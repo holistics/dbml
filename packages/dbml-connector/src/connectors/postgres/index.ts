@@ -26,19 +26,19 @@ const getValidatedClient = async (connection: string): Promise<Client> => {
 
     // If successful, return the client
     return client;
-  } catch (err) {
+  } catch (error) {
     // Ensure to close the client in case of failure
     await client.end();
 
-    if (err instanceof Error) {
-      throw new Error(`PostgreSQL connection error: ${err}`);
+    if (error instanceof Error) {
+      throw new Error(`PostgreSQL connection error: ${error}`, { cause: error });
     }
 
-    throw err; // Rethrow error if you want the calling code to handle it
+    throw error; // Rethrow error if you want the calling code to handle it
   }
 };
 
-const convertQueryBoolean = (val: string | null) => val === 'YES';
+const convertQueryBoolean = (value: string | null) => value === 'YES';
 
 const getFieldType = (data_type: string, udt_name: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (data_type === 'ARRAY') {
@@ -200,12 +200,12 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
-  const tables = tablesAndFieldsResult.rows.reduce((acc, row) => {
+  const tables = tablesAndFieldsResult.rows.reduce((accumulator, row) => {
     const { table_schema, table_name, table_comment } = row;
     const key = `${table_schema}.${table_name}`;
 
-    if (!acc[key]) {
-      acc[key] = {
+    if (!accumulator[key]) {
+      accumulator[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -216,7 +216,7 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
     const field = generateField(row);
     fields[key].push(field);
 
-    return acc;
+    return accumulator;
   }, {});
 
   return {
@@ -299,14 +299,14 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
       on_update,
     } = refRow;
 
-    const ep1: RefEndpoint = {
+    const endpoint1: RefEndpoint = {
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
       relation: '0..*',
     };
 
-    const ep2: RefEndpoint = {
+    const endpoint2: RefEndpoint = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
@@ -315,7 +315,7 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
 
     refs.push({
       name: fk_constraint_name,
-      endpoints: [ep1, ep2],
+      endpoints: [endpoint1, endpoint2],
       onDelete: on_delete === 'NO ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO ACTION' ? null : on_update,
     });
@@ -387,22 +387,22 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     ;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { outOfLineIndexes, inlineIndexes } = indexListResult.rows.reduce((acc, row) => {
+  const { outOfLineIndexes, inlineIndexes } = indexListResult.rows.reduce((accumulator, row) => {
     const { constraint_type, index_columns } = row;
 
-    if (index_columns === 'null' || index_columns.trim() === '') return acc;
+    if (index_columns === 'null' || index_columns.trim() === '') return accumulator;
 
     const isSingleColumn = index_columns.split(',').length === 1;
     const isInlineIndex = isSingleColumn && (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE');
     if (isInlineIndex) {
-      acc.inlineIndexes.push(row);
+      accumulator.inlineIndexes.push(row);
     } else {
-      acc.outOfLineIndexes.push(row);
+      accumulator.outOfLineIndexes.push(row);
     }
-    return acc;
+    return accumulator;
   }, { outOfLineIndexes: [], inlineIndexes: [] });
 
-  const indexes = outOfLineIndexes.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
+  const indexes = outOfLineIndexes.reduce((accumulator: IndexesDictionary, indexRow: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -441,13 +441,13 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     };
 
     const key = `${table_schema}.${table_name}`;
-    if (acc[key]) {
-      acc[key].push(index);
+    if (accumulator[key]) {
+      accumulator[key].push(index);
     } else {
-      acc[key] = [index];
+      accumulator[key] = [index];
     }
 
-    return acc;
+    return accumulator;
   }, {});
 
   const tableConstraints: TableConstraintsDictionary = {};
@@ -573,21 +573,21 @@ const generateRawEnums = async (client: Client, schemas: string[]): Promise<Enum
     ;
   `;
   const enumListResult = await client.query(enumListSql);
-  const enums = enumListResult.rows.reduce((acc, row) => {
+  const enums = enumListResult.rows.reduce((accumulator, row) => {
     const { schema_name, enum_type, enum_value } = row;
     const key = `${schema_name}.${enum_type}`;
 
-    if (!acc[key]) {
-      acc[key] = {
+    if (!accumulator[key]) {
+      accumulator[key] = {
         name: enum_type,
         schemaName: schema_name,
         values: [],
       };
     }
-    acc[key].values.push({
+    accumulator[key].values.push({
       name: enum_value,
     });
-    return acc;
+    return accumulator;
   }, {});
 
   return Object.values(enums);
@@ -598,22 +598,22 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const client = await getValidatedClient(connectionString);
 
   try {
-    const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
-    const indexesRes = generateIndexesAndConstraints(client, schemas);
-    const refsRes = generateRawRefs(client, schemas);
-    const enumsRes = generateRawEnums(client, schemas);
+    const tablesAndFieldsResult = generateTablesAndFields(client, schemas);
+    const indexesResult = generateIndexesAndConstraints(client, schemas);
+    const refsResult = generateRawRefs(client, schemas);
+    const enumsResult = generateRawEnums(client, schemas);
 
-    const res = await Promise.all([
-      tablesAndFieldsRes,
-      indexesRes,
-      refsRes,
-      enumsRes,
+    const result = await Promise.all([
+      tablesAndFieldsResult,
+      indexesResult,
+      refsResult,
+      enumsResult,
     ]);
 
-    const { tables, fields } = res[0];
-    const { indexes, tableConstraints, checks } = res[1];
-    const refs = res[2];
-    const enums = res[3];
+    const { tables, fields } = result[0];
+    const { indexes, tableConstraints, checks } = result[1];
+    const refs = result[2];
+    const enums = result[3];
 
     return {
       tables,
@@ -629,6 +629,4 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   }
 };
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

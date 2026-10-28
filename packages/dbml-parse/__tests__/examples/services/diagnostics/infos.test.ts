@@ -18,7 +18,7 @@ describe('[example] diagnostics - infos deduplication', () => {
       }
     `;
     const infos = getInfos(source);
-    const messages = infos.map((i) => `${i.diagnostic}:${i.nodeOrToken.startPos.line}:${i.nodeOrToken.startPos.column}`);
+    const messages = infos.map((index) => `${index.diagnostic}:${index.nodeOrToken.startPos.line}:${index.nodeOrToken.startPos.column}`);
     const unique = new Set(messages);
     expect(messages.length).toBe(unique.size);
   });
@@ -35,11 +35,11 @@ describe('[example] diagnostics - infos deduplication', () => {
       Ref: posts.user_id > users.id
     `;
     const infos = getInfos(source);
-    const nullable = infos.filter((i) => i.diagnostic.includes('nullable'));
+    const nullable = infos.filter((index) => index.diagnostic.includes('nullable'));
     // Should have 2 infos: one on the ref, one on the column declaration
     expect(nullable.length).toBe(2);
     // They should point to different locations
-    const locations = nullable.map((i) => `${i.nodeOrToken.startPos.line}:${i.nodeOrToken.startPos.column}`);
+    const locations = nullable.map((index) => `${index.nodeOrToken.startPos.line}:${index.nodeOrToken.startPos.column}`);
     expect(new Set(locations).size).toBe(2);
   });
 });

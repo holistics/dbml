@@ -30,7 +30,7 @@ import {
   ElementKind,
   SettingName,
 } from '../types/keywords';
-import { ImportKind, MetadataTargetKind } from '../types/symbol';
+import { ImportKind } from '../types/symbol';
 import { isHexChar } from './chars';
 import {
   destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
@@ -40,8 +40,8 @@ import {
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
-  const res = destructureComplexVariable(nameNode);
-  return res !== undefined && res.length > 0;
+  const result = destructureComplexVariable(nameNode);
+  return result !== undefined && result.length > 0;
 }
 
 // Is the alias valid (only simple name is allowed)
@@ -114,8 +114,8 @@ export function isValidHexColor (value?: SyntaxNode): value is PrimaryExpression
     return false;
   }
 
-  for (let i = 1; i < color.length; i += 1) {
-    if (!isHexChar(color[i])) {
+  for (let index = 1; index < color.length; index += 1) {
+    if (!isHexChar(color[index])) {
       return false;
     }
   }
@@ -237,7 +237,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
         return false;
       }
 
-      if (!type.argumentList.elementList.every((e) => isExpressionASignedNumberExpression(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      if (!type.argumentList.elementList.every((element) => isExpressionASignedNumberExpression(element) || isExpressionAQuotedString(element) || isExpressionAnIdentifierNode(element))) {
         return false;
       }
 
@@ -422,7 +422,7 @@ export function isInsideElementBody (node: SyntaxNode, kind: ElementKind): boole
 // `args[0]` -> 1th arg
 // `args[1]` -> 2nd arg
 // ...
-export function isWithinNthArgOfField (node: SyntaxNode, nth: number): boolean {
+export function isWithinNthArgumentOfField (node: SyntaxNode, nth: number): boolean {
   const parentField = node.parentOfKind(FunctionApplicationNode);
   if (!parentField) {
     return false;
@@ -432,9 +432,9 @@ export function isWithinNthArgOfField (node: SyntaxNode, nth: number): boolean {
     if (!parentField.callee) return false;
     return parentField.callee.containsEq(node);
   }
-  const arg = parentField.args[nth - 1];
-  if (!arg) return false;
-  return arg.containsEq(node);
+  const argument = parentField.args[nth - 1];
+  if (!argument) return false;
+  return argument.containsEq(node);
 }
 
 // Return whether `node` is within a setting list
@@ -469,19 +469,19 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
 }
 
 export function isEqualTupleOperands (value: InfixExpressionNode): boolean {
-  const leftRes = destructureComplexVariableTuple(value.leftExpression);
-  const rightRes = destructureComplexVariableTuple(value.rightExpression);
+  const leftResult = destructureComplexVariableTuple(value.leftExpression);
+  const rightResult = destructureComplexVariableTuple(value.rightExpression);
 
-  if (leftRes === undefined || rightRes === undefined) {
+  if (leftResult === undefined || rightResult === undefined) {
     return false;
   }
 
   const {
     tupleElements: leftTuple,
-  } = leftRes;
+  } = leftResult;
   const {
     tupleElements: rightTuple,
-  } = rightRes;
+  } = rightResult;
 
   if (leftTuple?.length !== rightTuple?.length) {
     return false;

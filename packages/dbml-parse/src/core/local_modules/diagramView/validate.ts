@@ -93,10 +93,10 @@ export default class DiagramViewValidator {
 
     // DiagramView doesn't have any supported settings yet
     for (const name of Object.keys(settingMap)) {
-      errors.push(...settingMap[name].map((attr) => new CompileError(
+      errors.push(...settingMap[name].map((attribute) => new CompileError(
         CompileErrorCode.UNEXPECTED_SETTINGS,
         `Unknown '${name}' setting for DiagramView`,
-        attr,
+        attribute,
       )));
     }
     return errors;
@@ -127,7 +127,7 @@ export default class DiagramViewValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     const subResult = this.validateSubElements(subs as ElementDeclarationNode[]);
     return {
       errors: [
@@ -143,10 +143,10 @@ export default class DiagramViewValidator {
       // Body-level {*} is valid shorthand for "show all entities"
       if (isWildcardExpression(field.callee)) {
         if (field.args.length > 0) {
-          return field.args.map((arg) => new CompileError(
+          return field.args.map((argument) => new CompileError(
             CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
             'DiagramView field should only have a single name',
-            arg,
+            argument,
           ));
         }
         return [];
@@ -231,10 +231,10 @@ export default class DiagramViewValidator {
     const body = sub.body as BlockExpressionNode;
 
     const hasWildcard = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
+      (element) => element instanceof FunctionApplicationNode && isWildcardExpression(element.callee),
     );
     const hasSpecificItems = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && !isWildcardExpression(e.callee),
+      (element) => element instanceof FunctionApplicationNode && !isWildcardExpression(element.callee),
     );
 
     if (hasWildcard && hasSpecificItems) {
@@ -261,16 +261,16 @@ export default class DiagramViewValidator {
     }
 
     const body = sub.body as BlockExpressionNode;
-    const fields = body.body.filter((e) => e instanceof FunctionApplicationNode) as FunctionApplicationNode[];
+    const fields = body.body.filter((element) => element instanceof FunctionApplicationNode) as FunctionApplicationNode[];
 
     for (const field of fields) {
       if (isWildcardExpression(field.callee)) continue;
 
       if (field.args.length > 0 || !destructureComplexVariable(field.callee)) {
-        errors.push(...field.args.map((arg) => new CompileError(
+        errors.push(...field.args.map((argument) => new CompileError(
           CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
           'DiagramView field should only have a single name',
-          arg,
+          argument,
         )));
       }
     }

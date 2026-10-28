@@ -105,7 +105,7 @@ export default class ProgramInterpreter {
     const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
 
     // Keep track of all encountered schemas while interpreting
-    const schemaQueue = schemas.filter((s): s is SchemaSymbol => s instanceof SchemaSymbol);
+    const schemaQueue = schemas.filter((schema): schema is SchemaSymbol => schema instanceof SchemaSymbol);
     while (schemaQueue.length > 0) {
       const schema = schemaQueue.shift()!;
       const members = this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
@@ -199,25 +199,25 @@ export default class ProgramInterpreter {
         case MetadataKind.Ref: {
           const ref = value as Ref;
           const [
-            ep1,
-            ep2,
+            endpoint1,
+            endpoint2,
           ] = ref.endpoints ?? [];
-          if (ep1 && ep2) {
+          if (endpoint1 && endpoint2) {
             const key = [
-              ep1.schemaName,
-              ep1.tableName,
-              ep1.fieldNames.join(','),
-              ep2.schemaName,
-              ep2.tableName,
-              ep2.fieldNames.join(','),
+              endpoint1.schemaName,
+              endpoint1.tableName,
+              endpoint1.fieldNames.join(','),
+              endpoint2.schemaName,
+              endpoint2.tableName,
+              endpoint2.fieldNames.join(','),
             ].join('|');
             const keyRev = [
-              ep2.schemaName,
-              ep2.tableName,
-              ep2.fieldNames.join(','),
-              ep1.schemaName,
-              ep1.tableName,
-              ep1.fieldNames.join(','),
+              endpoint2.schemaName,
+              endpoint2.tableName,
+              endpoint2.fieldNames.join(','),
+              endpoint1.schemaName,
+              endpoint1.tableName,
+              endpoint1.fieldNames.join(','),
             ].join('|');
             if (seenRefEndpoints.has(key) || seenRefEndpoints.has(keyRev)) {
               this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Ref with same endpoints already exists', meta.declaration));
@@ -234,7 +234,7 @@ export default class ProgramInterpreter {
           const edgeNodes = meta instanceof DepMetadata ? meta.edgeExpressions() : [];
           // a -> b and b -> a are distinct (directed), so no reverse key
           let duplicateEdgeIndex = -1;
-          (dep.edges ?? []).some((edge, i) => {
+          (dep.edges ?? []).some((edge, index) => {
             const { upstream: up, downstream: down } = edge;
             const key = [
               up.schemaName,
@@ -245,7 +245,7 @@ export default class ProgramInterpreter {
               down.fieldNames.join(','),
             ].join('|');
             if (seenDepEndpoints.has(key)) {
-              duplicateEdgeIndex = i;
+              duplicateEdgeIndex = index;
               return true;
             }
             seenDepEndpoints.add(key);
@@ -373,7 +373,7 @@ export default class ProgramInterpreter {
 
   private validatePartialRefs () {
     const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
-      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+      .filter((meta): meta is PartialRefMetadata => meta instanceof PartialRefMetadata);
     for (const meta of partialMetas) {
       this.infos.push(...validatePartialRef(this.compiler, meta));
     }
@@ -381,7 +381,7 @@ export default class ProgramInterpreter {
 
   private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {
     const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
-      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+      .filter((meta): meta is PartialRefMetadata => meta instanceof PartialRefMetadata);
 
     const refs: Ref[] = [];
     for (const {
@@ -419,25 +419,25 @@ export default class ProgramInterpreter {
           const leftName = tableSymbol.interpretedName(this.compiler, this.filepath);
           const rightName = rightTable.interpretedName(this.compiler, this.filepath);
 
-          const ep1: RefEndpoint = {
+          const endpoint1: RefEndpoint = {
             schemaName: leftName.schema,
             tableName: leftName.name,
-            fieldNames: leftColumns.map((c) => c.name ?? ''),
+            fieldNames: leftColumns.map((column) => column.name ?? ''),
             relation: multiplicities[0],
             token: getTokenPosition(meta.leftToken()),
           };
-          const ep2: RefEndpoint = {
+          const endpoint2: RefEndpoint = {
             schemaName: rightName.schema,
             tableName: rightName.name,
-            fieldNames: rightColumns.map((c) => c.name ?? ''),
+            fieldNames: rightColumns.map((column) => column.name ?? ''),
             relation: multiplicities[1],
             token: getTokenPosition(meta.rightToken()),
           };
           refs.push({
             token: getTokenPosition(meta.declaration),
             endpoints: [
-              ep1,
-              ep2,
+              endpoint1,
+              endpoint2,
             ],
           } as Ref);
         }

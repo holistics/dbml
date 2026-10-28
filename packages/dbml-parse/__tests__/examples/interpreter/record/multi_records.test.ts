@@ -99,8 +99,8 @@ describe('[example - record] multiple records blocks', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(4);
-    expect(errors.filter((e) => e.diagnostic.includes("'users'")).length).toBe(2);
-    expect(errors.filter((e) => e.diagnostic.includes("'posts'")).length).toBe(2);
-    expect(errors.every((e) => e.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE)).toBe(true);
+    expect(errors.filter((error) => error.diagnostic.includes("'users'")).length).toBe(2);
+    expect(errors.filter((error) => error.diagnostic.includes("'posts'")).length).toBe(2);
+    expect(errors.every((error) => error.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE)).toBe(true);
   });
 });

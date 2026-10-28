@@ -78,7 +78,7 @@ export class StickyNoteInterpreter {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     if (fields.length !== 1 || subs.length > 0) {
       return [

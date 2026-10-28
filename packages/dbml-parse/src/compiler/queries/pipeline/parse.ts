@@ -32,9 +32,9 @@ export function parseProject (this: Compiler): Map<string, Report<FileParseIndex
 
   const result = new Map<string, Report<FileParseIndex>>();
 
-  for (const d of deps) {
-    const parseResult = this.parseFile(d);
-    result.set(d.absolute, parseResult);
+  for (const dep of deps) {
+    const parseResult = this.parseFile(dep);
+    result.set(dep.absolute, parseResult);
   }
 
   return result;

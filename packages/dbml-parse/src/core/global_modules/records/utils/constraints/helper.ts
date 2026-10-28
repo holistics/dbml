@@ -8,7 +8,7 @@ import type { ColumnSymbol } from '@/core/types/symbol';
 export function toKeyedRows (record: TableRecord): Record<string, RecordValue>[] {
   return record.values.map((row) => {
     const keyed: Record<string, RecordValue> = {};
-    record.columns.forEach((col, i) => { keyed[col] = row[i]; });
+    record.columns.forEach((col, index) => { keyed[col] = row[index]; });
     return keyed;
   });
 }

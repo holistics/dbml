@@ -19,7 +19,7 @@ import {
 } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
   extractVariableFromExpression,
   getBody,
 } from '@/core/utils/expression';
@@ -31,7 +31,7 @@ import {
   isInsideElementBody,
   isInsideSettingValue,
   isTerminalAccessFragment,
-  isWithinNthArgOfField,
+  isWithinNthArgumentOfField,
   isValidPartialInjection,
 } from '@/core/utils/validate';
 import type { GlobalModule } from '../types';
@@ -88,11 +88,11 @@ export const tableModule: GlobalModule = {
     const members: NodeSymbol[] = [];
     const errors: CompileError[] = [];
     for (const child of children) {
-      const res = compiler.nodeSymbol(child);
-      const symbol = res.getFiltered(UNHANDLED);
+      const result = compiler.nodeSymbol(child);
+      const symbol = result.getFiltered(UNHANDLED);
       if (!symbol) continue;
       members.push(symbol);
-      errors.push(...res.getErrors());
+      errors.push(...result.getErrors());
     }
 
     // Duplicate checking
@@ -129,8 +129,8 @@ export const tableModule: GlobalModule = {
       index: number;
       partialMembers: NodeSymbol[];
     }[] = [];
-    for (let i = 0; i < members.length; i++) {
-      const member = members[i];
+    for (let index = 0; index < members.length; index++) {
+      const member = members[index];
       if (!(member.declaration instanceof FunctionApplicationNode)) continue;
       if (!isValidPartialInjection(member.declaration.callee)) continue;
 
@@ -148,46 +148,46 @@ export const tableModule: GlobalModule = {
 
       const tablePartialMembers = compiler.symbolMembers(tablePartialSymbol).getFiltered(UNHANDLED);
       if (tablePartialMembers) {
-        const injectedMembers = tablePartialMembers.flatMap((m) => {
-          if (!m.declaration) return [];
+        const injectedMembers = tablePartialMembers.flatMap((partialMember) => {
+          if (!partialMember.declaration) return [];
 
-          const name = m.name;
-          if (name === undefined) return m;
+          const name = partialMember.name;
+          if (name === undefined) return partialMember;
 
           return compiler.symbolFactory.create(
             InjectedColumnSymbol,
             {
               kind: SymbolKind.Column,
               injectionDeclaration: member.declaration!,
-              declaration: m.declaration,
+              declaration: partialMember.declaration,
               name,
             },
             node.filepath,
           );
         });
         injections.push({
-          index: i,
+          index: index,
           partialMembers: injectedMembers,
         });
       }
     }
 
     // Insert partial members at injection positions (process in reverse to keep indices valid)
-    for (let j = injections.length - 1; j >= 0; j--) {
+    for (let index_ = injections.length - 1; index_ >= 0; index_--) {
       const {
         index, partialMembers: pMembers,
-      } = injections[j];
+      } = injections[index_];
       members.splice(index, 0, ...pMembers);
     }
 
     // Deduplicate columns: direct columns win over injected, among injected later wins
     // Remove injected columns that are overridden by direct columns
-    const directNames = new Set(members.filter((m) => m.isKind(SymbolKind.Column) && !(m instanceof InjectedColumnSymbol)).map((m) => m.name));
-    const withoutOverridden = members.filter((m) => !(m instanceof InjectedColumnSymbol && directNames.has(m.name)));
+    const directNames = new Set(members.filter((member) => member.isKind(SymbolKind.Column) && !(member instanceof InjectedColumnSymbol)).map((member) => member.name));
+    const withoutOverridden = members.filter((member) => !(member instanceof InjectedColumnSymbol && directNames.has(member.name)));
     // Among remaining injected columns with same name, keep last (later partial wins)
     const deduped = uniqBy([
       ...withoutOverridden,
-    ].reverse(), (m) => m.isKind(SymbolKind.Column) ? m.name : m).reverse();
+    ].reverse(), (member) => member.isKind(SymbolKind.Column) ? member.name : member).reverse();
 
     return new Report(deduped, errors);
   },
@@ -225,7 +225,7 @@ export const tableModule: GlobalModule = {
     }
 
     // Case 1.1: Column's enum type
-    if (isWithinNthArgOfField(node, 1)) {
+    if (isWithinNthArgumentOfField(node, 1)) {
       return nodeRefereeOfEnumType(compiler, globalSymbol, node);
     }
 
@@ -241,7 +241,7 @@ export const tableModule: GlobalModule = {
 
     // Case 1.4: Column's default value being an enum value
     // Skip column name position (callee of the field's FunctionApplicationNode)
-    if (isWithinNthArgOfField(node, 0)) {
+    if (isWithinNthArgumentOfField(node, 0)) {
       return Report.create(PASS_THROUGH);
     }
     return nodeRefereeOfEnumDefault(compiler, globalSymbol, node);
@@ -270,7 +270,7 @@ function nodeRefereeOfPartialInjection (compiler: Compiler, globalSymbol: NodeSy
   const name = extractVariableFromExpression(node) ?? '';
   const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
   if (membersList) {
-    const publicSchema = membersList.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.isPublicSchema());
+    const publicSchema = membersList.find((member: NodeSymbol) => member instanceof SchemaSymbol && member.isPublicSchema());
     if (publicSchema) {
       const symbol = compiler.lookupMembers(publicSchema, SymbolKind.TablePartial, name);
       if (symbol) {
@@ -290,7 +290,7 @@ function nodeRefereeOfPartialInjection (compiler: Compiler, globalSymbol: NodeSy
 
 function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: try as enum in default schema, ignore if not found (could be a raw type like varchar)
   if (!isAccessExpression(node.parentNode)) {
@@ -335,7 +335,7 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
 // Always report errors, never ignore not found
 function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone variable in inline ref - look up in the enclosing table
   if (!isAccessExpression(node.parentNode)) {
@@ -367,7 +367,7 @@ function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const isColumnDep = isInsideElementBody(node, ElementKind.Table);
 
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   if (!isAccessExpression(node.parentNode)) {
     // Standalone variable in inline column dep - look up as column in the enclosing table
@@ -410,7 +410,7 @@ function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, n
 // Default value: enum.field or schema.enum.field
 function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: ignore default keywords (true/false/null), everything else is an enum lookup
   if (!isAccessExpression(node.parentNode)) {

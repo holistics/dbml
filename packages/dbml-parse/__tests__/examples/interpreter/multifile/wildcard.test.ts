@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - mixed selective + wildcard from same file', () => {
   // Selective + wildcard from the same file exposes the same `users` table twice via two distinct UseSymbol wrappers
@@ -30,7 +30,7 @@ Table memberships {
 
   test('interpretation succeeds and surfaces users, roles, memberships without errors', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const names = db.tables.map((t) => t.name).sort();
+    const names = db.tables.map((token) => token.name).sort();
     expect(names).toEqual(['memberships', 'roles', 'users']);
   });
 });
@@ -55,18 +55,18 @@ use * from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('public schema table present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeDefined();
   });
 
   test('auth schema table present with schema name', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const sessions = db.tables.find((t) => t.name === 'sessions');
+    const sessions = db.tables.find((token) => token.name === 'sessions');
     expect(sessions).toBeDefined();
     expect(sessions!.schemaName).toBe('auth');
   });
@@ -92,7 +92,7 @@ Ref: orders.user_id > users.id
 
   test('both tables present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+    expect(db.tables.map((token) => token.name).sort()).toEqual(['orders', 'users']);
   });
 });
 
@@ -127,7 +127,7 @@ records users(id, name) {
 
   test('both tables present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+    expect(db.tables.map((token) => token.name).sort()).toEqual(['orders', 'users']);
   });
 
   test('ref pulled', () => {
@@ -137,12 +137,12 @@ records users(id, name) {
 
   test('records pulled', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
+    expect(db.records.find((record) => record.tableName === 'users')).toBeDefined();
   });
 
   test('partial pulled', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tablePartials.find((p) => p.name === 'timestamps')).toBeDefined();
+    expect(db.tablePartials.find((partial) => partial.name === 'timestamps')).toBeDefined();
   });
 });
 
@@ -161,6 +161,6 @@ use { table "my-table" } from './source.dbml'
 
   test('quoted table name preserved', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'my-table')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'my-table')).toBeDefined();
   });
 });

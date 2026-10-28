@@ -31,7 +31,7 @@ export default class DiagramViewBinder {
   private bindBody (body: BlockExpressionNode): CompileError[] {
     const [
       , subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }
@@ -57,7 +57,7 @@ export default class DiagramViewBinder {
   private bindTableReferences (body: BlockExpressionNode): CompileError[] {
     const [
       fields,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee || isWildcardExpression(field.callee)) {
@@ -88,7 +88,7 @@ export default class DiagramViewBinder {
   private bindNoteReferences (body: BlockExpressionNode): CompileError[] {
     const [
       fields,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee || isWildcardExpression(field.callee)) {
@@ -111,7 +111,7 @@ export default class DiagramViewBinder {
   private bindTableGroupReferences (body: BlockExpressionNode): CompileError[] {
     const [
       fields,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee || isWildcardExpression(field.callee)) {
@@ -134,7 +134,7 @@ export default class DiagramViewBinder {
   private bindSchemaReferences (body: BlockExpressionNode): CompileError[] {
     const [
       fields,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee || isWildcardExpression(field.callee)) {
@@ -144,7 +144,7 @@ export default class DiagramViewBinder {
       const bindees = scanNonListNodeForBinding(field.callee);
 
       return bindees.flatMap((bindee) =>
-        bindee.variables.flatMap((b) => this.compiler.nodeReferee(b).getErrors()),
+        bindee.variables.flatMap((variable) => this.compiler.nodeReferee(variable).getErrors()),
       );
     });
   }

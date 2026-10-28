@@ -20,7 +20,7 @@ import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractStringFromIdentifierStream, getBody,
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
 } from '@/core/utils/expression';
 import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types';
@@ -110,18 +110,18 @@ export const refModule: GlobalModule = {
 // Always report errors, never ignore not found
 export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone variable
   if (!isAccessExpression(node.parentNode)) {
     // Check if inside a tuple that's the right side of an access: table.(col1, col2)
     const tupleParent = node.parentNode;
     if (tupleParent && isAccessExpression(tupleParent.parentNode) && (tupleParent.parentNode as InfixExpressionNode).rightExpression === tupleParent) {
-      const leftExpr = (tupleParent.parentNode as InfixExpressionNode).leftExpression!;
+      const leftExpression = (tupleParent.parentNode as InfixExpressionNode).leftExpression!;
       // If leftExpr is an access expression (e.g. schema.table), use its rightmost variable
-      const tableNode = isAccessExpression(leftExpr)
-        ? (leftExpr as InfixExpressionNode).rightExpression ?? leftExpr
-        : leftExpr;
+      const tableNode = isAccessExpression(leftExpression)
+        ? (leftExpression as InfixExpressionNode).rightExpression ?? leftExpression
+        : leftExpression;
       const tableSymbol = compiler.nodeReferee(tableNode).getFiltered(UNHANDLED);
       if (tableSymbol?.isKind(SymbolKind.Table)) {
         const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, name);

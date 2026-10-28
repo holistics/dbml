@@ -1,5 +1,7 @@
 import { Connection } from 'oracledb';
-import { CheckConstraint, CheckConstraintDictionary, Index, IndexesDictionary, TableConstraintsDictionary } from '../types';
+import {
+  CheckConstraint, CheckConstraintDictionary, Index, IndexesDictionary, TableConstraintsDictionary,
+} from '../types';
 import { EXECUTE_OPTIONS, LIST_SEPARATOR } from './utils';
 
 export async function generateConstraints (client: Connection): Promise<{
@@ -49,12 +51,12 @@ export async function generateConstraints (client: Connection): Promise<{
   const tableConstraints: TableConstraintsDictionary = {};
   const checks: CheckConstraintDictionary = {};
 
-  const res = await client.execute(query, [], EXECUTE_OPTIONS);
-  res.rows?.forEach((row) => {
-    const { constraint_name, table_name, columns: columnsStr, column_count, check_expression, constraint_type } = row as Record<string, unknown>;
+  const result = await client.execute(query, [], EXECUTE_OPTIONS);
+  result.rows?.forEach((row) => {
+    const { constraint_name, table_name, columns: columnsString, column_count, check_expression, constraint_type } = row as Record<string, unknown>;
     const tableName = table_name as string;
     const constraintName = (constraint_name as string) || '';
-    const columns = ((columnsStr as string) || '').split(LIST_SEPARATOR);
+    const columns = ((columnsString as string) || '').split(LIST_SEPARATOR);
     const columnCount = (column_count as number) || 1;
     const constraintType = constraint_type as 'P' | 'U' | 'C';
     const checkExpression = (check_expression || null) as string | null;
@@ -96,9 +98,9 @@ export async function generateConstraints (client: Connection): Promise<{
         type: '',
         unique: true,
         pk: constraintType === 'P',
-        columns: columns.map((c) => ({
+        columns: columns.map((column) => ({
           type: 'column',
-          value: c,
+          value: column,
         })),
       };
       indexes[tableName].push(index);

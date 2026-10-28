@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - aliased table renamed in records', () => {
   const { compiler } = setupCompiler({
@@ -21,24 +21,24 @@ records u(id, name) {
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('no export errors', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('record tableName uses alias', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const record = db.records.find((r) => r.tableName === 'u');
+    const record = db.records.find((record) => record.tableName === 'u');
     expect(record).toBeDefined();
   });
 
   test('record values preserved', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const record = db.records.find((r) => r.tableName === 'u')!;
+    const record = db.records.find((record) => record.tableName === 'u')!;
     expect(record.values).toHaveLength(2);
   });
 });
@@ -63,18 +63,18 @@ records users(id, name, active) {
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('no export errors', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('records appear with correct table and values', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const record = db.records.find((r) => r.tableName === 'users');
+    const record = db.records.find((record) => record.tableName === 'users');
     expect(record).toBeDefined();
     expect(record!.values).toHaveLength(2);
   });
@@ -104,13 +104,13 @@ records users(id, name, created_at, updated_at) {
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
-    expect(result.getErrors().some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
+    expect(result.getErrors().some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -144,13 +144,13 @@ records orders(id, total, created_by, modified_by) {
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
-    expect(result.getErrors().some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
+    expect(result.getErrors().some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -176,13 +176,13 @@ use { table users } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('records from source file are pulled into consumer schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const record = db.records.find((r) => r.tableName === 'users');
+    const record = db.records.find((record) => record.tableName === 'users');
     expect(record).toBeDefined();
     expect(record!.values).toHaveLength(3);
   });
@@ -209,8 +209,8 @@ use { table users as u } from './source.dbml'
 
   test('records pulled under alias name', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.records.find((r) => r.tableName === 'u')).toBeDefined();
-    expect(db.records.find((r) => r.tableName === 'users')).toBeUndefined();
+    expect(db.records.find((record) => record.tableName === 'u')).toBeDefined();
+    expect(db.records.find((record) => record.tableName === 'users')).toBeUndefined();
   });
 });
 
@@ -262,7 +262,7 @@ use { table users } from './source.dbml'
 
   test('nested records are pulled with the imported table', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const record = db.records.find((r) => r.tableName === 'users');
+    const record = db.records.find((record) => record.tableName === 'users');
     expect(record).toBeDefined();
     expect(record!.values).toHaveLength(2);
   });
@@ -290,7 +290,7 @@ records users(id, name) {
   });
 
   test('duplicate records blocks across files is an error', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
-    expect(result.getErrors().some((e) => e.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE)).toBe(true);
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
+    expect(result.getErrors().some((error) => error.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE)).toBe(true);
   });
 });

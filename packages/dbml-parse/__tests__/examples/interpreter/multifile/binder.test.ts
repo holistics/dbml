@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { fp, setupCompiler } from './utils';
+import { filepath, setupCompiler } from './utils';
 
 describe('[example] multifile binder - TableGroup cannot reference imported table', () => {
   // base.dbml:   Table users { id int [pk] }
@@ -31,20 +31,20 @@ TableGroup mixed {
 `,
   });
 
-  const errors = compiler.bindNode(compiler.parseFile(fp('/main.dbml')).getValue().ast).getErrors();
+  const errors = compiler.bindNode(compiler.parseFile(filepath('/main.dbml')).getValue().ast).getErrors();
 
   test('binding produces BINDING_ERROR for the imported table reference', () => {
-    expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
   });
 
   test('error message names the imported table', () => {
-    const err = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('users'));
-    expect(err).toBeDefined();
+    const error = errors.find((error) => error.code === CompileErrorCode.BINDING_ERROR && e.message.includes('users'));
+    expect(error).toBeDefined();
   });
 
   test('local table in the same tablegroup does not produce an error', () => {
-    const localErr = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('local'));
-    expect(localErr).toBeUndefined();
+    const localError = errors.find((error) => error.code === CompileErrorCode.BINDING_ERROR && e.message.includes('local'));
+    expect(localError).toBeUndefined();
   });
 });
 
@@ -73,8 +73,8 @@ TableGroup all_imported {
   });
 
   test('binding produces one BINDING_ERROR per imported table reference', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
-    const errors = compiler.bindNode(ast).getErrors().filter((e) => e.code === CompileErrorCode.BINDING_ERROR);
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors().filter((error) => error.code === CompileErrorCode.BINDING_ERROR);
     expect(errors).toHaveLength(2);
   });
 });
@@ -86,8 +86,8 @@ describe('[example] multifile binder - absolute import path produces error', () 
   });
 
   test('binding error for absolute import path', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     const errors = compiler.bindNode(ast).getErrors();
-    expect(errors.some((e) => e.message.includes('Import path must be relative'))).toBe(true);
+    expect(errors.some((error) => error.message.includes('Import path must be relative'))).toBe(true);
   });
 });

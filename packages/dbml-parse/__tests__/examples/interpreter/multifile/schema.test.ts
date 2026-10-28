@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - schema-alias ref', () => {
   // tables.dbml: Table ecommerce.users as EU { id int [pk]; name varchar }
@@ -23,13 +23,13 @@ Table orders {
   });
 
   test('no binding errors - inline ref binds against the alias', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('alias EU appears as a table in exported schema; schema prefix is stripped', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const eu = db.tables.find((t) => t.name === 'EU');
+    const eu = db.tables.find((token) => token.name === 'EU');
 
     expect(eu).toBeDefined();
     expect(eu!.schemaName).toBe('');
@@ -38,13 +38,13 @@ Table orders {
   test('original schema-qualified name is not separately exposed', () => {
     const db = getDatabase(compiler, '/main.dbml');
     // expect: "users" (with or without schema) is not directly in main's table list
-    expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeUndefined();
   });
 
   test('inline ref on orders.user_id resolves to EU', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const orders = db.tables.find((t) => t.name === 'orders')!;
-    const userIdField = orders.fields.find((f) => f.name === 'user_id')!;
+    const orders = db.tables.find((token) => token.name === 'orders')!;
+    const userIdField = orders.fields.find((field) => field.name === 'user_id')!;
     // expect: [ref: > EU.id] captured as inline_ref targeting EU
     const ref = userIdField.inline_refs[0];
     expect(ref.tableName).toBe('EU');
@@ -75,28 +75,28 @@ Table orders {
   });
 
   test('no binding errors - inline ref binds against alias u', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('alias u appears without schema prefix in exported schema', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const u = db.tables.find((t) => t.name === 'u');
+    const aliasedTable = db.tables.find((token) => token.name === 'u');
     // expect: visible as "u" with no schemaName
-    expect(u).toBeDefined();
-    expect(u!.schemaName).toBe('');
+    expect(aliasedTable).toBeDefined();
+    expect(aliasedTable!.schemaName).toBe('');
   });
 
   test('original auth.users is not directly exposed', () => {
     const db = getDatabase(compiler, '/main.dbml');
     // expect: original "users" (with or without "auth" schema) is not separately present
-    expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeUndefined();
   });
 
   test('inline ref on orders.user_id points to u', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const orders = db.tables.find((t) => t.name === 'orders')!;
-    const ref = orders.fields.find((f) => f.name === 'user_id')!.inline_refs[0];
+    const orders = db.tables.find((token) => token.name === 'orders')!;
+    const ref = orders.fields.find((field) => field.name === 'user_id')!.inline_refs[0];
     // expect: [ref: > u.id] - tableName is the alias, not the original
     expect(ref.tableName).toBe('u');
     expect(ref.fieldNames).toContain('id');
@@ -126,21 +126,21 @@ use { table auth.posts } from './posts-db.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('both auth.users and auth.posts appear in exported tables', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const names = db.tables.map((t) => t.name);
+    const names = db.tables.map((token) => token.name);
     expect(names).toContain('users');
     expect(names).toContain('posts');
   });
 
   test('both tables carry schemaName "auth"', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const posts = db.tables.find((t) => t.name === 'posts')!;
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const posts = db.tables.find((token) => token.name === 'posts')!;
     expect(users.schemaName).toBe('auth');
     expect(posts.schemaName).toBe('auth');
   });
@@ -169,19 +169,19 @@ use { schema x } from './b.dbml'
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('x.b is present in a.dbml schema', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    const table = db.tables.find((t) => t.name === 'b' && t.schemaName === 'x');
+    const table = db.tables.find((token) => token.name === 'b' && t.schemaName === 'x');
     expect(table).toBeDefined();
   });
 
   test('x.c is NOT transitively present (use is local-only, not transitive)', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    const table = db.tables.find((t) => t.name === 'c' && t.schemaName === 'x');
+    const table = db.tables.find((token) => token.name === 'c' && t.schemaName === 'x');
     expect(table).toBeUndefined();
   });
 });
@@ -210,7 +210,7 @@ Ref: x.b.id > x.c.id
   });
 
   test('Ref between x.b and x.c errors because x.c is not in scope', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors().length).toBeGreaterThan(0);
   });
 });
@@ -239,13 +239,13 @@ Ref: x.b.id > x.c.id
   });
 
   test('no errors - x.c transitively reachable via reuse', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('x.c present in a.dbml schema', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    const table = db.tables.find((t) => t.name === 'c' && t.schemaName === 'x');
+    const table = db.tables.find((token) => token.name === 'c' && t.schemaName === 'x');
     expect(table).toBeDefined();
   });
 });
@@ -275,13 +275,13 @@ use { schema public } from './a.dbml'
 
   test('table v is pulled into main', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.find((t) => t.name === 'v')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'v')).toBeDefined();
   });
 
   test('table v has correct fields', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const v = db.tables.find((t) => t.name === 'v')!;
-    expect(v.fields.map((f) => f.name)).toEqual(['id', 'abc']);
+    const tableV = db.tables.find((token) => token.name === 'v')!;
+    expect(tableV.fields.map((field) => field.name)).toEqual(['id', 'abc']);
   });
 
   test('records for v are present', () => {
@@ -291,8 +291,8 @@ use { schema public } from './a.dbml'
 
   test('indexes on v are present', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const v = db.tables.find((t) => t.name === 'v')!;
-    expect(v.indexes.length).toBeGreaterThan(0);
+    const tableV = db.tables.find((token) => token.name === 'v')!;
+    expect(tableV.indexes.length).toBeGreaterThan(0);
   });
 });
 
@@ -321,12 +321,12 @@ Ref: R.id > R.r
 
   test('tables R and G pulled into main via wildcard + reuse schema chain', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.find((t) => t.name === 'R')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'G')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'R')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'G')).toBeDefined();
   });
 
   test('ref between R columns resolves', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 });
@@ -352,8 +352,8 @@ use { table auth.orders } from './source.dbml'
 
   test('both schema-qualified tables present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'users' && t.schemaName === 'auth')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'orders' && t.schemaName === 'auth')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'users' && t.schemaName === 'auth')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'orders' && t.schemaName === 'auth')).toBeDefined();
   });
 
   test('ref between schema-qualified tables is auto-pulled', () => {
@@ -383,10 +383,10 @@ use { table auth.orders as o } from './source.dbml'
   test('ref endpoints use alias names', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
-    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
-    const ordersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('user_id'))!;
-    expect(usersEp.tableName).toBe('u');
-    expect(ordersEp.tableName).toBe('o');
+    const usersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('id'))!;
+    const ordersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('user_id'))!;
+    expect(usersEndpoint.tableName).toBe('u');
+    expect(ordersEndpoint.tableName).toBe('o');
   });
 });
 
@@ -412,8 +412,8 @@ use * from './b.dbml'
 
   test('both tables under auth schema present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users');
-    const roles = db.tables.find((t) => t.name === 'roles');
+    const users = db.tables.find((token) => token.name === 'users');
+    const roles = db.tables.find((token) => token.name === 'roles');
     expect(users).toBeDefined();
     expect(roles).toBeDefined();
     expect(users!.schemaName).toBe('auth');
@@ -434,8 +434,8 @@ use { schema auth as a } from './base'
 
   test('alias schema has both tables', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'posts')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'posts')).toBeDefined();
   });
 
   test('tables accessible via alias schema name in refs', () => {
@@ -449,7 +449,7 @@ use { schema auth as a } from './base'
 Ref: a.posts.user_id > a.users.id
 `,
     });
-    const result = c2.interpretFile(fp('/main.dbml'));
+    const result = c2.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
     expect(result.getValue()!.refs).toHaveLength(1);
   });
@@ -462,7 +462,7 @@ use { schema auth as a } from './base'
 Ref: auth.users.id > auth.users.id
 `,
     });
-    const result = c3.interpretFile(fp('/main.dbml'));
+    const result = c3.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors().length).toBeGreaterThan(0);
   });
 });
@@ -480,14 +480,14 @@ use { schema x as a } from './a.dbml'
   });
 
   test('no errors', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('schema a contains tables from both public and x', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.find((t) => t.name === 't' && t.schemaName === 'a')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'g' && t.schemaName === 'a')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't' && t.schemaName === 'a')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'g' && t.schemaName === 'a')).toBeDefined();
   });
 
   test('refs work across merged schemas', () => {
@@ -502,7 +502,7 @@ use { schema x as a } from './a.dbml'
 Ref: a.g.t_id > a.t.id
 `,
     });
-    const result = c2.interpretFile(fp('/main.dbml'));
+    const result = c2.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
     expect(result.getValue()!.refs).toHaveLength(1);
   });
@@ -525,19 +525,19 @@ use { schema public as nested } from './nested.dbml'
   });
 
   test('no errors', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('enum appears only once in output', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const statuses = db.enums.filter((e) => e.name === 'status');
+    const statuses = db.enums.filter((error) => error.name === 'status');
     expect(statuses).toHaveLength(1);
   });
 
   test('table appears only once in output', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const tables = db.tables.filter((t) => t.name === 't');
+    const tables = db.tables.filter((token) => token.name === 't');
     expect(tables).toHaveLength(1);
   });
 });
@@ -569,18 +569,18 @@ Table E {
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('Table T is present in a.dbml', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T')).toBeDefined();
   });
 
   test('Table E is present in a.dbml (via wildcard reuse chain)', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'E')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'E')).toBeDefined();
   });
 });
 
@@ -613,18 +613,18 @@ Ref: T2.id > T3.id
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('T2 is present', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T2')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T2')).toBeDefined();
   });
 
   test('T3 is present via chained wildcard reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T3')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T3')).toBeDefined();
   });
 });
 
@@ -653,18 +653,18 @@ Ref: auth.users.id > auth.roles.id
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('auth.users is present', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'users' && t.schemaName === 'auth')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'users' && t.schemaName === 'auth')).toBeDefined();
   });
 
   test('auth.roles is present via wildcard reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'roles' && t.schemaName === 'auth')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'roles' && t.schemaName === 'auth')).toBeDefined();
   });
 });
 
@@ -696,18 +696,18 @@ Ref: T1.id > T2.id
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('T1 present via wildcard reuse from c', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T1')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T1')).toBeDefined();
   });
 
   test('T2 present via wildcard reuse from d', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T2')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T2')).toBeDefined();
   });
 });
 
@@ -739,18 +739,18 @@ Ref: T_wild.id > T_sel.id
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('T_wild present via wildcard reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T_wild')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T_wild')).toBeDefined();
   });
 
   test('T_sel present via selective reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T_sel')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T_sel')).toBeDefined();
   });
 });
 
@@ -778,12 +778,12 @@ use { schema public } from './b'
 
   test('T is present', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'T')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'T')).toBeDefined();
   });
 
   test('E is NOT present (use is local-only, not transitive)', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'E')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 'E')).toBeUndefined();
   });
 });
 
@@ -802,13 +802,13 @@ use { schema x.y } from './base'
   });
 
   test('no errors when interpreting main.dbml', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('t1 appears under schema x.y', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const t1 = db.tables.find((t) => t.name === 't1');
+    const t1 = db.tables.find((token) => token.name === 't1');
     expect(t1).toBeDefined();
     expect(t1!.schemaName).toBe('x.y');
   });
@@ -835,7 +835,7 @@ Ref: x.y.orders.user_id > x.y.users.id
   });
 
   test('no errors when interpreting main.dbml', () => {
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(filepath('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -870,18 +870,18 @@ Ref: x.y.local.id > x.y.deep.id
   });
 
   test('no errors when interpreting a.dbml', () => {
-    const result = compiler.interpretFile(fp('/a.dbml'));
+    const result = compiler.interpretFile(filepath('/a.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('x.y.local is present', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'local' && t.schemaName === 'x.y')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'local' && t.schemaName === 'x.y')).toBeDefined();
   });
 
   test('x.y.deep is present via wildcard reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'deep' && t.schemaName === 'x.y')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'deep' && t.schemaName === 'x.y')).toBeDefined();
   });
 });
 
@@ -910,18 +910,18 @@ Ref: y.t2.t1_id > y.t1.id
   });
 
   test('no errors', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('t1 under aliased schema y', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't1' && t.schemaName === 'y')).toBeDefined();
   });
 
   test('t2 under aliased schema y', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 't2' && t.schemaName === 'y')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't2' && t.schemaName === 'y')).toBeDefined();
   });
 
   test('ref resolves through aliased schema', () => {
@@ -947,13 +947,13 @@ reuse * from './mid'
   });
 
   test('no errors', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('t1 is NOT present (use is local-only)', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 't1')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 't1')).toBeUndefined();
   });
 });
 
@@ -977,12 +977,12 @@ use { schema y } from './consumer'
   });
 
   test('no errors', () => {
-    const result = compiler.interpretFile(fp('/final.dbml'));
+    const result = compiler.interpretFile(filepath('/final.dbml'));
     expect(result.getErrors()).toHaveLength(0);
   });
 
   test('t1 under aliased schema y in final', () => {
     const db = getDatabase(compiler, '/final.dbml');
-    expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't1' && t.schemaName === 'y')).toBeDefined();
   });
 });

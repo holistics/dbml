@@ -88,25 +88,25 @@ function validateTableGroupSettings (settingList?: ListExpressionNode): Report<S
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
+  for (const [name, attributes] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Note:
       case SettingName.Color: {
         const field = TABLEGROUP_METADATA_FIELDS[name];
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, `'${name}' can only appear once`, attribute)));
         }
 
-        attrs.forEach((attr) => {
-          if (field.parse(attr.value) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, field.message, attr.value || attr.name || attr));
+        attributes.forEach((attribute) => {
+          if (field.parse(attribute.value) === undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, field.message, attribute.value || attribute.name || attribute));
           }
         });
         break; }
       default:
         // Any non-builtin key is free-form inline custom metadata
         errors.push(
-          ...validateCustomInlineMetadata(name, attrs, {
+          ...validateCustomInlineMetadata(name, attributes, {
             duplicate: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING,
             invalidValue: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE,
           }),

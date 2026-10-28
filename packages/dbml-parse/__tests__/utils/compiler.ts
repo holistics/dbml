@@ -147,23 +147,23 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.ELEMENT_DECLARATION: {
-        const elem = node as ElementDeclarationNode;
-        if (elem.type) collectTokens(elem.type);
-        if (elem.targetKind) collectTokens(elem.targetKind);
-        if (elem.name) collectTokens(elem.name);
-        if (elem.as) collectTokens(elem.as);
-        if (elem.alias) collectTokens(elem.alias);
-        if (elem.attributeList) collectTokens(elem.attributeList);
-        if (elem.bodyColon) collectTokens(elem.bodyColon);
-        if (elem.body) collectTokens(elem.body);
+        const element = node as ElementDeclarationNode;
+        if (element.type) collectTokens(element.type);
+        if (element.targetKind) collectTokens(element.targetKind);
+        if (element.name) collectTokens(element.name);
+        if (element.as) collectTokens(element.as);
+        if (element.alias) collectTokens(element.alias);
+        if (element.attributeList) collectTokens(element.attributeList);
+        if (element.bodyColon) collectTokens(element.bodyColon);
+        if (element.body) collectTokens(element.body);
         break;
       }
 
       case SyntaxNodeKind.ATTRIBUTE: {
-        const attr = node as AttributeNode;
-        if (attr.name) collectTokens(attr.name);
-        if (attr.colon) collectTokens(attr.colon);
-        if (attr.value) collectTokens(attr.value);
+        const attribute = node as AttributeNode;
+        if (attribute.name) collectTokens(attribute.name);
+        if (attribute.colon) collectTokens(attribute.colon);
+        if (attribute.value) collectTokens(attribute.value);
         break;
       }
 
@@ -174,30 +174,30 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.PREFIX_EXPRESSION: {
-        const expr = node as PrefixExpressionNode;
-        if (expr.op) collectTokens(expr.op);
-        if (expr.expression) collectTokens(expr.expression);
+        const expression = node as PrefixExpressionNode;
+        if (expression.op) collectTokens(expression.op);
+        if (expression.expression) collectTokens(expression.expression);
         break;
       }
 
       case SyntaxNodeKind.INFIX_EXPRESSION: {
-        const expr = node as InfixExpressionNode;
-        if (expr.leftExpression) collectTokens(expr.leftExpression);
-        if (expr.op) collectTokens(expr.op);
-        if (expr.rightExpression) collectTokens(expr.rightExpression);
+        const expression = node as InfixExpressionNode;
+        if (expression.leftExpression) collectTokens(expression.leftExpression);
+        if (expression.op) collectTokens(expression.op);
+        if (expression.rightExpression) collectTokens(expression.rightExpression);
         break;
       }
 
       case SyntaxNodeKind.POSTFIX_EXPRESSION: {
-        const expr = node as PostfixExpressionNode;
-        if (expr.expression) collectTokens(expr.expression);
-        if (expr.op) collectTokens(expr.op);
+        const expression = node as PostfixExpressionNode;
+        if (expression.expression) collectTokens(expression.expression);
+        if (expression.op) collectTokens(expression.op);
         break;
       }
 
       case SyntaxNodeKind.FUNCTION_EXPRESSION: {
-        const func = node as FunctionExpressionNode;
-        if (func.value) collectTokens(func.value);
+        const function_ = node as FunctionExpressionNode;
+        if (function_.value) collectTokens(function_.value);
         break;
       }
 
@@ -268,9 +268,9 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.ARRAY: {
-        const arr = node as ArrayNode;
-        if (arr.array) collectTokens(arr.array);
-        if (arr.indexer) collectTokens(arr.indexer);
+        const array = node as ArrayNode;
+        if (array.array) collectTokens(array.array);
+        if (array.indexer) collectTokens(array.indexer);
         break;
       }
 
@@ -318,5 +318,5 @@ export function print (source: string, ast: SyntaxNode): string {
 
   collectTokens(ast);
 
-  return tokens.sort((a, b) => a.start - b.start).map((t) => source.slice(t.start, t.end)).join('');
+  return tokens.sort((first, second) => first.start - second.start).map((token) => source.slice(token.start, token.end)).join('');
 }

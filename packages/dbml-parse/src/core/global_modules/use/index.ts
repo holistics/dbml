@@ -165,15 +165,15 @@ export const useModule: GlobalModule = {
       }
 
       if (node.specifiers) {
-        const res = compiler.bindNode(node.specifiers);
-        errors.push(...res.getErrors());
+        const result = compiler.bindNode(node.specifiers);
+        errors.push(...result.getErrors());
       }
 
       return new Report(undefined, errors);
     }
 
     if (node instanceof UseSpecifierListNode) {
-      const errors = node.specifiers.flatMap((s) => compiler.bindNode(s).getErrors());
+      const errors = node.specifiers.flatMap((specifier) => compiler.bindNode(specifier).getErrors());
 
       return new Report(undefined, errors);
     }
@@ -223,13 +223,13 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   if (!usable) return undefined;
 
   // 1. Direct non-schema members
-  const directMember = usable.nonSchemaMembers.find((m) => m.name === name && m.isKind(symbolKind));
+  const directMember = usable.nonSchemaMembers.find((member) => member.name === name && member.isKind(symbolKind));
   if (directMember) {
     return directMember;
   }
 
   // 2. Direct schema members
-  const directSchema = usable.schemaMembers.find((m) => m.name === name);
+  const directSchema = usable.schemaMembers.find((member) => member.name === name);
   if (directSchema?.isKind(SymbolKind.Schema)) {
     return directSchema;
   }
@@ -238,9 +238,9 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   // to avoid nodeReferee -> nodeSymbol -> nodeReferee cycle on circular reuse
   for (const specifier of usable.reuses.selective) {
     if (destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1) === name) {
-      const reuseDecl = specifier.parentOfKind(UseDeclarationNode);
-      if (reuseDecl?.importPath?.value) {
-        const reusePath = compiler.layout.resolveFileSpecifier(importPath, reuseDecl.importPath.value);
+      const reuseDeclaration = specifier.parentOfKind(UseDeclarationNode);
+      if (reuseDeclaration?.importPath?.value) {
+        const reusePath = compiler.layout.resolveFileSpecifier(importPath, reuseDeclaration.importPath.value);
         const originalName = destructureComplexVariable(specifier.name)?.at(-1) ?? name;
         const found = lookupMemberInFilepath(compiler, reusePath, originalName, symbolKind, visited);
         if (found) return found;

@@ -61,21 +61,21 @@ function dispatch<K extends keyof LocalModule> (
 }
 
 export function validateNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('validateNode', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('validateNode', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function nodeSettings (this: Compiler, node: SyntaxNode): Report<Settings> | Report<Unhandled> {
-  const res = dispatch('nodeSettings', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeSettings', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function nodeFullname (this: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<Unhandled> {
-  const res = dispatch('nodeFullname', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeFullname', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function nodeAlias (this: Compiler, node: SyntaxNode): Report<string | undefined> | Report<Unhandled> {
-  const res = dispatch('nodeAlias', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeAlias', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }

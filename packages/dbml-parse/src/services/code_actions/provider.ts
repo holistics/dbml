@@ -30,7 +30,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     // Collect infos for the current file that have quick fixes attached
     const filepath = Filepath.fromUri(String(model.uri));
     const infos = this.compiler.interpretProject().getInfos()
-      .filter((h) => h.quickFixes?.length && h.filepath.equals(filepath));
+      .filter((hint) => hint.quickFixes?.length && hint.filepath.equals(filepath));
     if (!infos.length) return undefined;
 
     // Match each marker to its corresponding hint by exact position, then collect the quick fixes
@@ -52,9 +52,9 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     }
 
     // Deduplicate by title + marker position
-    const unique = uniqBy(actions, (a) => {
-      const d = a.diagnostics?.[0] as MarkerData | undefined;
-      return `${a.title}@${d?.startLineNumber}:${d?.startColumn}`;
+    const unique = uniqBy(actions, (action) => {
+      const diagnostic = action.diagnostics?.[0] as MarkerData | undefined;
+      return `${action.title}@${diagnostic?.startLineNumber}:${diagnostic?.startColumn}`;
     });
     if (!unique.length) return undefined;
     return { actions: unique, dispose () {} };
@@ -70,9 +70,9 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
 
     const resource = Uri.parse(fix.filepath.toUri({ protocol: model.uri.scheme }));
     const edit: WorkspaceEdit = {
-      edits: fix.edits.map((e) => {
-        const startPos = model.getPositionAt(e.start);
-        const endPos = model.getPositionAt(e.end);
+      edits: fix.edits.map((edit) => {
+        const startPos = model.getPositionAt(edit.start);
+        const endPos = model.getPositionAt(edit.end);
         return {
           resource,
           textEdit: {
@@ -82,7 +82,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
               endLineNumber: endPos.lineNumber,
               endColumn: endPos.column,
             },
-            text: e.newText,
+            text: edit.newText,
           },
           versionId: model.getVersionId(),
         };

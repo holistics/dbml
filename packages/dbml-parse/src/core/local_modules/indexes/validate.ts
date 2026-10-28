@@ -117,7 +117,7 @@ export default class IndexesValidator {
 
     const [fields, subs] = partition(
       body.body,
-      (e) => e instanceof FunctionApplicationNode,
+      (element) => element instanceof FunctionApplicationNode,
     );
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
@@ -204,9 +204,9 @@ export function isValidIndexesType (value?: SyntaxNode): boolean {
     return false;
   }
 
-  const str = value.expression.variable?.value;
+  const string_ = value.expression.variable?.value;
 
-  return str === 'btree' || str === 'hash';
+  return string_ === 'btree' || string_ === 'hash';
 }
 
 // The error for an index field that `destructureIndexNode` cannot read
@@ -214,7 +214,7 @@ function createInvalidIndexFieldError (node: SyntaxNode): CompileError {
   const elements =
     node instanceof TupleExpressionNode ? node.elementList : [node];
   const hasBadSetting = elements.some(
-    (e) => e instanceof ArrayNode && !getIndexColumnSortOrder(e),
+    (element) => element instanceof ArrayNode && !getIndexColumnSortOrder(element),
   );
   const message = hasBadSetting
     ? 'An index column setting must be [asc] or [desc]'

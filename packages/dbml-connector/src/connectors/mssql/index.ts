@@ -38,20 +38,20 @@ const getValidatedClient = async (connection: string): Promise<sql.ConnectionPoo
 
     // If successful, return the pool
     return pool;
-  } catch (err) {
+  } catch (error) {
     // Ensure to close any open pool in case of failure
     if (pool.connected) {
       await pool.close();
     }
-    if (err instanceof Error) {
-      throw new Error(`SQL connection error: ${err.message}`);
+    if (error instanceof Error) {
+      throw new Error(`SQL connection error: ${error.message}`, { cause: error });
     }
 
-    throw err; // Rethrow error if you want the calling code to handle it
+    throw error; // Rethrow error if you want the calling code to handle it
   }
 };
 
-const convertQueryBoolean = (val: string | null): boolean => val === 'YES';
+const convertQueryBoolean = (value: string | null): boolean => value === 'YES';
 
 const getFieldType = (data_type: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (MSSQL_DATE_TYPES.includes(data_type)) {
@@ -220,7 +220,7 @@ const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
-  const tables = tablesAndFieldsResult.recordset.reduce((acc, row) => {
+  const tables = tablesAndFieldsResult.recordset.reduce((accumulator, row) => {
     const {
       table_schema,
       table_name,
@@ -228,8 +228,8 @@ const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[
     } = row;
     const key = `${table_schema}.${table_name}`;
 
-    if (!acc[key]) {
-      acc[key] = {
+    if (!accumulator[key]) {
+      accumulator[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -240,7 +240,7 @@ const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[
     const field = generateField(row);
     fields[key].push(field);
 
-    return acc;
+    return accumulator;
   }, {});
 
   return {
@@ -288,13 +288,13 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
 
   const refsQueryResult = await client.query(refsListSql);
 
-  const endpointsEqual = (ep1: RefEndpoint[], ep2: RefEndpoint[]): boolean => {
-    if (ep1.length !== ep2.length) return false;
-    return ep1.every(
-      (endpoint, index) => endpoint.tableName === ep2[index].tableName
-        && endpoint.schemaName === ep2[index].schemaName
-        && endpoint.fieldNames.length === ep2[index].fieldNames.length
-        && endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex]),
+  const endpointsEqual = (endpoint1: RefEndpoint[], endpoint2: RefEndpoint[]): boolean => {
+    if (endpoint1.length !== endpoint2.length) return false;
+    return endpoint1.every(
+      (endpoint, index) => endpoint.tableName === endpoint2[index].tableName
+        && endpoint.schemaName === endpoint2[index].schemaName
+        && endpoint.fieldNames.length === endpoint2[index].fieldNames.length
+        && endpoint.fieldNames.every((field, fieldIndex) => field === endpoint2[index].fieldNames[fieldIndex]),
     );
   };
 
@@ -311,14 +311,14 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
       on_update,
     } = refRow;
 
-    const ep1: RefEndpoint = {
+    const endpoint1: RefEndpoint = {
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
       relation: '0..*',
     };
 
-    const ep2: RefEndpoint = {
+    const endpoint2: RefEndpoint = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
@@ -327,7 +327,7 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
 
     const newRef = {
       name: fk_constraint_name,
-      endpoints: [ep1, ep2],
+      endpoints: [endpoint1, endpoint2],
       onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
     };
@@ -418,19 +418,19 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
       ii.index_name;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { outOfLineIndexes, inlineIndexes } = indexListResult.recordset.reduce((acc, row) => {
+  const { outOfLineIndexes, inlineIndexes } = indexListResult.recordset.reduce((accumulator, row) => {
     const { constraint_type, columns } = row;
 
-    if (columns === 'null' || columns.trim() === '') return acc;
+    if (columns === 'null' || columns.trim() === '') return accumulator;
     if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
-      acc.inlineIndexes.push(row);
+      accumulator.inlineIndexes.push(row);
     } else {
-      acc.outOfLineIndexes.push(row);
+      accumulator.outOfLineIndexes.push(row);
     }
-    return acc;
+    return accumulator;
   }, { inlineIndexes: [], outOfLineIndexes: [] });
 
-  const indexes = outOfLineIndexes.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
+  const indexes = outOfLineIndexes.reduce((accumulator: IndexesDictionary, indexRow: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -469,13 +469,13 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
     };
 
     const key = `${table_schema}.${table_name}`;
-    if (acc[key]) {
-      acc[key].push(index);
+    if (accumulator[key]) {
+      accumulator[key].push(index);
     } else {
-      acc[key] = [index];
+      accumulator[key] = [index];
     }
 
-    return acc;
+    return accumulator;
   }, {});
 
   const tableConstraints: TableConstraintsDictionary = {};
@@ -555,19 +555,19 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const client = await getValidatedClient(connectionString);
 
   try {
-    const tablesRes = generateTablesFields(client, schemas);
-    const indexesAndConstraintsRes = generateIndexesAndConstraints(client, schemas);
-    const refsRes = generateRefs(client, schemas);
+    const tablesResult = generateTablesFields(client, schemas);
+    const indexesAndConstraintsResult = generateIndexesAndConstraints(client, schemas);
+    const refsResult = generateRefs(client, schemas);
 
-    const res = await Promise.all([
-      tablesRes,
-      indexesAndConstraintsRes,
-      refsRes,
+    const result = await Promise.all([
+      tablesResult,
+      indexesAndConstraintsResult,
+      refsResult,
     ]);
 
-    const { tables, fields } = res[0];
-    const { indexes, tableConstraints, checks } = res[1];
-    const refs = res[2];
+    const { tables, fields } = result[0];
+    const { indexes, tableConstraints, checks } = result[1];
+    const refs = result[2];
 
     return {
       tables,
@@ -584,6 +584,4 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   }
 };
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

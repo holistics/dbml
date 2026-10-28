@@ -4,30 +4,30 @@ import { extractMetadataValue } from '@/core/utils/interpret';
 
 export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
   const value = node.targetKind?.value?.toLowerCase();
-  return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
+  return Object.values(MetadataTargetKind).find((key) => key.toLowerCase() === value);
 }
 
 export function validateCustomInlineMetadata (
   name: string,
-  attrs: AttributeNode[],
+  attributes: AttributeNode[],
   errorCodes: { duplicate: CompileErrorCode; invalidValue: CompileErrorCode },
 ): CompileError[] {
   const errors: CompileError[] = [];
 
-  if (attrs.length > 1) {
-    errors.push(...attrs.map((attr) => new CompileError(
+  if (attributes.length > 1) {
+    errors.push(...attributes.map((attribute) => new CompileError(
       errorCodes.duplicate,
       `'${name}' can only appear once`,
-      attr,
+      attribute,
     )));
   }
 
-  attrs.forEach((attr) => {
-    if (extractMetadataValue(attr.value) === undefined) {
+  attributes.forEach((attribute) => {
+    if (extractMetadataValue(attribute.value) === undefined) {
       errors.push(new CompileError(
         errorCodes.invalidValue,
         `Custom setting '${name}' must be a string, a color literal, a number literal, or a boolean literal`,
-        attr.value || attr.name || attr,
+        attribute.value || attribute.name || attribute,
       ));
     }
   });

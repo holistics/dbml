@@ -51,12 +51,12 @@ export function findRefDefinition (compiler: Compiler, filepath: Filepath, targe
   return undefined;
 }
 
-function endpointMatches (table: TableSymbol | undefined, columns: ColumnSymbol[], ep: EndpointRef): boolean {
-  if (!table?.name || table.name !== ep.tableName) return false;
-  const fields = ep.fieldNames ?? [];
+function endpointMatches (table: TableSymbol | undefined, columns: ColumnSymbol[], endpoint: EndpointRef): boolean {
+  if (!table?.name || table.name !== endpoint.tableName) return false;
+  const fields = endpoint.fieldNames ?? [];
   if (fields.length === 0) return true;
   if (columns.length !== fields.length) return false;
-  return columns.every((col, i) => col.name === fields[i]);
+  return columns.every((col, index) => col.name === fields[index]);
 }
 
 function refMetadataMatches (compiler: Compiler, meta: RefMetadata, target: RefIdentifier): boolean {
@@ -66,10 +66,10 @@ function refMetadataMatches (compiler: Compiler, meta: RefMetadata, target: RefI
   const rightColumns = meta.rightColumns(compiler);
 
   const [
-    ep0,
-    ep1,
+    endpoint0,
+    endpoint1,
   ] = target.endpoints;
 
-  return (endpointMatches(leftTable, leftColumns, ep0) && endpointMatches(rightTable, rightColumns, ep1))
-    || (endpointMatches(leftTable, leftColumns, ep1) && endpointMatches(rightTable, rightColumns, ep0));
+  return (endpointMatches(leftTable, leftColumns, endpoint0) && endpointMatches(rightTable, rightColumns, endpoint1))
+    || (endpointMatches(leftTable, leftColumns, endpoint1) && endpointMatches(rightTable, rightColumns, endpoint0));
 }

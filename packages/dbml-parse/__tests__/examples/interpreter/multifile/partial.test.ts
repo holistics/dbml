@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { fp, setupCompiler } from './utils';
+import { filepath, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - directly imported table loses partial-injected columns', () => {
   const { compiler } = setupCompiler({
@@ -22,22 +22,22 @@ use { table users } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('imported table has own columns and partial reference', () => {
-    const db = compiler.interpretFile(fp('/consumer.dbml')).getValue()! as any;
-    const users = db.tables.find((t: any) => t.name === 'users')!;
-    expect(users.fields.map((f: any) => f.name)).toEqual(['id', 'name']);
+    const db = compiler.interpretFile(filepath('/consumer.dbml')).getValue()! as any;
+    const users = db.tables.find((table: any) => table.name === 'users')!;
+    expect(users.fields.map((field: any) => field.name)).toEqual(['id', 'name']);
     expect(users.partials).toHaveLength(1);
     expect(users.partials[0].name).toBe('timestamps');
   });
 
   test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     const errors = result.getErrors();
-    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    expect(errors.some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -64,8 +64,8 @@ use { table orders } from './source.dbml'
   });
 
   test('UNSUPPORTED error for each imported table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
-    const errors = result.getErrors().filter((e) => e.code === CompileErrorCode.UNSUPPORTED);
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
+    const errors = result.getErrors().filter((error) => error.code === CompileErrorCode.UNSUPPORTED);
     expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
@@ -88,14 +88,14 @@ use { table products } from './source.dbml'
   });
 
   test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     const errors = result.getErrors();
-    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    expect(errors.some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 
   test('categories table is NOT in consumer scope', () => {
-    const db = compiler.interpretFile(fp('/consumer.dbml')).getValue()! as any;
-    expect(db.tables.find((t: any) => t.name === 'categories')).toBeUndefined();
+    const db = compiler.interpretFile(filepath('/consumer.dbml')).getValue()! as any;
+    expect(db.tables.find((table: any) => table.name === 'categories')).toBeUndefined();
   });
 });
 
@@ -122,8 +122,8 @@ use { table orders } from './b.dbml'
   });
 
   test('UNSUPPORTED error for each imported table that uses out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
-    const errors = result.getErrors().filter((e) => e.code === CompileErrorCode.UNSUPPORTED);
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
+    const errors = result.getErrors().filter((error) => error.code === CompileErrorCode.UNSUPPORTED);
     expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
@@ -151,14 +151,14 @@ use { table users } from './a.dbml'
   });
 
   test('UNSUPPORTED error when partial from C is not in consumer scope', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     const errors = result.getErrors();
-    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    expect(errors.some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 
   test('table has partial reference', () => {
-    const db = compiler.interpretFile(fp('/consumer.dbml')).getValue()! as any;
-    const users = db.tables.find((t: any) => t.name === 'users')!;
+    const db = compiler.interpretFile(filepath('/consumer.dbml')).getValue()! as any;
+    const users = db.tables.find((table: any) => table.name === 'users')!;
     expect(users.partials).toHaveLength(1);
   });
 });

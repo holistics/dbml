@@ -8,16 +8,16 @@ import { DEFAULT_ENTRY } from '@/constants';
 // @ts-expect-error nodemark has no type declarations
 import benchmark from 'nodemark';
 
-const inputDir = path.resolve(__dirname, 'input');
-const outputDir = path.resolve(__dirname, 'output');
-mkdirSync(outputDir, { recursive: true });
+const inputDirectory = path.resolve(__dirname, 'input');
+const outputDirectory = path.resolve(__dirname, 'output');
+mkdirSync(outputDirectory, { recursive: true });
 
-const inputFiles = readdirSync(inputDir).filter((f) => f.endsWith('.dbml'));
+const inputFiles = readdirSync(inputDirectory).filter((file) => file.endsWith('.dbml'));
 
 const report: Record<string, { ms: number; error: number; count: number }> = {};
 
 for (const file of inputFiles) {
-  const source = readFileSync(path.resolve(inputDir, file), 'utf-8');
+  const source = readFileSync(path.resolve(inputDirectory, file), 'utf-8');
   const name = path.basename(file, '.dbml');
 
   console.log(`Benchmarking ${name}...`);
@@ -35,5 +35,5 @@ for (const file of inputFiles) {
   console.log(`  ${result.milliseconds(3)}ms ±${error}% (${result.count} samples)`);
 }
 
-writeFileSync(path.resolve(outputDir, 'bench.json'), JSON.stringify(report, null, 2));
-console.log(`\nResults written to ${path.resolve(outputDir, 'bench.json')}`);
+writeFileSync(path.resolve(outputDirectory, 'bench.json'), JSON.stringify(report, null, 2));
+console.log(`\nResults written to ${path.resolve(outputDirectory, 'bench.json')}`);

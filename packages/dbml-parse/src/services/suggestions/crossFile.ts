@@ -22,9 +22,9 @@ export function collectCrossFileSuggestions (
   const seen = new Set<string>();
   const currentContent = compiler.layout.getSource(currentFilepath) ?? '';
 
-  for (const fp of compiler.layout.getEntrypoints()) {
-    if (fp.equals(currentFilepath)) continue;
-    const usable = compiler.usableMembers(fp).getFiltered(UNHANDLED);
+  for (const filepath of compiler.layout.getEntrypoints()) {
+    if (filepath.equals(currentFilepath)) continue;
+    const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
     if (!usable) continue;
     for (const sym of [
       ...usable.nonSchemaMembers,
@@ -109,8 +109,8 @@ function offsetToPosition (content: string, offset: number): { line: number;
   column: number; } {
   let line = 1;
   let col = 1;
-  for (let i = 0; i < offset && i < content.length; i++) {
-    if (content[i] === '\n') {
+  for (let index = 0; index < offset && index < content.length; index++) {
+    if (content[index] === '\n') {
       line++;
       col = 1;
     } else {

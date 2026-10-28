@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { setupCompiler, fp, canonicalName } from '../interpreter/multifile/utils';
+import { setupCompiler, filepath, canonicalName } from '../interpreter/multifile/utils';
 
 describe('canonicalName - basics', () => {
   const { compiler } = setupCompiler({
@@ -95,9 +95,9 @@ describe('canonicalName - same real name, 2 paths, deduplicates', () => {
   });
 
   test('one table, no errors', () => {
-    const r = compiler.interpretFile(fp('/main.dbml'));
-    expect(r.getErrors()).toHaveLength(0);
-    expect(r.getValue()!.tables.filter((t: any) => t.name === 'users')).toHaveLength(1);
+    const result = compiler.interpretFile(filepath('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()!.tables.filter((table: any) => table.name === 'users')).toHaveLength(1);
   });
 
   test('canonical name is `users`', () => {

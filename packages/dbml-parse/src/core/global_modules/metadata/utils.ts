@@ -77,7 +77,7 @@ export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Metada
     }
   }
 
-  return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
+  return nameParts.map((namePart, index) => ({ name: namePart, symbolKind: kindParts[index] }));
 }
 
 // Resolve the target element a Metadata declaration annotates, from its `<target-kind> <name>` header
@@ -132,20 +132,20 @@ export function attachCustomMetadata<T extends MetadataTarget> (
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return;
 
-  const metas = compiler.symbolMetadata(targetSymbol).filter((m) => m.owners(compiler).includes(programSymbol));
+  const metas = compiler.symbolMetadata(targetSymbol).filter((meta) => meta.owners(compiler).includes(programSymbol));
   if (!metas.length) return;
 
   const precedence = metadataFilePrecedence(compiler, filepath);
-  const orderedMetas = [...metas].sort((a, b) => {
-    const rankA = precedence.get(a.declaration.filepath.intern()) ?? -1;
-    const rankB = precedence.get(b.declaration.filepath.intern()) ?? -1;
+  const orderedMetas = [...metas].sort((left, right) => {
+    const rankA = precedence.get(left.declaration.filepath.intern()) ?? -1;
+    const rankB = precedence.get(right.declaration.filepath.intern()) ?? -1;
     if (rankA !== rankB) return rankA - rankB;
-    return a.declaration.start - b.declaration.start;
+    return left.declaration.start - right.declaration.start;
   });
 
   const blocks = orderedMetas
-    .map((m) => compiler.interpretMetadata(m, filepath).getFiltered(UNHANDLED))
-    .filter((v) => !!v) as CustomMetadata[];
+    .map((meta) => compiler.interpretMetadata(meta, filepath).getFiltered(UNHANDLED))
+    .filter((value) => !!value) as CustomMetadata[];
   if (!blocks.length) return;
 
   // Blocks are already parsed against their target kind's fields, so a later block's (valid) entry simply overrides an earlier one
@@ -167,5 +167,5 @@ export function attachCustomMetadata<T extends MetadataTarget> (
     else mergedMetadata[lowerCaseKey] = { originalKey, entry };
   });
 
-  targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((v) => [v.originalKey, v.entry]));
+  targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((value) => [value.originalKey, value.entry]));
 }

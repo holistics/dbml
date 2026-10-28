@@ -24,8 +24,8 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const offset = getOffsetFromMonacoPosition(model, position);
 
     // Go-to-definition on import path: jump to the imported file
-    const importDef = this.resolveImportPath(filepath, offset, uri);
-    if (importDef) return importDef;
+    const importDefinition = this.resolveImportPath(filepath, offset, uri);
+    if (importDefinition) return importDefinition;
 
     const containers = [
       ...this.compiler.container.stack(filepath, offset),

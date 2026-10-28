@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - cross-file standalone Dep with column-level endpoints', () => {
   // Dep is declared in the consumer, both endpoint tables come from the import
@@ -24,7 +24,7 @@ Dep: raw_orders.user_id -> stg_orders.user_id
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -64,7 +64,7 @@ Dep: raw_orders -> stg_orders
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -100,7 +100,7 @@ Dep: stg_orders <- raw_orders
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -132,14 +132,14 @@ use { table users } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('inline dep on users.account_id appears in exported schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const accountIdField = users.fields.find((f) => f.name === 'account_id')!;
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const accountIdField = users.fields.find((field) => field.name === 'account_id')!;
     expect(accountIdField.inline_deps).toHaveLength(1);
     expect(accountIdField.inline_deps[0].direction).toBe('->');
     expect(accountIdField.inline_deps[0].tableName).toBe('accounts');
@@ -166,7 +166,7 @@ use { table fct_orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -201,7 +201,7 @@ use { table stg_orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -266,7 +266,7 @@ use { table fct_orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -304,7 +304,7 @@ use { table stg_orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -342,14 +342,14 @@ use { table stg_orders } from './file-b.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('both tables present and Dep auto-pulled', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'raw_orders')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'stg_orders')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'raw_orders')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'stg_orders')).toBeDefined();
     expect(db.deps).toHaveLength(1);
   });
 });

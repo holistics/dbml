@@ -30,7 +30,7 @@ export interface DbmlProjectLayout {
   isFile (filePath: Filepath): boolean;
   isDirectory (filePath: Filepath): boolean;
 
-  listDirectory (dirPath?: Filepath): Filepath[];
+  listDirectory (directoryPath?: Filepath): Filepath[];
 
   getEntrypoints (): Filepath[];
 }
@@ -65,8 +65,8 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   }
 
   getSource (filePath: Filepath): string | undefined {
-    const val = this.files.get(filePath.absolute);
-    return val ?? undefined;
+    const value = this.files.get(filePath.absolute);
+    return value ?? undefined;
   }
 
   deleteSource (filePath: Filepath): void {
@@ -87,20 +87,20 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
 
   isDirectory (filePath: Filepath): boolean {
     const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
-    for (const f of this.files.keys()) {
-      if (f.startsWith(prefix)) return true;
+    for (const file of this.files.keys()) {
+      if (file.startsWith(prefix)) return true;
     }
     return false;
   }
 
-  listDirectory (dirPath?: Filepath): Filepath[] {
-    const base = dirPath?.absolute ?? '/';
+  listDirectory (directoryPath?: Filepath): Filepath[] {
+    const base = directoryPath?.absolute ?? '/';
     const prefix = base.endsWith('/') ? base : base + '/';
     const entries = new Set<string>();
 
-    for (const f of this.files.keys()) {
-      if (!f.startsWith(prefix)) continue;
-      const rest = f.slice(prefix.length);
+    for (const file of this.files.keys()) {
+      if (!file.startsWith(prefix)) continue;
+      const rest = file.slice(prefix.length);
       const slash = rest.indexOf('/');
       entries.add(prefix + (slash === -1 ? rest : rest.slice(0, slash)));
     }
@@ -115,7 +115,7 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
       ...this.files.keys(),
     ]
       .map(Filepath.from)
-      .sort((a, b) => a.absolute.localeCompare(b.absolute));
+      .sort((left, right) => left.absolute.localeCompare(right.absolute));
   }
 
   clone (): MemoryProjectLayout {

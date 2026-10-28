@@ -66,7 +66,7 @@ export function validateForeignKeys (
 
   const relevantRefs = allRefs.filter((ref) => {
     if (!ref.endpoints) return false;
-    return ref.endpoints.some((ep) => tablesWithRecords.has(makeTableKey(ep.schemaName, ep.tableName)));
+    return ref.endpoints.some((endpoint) => tablesWithRecords.has(makeTableKey(endpoint.schemaName, endpoint.tableName)));
   });
 
   return flatMap(relevantRefs, (ref) => validateForeignKey(compiler, ref, tableInfoLookup, filepath));
@@ -93,8 +93,8 @@ function validateForeignKey (
 
   const columns1 = table1.tableSymbol.mergedColumns(compiler);
   const columns2 = table2.tableSymbol.mergedColumns(compiler);
-  const endpoint1 = compact(rawEndpoint1.fieldNames.map((fn) => columns1.find((c) => c.name === fn)));
-  const endpoint2 = compact(rawEndpoint2.fieldNames.map((fn) => columns2.find((c) => c.name === fn)));
+  const endpoint1 = compact(rawEndpoint1.fieldNames.map((fn) => columns1.find((column) => column.name === fn)));
+  const endpoint2 = compact(rawEndpoint2.fieldNames.map((fn) => columns2.find((column) => column.name === fn)));
 
   const { min: min1, max: max1 } = parseCardinality(rawEndpoint1.relation);
   const { min: min2, max: max2 } = parseCardinality(rawEndpoint2.relation);
@@ -133,8 +133,8 @@ function validateEndpoint (
   const { min: leftMin, max: leftMax } = parseCardinality(leftCard);
   const { min: rightMin, max: rightMax } = parseCardinality(rightCard);
 
-  const leftColumnNames = compact(leftEndpoint.map((c) => c.name));
-  const rightColumnNames = compact(rightEndpoint.map((c) => c.name));
+  const leftColumnNames = compact(leftEndpoint.map((column) => column.name));
+  const _rightColumnNames = compact(rightEndpoint.map((column) => column.name));
 
   // right min = 0 -> left FK values may be NULL (optional relationship)
   // right min >= 1 -> left FK values must not be NULL
@@ -160,9 +160,9 @@ function validateEndpoint (
 
     if (isNull) {
       if (allowNull) return [];
-      const valueStr = formatValues(compiler, row, leftEndpoint);
+      const valueString = formatValues(compiler, row, leftEndpoint);
       return getDiagnosticAnchorValues(row, leftColumnNames)
-        .map((v) => recordsFkNull(compiler, resolveRecordValueNode(compiler, v), { ...fkOptions, valueStr }));
+        .map((value) => recordsFkNull(compiler, resolveRecordValueNode(compiler, value), { ...fkOptions, valueStr: valueString }));
     }
 
     // right max = 1 -> non-null left value must map to exactly 1 right row
@@ -173,8 +173,8 @@ function validateEndpoint (
     const fkValue = extractKeyValueWithDefault(compiler, row, leftEndpoint);
     if (validFkValues.has(fkValue)) return [];
 
-    const valueStr = formatValues(compiler, row, leftEndpoint);
+    const valueString = formatValues(compiler, row, leftEndpoint);
     return getDiagnosticAnchorValues(row, leftColumnNames)
-      .map((v) => recordsFkNotFound(compiler, resolveRecordValueNode(compiler, v), { ...fkOptions, valueStr }));
+      .map((value) => recordsFkNotFound(compiler, resolveRecordValueNode(compiler, value), { ...fkOptions, valueStr: valueString }));
   });
 }

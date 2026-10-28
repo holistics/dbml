@@ -78,7 +78,7 @@ export const anyRefEndpointArbitrary = fc.oneof(
 export const basicTypeArbitrary = anyIdentifierArbitrary;
 
 // Type arguments - can be numbers, identifiers, or quoted strings
-const typeArgArbitrary = fc.oneof(
+const typeArgumentArbitrary = fc.oneof(
   fc.integer({
     min: 0,
     max: 65535,
@@ -89,28 +89,28 @@ const typeArgArbitrary = fc.oneof(
   }), fc.integer({
     min: 0,
     max: 30,
-  })).map(([p, s]) => `${p}, ${s}`), // Precision/scale pairs
+  })).map(([precision, scale]) => `${precision}, ${scale}`), // Precision/scale pairs
   anyIdentifierArbitrary,
   singleLineStringArbitrary, // For charset args like 'utf8'
 );
 
 // Type with arguments - supports 0 to many args: varchar(255), decimal(10,2)
-export const typeWithArgsArbitrary = fc.tuple(
+export const typeWithArgumentsArbitrary = fc.tuple(
   basicTypeArbitrary,
-  fc.array(typeArgArbitrary, {
+  fc.array(typeArgumentArbitrary, {
     minLength: 1,
     maxLength: 3,
   }),
 ).map(([type, args]) => `${type}(${args.join(', ')})`);
 
 // Type with empty parens: type()
-export const typeWithEmptyArgsArbitrary = basicTypeArbitrary.map((t) => `${t}()`);
+export const typeWithEmptyArgumentsArbitrary = basicTypeArbitrary.map((typeName) => `${typeName}()`);
 
 // Array type - can be applied to any type: int[], varchar(255)[]
 export const arrayTypeArbitrary = fc.oneof(
-  basicTypeArbitrary.map((t) => `${t}[]`),
-  typeWithArgsArbitrary.map((t) => `${t}[]`),
-  schemaQualifiedNameArbitrary.map((t) => `${t}[]`),
+  basicTypeArbitrary.map((typeName) => `${typeName}[]`),
+  typeWithArgumentsArbitrary.map((typeName) => `${typeName}[]`),
+  schemaQualifiedNameArbitrary.map((typeName) => `${typeName}[]`),
 );
 
 // Array with size: int[5], varchar[255]
@@ -133,11 +133,11 @@ export const columnTypeArbitrary = fc.oneof(
   },
   {
     weight: 3,
-    arbitrary: typeWithArgsArbitrary,
+    arbitrary: typeWithArgumentsArbitrary,
   },
   {
     weight: 1,
-    arbitrary: typeWithEmptyArgsArbitrary,
+    arbitrary: typeWithEmptyArgumentsArbitrary,
   },
   {
     weight: 2,
@@ -187,7 +187,7 @@ export const checkExpressionArbitrary = functionExpressionArbitrary;
 
 // Inline check (for column settings): check: `expression`
 export const inlineCheckArbitrary = checkExpressionArbitrary
-  .map((expr) => `check: ${expr}`);
+  .map((expression) => `check: ${expression}`);
 
 // Relationship cardinality operators
 export const relationshipTypeArbitrary = fc.constantFrom('<', '>', '-', '<>');
@@ -196,7 +196,7 @@ export const relationshipTypeArbitrary = fc.constantFrom('<', '>', '-', '<>');
 export const inlineRefSettingArbitrary = fc.tuple(
   relationshipTypeArbitrary,
   anyRefEndpointArbitrary,
-).map(([rel, endpoint]) => `ref: ${rel} ${endpoint}`);
+).map(([relative, endpoint]) => `ref: ${relative} ${endpoint}`);
 
 // Column settings (inside square brackets)
 export const columnSettingArbitrary = fc.oneof(
@@ -300,7 +300,7 @@ export const columnListArbitrary = fc.array(
     minLength: 1,
     maxLength: 15,
   },
-).map((cols) => cols.map((c) => `  ${c}`).join('\n'));
+).map((cols) => cols.map((col) => `  ${col}`).join('\n'));
 
 // Single column index
 export const singleColumnIndexArbitrary = fc.tuple(
@@ -318,8 +318,8 @@ export const expressionIndexArbitrary = fc.tuple(
   fc.option(indexSettingsListArbitrary, {
     nil: undefined,
   }),
-).chain(([expr, settings]) =>
-  settings ? joinWithRandomInlineSpaces(expr, settings) : fc.constant(expr),
+).chain(([expression, settings]) =>
+  settings ? joinWithRandomInlineSpaces(expression, settings) : fc.constant(expression),
 );
 
 // Composite index with columns
@@ -383,7 +383,7 @@ export const indexesBlockArbitrary = fc.tuple(
   }),
 ).chain(([keyword, indexes]) =>
   joinWithRandomSpaces(keyword, '{').map((header) =>
-    `  ${header}\n${indexes.map((idx) => `    ${idx}`).join('\n')}\n  }`,
+    `  ${header}\n${indexes.map((index) => `    ${index}`).join('\n')}\n  }`,
   ),
 );
 
@@ -396,8 +396,8 @@ export const checkConstraintArbitrary = fc.tuple(
   fc.option(checkSettingArbitrary, {
     nil: undefined,
   }),
-).chain(([expr, setting]) =>
-  setting ? joinWithRandomInlineSpaces(expr, `[${setting}]`) : fc.constant(expr),
+).chain(([expression, setting]) =>
+  setting ? joinWithRandomInlineSpaces(expression, `[${setting}]`) : fc.constant(expression),
 );
 
 // Checks block (inside table body)
@@ -409,7 +409,7 @@ export const checksBlockArbitrary = fc.tuple(
   }),
 ).chain(([keyword, checks]) =>
   joinWithRandomSpaces(keyword, '{').map((header) =>
-    `  ${header}\n${checks.map((c) => `    ${c}`).join('\n')}\n  }`,
+    `  ${header}\n${checks.map((check) => `    ${check}`).join('\n')}\n  }`,
   ),
 );
 
@@ -417,22 +417,22 @@ export const checksBlockArbitrary = fc.tuple(
 export const inlineNoteArbitrary = fc.tuple(
   caseVariant('Note'),
   anyStringArbitrary,
-).chain(([keyword, s]) =>
-  joinWithRandomSpaces(keyword, ':', s).map((line) => `  ${line}`),
+).chain(([keyword, noteString]) =>
+  joinWithRandomSpaces(keyword, ':', noteString).map((line) => `  ${line}`),
 );
 
 // Block note in table body
 export const blockNoteArbitrary = fc.tuple(
   caseVariant('Note'),
   anyStringArbitrary,
-).chain(([keyword, s]) =>
+).chain(([keyword, noteString]) =>
   joinWithRandomSpaces(keyword, '{').map((header) =>
     `  ${header}\n    ${s}\n  }`,
   ),
 );
 
 // Simple enum value
-export const simpleEnumValueArbitrary = anyIdentifierArbitrary.map((v) => `  ${v}`);
+export const simpleEnumValueArbitrary = anyIdentifierArbitrary.map((value) => `  ${value}`);
 
 // Enum value with note
 export const enumValueWithNoteArbitrary = fc.tuple(
@@ -466,8 +466,8 @@ export const enumArbitrary = fc.tuple(
 export const inlineRefArbitrary = fc.tuple(
   relationshipTypeArbitrary,
   schemaQualifiedNameArbitrary,
-).chain(([rel, ref]) =>
-  joinWithRandomInlineSpaces('ref:', rel, ref),
+).chain(([relative, ref]) =>
+  joinWithRandomInlineSpaces('ref:', relative, ref),
 );
 
 // Standalone ref with explicit columns (uses flexible endpoints)
@@ -482,7 +482,7 @@ export const standaloneRefArbitrary = fc.tuple(
 ).chain(([
   keyword,
   endpoint1,
-  rel,
+  relative,
   endpoint2,
   settings,
 ]) => {
@@ -490,11 +490,11 @@ export const standaloneRefArbitrary = fc.tuple(
     keyword,
     ':',
     endpoint1,
-    rel,
+    relative,
     endpoint2,
   ];
   return settings
-    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    ? joinWithRandomSpaces(...parts).map((string_) => string_.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
 });
 
@@ -512,7 +512,7 @@ export const namedRefArbitrary = fc.tuple(
   keyword,
   name,
   endpoint1,
-  rel,
+  relative,
   endpoint2,
   settings,
 ]) => {
@@ -521,11 +521,11 @@ export const namedRefArbitrary = fc.tuple(
     name,
     ':',
     endpoint1,
-    rel,
+    relative,
     endpoint2,
   ];
   return settings
-    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    ? joinWithRandomSpaces(...parts).map((string_) => string_.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
 });
 
@@ -553,7 +553,7 @@ export const multiColumnRefArbitrary = fc.integer({
   keyword,
   table1,
   cols1,
-  rel,
+  relative,
   table2,
   cols2,
   settings,
@@ -562,11 +562,11 @@ export const multiColumnRefArbitrary = fc.integer({
     keyword,
     ':',
     `${table1}.(${cols1.join(', ')})`,
-    rel,
+    relative,
     `${table2}.(${cols2.join(', ')})`,
   ];
   return settings
-    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    ? joinWithRandomSpaces(...parts).map((string_) => string_.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
     : joinWithRandomSpaces(...parts);
 }));
 
@@ -771,7 +771,7 @@ export const tableGroupArbitrary = fc.tuple(
   headerParts.push('{');
 
   return joinWithRandomSpaces(...headerParts).map((header) => {
-    const tableRefs = tables.map((t) => `  ${t}`).join('\n');
+    const tableRefs = tables.map((tableName) => `  ${tableName}`).join('\n');
     return `${header}\n${tableRefs}\n}`;
   });
 });
@@ -1016,22 +1016,22 @@ export const dbmlSchemaArbitrary = fc.oneof(
 export const unclosedBracketArbitrary = fc.oneof(
   fc.nat({
     max: 20,
-  }).map((n) => '['.repeat(n + 1)), // more opens than closes
+  }).map((number_) => '['.repeat(number_ + 1)), // more opens than closes
   fc.nat({
     max: 20,
-  }).map((n) => '{'.repeat(n + 1)),
+  }).map((number_) => '{'.repeat(number_ + 1)),
   fc.nat({
     max: 20,
-  }).map((n) => '('.repeat(n + 1)),
+  }).map((number_) => '('.repeat(number_ + 1)),
   fc.nat({
     max: 20,
-  }).map((n) => ']'.repeat(n + 1)), // only closes
+  }).map((number_) => ']'.repeat(number_ + 1)), // only closes
   fc.nat({
     max: 20,
-  }).map((n) => '}'.repeat(n + 1)),
+  }).map((number_) => '}'.repeat(number_ + 1)),
   fc.nat({
     max: 20,
-  }).map((n) => ')'.repeat(n + 1)),
+  }).map((number_) => ')'.repeat(number_ + 1)),
 );
 
 // Mismatched brackets - generates dynamic open/close bracket mismatches
@@ -1040,13 +1040,13 @@ export const mismatchedBracketsArbitrary = fc.tuple(
   fc.nat({
     max: 10,
   }),
-).map(([open, n]) => {
+).map(([open, number_]) => {
   const mismatchedClose: Record<string, string> = {
     '[': '}',
     '{': ']',
     '(': ']',
   };
-  const count = n + 1;
+  const count = number_ + 1;
   return open.repeat(count) + mismatchedClose[open].repeat(count);
 });
 
@@ -1055,19 +1055,19 @@ export const unclosedStringArbitrary = fc.oneof(
   fc.string({
     minLength: 0,
     maxLength: 50,
-  }).map((s) => `'${s.replace(/'/g, '')}`), // missing closing '
+  }).map((string_) => `'${string_.replace(/'/g, '')}`), // missing closing '
   fc.string({
     minLength: 0,
     maxLength: 50,
-  }).map((s) => `"${s.replace(/"/g, '')}`), // missing closing "
+  }).map((string_) => `"${string_.replace(/"/g, '')}`), // missing closing "
   fc.string({
     minLength: 0,
     maxLength: 50,
-  }).map((s) => `'''${s.replace(/'''/g, '')}`), // missing closing '''
+  }).map((string_) => `'''${string_.replace(/'''/g, '')}`), // missing closing '''
   fc.string({
     minLength: 0,
     maxLength: 50,
-  }).map((s) => `\`${s.replace(/`/g, '')}`), // missing closing `
+  }).map((string_) => `\`${string_.replace(/`/g, '')}`), // missing closing `
 );
 
 // Truncated input mid-token
@@ -1091,7 +1091,7 @@ export const invalidEscapeArbitrary = fc.oneof(
   fc.string({
     minLength: 0,
     maxLength: 10,
-  }).map((s) => `'${s.replace(/['\\]/g, '')}\\'`),
+  }).map((string_) => `'${string_.replace(/['\\]/g, '')}\\'`),
 );
 
 // Binary garbage (non-printable characters)
@@ -1099,7 +1099,7 @@ export const binaryGarbageArbitrary = fc.uint8Array({
   minLength: 1,
   maxLength: 100,
 })
-  .map((arr) => String.fromCharCode(...arr));
+  .map((array) => String.fromCharCode(...array));
 
 // Extremely deep nesting (>1000 levels)
 export const extremeNestingArbitrary = fc.integer({
@@ -1163,16 +1163,16 @@ export const malformedRefArbitrary = fc.oneof(
       kw,
       table,
       col,
-      rel,
-    ]) => `${kw}: ${table}.${col} ${rel}`),
+      relative,
+    ]) => `${kw}: ${table}.${col} ${relative}`),
   // Missing first endpoint (operator with only second endpoint)
   fc.tuple(caseVariant('Ref'), relationshipTypeArbitrary, schemaQualifiedNameArbitrary, anyIdentifierArbitrary)
     .map(([
       kw,
-      rel,
+      relative,
       table,
       col,
-    ]) => `${kw}: ${rel} ${table}.${col}`),
+    ]) => `${kw}: ${relative} ${table}.${col}`),
   // Unclosed settings bracket
   fc.tuple(
     caseVariant('Ref'),
@@ -1185,10 +1185,10 @@ export const malformedRefArbitrary = fc.oneof(
     kw,
     t1,
     c1,
-    rel,
+    relative,
     t2,
     c2,
-  ]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} [`),
+  ]) => `${kw}: ${t1}.${c1} ${relative} ${t2}.${c2} [`),
   // Trailing garbage after valid ref
   fc.tuple(
     caseVariant('Ref'),
@@ -1202,11 +1202,11 @@ export const malformedRefArbitrary = fc.oneof(
     kw,
     t1,
     c1,
-    rel,
+    relative,
     t2,
     c2,
     garbage,
-  ]) => `${kw}: ${t1}.${c1} ${rel} ${t2}.${c2} ${garbage}`),
+  ]) => `${kw}: ${t1}.${c1} ${relative} ${t2}.${c2} ${garbage}`),
 );
 
 // Columns with conflicting settings - generates dynamic conflicting setting combinations
@@ -1225,8 +1225,8 @@ export const conflictingSettingsArbitrary = fc.tuple(
   columnTypeArbitrary,
   fc.oneof(
     // Conflicting pair (e.g., pk + null, not null + null)
-    fc.constantFrom(...conflictingPairs).chain(([a, b]) =>
-      fc.tuple(caseVariant(a), caseVariant(b)).map(([va, vb]) => `[${va}, ${vb}]`),
+    fc.constantFrom(...conflictingPairs).chain(([first, second]) =>
+      fc.tuple(caseVariant(first), caseVariant(second)).map(([va, vb]) => `[${va}, ${vb}]`),
     ),
     // Duplicate settings (e.g., pk, pk or unique, unique)
     fc.constantFrom(...duplicatableSettings).chain((setting) =>
@@ -1253,8 +1253,8 @@ export const emptyTableArbitrary = fc.tuple(
   fc.oneof(
     fc.constant('{}'),
     fc.constant('{ }'),
-    fc.stringMatching(/^\{[ \t]*\n[ \t]*\}$/).filter((s) => s.length < 20),
-    fc.stringMatching(/^\{[ \t\n]*\}$/).filter((s) => s.length < 15),
+    fc.stringMatching(/^\{[ \t]*\n[ \t]*\}$/).filter((string_) => string_.length < 20),
+    fc.stringMatching(/^\{[ \t\n]*\}$/).filter((string_) => string_.length < 15),
   ),
 ).map(([kw, name, body]) => `${kw} ${name} ${body}`);
 
@@ -1274,7 +1274,7 @@ export const tableWithZeroSettingsArbitrary = fc.tuple(
   }),
 ).chain(([keyword, name, cols]) =>
   joinWithRandomSpaces(keyword, name, '{').map((header) =>
-    `${header}\n${cols.map((c) => `  ${c}`).join('\n')}\n}`,
+    `${header}\n${cols.map((col) => `  ${col}`).join('\n')}\n}`,
   ),
 );
 
@@ -1306,8 +1306,8 @@ export const circularRefArbitrary = fc.integer({
     minLength: count,
     maxLength: count,
   }).map((names) => {
-    const tables = names.map((name, i) => {
-      const nextName = names[(i + 1) % names.length];
+    const tables = names.map((name, index) => {
+      const nextName = names[(index + 1) % names.length];
       return `Table ${name} {\n  id int [pk]\n  ${nextName}_id int [ref: > ${nextName}.id]\n}`;
     });
     return tables.join('\n\n');
@@ -1328,12 +1328,12 @@ export const danglingRefArbitrary = fc.tuple(
   fakeCol,
   mode,
 ]) => {
-  const tableDecl = `Table ${table} { ${col} int [pk] }`;
+  const tableDeclaration = `Table ${table} { ${col} int [pk] }`;
   switch (mode) {
     case 'nonexistent_table':
-      return `${tableDecl}\nRef: ${table}.${col} > ${fakeTable}.${col}`;
+      return `${tableDeclaration}\nRef: ${table}.${col} > ${fakeTable}.${col}`;
     case 'nonexistent_col':
-      return `${tableDecl}\nRef: ${table}.${fakeCol} > ${table}.${col}`;
+      return `${tableDeclaration}\nRef: ${table}.${fakeCol} > ${table}.${col}`;
     default:
       return `Ref: ${fakeTable}.${fakeCol} > ${fakeTable}.${col}`;
   }
@@ -1359,7 +1359,7 @@ export const mismatchedCompositeRefArbitrary = fc.tuple(
   t2,
   count1,
   count2,
-  rel,
+  relative,
 ]) => {
   // Ensure counts are different for mismatch
   const actualCount2 = count1 === count2 ? count2 + 1 : count2;
@@ -1373,7 +1373,7 @@ export const mismatchedCompositeRefArbitrary = fc.tuple(
       maxLength: actualCount2,
     }),
   ).map(([cols1, cols2]) =>
-    `${kw}: ${t1}.(${cols1.join(', ')}) ${rel} ${t2}.(${cols2.join(', ')})`,
+    `${kw}: ${t1}.(${cols1.join(', ')}) ${relative} ${t2}.(${cols2.join(', ')})`,
   );
 });
 
@@ -1463,10 +1463,10 @@ export const blockDuplicationArbitrary = (source: string) =>
       max: Math.max(0, source.length - 1),
     }),
   ).map(([start, end]) => {
-    const s = Math.min(start, end);
-    const e = Math.max(start, end);
-    const block = source.slice(s, e);
-    return source.slice(0, e) + block + source.slice(e);
+    const startIndex = Math.min(start, end);
+    const endIndex = Math.max(start, end);
+    const block = source.slice(startIndex, endIndex);
+    return source.slice(0, endIndex) + block + source.slice(endIndex);
   });
 
 // Convert a schema to use CRLF line endings (for Windows compatibility testing)

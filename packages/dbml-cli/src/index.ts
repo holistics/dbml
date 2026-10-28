@@ -1,6 +1,4 @@
-import {
-  db2dbml, dbml2sql, sql2dbml,
-} from './cli';
+import { db2dbml, dbml2sql, sql2dbml } from './cli';
 
 export {
   dbml2sql,

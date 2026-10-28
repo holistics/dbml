@@ -7,7 +7,7 @@ export async function loadCredentialFromFile (filename: string): Promise<string>
     return data;
   } catch (error) {
     if ((error as TypeError).name === 'TypeError' || (error as Error).name === 'Error') {
-      throw new Error(`Load credential error: ${(error as Error).message}`);
+      throw new Error(`Load credential error: ${(error as Error).message}`, { cause: error });
     }
 
     throw error;
@@ -62,7 +62,7 @@ export function parseBigQueryCredential (credentialString: string): BigQueryCred
     return parsedCredentials;
   } catch (error) {
     if (error instanceof SyntaxError) {
-      throw new Error('Credentials must be in JSON format');
+      throw new Error('Credentials must be in JSON format', { cause: error });
     }
 
     throw error;

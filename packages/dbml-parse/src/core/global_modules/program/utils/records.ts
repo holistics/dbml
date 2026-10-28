@@ -86,7 +86,7 @@ function collectPartialRefs (
   filepath: Filepath,
 ): Ref[] {
   const partialMetas = compiler.symbolMetadata(programSymbol)
-    .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+    .filter((meta): meta is PartialRefMetadata => meta instanceof PartialRefMetadata);
 
   const refs: Ref[] = [];
   for (const { tableSymbol } of fkTableMap.values()) {
@@ -121,25 +121,25 @@ function collectPartialRefs (
         const leftName = tableSymbol.interpretedName(compiler, filepath);
         const rightName = rightTable.interpretedName(compiler, filepath);
 
-        const ep1: RefEndpoint = {
+        const endpoint1: RefEndpoint = {
           schemaName: leftName.schema,
           tableName: leftName.name,
-          fieldNames: leftColumns.map((c) => c.name ?? ''),
+          fieldNames: leftColumns.map((column) => column.name ?? ''),
           relation: multiplicities[0],
           token: getTokenPosition(meta.leftToken()),
         };
-        const ep2: RefEndpoint = {
+        const endpoint2: RefEndpoint = {
           schemaName: rightName.schema,
           tableName: rightName.name,
-          fieldNames: rightColumns.map((c) => c.name ?? ''),
+          fieldNames: rightColumns.map((column) => column.name ?? ''),
           relation: multiplicities[1],
           token: getTokenPosition(meta.rightToken()),
         };
         refs.push({
           token: getTokenPosition(meta.declaration),
           endpoints: [
-            ep1,
-            ep2,
+            endpoint1,
+            endpoint2,
           ],
         } as Ref);
       }

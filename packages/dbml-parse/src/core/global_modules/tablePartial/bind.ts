@@ -39,7 +39,7 @@ export default class TablePartialBinder {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),

@@ -43,7 +43,7 @@ export default class DepBinder {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
       ...this.bindSubElements(subs as ElementDeclarationNode[]),
@@ -64,7 +64,7 @@ export default class DepBinder {
           ...bindee.variables,
           ...bindee.tupleElements,
         ];
-        return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
+        return nodes.flatMap((bindee) => this.compiler.nodeReferee(bindee).getErrors());
       });
 
       const selfLoopErrors = this.checkColumnSelfLoop(field.callee);
@@ -94,26 +94,26 @@ export default class DepBinder {
     return [];
   }
 
-  private endpointSymbol (expr: SyntaxNode | undefined): NodeSymbol | undefined {
-    if (!expr) return undefined;
-    const fragments = destructureComplexVariableTuple(expr);
+  private endpointSymbol (expression: SyntaxNode | undefined): NodeSymbol | undefined {
+    if (!expression) return undefined;
+    const fragments = destructureComplexVariableTuple(expression);
     if (!fragments) return undefined;
-    const lastVar = fragments.variables.at(-1);
-    if (!lastVar) return undefined;
-    return this.compiler.nodeReferee(lastVar).getFiltered(UNHANDLED);
+    const lastVariable = fragments.variables.at(-1);
+    if (!lastVariable) return undefined;
+    return this.compiler.nodeReferee(lastVariable).getFiltered(UNHANDLED);
   }
 
-  private endpointLevel (expr: SyntaxNode | undefined): 'table' | 'column' | undefined {
-    if (!expr) return undefined;
-    const fragments = destructureComplexVariableTuple(expr);
+  private endpointLevel (expression: SyntaxNode | undefined): 'table' | 'column' | undefined {
+    if (!expression) return undefined;
+    const fragments = destructureComplexVariableTuple(expression);
     if (!fragments) return undefined;
 
     if (fragments.tupleElements.length > 0) return 'column';
 
-    const lastVar = fragments.variables.at(-1);
-    if (!lastVar) return undefined;
+    const lastVariable = fragments.variables.at(-1);
+    if (!lastVariable) return undefined;
 
-    const symbol = this.compiler.nodeReferee(lastVar).getFiltered(UNHANDLED);
+    const symbol = this.compiler.nodeReferee(lastVariable).getFiltered(UNHANDLED);
     if (symbol?.isKind(SymbolKind.Column)) return 'column';
     if (symbol?.isKind(SymbolKind.Table)) return 'table';
 

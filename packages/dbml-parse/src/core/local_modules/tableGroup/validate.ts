@@ -97,7 +97,7 @@ export default class TableGroupValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -112,7 +112,7 @@ export default class TableGroupValidator {
       }
 
       if (field.args.length > 0) {
-        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', arg)));
+        errors.push(...field.args.map((argument) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', argument)));
       }
 
       return errors;

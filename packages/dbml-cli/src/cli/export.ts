@@ -1,21 +1,11 @@
 import path from 'path';
-import {
-  ModelExporter, Parser,
-} from '@dbml/core';
-import {
-  Compiler, Filepath,
-} from '@dbml/parse';
+import { ModelExporter, Parser } from '@dbml/core';
+import { Compiler, Filepath } from '@dbml/parse';
 import chalk from 'chalk';
-import type {
-  Command,
-} from 'commander';
+import type { Command } from 'commander';
 import figures from 'figures';
-import {
-  NodeProjectLayout,
-} from '../NodeProjectLayout';
-import {
-  consoleLogger, fileLogger,
-} from '../helpers/logger';
+import { NodeProjectLayout } from '../NodeProjectLayout';
+import { consoleLogger, fileLogger } from '../helpers/logger';
 import config from './config';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
@@ -24,22 +14,20 @@ import {
   resolvePaths,
   validateInputFilePaths,
 } from './utils';
-import {
-  validateFilePlugin,
-} from './validatePlugins/validatePlugins';
+import { validateFilePlugin } from './validatePlugins/validatePlugins';
 
 export default async function exportHandler (program: Command): Promise<void> {
   const inputPaths = resolvePaths(program.args);
   validateInputFilePaths(inputPaths, validateFilePlugin);
-  const opts = program.opts();
-  const format = getFormatOpt(opts);
+  const options = program.opts();
+  const format = getFormatOpt(options);
 
-  const entrypoints = inputPaths.map((p: string) => new Filepath(p));
+  const entrypoints = inputPaths.map((inputPath: string) => new Filepath(inputPath));
   const compiler = new Compiler(new NodeProjectLayout(entrypoints));
 
-  const outputPlugin = opts.outFile
+  const outputPlugin = options.outFile
     ? new OutputFilePlugin(
-        resolvePaths(opts.outFile as string),
+        resolvePaths(options.outFile as string),
         [
           '-- SQL dump generated using DBML (dbml.dbdiagram.io)\n',
           `-- Database: ${(config as any)[format].name}\n`,
@@ -57,18 +45,18 @@ export default async function exportHandler (program: Command): Promise<void> {
     if (errors.length > 0) {
       hasErrors = true;
       const isMultifile = compiler.reachableFiles(filepath).length > 1; // If this filepath can reach other files, it's mutifile
-      const msg = `\n    ${errors
-        .map((e) => {
-          const pos = e.nodeOrToken.startPos;
+      const message = `\n    ${errors
+        .map((error) => {
+          const pos = error.nodeOrToken.startPos;
           const line = pos.line + 1;
           const col = pos.column + 1;
-          const location = chalk.cyan(isMultifile ? e.filepath.relativeTo(process.cwd()) : e.filepath.basename);
+          const location = chalk.cyan(isMultifile ? error.filepath.relativeTo(process.cwd()) : error.filepath.basename);
           const position = chalk.yellow(`(${line},${col})`);
-          return `${location}${position}: ${e.message}`;
+          return `${location}${position}: ${error.message}`;
         })
         .join('\n    ')}`;
-      consoleLogger.error(msg);
-      fileLogger.error(msg);
+      consoleLogger.error(message);
+      fileLogger.error(message);
       continue;
     }
 
@@ -79,7 +67,7 @@ export default async function exportHandler (program: Command): Promise<void> {
     outputPlugin.write(sql);
   }
 
-  if (!hasErrors && opts.outFile) {
-    console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${(config as any)[format].name}): ${path.basename(opts.outFile)}`);
+  if (!hasErrors && options.outFile) {
+    console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${(config as any)[format].name}): ${path.basename(options.outFile)}`);
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[stress] transitive reuse: A reuses B reuses C, all metadata follows', () => {
   const { compiler } = setupCompiler({
@@ -36,7 +36,7 @@ use { table orders } from './a.dbml'
 
   test('tables reachable through 3-hop reuse', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+    expect(db.tables.map((token) => token.name).sort()).toEqual(['orders', 'users']);
   });
 
   test('ref follows through reuse chain', () => {
@@ -46,6 +46,6 @@ use { table orders } from './a.dbml'
 
   test('records follow through reuse chain', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
+    expect(db.records.find((record) => record.tableName === 'users')).toBeDefined();
   });
 });

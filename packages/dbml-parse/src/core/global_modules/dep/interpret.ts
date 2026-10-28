@@ -7,7 +7,6 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   AttributeNode,
@@ -73,29 +72,26 @@ export class DepInterpreter {
     const edges: DepEdge[] = [];
     const errors: CompileError[] = [];
     const count = Math.max(upstreamTables.length, downstreamTables.length);
-    for (let i = 0; i < count; i++) {
-      const upTable = upstreamTables[i];
-      const downTable = downstreamTables[i];
-      const upColumns = upstreamColsList[i] ?? [];
-      const downColumns = downstreamColsList[i] ?? [];
+    for (let index = 0; index < count; index++) {
+      const upTable = upstreamTables[index];
+      const downTable = downstreamTables[index];
+      const upColumns = upstreamColsList[index] ?? [];
+      const downColumns = downstreamColsList[index] ?? [];
 
       const upTableName = upTable?.interpretedName(this.compiler, this.filepath);
       const downTableName = downTable?.interpretedName(this.compiler, this.filepath);
-
-      const upSchema = upTableName?.schema ?? null;
-      const downSchema = downTableName?.schema ?? null;
 
       edges.push({
         upstream: {
           schemaName: upTableName?.schema ?? null,
           tableName: upTableName?.name ?? '',
-          fieldNames: upColumns.map((c) => c.name ?? ''),
+          fieldNames: upColumns.map((column) => column.name ?? ''),
           token: this.dep.token!,
         },
         downstream: {
           schemaName: downTableName?.schema ?? null,
           tableName: downTableName?.name ?? '',
-          fieldNames: downColumns.map((c) => c.name ?? ''),
+          fieldNames: downColumns.map((column) => column.name ?? ''),
           token: this.dep.token!,
         },
         token: this.dep.token!,
@@ -119,16 +115,16 @@ export class DepInterpreter {
           ? [
               body,
             ]
-          : body.body.filter((e): e is FunctionApplicationNode => e instanceof FunctionApplicationNode);
+          : body.body.filter((element): element is FunctionApplicationNode => element instanceof FunctionApplicationNode);
         for (const field of fields) {
-          const settingsList = field.args.find((arg): arg is ListExpressionNode => arg instanceof ListExpressionNode);
+          const settingsList = field.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode);
           if (settingsList) {
             this.consumeSettings(settingsList, metadata);
           }
         }
 
         if (!(body instanceof FunctionApplicationNode)) {
-          const subs = body.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode);
+          const subs = body.body.filter((element): element is ElementDeclarationNode => element instanceof ElementDeclarationNode);
           for (const sub of subs) {
             const key = sub.type?.value?.toLowerCase();
             if (!key) continue;
@@ -172,22 +168,22 @@ export class DepInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
     for (const [
       name,
-      attrs,
+      attributes,
     ] of Object.entries(settingMap)) {
-      const attr = attrs[0];
-      if (!attr) continue;
+      const attribute = attributes[0];
+      if (!attribute) continue;
 
       if (name === SettingName.Color) {
-        const color = extractColor(attr.value);
+        const color = extractColor(attribute.value);
         if (color !== undefined) this.dep.color = color;
         continue;
       }
 
-      const rawValue = this.extractAttrValue(attr.value);
+      const rawValue = this.extractAttrValue(attribute.value);
       if (rawValue === undefined) continue;
 
       if (name === SettingName.Note) {
-        this.dep.note = { value: normalizeNote(String(rawValue)), token: getTokenPosition(attr) };
+        this.dep.note = { value: normalizeNote(String(rawValue)), token: getTokenPosition(attribute) };
       } else {
         metadata[name] = rawValue;
       }

@@ -1,5 +1,7 @@
 import { Connection } from 'oracledb';
-import { DefaultInfo, DefaultType, Field, FieldsDictionary, Table } from '../types';
+import {
+  DefaultInfo, DefaultType, Field, FieldsDictionary, Table,
+} from '../types';
 import { EXECUTE_OPTIONS } from './utils';
 
 export async function generateTablesAndFields (client: Connection): Promise<{
@@ -37,10 +39,10 @@ export async function generateTablesAndFields (client: Connection): Promise<{
   `;
 
   const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql, [], EXECUTE_OPTIONS);
-  const tableMap = tablesAndFieldsResult.rows?.reduce((acc: Record<string, Table>, row) => {
+  const tableMap = tablesAndFieldsResult.rows?.reduce((accumulator: Record<string, Table>, row) => {
     const { table_name, table_comment } = row as any;
-    if (!acc[table_name]) {
-      acc[table_name] = {
+    if (!accumulator[table_name]) {
+      accumulator[table_name] = {
         name: table_name,
         schemaName: '',
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -51,7 +53,7 @@ export async function generateTablesAndFields (client: Connection): Promise<{
     const field = generateField(row as any);
     fields[table_name].push(field);
 
-    return acc;
+    return accumulator;
   }, {} as Record<string, Table>) || {};
 
   return {
@@ -137,7 +139,7 @@ function getDbdefault (columnDefault: string | null, defaultType: string): Defau
 
 // These datatypes are never qualified: data size, data scale and data precision
 // Ref: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Data-Types.html
-const UNQUALIFIED_DATA_TYPES = new Set([
+const _UNQUALIFIED_DATA_TYPES = new Set([
   // datetime
   'date',
   // number
@@ -297,7 +299,7 @@ export function getFieldType (dataType: string, characterMaximumLength: number, 
   }
 
   // This is not needed since we return `normalizedDataType` either if the condition holds true or not
-  // if (UNQUALIFIED_DATA_TYPES.has(normalizedDataType)) {
+  // if (_UNQUALIFIED_DATA_TYPES.has(normalizedDataType)) {
   //   return normalizedDataType;
   // }
 

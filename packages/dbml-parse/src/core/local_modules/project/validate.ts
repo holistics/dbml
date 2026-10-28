@@ -84,7 +84,7 @@ export default class ProjectValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),

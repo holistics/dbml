@@ -85,10 +85,10 @@ function createNullErrors (
 ): CompileInfo[] {
   if (isEmpty(rowsWithNull)) return [];
 
-  const pkColumns = pkColumnSymbols.map((c) => c.name ?? '');
+  const pkColumns = pkColumnSymbols.map((column) => column.name ?? '');
   return flatMap(rowsWithNull, (row) =>
-    getDiagnosticAnchorValues(row, pkColumns).map((v) =>
-      recordsPkNull(compiler, resolveRecordValueNode(compiler, v), { table: tableSymbol, columns: pkColumnSymbols })),
+    getDiagnosticAnchorValues(row, pkColumns).map((value) =>
+      recordsPkNull(compiler, resolveRecordValueNode(compiler, value), { table: tableSymbol, columns: pkColumnSymbols })),
   );
 }
 
@@ -99,16 +99,16 @@ function findDuplicateErrors (
   pkColumnSymbols: ColumnSymbol[],
   rows: Record<string, RecordValue>[],
 ): CompileInfo[] {
-  const pkColumns = pkColumnSymbols.map((c) => c.name ?? '');
+  const pkColumns = pkColumnSymbols.map((column) => column.name ?? '');
 
   const rowsByKeyValue = groupBy(rows, (row) => extractKeyValueWithDefault(compiler, row, pkColumnSymbols));
   const duplicateGroups = filter(rowsByKeyValue, (group) => group.length > 1);
 
   return flatMap(duplicateGroups, (duplicateRows) =>
     flatMap(duplicateRows, (row) => {
-      const valueStr = formatValues(compiler, row, pkColumnSymbols);
-      return getDiagnosticAnchorValues(row, pkColumns).map((v) =>
-        recordsPkDuplicate(compiler, resolveRecordValueNode(compiler, v), { table: tableSymbol, columns: pkColumnSymbols, valueStr }));
+      const valueString = formatValues(compiler, row, pkColumnSymbols);
+      return getDiagnosticAnchorValues(row, pkColumns).map((value) =>
+        recordsPkDuplicate(compiler, resolveRecordValueNode(compiler, value), { table: tableSymbol, columns: pkColumnSymbols, valueStr: valueString }));
     }),
   );
 }
@@ -122,13 +122,13 @@ function checkMissingPkColumns (
   pkColumnSymbols: ColumnSymbol[],
   record: TableRecord,
 ): CompileInfo[] {
-  const pkColumns = pkColumnSymbols.map((c) => c.name ?? '');
+  const pkColumns = pkColumnSymbols.map((column) => column.name ?? '');
   const availableColumns = new Set(record.columns);
   const missingColumns = difference(pkColumns, Array.from(availableColumns));
   if (isEmpty(missingColumns)) return [];
 
   const missingSet = new Set(missingColumns);
-  const missingSymbols = pkColumnSymbols.filter((c) => missingSet.has(c.name ?? ''));
+  const missingSymbols = pkColumnSymbols.filter((column) => missingSet.has(column.name ?? ''));
   const missingWithoutDefaultSymbols = missingSymbols
     .filter((col) => !col.increment(compiler) && !col.default(compiler));
   if (isEmpty(missingWithoutDefaultSymbols)) return [];
@@ -140,7 +140,7 @@ function checkMissingPkColumns (
 // Collect all PK constraints for a table: single-column PKs and composite PKs from indexes
 function collectPkConstraints (tableSymbol: TableSymbol, compiler: Compiler): ColumnSymbol[][] {
   const columns = tableSymbol.mergedColumns(compiler);
-  const columnSymbolMap = keyBy(columns, (c) => c.name ?? '');
+  const columnSymbolMap = keyBy(columns, (column) => column.name ?? '');
 
   return [
     ...columns.filter((col) => col.pk(compiler)).map((col) => [
@@ -149,7 +149,7 @@ function collectPkConstraints (tableSymbol: TableSymbol, compiler: Compiler): Co
     ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
       const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
       if (!Array.isArray(result)) return [];
-      return (result as Index[]).filter((e) => e.pk).map((e) => compact(e.columns.map((c) => columnSymbolMap[c.value])));
+      return (result as Index[]).filter((element) => element.pk).map((element) => compact(element.columns.map((column) => columnSymbolMap[column.value])));
     }),
   ];
 }

@@ -79,11 +79,11 @@ describe('[fuzz] interpreter - valid input', () => {
         });
 
         // All enums should have valid structure
-        db.enums.forEach((enumDef) => {
-          expect(enumDef.name).toBeDefined();
-          expect(enumDef.values).toBeInstanceOf(Array);
+        db.enums.forEach((enumDefinition) => {
+          expect(enumDefinition.name).toBeDefined();
+          expect(enumDefinition.values).toBeInstanceOf(Array);
 
-          enumDef.values.forEach((value) => {
+          enumDefinition.values.forEach((value) => {
             expect(value.name).toBeDefined();
           });
         });
@@ -123,9 +123,9 @@ describe('[fuzz] interpreter - valid input', () => {
 
         // db may be undefined if interpretation fails
         if (db && db.enums && db.enums.length > 0) {
-          const enumDef = db.enums[0];
-          expect(enumDef.name).toBeDefined(); // Empty string is valid
-          expect(enumDef.values).toBeInstanceOf(Array);
+          const enumDefinition = db.enums[0];
+          expect(enumDefinition.name).toBeDefined(); // Empty string is valid
+          expect(enumDefinition.values).toBeInstanceOf(Array);
         }
       }),
       FUZZ_CONFIG,
@@ -136,7 +136,7 @@ describe('[fuzz] interpreter - valid input', () => {
 describe('[fuzz] interpreter - robustness (arbitrary input)', () => {
   it('should return valid result structure on arbitrary strings', () => {
     fc.assert(
-      fc.property(fc.string().filter((s) => !s.includes('\0')), (source: string) => {
+      fc.property(fc.string().filter((text) => !text.includes('\0')), (source: string) => {
         const result = interpret(source);
 
         // Must return a valid result object
@@ -162,7 +162,7 @@ describe('[fuzz] interpreter - robustness (arbitrary input)', () => {
         fc.string({
           minLength: 5000,
           maxLength: 20000,
-        }).filter((s) => !s.includes('\0')),
+        }).filter((text) => !text.includes('\0')),
         (source: string) => {
           const result = interpret(source);
 
@@ -253,9 +253,9 @@ describe('[fuzz] interpreter - consistency', () => {
           expect(db1.tableGroups.length).toBe(db2.tableGroups.length);
 
           // Table names should match
-          for (let i = 0; i < db1.tables.length; i++) {
-            expect(db1.tables[i].name).toBe(db2.tables[i].name);
-            expect(db1.tables[i].fields.length).toBe(db2.tables[i].fields.length);
+          for (let index = 0; index < db1.tables.length; index++) {
+            expect(db1.tables[index].name).toBe(db2.tables[index].name);
+            expect(db1.tables[index].fields.length).toBe(db2.tables[index].fields.length);
           }
         }
       }),
@@ -272,13 +272,13 @@ describe('[fuzz] interpreter - consistency', () => {
         if (db) {
           // Only check uniqueness when there are no errors (errors may include duplicate name reports)
           if (result.getErrors().length === 0) {
-            const tableNames = new Set(db.tables.map((t) => t.name));
+            const tableNames = new Set(db.tables.map((token) => token.name));
 
             // Verify no duplicate table names
             expect(tableNames.size).toBe(db.tables.length);
 
             // Verify no duplicate enum names
-            const enumNames = new Set(db.enums.map((e) => e.name));
+            const enumNames = new Set(db.enums.map((error) => error.name));
             expect(enumNames.size).toBe(db.enums.length);
           }
 
@@ -379,7 +379,7 @@ describe('[fuzz] interpreter - edge cases', () => {
           maxLength: 10,
         }),
         (comments: string[]) => {
-          const source = comments.map((c) => `// ${c.replace(/\n/g, ' ')}`).join('\n');
+          const source = comments.map((comment) => `// ${comment.replace(/\n/g, ' ')}`).join('\n');
 
           let didThrow = false;
           try {
@@ -462,9 +462,9 @@ describe('[fuzz] interpreter - semantic correctness', () => {
         fc.pre(db !== undefined);
         fc.pre(db.enums.length > 0);
 
-        db.enums.forEach((enumDef) => {
-          expect(enumDef.values.length).toBeGreaterThanOrEqual(1);
-          enumDef.values.forEach((value) => {
+        db.enums.forEach((enumDefinition) => {
+          expect(enumDefinition.values.length).toBeGreaterThanOrEqual(1);
+          enumDefinition.values.forEach((value) => {
             expect(value.name).toBeDefined();
           });
         });

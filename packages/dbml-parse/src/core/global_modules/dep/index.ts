@@ -17,7 +17,7 @@ import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import { SymbolKind, type NodeSymbol } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { extractStringFromIdentifierStream, extractVarNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
+import { extractStringFromIdentifierStream, extractVariableNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
 import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { getDefaultSchemaSymbol } from '../utils';
 import { nodeRefereeOfLeftExpression } from '../utils';
@@ -53,7 +53,7 @@ export const depModule: GlobalModule = {
     if (isElementNode(node, ElementKind.Dep)) {
       const fields = getBody(node);
       if (fields.length === 0) return Report.create(PASS_THROUGH);
-      const hasAnyEdge = fields.some((f) => f instanceof FunctionApplicationNode && f.callee instanceof InfixExpressionNode);
+      const hasAnyEdge = fields.some((field) => field instanceof FunctionApplicationNode && field.callee instanceof InfixExpressionNode);
       if (!hasAnyEdge) return Report.create(PASS_THROUGH);
       return Report.create(new DepMetadata(node));
     }
@@ -87,7 +87,7 @@ export const depModule: GlobalModule = {
 
 function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone variable (no access parent): resolve as Table
   if (!isAccessExpression(node.parentNode)) {

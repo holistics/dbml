@@ -139,8 +139,8 @@ export function removeSettingEdit (
     return { start: settingNode.start, end: nextSetting.start, newText: '' };
   }
 
-  const prevSetting = elements[settingIndex - 1];
-  return { start: prevSetting.end, end: settingNode.end, newText: '' };
+  const previousSetting = elements[settingIndex - 1];
+  return { start: previousSetting.end, end: settingNode.end, newText: '' };
 }
 
 // Finds the [...] attribute list on a declaration or its inline body
@@ -153,7 +153,7 @@ function findSettingsList (declaration: SyntaxNode): ListExpressionNode | undefi
     if (declaration.attributeList) return declaration.attributeList;
     const body = declaration.body;
     if (body instanceof FunctionApplicationNode) {
-      return body.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
+      return body.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode);
     }
   }
   return undefined;

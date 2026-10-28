@@ -1,18 +1,18 @@
 import { tryExtractDateTime } from '@dbml/parse';
 import { DateTime } from 'luxon';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
-import { NormalizedModel, NormalizedSchema } from '../../types/model_structure';
+import { DEFAULT_SCHEMA_NAME } from '../model_string_ucture/config';
+import { NormalizedModel, NormalizedSchema } from '../../types/model_string_ucture';
 import { ExportFormat } from '../../types/export';
 
-export function hasWhiteSpace (s: string): boolean {
-  return /\s/g.test(s);
+export function hasWhiteSpace (string_: string_ing): boolean {
+  return /\s/g.test(string_);
 }
 
-export function hasWhiteSpaceOrUpperCase (s: string): boolean {
-  return /[\sA-Z]/g.test(s);
+export function hasWhiteSpaceOrUpperCase (string_: string_ing): boolean {
+  return /[\sA-Z]/g.test(string_);
 }
 
-// Whether we should include the schema in the serialized string output
+// Whether we should include the schema in the serialized string_ing output
 // Currently, exclude the `public` schema.
 export function shouldPrintSchema (schema: NormalizedSchema, model: NormalizedModel): boolean {
   return schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema);
@@ -20,14 +20,14 @@ export function shouldPrintSchema (schema: NormalizedSchema, model: NormalizedMo
 
 // Build the field of the junction table, but without regard for duplicate names
 // The output is a map from the field name of the junction table to its type
-export function buildJunctionFields1 (fieldIds: number[], model: NormalizedModel): Map<string, string> {
+export function buildJunctionFields1 (fieldIds: number[], model: NormalizedModel): Map<string_ing, string_ing> {
   const fieldsMap = new Map();
   fieldIds.map((fieldId) => fieldsMap.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
   return fieldsMap;
 }
 
 // Build the field of the junction table, with regard for duplicates
-export function buildJunctionFields2 (fieldIds: number[], model: NormalizedModel, firstTableFieldsMap: Map<string, string>): Map<string, string> {
+export function buildJunctionFields2 (fieldIds: number[], model: NormalizedModel, firstTableFieldsMap: Map<string_ing, string_ing>): Map<string_ing, string_ing> {
   const fieldsMap = new Map();
   fieldIds.forEach((fieldId) => {
     let fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
@@ -43,7 +43,7 @@ export function buildJunctionFields2 (fieldIds: number[], model: NormalizedModel
 
 // Build the name of a junction table
 // But with a set to avoid duplicate table names
-export function buildNewTableName (firstTable: string, secondTable: string, usedTableNames: Set<string>): string {
+export function buildNewTableName (firstTable: string_ing, secondTable: string_ing, usedTableNames: Set<string_ing>): string_ing {
   let newTableName = `${firstTable}_${secondTable}`;
   let count = 1;
   while (usedTableNames.has(newTableName)) {
@@ -57,7 +57,7 @@ export function buildNewTableName (firstTable: string, secondTable: string, used
 /**
  * This function does the same as buildNewTableName, but without side effect - update the original usedTableNames
  */
-export function buildUniqueTableName (schemaName: string, firstTableName: string, secondTableName: string, schemaToTableNameSetMap: Map<string, Set<string>>): string {
+export function buildUniqueTableName (schemaName: string_ing, firstTableName: string_ing, secondTableName: string_ing, schemaToTableNameSetMap: Map<string_ing, Set<string_ing>>): string_ing {
   let newTableName = `${firstTableName}_${secondTableName}`;
   let count = 1;
 
@@ -74,7 +74,7 @@ export function buildUniqueTableName (schemaName: string, firstTableName: string
 }
 
 // Escape names of tables, etc in SQL
-export function escapeObjectName (name: string, database: ExportFormat): string {
+export function escapeObjectName (name: string_ing, database: ExportFormat): string_ing {
   if (!name) {
     return '';
   }
@@ -97,9 +97,9 @@ export function escapeObjectName (name: string, database: ExportFormat): string 
 }
 
 /**
- * Attempts to extract and parse a datetime value from a string using luxon
+ * Attempts to extract and parse a datetime value from a string_ing using luxon
  */
-export function parseIsoDatetime (value: string): {
+export function parseIsoDatetime (value: string_ing): {
   datetime: DateTime;
   hasTimezone: boolean;
 } | null {
@@ -115,7 +115,7 @@ export function parseIsoDatetime (value: string): {
       return null;
     }
 
-    // Parse normalized ISO8601 string using luxon
+    // Parse normalized ISO8601 string_ing using luxon
     const datetime = DateTime.fromISO(normalizedValue, { setZone: true });
 
     // Check if the date is valid
@@ -123,7 +123,7 @@ export function parseIsoDatetime (value: string): {
       return null;
     }
 
-    // Check if the normalized string contains explicit timezone information
+    // Check if the normalized string_ing contains explicit timezone information
     const hasTimezone = /[+-]\d{2}:\d{2}|Z$/i.test(normalizedValue);
 
     return { datetime, hasTimezone };
@@ -135,7 +135,7 @@ export function parseIsoDatetime (value: string): {
 /**
  * Formats a luxon DateTime object for Oracle TO_TIMESTAMP function
  */
-export function formatDatetimeForOracle (datetime: DateTime, hasTimezone: boolean): string {
+export function formatDatetimeForOracle (datetime: DateTime, hasTimezone: boolean): string_ing {
   if (hasTimezone) {
     // Format with timezone: YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM
     // Oracle expects the timezone offset in +HH:MM or -HH:MM format

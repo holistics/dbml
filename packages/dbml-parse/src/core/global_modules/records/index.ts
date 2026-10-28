@@ -17,7 +17,7 @@ import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   destructureMemberAccessExpression,
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
 } from '@/core/utils/expression';
 import {
   isAccessExpression,
@@ -134,7 +134,7 @@ function nodeRefereeOfCallColumn (compiler: Compiler, callParent: CallExpression
 function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
 
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   if (!isAccessExpression(node.parentNode)) {
     const symbol = compiler.lookupMembers(
@@ -199,7 +199,7 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
 function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
 
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   const symbol = compiler.lookupMembers(
     tableSymbol,
@@ -219,7 +219,7 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
 function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
 
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: ignore (could be a literal like null/true/false)
   if (!isAccessExpression(node.parentNode)) {

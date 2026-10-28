@@ -89,9 +89,9 @@ export function processDefaultValue (valueNode?: SyntaxNode): {
 } | undefined {
   if (!valueNode) return undefined;
   if (isExpressionAQuotedString(valueNode)) {
-    const str = extractQuotedStringToken(valueNode);
-    if (str !== undefined) return {
-      value: str,
+    const string_ = extractQuotedStringToken(valueNode);
+    if (string_ !== undefined) return {
+      value: string_,
       type: 'string',
     };
   }
@@ -110,9 +110,9 @@ export function processDefaultValue (valueNode?: SyntaxNode): {
   if (isDotDelimitedIdentifier(valueNode)) {
     const fragments = destructureMemberAccessExpression(valueNode);
     const last = fragments?.at(-1);
-    const val = last ? extractVariableFromExpression(last) : undefined;
-    if (val !== undefined) return {
-      value: val,
+    const value = last ? extractVariableFromExpression(last) : undefined;
+    if (value !== undefined) return {
+      value: value,
       type: 'string',
     };
   }
@@ -124,37 +124,37 @@ export function processColumnType (
   typeNode: SyntaxNode,
 ): Report<ColumnType> {
   let typeSuffix = '';
-  let typeArgs: string | null = null;
+  let typeArguments: string | null = null;
 
   if (typeNode instanceof CallExpressionNode) {
-    const argElements = typeNode.argumentList?.elementList ?? [];
-    typeArgs = argElements.map((e) => {
-      if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-      if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e);
-      return extractVariableFromExpression(e);
+    const argumentElements = typeNode.argumentList?.elementList ?? [];
+    typeArguments = argumentElements.map((element) => {
+      if (isExpressionASignedNumberExpression(element)) return getNumberTextFromExpression(element);
+      if (isExpressionAQuotedString(element)) return extractQuotedStringToken(element);
+      return extractVariableFromExpression(element);
     }).join(',');
-    typeSuffix = `(${typeArgs})`;
+    typeSuffix = `(${typeArguments})`;
 
     if (!typeNode.callee) return new Report({
       schemaName: null,
       type_name: '',
-      args: typeArgs,
+      args: typeArguments,
     });
     typeNode = typeNode.callee;
   }
 
   while (typeNode instanceof CallExpressionNode || typeNode instanceof ArrayNode) {
     if (typeNode instanceof CallExpressionNode) {
-      const args = (typeNode.argumentList?.elementList ?? []).map((e) => {
-        if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-        if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e);
-        return extractVariableFromExpression(e);
+      const args = (typeNode.argumentList?.elementList ?? []).map((element) => {
+        if (isExpressionASignedNumberExpression(element)) return getNumberTextFromExpression(element);
+        if (isExpressionAQuotedString(element)) return extractQuotedStringToken(element);
+        return extractVariableFromExpression(element);
       }).join(',');
       typeSuffix = `(${args})${typeSuffix}`;
       if (!typeNode.callee) break;
       typeNode = typeNode.callee;
     } else if (typeNode instanceof ArrayNode) {
-      const indexer = `[${(typeNode.indexer?.elementList ?? []).map((e: any) => e?.name?.expression?.literal?.value ?? '').join(',')}]`;
+      const indexer = `[${(typeNode.indexer?.elementList ?? []).map((element: any) => element?.name?.expression?.literal?.value ?? '').join(',')}]`;
       typeSuffix = `${indexer}${typeSuffix}`;
       if (!typeNode.array) break;
       typeNode = typeNode.array;
@@ -169,7 +169,7 @@ export function processColumnType (
     return new Report({
       schemaName: schema || null,
       type_name: `${name}${typeSuffix}`,
-      args: typeArgs,
+      args: typeArguments,
     });
   }
 
@@ -181,7 +181,7 @@ export function processColumnType (
       {
         schemaName: typeSchemaName[0] ?? null,
         type_name: `${typeName}${typeSuffix}`,
-        args: typeArgs,
+        args: typeArguments,
       },
       [
         new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode),
@@ -192,7 +192,7 @@ export function processColumnType (
   return new Report({
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeSuffix}`,
-    args: typeArgs,
+    args: typeArguments,
   });
 }
 
@@ -203,14 +203,14 @@ export function processColumnType (
   * NOTE: This is used during interpret phase, so no need to validate values, just extract them
   */
 export function extractCustomInlineMetadata (settingMap: Settings, builtinSettings: readonly SettingName[]): CustomMetadata {
-  const builtins = new Set(builtinSettings.map((n) => n.toLowerCase()));
+  const builtins = new Set(builtinSettings.map((settingName) => settingName.toLowerCase()));
   const values: CustomMetadata = {};
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
+  for (const [name, attributes] of Object.entries(settingMap)) {
     if (builtins.has(name.toLowerCase())) continue;
-    const attr = attrs[0];
-    const value = extractMetadataValue(attr.value);
-    if (value !== undefined) values[name] = { ...value, token: getTokenPosition(attr) };
+    const attribute = attributes[0];
+    const value = extractMetadataValue(attribute.value);
+    if (value !== undefined) values[name] = { ...value, token: getTokenPosition(attribute) };
   }
 
   return values;
@@ -230,17 +230,17 @@ export function assignInlineMetadata<T extends MetadataTarget> (
 ): void {
   const metadata: CustomMetadata = {};
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
-    const attr = attrs[0];
+  for (const [name, attributes] of Object.entries(settingMap)) {
+    const attribute = attributes[0];
     const field = registry[name];
     if (field) {
-      const value = field.parse(attr.value);
-      if (value !== undefined) field.assign(element, value, getTokenPosition(attr));
+      const value = field.parse(attribute.value);
+      if (value !== undefined) field.assign(element, value, getTokenPosition(attribute));
       continue;
     }
 
-    const value = extractMetadataValue(attr.value);
-    if (value !== undefined) metadata[name] = { ...value, token: getTokenPosition(attr) };
+    const value = extractMetadataValue(attribute.value);
+    if (value !== undefined) metadata[name] = { ...value, token: getTokenPosition(attribute) };
   }
 
   element.metadata = metadata;

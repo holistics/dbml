@@ -1145,8 +1145,8 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const index = db.tables[0].indexes[0];
 
-      expect(index.columns.map((c) => c.value)).toEqual(['a', 'lower(b)', 'c', 'upper(c)']);
-      expect(index.columns.map((c) => c.type)).toEqual(['column', 'expression', 'column', 'expression']);
+      expect(index.columns.map((column) => column.value)).toEqual(['a', 'lower(b)', 'c', 'upper(c)']);
+      expect(index.columns.map((column) => column.type)).toEqual(['column', 'expression', 'column', 'expression']);
     });
 
     test('should interpret index with all settings', () => {
@@ -1189,9 +1189,9 @@ describe('[example] interpreter', () => {
       expect(indexes).toHaveLength(4);
       expect(indexes[0].columns[0].sortOrder).toBeUndefined();
       expect(indexes[1].columns[0]).toMatchObject({ value: 'b', type: 'column', sortOrder: 'desc' });
-      expect(indexes[2].columns.map((c) => c.value)).toEqual(['a', 'b', 'lower(b)']);
-      expect(indexes[2].columns.map((c) => c.sortOrder)).toEqual([undefined, 'desc', 'desc']);
-      expect(indexes[3].columns.map((c) => c.sortOrder)).toEqual(['desc', undefined]);
+      expect(indexes[2].columns.map((column) => column.value)).toEqual(['a', 'b', 'lower(b)']);
+      expect(indexes[2].columns.map((column) => column.sortOrder)).toEqual([undefined, 'desc', 'desc']);
+      expect(indexes[3].columns.map((column) => column.sortOrder)).toEqual(['desc', undefined]);
     });
 
     test('should report error for descending primary key column', () => {
@@ -1238,7 +1238,7 @@ describe('[example] interpreter', () => {
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.map((e) => e.diagnostic)).toEqual([
+      expect(errors.map((error) => error.diagnostic)).toEqual([
         'An index column setting must be [asc] or [desc]',
         'An index column setting must be [asc] or [desc]',
         'An index column setting must be [asc] or [desc]',
@@ -1272,7 +1272,7 @@ describe('[example] interpreter', () => {
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.map((e) => e.diagnostic)).toEqual([
+      expect(errors.map((error) => error.diagnostic)).toEqual([
         'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
         'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
       ]);
@@ -1303,9 +1303,9 @@ describe('[example] interpreter', () => {
         }
       `;
       const db = interpret(source).getValue()!;
-      const enumVal = db.enums[0].values[0];
+      const enumValue = db.enums[0].values[0];
 
-      expect(enumVal.note?.value).toBe('User is active');
+      expect(enumValue.note?.value).toBe('User is active');
     });
 
     test('should preserve enum value order', () => {
@@ -1342,8 +1342,8 @@ describe('[example] interpreter', () => {
       const group = db.tableGroups[0];
 
       expect(group.tables).toHaveLength(2);
-      expect(group.tables.map((t) => t.name)).toContain('posts');
-      expect(group.tables.map((t) => t.name)).toContain('comments');
+      expect(group.tables.map((token) => token.name)).toContain('posts');
+      expect(group.tables.map((token) => token.name)).toContain('comments');
     });
 
     test('should interpret tablegroup with schema', () => {
@@ -2386,7 +2386,7 @@ describe('[example] interpreter', () => {
 
       // The ref should reference actual tables
       const ref = db.refs[0];
-      const tableNames = db.tables.map((t) => t.name);
+      const tableNames = db.tables.map((token) => token.name);
 
       expect(tableNames).toContain(ref.endpoints[0].tableName);
       expect(tableNames).toContain(ref.endpoints[1].tableName);
@@ -2403,7 +2403,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
       const group = db.tableGroups[0];
-      const tableNames = db.tables.map((t) => t.name);
+      const tableNames = db.tables.map((token) => token.name);
 
       group.tables.forEach((ref) => {
         expect(tableNames).toContain(ref.name);

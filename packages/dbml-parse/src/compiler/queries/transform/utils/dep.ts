@@ -57,7 +57,7 @@ function endpointMatches (
 ): boolean {
   if (!sameSymbol(table, target.table)) return false;
   if (columns.length !== target.columns.length) return false;
-  return columns.every((column, i) => sameSymbol(column, target.columns[i]));
+  return columns.every((column, index) => sameSymbol(column, target.columns[index]));
 }
 
 /**
@@ -93,9 +93,9 @@ export function findDepDefinition (
     const downstreamTables = meta.downstreamTables(compiler);
     const downstreamColumns = meta.downstreamColumns(compiler);
 
-    const carriesEdge = upstreamTables.some((_, i) => (
-      endpointMatches(upstreamTables[i], upstreamColumns[i] ?? [], upstream)
-      && endpointMatches(downstreamTables[i], downstreamColumns[i] ?? [], downstream)
+    const carriesEdge = upstreamTables.some((_, index) => (
+      endpointMatches(upstreamTables[index], upstreamColumns[index] ?? [], upstream)
+      && endpointMatches(downstreamTables[index], downstreamColumns[index] ?? [], downstream)
     ));
     if (!carriesEdge) continue;
 

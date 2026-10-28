@@ -13,7 +13,7 @@ export function containerToken (
   token: undefined;
   index: undefined;
 } {
-  const id = this.token.flatStream(filepath).findIndex((t) => t.start >= offset);
+  const id = this.token.flatStream(filepath).findIndex((token) => token.start >= offset);
 
   if (id === undefined) {
     return {

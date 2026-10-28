@@ -66,13 +66,13 @@ class Schema extends Element {
   }
 
   private checkTable (table: Table): void {
-    if (this.tables.some((t) => t.name === table.name)) {
+    if (this.tables.some((existingTable) => existingTable.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
   findTable (tableName: string): Table | undefined {
-    return this.tables.find((t) => t.name === tableName);
+    return this.tables.find((table) => table.name === tableName);
   }
 
   private processEnums (rawEnums: any[]): void {
@@ -87,7 +87,7 @@ class Schema extends Element {
   }
 
   private checkEnum (_enum: Enum): void {
-    if (this.enums.some((e) => e.name === _enum.name)) {
+    if (this.enums.some((existingEnum) => existingEnum.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
         ? `"${this.name}".`
         : ''}"${_enum.name}" existed`);
@@ -106,11 +106,11 @@ class Schema extends Element {
   }
 
   private checkRef (ref: Ref): void {
-    if (this.refs.some((r) => r.equals(ref as any))) {
+    if (this.refs.some((existingRef) => existingRef.equals(ref as any))) {
       const endpoint1 = ref.endpoints[0];
-      const fieldList1 = endpoint1.fieldNames.map((s) => JSON.stringify(s)).join(', ');
+      const fieldList1 = endpoint1.fieldNames.map((fieldName) => JSON.stringify(fieldName)).join(', ');
       const endpoint2 = ref.endpoints[1];
-      const fieldList2 = endpoint2.fieldNames.map((s) => JSON.stringify(s)).join(', ');
+      const fieldList2 = endpoint2.fieldNames.map((fieldName) => JSON.stringify(fieldName)).join(', ');
       const ref1 = `"${endpoint1.schemaName ? `${endpoint1.schemaName}"."` : ''}${endpoint1.tableName}"(${fieldList1})`;
       const ref2 = `"${endpoint2.schemaName ? `${endpoint2.schemaName}"."` : ''}${endpoint2.tableName}"(${fieldList2})`;
       ref.error(`Reference with the same endpoints already exists: ${ref1} references ${ref2}`);
@@ -160,21 +160,21 @@ class Schema extends Element {
 
   private exportChild () {
     return {
-      tables: this.tables.map((t) => t.export()),
-      enums: this.enums.map((e) => e.export()),
+      tables: this.tables.map((table) => table.export()),
+      enums: this.enums.map((enumItem) => enumItem.export()),
       tableGroups: this.tableGroups.map((tg) => tg.export()),
-      refs: this.refs.map((r) => r.export()),
-      deps: this.deps.map((d) => d.export()),
+      refs: this.refs.map((ref) => ref.export()),
+      deps: this.deps.map((dep) => dep.export()),
     };
   }
 
   private exportChildIds () {
     return {
-      tableIds: this.tables.map((t) => t.id),
-      enumIds: this.enums.map((e) => e.id),
+      tableIds: this.tables.map((table) => table.id),
+      enumIds: this.enums.map((enumItem) => enumItem.id),
       tableGroupIds: this.tableGroups.map((tg) => tg.id),
-      refIds: this.refs.map((r) => r.id),
-      depIds: this.deps.map((d) => d.id),
+      refIds: this.refs.map((ref) => ref.id),
+      depIds: this.deps.map((dep) => dep.id),
     };
   }
 

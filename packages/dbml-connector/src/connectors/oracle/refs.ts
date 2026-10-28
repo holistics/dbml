@@ -47,14 +47,14 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
   refsQueryResult.rows?.forEach((refRow) => {
     const { fk_name, child_table, child_columns, parent_table, parent_columns, delete_rule } = refRow as Record<string, string>;
 
-    const ep1: RefEndpoint = {
+    const endpoint1: RefEndpoint = {
       tableName: child_table,
       schemaName: '',
       fieldNames: child_columns.split(LIST_SEPARATOR),
       relation: '0..*',
     };
 
-    const ep2: RefEndpoint = {
+    const endpoint2: RefEndpoint = {
       tableName: parent_table,
       schemaName: '',
       fieldNames: parent_columns.split(LIST_SEPARATOR),
@@ -63,7 +63,7 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
 
     refs.push({
       name: fk_name,
-      endpoints: [ep1, ep2],
+      endpoints: [endpoint1, endpoint2],
       onDelete: delete_rule === 'NO ACTION' ? null : delete_rule,
       onUpdate: null,
     });

@@ -3,7 +3,7 @@ import { Compiler } from '@/index';
 import { Filepath } from '@/core/types/filepath';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import type { Database } from '@/core/types/schemaJson';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - indexes cross-file', () => {
   // tables.dbml: Table bookings { id, user_id, event_id, created_at
@@ -38,32 +38,32 @@ Ref: bookings.event_id > events.id
   });
 
   test('no binding errors - cross-file ref resolves', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('imported table retains both indexes', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const bookings = db.tables.find((t) => t.name === 'bookings')!;
+    const bookings = db.tables.find((token) => token.name === 'bookings')!;
     // expect: both composite and single-column index are preserved
     expect(bookings.indexes).toHaveLength(2);
   });
 
   test('composite index is unique and carries the declared name', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const bookings = db.tables.find((t) => t.name === 'bookings')!;
-    const compositeIdx = bookings.indexes.find((i) => i.columns.length === 2)!;
+    const bookings = db.tables.find((token) => token.name === 'bookings')!;
+    const compositeIndex = bookings.indexes.find((index) => index.columns.length === 2)!;
     // expect: (user_id, event_id) [unique, name: 'unique_booking']
-    expect(compositeIdx.unique).toBe(true);
-    expect(compositeIdx.name).toBe('unique_booking');
-    expect(compositeIdx.columns.map((c) => c.value)).toEqual(['user_id', 'event_id']);
+    expect(compositeIndex.unique).toBe(true);
+    expect(compositeIndex.name).toBe('unique_booking');
+    expect(compositeIndex.columns.map((column) => column.value)).toEqual(['user_id', 'event_id']);
   });
 
   test('single-column index is preserved', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const bookings = db.tables.find((t) => t.name === 'bookings')!;
-    const singleIdx = bookings.indexes.find((i) => i.columns.length === 1)!;
-    expect(singleIdx.columns[0].value).toBe('created_at');
+    const bookings = db.tables.find((token) => token.name === 'bookings')!;
+    const singleIndex = bookings.indexes.find((index) => index.columns.length === 1)!;
+    expect(singleIndex.columns[0].value).toBe('created_at');
   });
 });
 
@@ -91,14 +91,14 @@ use { table users } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('inline ref on users.account_id appears in exported schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const accountIdField = users.fields.find((f) => f.name === 'account_id')!;
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const accountIdField = users.fields.find((field) => field.name === 'account_id')!;
     expect(accountIdField.inline_refs).toHaveLength(1);
     expect(accountIdField.inline_refs[0].tableName).toBe('accounts');
     expect(accountIdField.inline_refs[0].fieldNames).toContain('id');
@@ -129,7 +129,7 @@ Ref: orders.user_id > users.id
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -141,13 +141,13 @@ Ref: orders.user_id > users.id
   test('Ref endpoints point to the correct tables and columns', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     const ref = db.refs[0];
-    const ep = ref.endpoints;
-    const ordersEp = ep.find((e) => e.tableName === 'orders')!;
-    const usersEp = ep.find((e) => e.tableName === 'users')!;
-    expect(ordersEp).toBeDefined();
-    expect(usersEp).toBeDefined();
-    expect(ordersEp.fieldNames).toContain('user_id');
-    expect(usersEp.fieldNames).toContain('id');
+    const endpoint = ref.endpoints;
+    const ordersEndpoint = endpoint.find((error) => error.tableName === 'orders')!;
+    const usersEndpoint = endpoint.find((error) => error.tableName === 'users')!;
+    expect(ordersEndpoint).toBeDefined();
+    expect(usersEndpoint).toBeDefined();
+    expect(ordersEndpoint.fieldNames).toContain('user_id');
+    expect(usersEndpoint.fieldNames).toContain('id');
   });
 });
 
@@ -173,18 +173,18 @@ Ref many_to_one: players.team_id > teams.id
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('Ref cardinality: players endpoint is many (*), teams endpoint is one (1)', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     const ref = db.refs[0];
-    const playersEp = ref.endpoints.find((e) => e.tableName === 'players')!;
-    const teamsEp = ref.endpoints.find((e) => e.tableName === 'teams')!;
+    const playersEndpoint = ref.endpoints.find((error) => error.tableName === 'players')!;
+    const teamsEndpoint = ref.endpoints.find((error) => error.tableName === 'teams')!;
     // '>' at players side means many (players side = '*', teams side = '1')
-    expect(playersEp.relation).toBe('*');
-    expect(teamsEp.relation).toBe('1');
+    expect(playersEndpoint.relation).toBe('*');
+    expect(teamsEndpoint.relation).toBe('1');
   });
 
   test('Ref name is preserved', () => {
@@ -227,7 +227,7 @@ Ref r2: orders.user_id > u.id
   });
 
   test('references with the same endpoint exists can be detected even aliased', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     const bindErrors = compiler.bindNode(ast).getErrors();
     expect(bindErrors).toHaveLength(2);
     expect(bindErrors[0].diagnostic).toMatchInlineSnapshot('"References with same endpoints exist"');
@@ -261,23 +261,23 @@ Ref: orders.user_id > u.id
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('ref endpoint tableName is rewritten to alias', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const ref = db.refs[0];
-    const usersEp = ref.endpoints.find((e) => e.fieldNames.includes('id'))!;
-    expect(usersEp.tableName).toBe('u');
-    expect(usersEp.schemaName).toBe('');
+    const usersEndpoint = ref.endpoints.find((error) => error.fieldNames.includes('id'))!;
+    expect(usersEndpoint.tableName).toBe('u');
+    expect(usersEndpoint.schemaName).toBe('');
   });
 
   test('other ref endpoint keeps original name', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const ref = db.refs[0];
-    const ordersEp = ref.endpoints.find((e) => e.fieldNames.includes('user_id'))!;
-    expect(ordersEp.tableName).toBe('orders');
+    const ordersEndpoint = ref.endpoints.find((error) => error.fieldNames.includes('user_id'))!;
+    expect(ordersEndpoint.tableName).toBe('orders');
   });
 });
 
@@ -304,15 +304,15 @@ use { table orders } from './base.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('cross-file ref is auto-pulled and endpoint uses alias', () => {
     const db = getDatabase(compiler, '/main.dbml');
     expect(db.refs).toHaveLength(1);
-    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
-    expect(usersEp.tableName).toBe('u');
+    const usersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('id'))!;
+    expect(usersEndpoint.tableName).toBe('u');
   });
 });
 
@@ -339,13 +339,13 @@ use { table orders } from './source.dbml'
 
   test('imported table appears in schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'orders')).toBeDefined();
   });
 
   test('inline ref target (users) is NOT in scope - ref should be dropped or users not present', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     // users was never imported
-    expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeUndefined();
   });
 });
 
@@ -373,15 +373,15 @@ use { table orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('standalone Ref from source is auto-pulled into consumer schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
-    expect(db.refs[0].endpoints.find((e) => e.tableName === 'orders')).toBeDefined();
-    expect(db.refs[0].endpoints.find((e) => e.tableName === 'users')).toBeDefined();
+    expect(db.refs[0].endpoints.find((error) => error.tableName === 'orders')).toBeDefined();
+    expect(db.refs[0].endpoints.find((error) => error.tableName === 'users')).toBeDefined();
   });
 });
 
@@ -434,15 +434,15 @@ use { table orders } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('Ref is auto-pulled and endpoint uses alias name', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
-    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
-    expect(usersEp.tableName).toBe('u');
+    const usersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('id'))!;
+    expect(usersEndpoint.tableName).toBe('u');
   });
 });
 
@@ -473,14 +473,14 @@ use { table orders } from './file-b.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('both tables present in consumer schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
-    expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'users')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'orders')).toBeDefined();
   });
 });
 
@@ -509,7 +509,7 @@ use { table employees } from './source.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -517,13 +517,13 @@ use { table employees } from './source.dbml'
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
     const ref = db.refs[0];
-    expect(ref.endpoints.find((e) => e.tableName === 'employees')).toBeDefined();
-    expect(ref.endpoints.find((e) => e.tableName === 'departments')).toBeDefined();
+    expect(ref.endpoints.find((error) => error.tableName === 'employees')).toBeDefined();
+    expect(ref.endpoints.find((error) => error.tableName === 'departments')).toBeDefined();
   });
 
   test('ref is NOT pulled when only one endpoint is imported', () => {
     const partialLayout = new MemoryProjectLayout();
-    const fp = Filepath.from('/partial.dbml');
+    const filepath = Filepath.from('/partial.dbml');
     partialLayout.setSource(Filepath.from('/source.dbml'), `
 Table departments {
   id int [pk]
@@ -536,9 +536,9 @@ Table employees {
 }
 Ref: employees.dept_id > departments.id
 `);
-    partialLayout.setSource(fp, 'use { table employees } from \'./source.dbml\'');
+    partialLayout.setSource(filepath, 'use { table employees } from \'./source.dbml\'');
     const partial = new Compiler(partialLayout);
-    const result = partial.interpretFile(fp);
+    const result = partial.interpretFile(filepath);
     const db = result.getValue() as Database | undefined;
     expect(db?.refs ?? []).toHaveLength(0);
   });
@@ -595,14 +595,14 @@ use { table orders } from './source.dbml'
   test('ref endpoint uses alias name', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
-    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
-    expect(usersEp.tableName).toBe('u');
+    const usersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('id'))!;
+    expect(usersEndpoint.tableName).toBe('u');
   });
 
   test('other endpoint keeps original name', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const ordersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('user_id'))!;
-    expect(ordersEp.tableName).toBe('orders');
+    const ordersEndpoint = db.refs[0].endpoints.find((error) => error.fieldNames.includes('user_id'))!;
+    expect(ordersEndpoint.tableName).toBe('orders');
   });
 });
 
@@ -681,8 +681,8 @@ use { table memberships } from './source.dbml'
 
   test('composite ref has correct field names', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const membershipEp = db.refs[0].endpoints.find((e) => e.tableName === 'memberships')!;
-    expect(membershipEp.fieldNames.sort()).toEqual(['org_id', 'user_id']);
+    const membershipEndpoint = db.refs[0].endpoints.find((error) => error.tableName === 'memberships')!;
+    expect(membershipEndpoint.fieldNames.sort()).toEqual(['org_id', 'user_id']);
   });
 });
 
@@ -709,8 +709,8 @@ Ref: orders.user_id > users.id
   test('local ref with one imported endpoint works', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
     expect(db.refs).toHaveLength(1);
-    expect(db.refs[0].endpoints.find((e) => e.tableName === 'orders')).toBeDefined();
-    expect(db.refs[0].endpoints.find((e) => e.tableName === 'users')).toBeDefined();
+    expect(db.refs[0].endpoints.find((error) => error.tableName === 'orders')).toBeDefined();
+    expect(db.refs[0].endpoints.find((error) => error.tableName === 'users')).toBeDefined();
   });
 });
 
@@ -734,8 +734,8 @@ use { table products } from './source.dbml'
 
   test('inline ref preserved on imported table', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const products = db.tables.find((t) => t.name === 'products')!;
-    const catField = products.fields.find((f) => f.name === 'category_id')!;
+    const products = db.tables.find((token) => token.name === 'products')!;
+    const catField = products.fields.find((field) => field.name === 'category_id')!;
     expect(catField.inline_refs).toHaveLength(1);
     expect(catField.inline_refs[0].tableName).toBe('categories');
   });

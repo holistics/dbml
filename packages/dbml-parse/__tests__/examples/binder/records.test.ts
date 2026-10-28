@@ -7,7 +7,7 @@ import type Compiler from '@/compiler';
 
 function findMember (compiler: Compiler, symbol: NodeSymbol, kind: SymbolKind, name: string): NodeSymbol | undefined {
   const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? [];
-  return members.find((m) => m.kind === kind && m.name === name);
+  return members.find((member) => member.kind === kind && member.name === name);
 }
 
 function nodeSymbol (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): NodeSymbol | undefined {
@@ -33,9 +33,9 @@ describe('[example] records binder', () => {
     const schemaSymbol = nodeSymbol(compiler, ast)!;
     const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(tableSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
   });
 
   test('should bind records with schema-qualified table', () => {
@@ -56,10 +56,10 @@ describe('[example] records binder', () => {
     const authSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'auth')!;
     const tableSymbol = findMember(compiler, authSchema, SymbolKind.Table, 'users')!;
 
-    expect(authSchema).toSatisfy((s: any) => s?.isKind(SymbolKind.Schema));
-    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(authSchema).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Schema));
+    expect(tableSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
   });
 
   test('should detect unknown table in records', () => {
@@ -107,9 +107,9 @@ describe('[example] records binder', () => {
     const schemaSymbol = nodeSymbol(compiler, ast)!;
     const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(tableSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
   });
 
   test('should bind records with enum column type', () => {
@@ -129,8 +129,8 @@ describe('[example] records binder', () => {
     const { ast, compiler } = result.getValue();
     const schemaSymbol = nodeSymbol(compiler, ast)!;
     const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')!;
-    expect(enumSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(enumSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
   });
 
   test('should allow forward reference to table in records', () => {
@@ -150,9 +150,9 @@ describe('[example] records binder', () => {
     const schemaSymbol = nodeSymbol(compiler, ast)!;
     const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(tableSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
   });
 
   test('should bind schema-qualified enum values in records', () => {
@@ -175,9 +175,9 @@ describe('[example] records binder', () => {
     const authSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'auth')!;
     const enumSymbol = findMember(compiler, authSchema, SymbolKind.Enum, 'role')!;
 
-    expect(enumSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'admin')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'user')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(enumSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'admin')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'user')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
   });
 
   test('should detect unknown enum in records data', () => {
@@ -232,9 +232,9 @@ describe('[example] records binder', () => {
     const schemaSymbol = nodeSymbol(compiler, ast)!;
     const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')!;
 
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'completed')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'completed')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
   });
 
   test('should error when there are duplicate columns in top-level records', () => {

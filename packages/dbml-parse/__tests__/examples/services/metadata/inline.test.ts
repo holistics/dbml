@@ -7,7 +7,7 @@ function db (source: string) {
 }
 
 function table (source: string, name = 'users') {
-  return db(source)?.tables?.find((t) => t.name === name);
+  return db(source)?.tables?.find((token) => token.name === name);
 }
 
 describe('[example] Inline custom metadata (settings list)', () => {
@@ -18,8 +18,8 @@ describe('[example] Inline custom metadata (settings list)', () => {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+      const tableItem = table(source)!;
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({
         owner: { value: 'data-team', type: 'string' },
         sla_hours: { value: 24, type: 'number' },
         active: { value: true, type: 'bool' },
@@ -32,11 +32,11 @@ describe('[example] Inline custom metadata (settings list)', () => {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect(t.headerColor).toBe('#fff');
-      expect(t.note?.value).toBe('n');
+      const tableItem = table(source)!;
+      expect(tableItem.headerColor).toBe('#fff');
+      expect(tableItem.note?.value).toBe('n');
       // Builtins are NOT duplicated into metadata, only the custom key is
-      expect(excludeMetadataValueToken(t.metadata)).toEqual({
+      expect(excludeMetadataValueToken(tableItem.metadata)).toEqual({
         owner: { value: 'x', type: 'string' },
       });
     });
@@ -48,9 +48,9 @@ describe('[example] Inline custom metadata (settings list)', () => {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect((t as any).color).toBeUndefined();
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+      const tableItem = table(source)!;
+      expect((tableItem as any).color).toBeUndefined();
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({
         color: { value: '#abc', type: 'color' },
       });
     });
@@ -59,7 +59,7 @@ describe('[example] Inline custom metadata (settings list)', () => {
       const source = `Table users [owner] {
   id int
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_TABLE_SETTING_VALUE);
     });
 
@@ -67,7 +67,7 @@ describe('[example] Inline custom metadata (settings list)', () => {
       const source = `Table users [owner: (a, b)] {
   id int
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_TABLE_SETTING_VALUE);
     });
 
@@ -75,7 +75,7 @@ describe('[example] Inline custom metadata (settings list)', () => {
       const source = `Table users [owner: "a", owner: "b"] {
   id int
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.DUPLICATE_TABLE_SETTING);
     });
   });
@@ -91,9 +91,9 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
-      expect(g?.color).toBe('#123');
-      expect(g?.note?.value).toBe('gn');
+      const group = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
+      expect(group?.color).toBe('#123');
+      expect(group?.note?.value).toBe('gn');
       expect(excludeMetadataValueToken(g?.metadata)).toEqual({
         team: { value: 'growth', type: 'string' },
       });
@@ -107,8 +107,8 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
-      expect(n?.color).toBe('#456');
+      const noteItem = result.getValue()?.notes?.find((note) => note.name === 'overview');
+      expect(noteItem?.color).toBe('#456');
       expect(excludeMetadataValueToken(n?.metadata)).toEqual({
         author: { value: 'alice', type: 'string' },
       });
@@ -122,7 +122,7 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const col = table(source)!.fields.find((f) => f.name === 'id')!;
+      const col = table(source)!.fields.find((field) => field.name === 'id')!;
       expect(col.pk).toBe(true);
       expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
         pii: { value: true, type: 'bool' },
@@ -143,8 +143,8 @@ Table users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const partial = result.getValue()?.tablePartials?.find((p) => p.name === 'Base');
-      const col = partial?.fields.find((f) => f.name === 'id');
+      const partial = result.getValue()?.tablePartials?.find((partial) => p.name === 'Base');
+      const col = partial?.fields.find((field) => field.name === 'id');
       expect(excludeMetadataValueToken(col?.metadata)).toMatchObject({
         owner: { value: 'data-team', type: 'string' },
       });
@@ -163,9 +163,9 @@ Metadata Table public.users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
+      const tableItem = table(source)!;
       // block overrides owner, inline-only `region` survives, block adds `sla`
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({
         owner: { value: 'from-block', type: 'string' },
         region: { value: 'us', type: 'string' },
         sla: { value: 24, type: 'number' },
@@ -196,9 +196,9 @@ Metadata Table public.users {
       `;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect(t.headerColor).toBe('#222');
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+      const tableItem = table(source)!;
+      expect(tableItem.headerColor).toBe('#222');
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({
         owner: { value: 'x', type: 'string' },
       });
     });

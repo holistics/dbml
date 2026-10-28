@@ -25,6 +25,4 @@ const fetchSchemaJson = async (connection: string, databaseType: string): Promis
   }
 };
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

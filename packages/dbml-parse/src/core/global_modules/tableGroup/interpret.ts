@@ -90,7 +90,7 @@ export class TableGroupInterpreter {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),

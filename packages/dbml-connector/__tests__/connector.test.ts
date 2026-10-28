@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Client } from 'pg';
-import { scanDirNames } from './testHelpers';
+import { scanDirectoryNames } from './testHelpers';
 import { connector } from '../src/index';
 
 const sortKeys = (obj: any): any => {
@@ -42,7 +42,7 @@ describe('@dbml/connector', () => {
     expect(sortKeys(contentObj)).toEqual(sortKeys(expectObj));
   };
 
-  test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
+  test.each(scanDirectoryNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'connectors', dirName));
   }, 10000);
 

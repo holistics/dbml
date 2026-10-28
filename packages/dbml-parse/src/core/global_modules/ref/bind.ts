@@ -41,7 +41,7 @@ export default class RefBinder {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
@@ -79,7 +79,7 @@ export default class RefBinder {
           ...schemaBindees,
           tableBindee,
           ...columnBindees,
-        ].flatMap((b) => this.compiler.nodeReferee(b).getErrors());
+        ].flatMap((bindee) => this.compiler.nodeReferee(bindee).getErrors());
       });
     });
   }

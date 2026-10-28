@@ -99,73 +99,73 @@ function sortObject (object: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(entries);
 }
 
-function compareRank (a: number | string, b: number | string): number {
-  if (Number.isNaN(a) && Number.isNaN(b)) return 0;
-  if (Number.isNaN(a)) return -1;
-  if (Number.isNaN(b)) return 1;
-  return a < b ? -1 : a > b ? 1 : 0;
+function compareRank (first: number | string, second: number | string): number {
+  if (Number.isNaN(first) && Number.isNaN(second)) return 0;
+  if (Number.isNaN(first)) return -1;
+  if (Number.isNaN(second)) return 1;
+  return first < second ? -1 : first > second ? 1 : 0;
 }
 
 // Accept an array
 // Output a stable array
 function sortArray (array: unknown[]): unknown[] {
   // A stable ranking among different kinds of values
-  function getInterKindRank (s: unknown): number {
-    if (s === null) return -2;
-    if (typeof s === 'undefined') return -1;
-    if (typeof s === 'string') return 0;
-    if (typeof s === 'number') return 1;
-    if (typeof s === 'boolean') return 2;
-    if (typeof s === 'bigint') return 3;
-    if (typeof s === 'symbol') return 4;
-    if (s instanceof CompileInfo) return 5;
-    if (s instanceof CompileWarning) return 6;
-    if (s instanceof CompileError) return 7;
-    if (s instanceof SyntaxNode) return 7;
-    if (s instanceof SyntaxToken) return 8;
-    if ((s as any)?.token) return 9; // possibly a schema element
+  function getInterKindRank (value: unknown): number {
+    if (value === null) return -2;
+    if (typeof value === 'undefined') return -1;
+    if (typeof value === 'string') return 0;
+    if (typeof value === 'number') return 1;
+    if (typeof value === 'boolean') return 2;
+    if (typeof value === 'bigint') return 3;
+    if (typeof value === 'symbol') return 4;
+    if (value instanceof CompileInfo) return 5;
+    if (value instanceof CompileWarning) return 6;
+    if (value instanceof CompileError) return 7;
+    if (value instanceof SyntaxNode) return 7;
+    if (value instanceof SyntaxToken) return 8;
+    if ((value as any)?.token) return 9; // possibly a schema element
     return 1000;
   }
 
   // Primary rank for values within a given kind
-  function getIntraKindRank (s: unknown): number | string {
-    if (s === null || s === undefined) return 0;
-    if (typeof s === 'string' || typeof s === 'number') return s;
-    if (typeof s === 'boolean') return Number(s);
-    if (typeof s === 'bigint') return Number(s);
-    if (typeof s === 'symbol') return s.toString();
-    if (s instanceof CompileInfo || s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
-    if (s instanceof SyntaxNode) return s.start;
-    if (s instanceof SyntaxToken) return s.start;
-    if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
-    if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset ?? 0; // possibly a schema element
-    if ((s as any)?.id) return getIntraKindRank((s as any).id);
-    if (typeof s === 'object') {
-      const obj = s as Record<string, unknown>;
-      const tokenOffset = (obj.token as any)?.start?.offset;
+  function getIntraKindRank (value: unknown): number | string {
+    if (value === null || value === undefined) return 0;
+    if (typeof value === 'string' || typeof value === 'number') return value;
+    if (typeof value === 'boolean') return Number(value);
+    if (typeof value === 'bigint') return Number(value);
+    if (typeof value === 'symbol') return value.toString();
+    if (value instanceof CompileInfo || value instanceof CompileWarning || value instanceof CompileError) return (value as any).nodeOrToken?.start ?? 0;
+    if (value instanceof SyntaxNode) return value.start;
+    if (value instanceof SyntaxToken) return value.start;
+    if ((value as any)?.declaration) return getIntraKindRank((value as any).declaration);
+    if ((value as any)?.token) return ((value as any).token as TokenPosition)?.start?.offset ?? 0; // possibly a schema element
+    if ((value as any)?.id) return getIntraKindRank((value as any).id);
+    if (typeof value === 'object') {
+      const object = value as Record<string, unknown>;
+      const tokenOffset = (object.token as any)?.start?.offset;
       if (typeof tokenOffset === 'number') return tokenOffset;
-      return getIntraKindRank(Object.values(sortObject(obj))[0]);
+      return getIntraKindRank(Object.values(sortObject(object))[0]);
     }
     return 0;
   }
 
   // Secondary tiebreaker when primary rank is equal
-  function getTiebreakerRank (s: unknown): number | string {
-    if (s instanceof CompileInfo || s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
-    if (s instanceof SyntaxNode) return s.id;
-    if (s instanceof SyntaxToken) return s.value ?? '';
-    if ((s as any)?.id !== undefined) return (s as any).id;
+  function getTiebreakerRank (value: unknown): number | string {
+    if (value instanceof CompileInfo || value instanceof CompileWarning || value instanceof CompileError) return value.diagnostic;
+    if (value instanceof SyntaxNode) return value.id;
+    if (value instanceof SyntaxToken) return value.value ?? '';
+    if ((value as any)?.id !== undefined) return (value as any).id;
     return 0;
   }
 
-  return array.sort((s1, s2) => {
-    const interDiff = getInterKindRank(s1) - getInterKindRank(s2);
+  return array.sort((item1, item2) => {
+    const interDiff = getInterKindRank(item1) - getInterKindRank(item2);
     if (interDiff !== 0) return interDiff;
 
-    const intraDiff = compareRank(getIntraKindRank(s1), getIntraKindRank(s2));
+    const intraDiff = compareRank(getIntraKindRank(item1), getIntraKindRank(item2));
     if (intraDiff !== 0) return intraDiff;
 
-    return compareRank(getTiebreakerRank(s1), getTiebreakerRank(s2));
+    return compareRank(getTiebreakerRank(item1), getTiebreakerRank(item2));
   });
 }
 
@@ -176,7 +176,7 @@ export function toSnapshot (
   { simple = false, includeReferences = true, includeSymbols = true, includeReferee = true }: { simple?: boolean; includeReferences?: boolean; includeSymbols?: boolean; includeReferee?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
+    return sortArray([...value]).map((item) => toSnapshot(compiler, item as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileInfo) {
     return infoToSnapshot(compiler, value, {
@@ -383,8 +383,8 @@ export function syntaxTokenToSnapshot (
     },
     ...sortObject({
       value,
-      leadingTrivia: leadingTrivia.map((t) => t.value).join(''),
-      trailingTrivia: trailingTrivia.map((t) => t.value).join(''),
+      leadingTrivia: leadingTrivia.map((token) => token.value).join(''),
+      trailingTrivia: trailingTrivia.map((token) => token.value).join(''),
     }),
   };
   return result;
@@ -409,12 +409,12 @@ export function syntaxNodeToSnapshot (
     filepath,
     fullStart,
     fullEnd,
-    ...props
+    ...properties
   } = node;
   const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
   const referee = compiler.nodeReferee(node).getFiltered(UNHANDLED);
   if (node instanceof ProgramNode) {
-    delete (props as any).source;
+    delete (properties as any).source;
   }
   if (simple) {
     return {
@@ -435,7 +435,7 @@ export function syntaxNodeToSnapshot (
       fullStart,
       fullEnd,
       children: sortObject(Object.fromEntries(
-        Object.entries(props)
+        Object.entries(properties)
           .map(
             ([key, value]) =>
               [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>, { includeReferences, includeSymbols, includeReferee })],
@@ -451,10 +451,10 @@ export function collectNodesWithReferee (compiler: Compiler, node: SyntaxNode): 
   if (compiler.nodeReferee(node).getFiltered(UNHANDLED)) result.push(node);
 
   const {
-    id, parent, parentNode, kind, startPos, endPos, start, end, filepath, fullStart, fullEnd, symbol, referee, source, ...props
+    id, parent, parentNode, kind, startPos, endPos, start, end, filepath, fullStart, fullEnd, symbol, referee, source, ...properties
   } = node as SyntaxNode & Record<string, unknown>;
 
-  for (const value of Object.values(props)) {
+  for (const value of Object.values(properties)) {
     if (value instanceof SyntaxNode) {
       result.push(...collectNodesWithReferee(compiler, value));
     } else if (Array.isArray(value)) {
@@ -507,8 +507,8 @@ export function symbolToSnapshot (
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler),
       },
-      references: references && sortArray(references.map((r) => ({
-        id: getReadableId(r),
+      references: references && sortArray(references.map((reference) => ({
+        id: getReadableId(reference),
         snippet: getCodeSnippet(r, compiler),
       }))),
     }),

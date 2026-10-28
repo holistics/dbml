@@ -96,9 +96,9 @@ class DepEdge extends Element {
     return {
       depId: this.dep.id,
       upstreamTableId: this.upstreamTable ? this.upstreamTable.id : null,
-      upstreamFieldIds: this.upstreamFields.map((f) => f.id),
+      upstreamFieldIds: this.upstreamFields.map((field) => field.id),
       downstreamTableId: this.downstreamTable ? this.downstreamTable.id : null,
-      downstreamFieldIds: this.downstreamFields.map((f) => f.id),
+      downstreamFieldIds: this.downstreamFields.map((field) => field.id),
     };
   }
 

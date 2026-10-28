@@ -126,7 +126,7 @@ describe('dep self-ref', () => {
       Table a { id int }
       Dep: a.id -> a.id
     `);
-    expect(result.getErrors().some((e) => e.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
+    expect(result.getErrors().some((error) => error.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
   });
 
   it('allows column-level dep between different columns of same table', () => {
@@ -181,13 +181,13 @@ describe('dep settings validation', () => {
   it('invalid: color with non-color value', () => {
     const errors = analyze(`${PRELUDE}Dep: a -> b [color: notacolor]`).getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some((e) => e.message.includes('color'))).toBe(true);
+    expect(errors.some((error) => error.message.includes('color'))).toBe(true);
   });
 
   it('invalid: note with non-string value', () => {
     const errors = analyze(`${PRELUDE}Dep: a -> b [note: 123]`).getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some((e) => e.message.includes('note'))).toBe(true);
+    expect(errors.some((error) => error.message.includes('note'))).toBe(true);
   });
 });
 
@@ -244,7 +244,7 @@ Dep {
   color: notacolor
 }`).getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some((e) => e.message.includes('color'))).toBe(true);
+    expect(errors.some((error) => error.message.includes('color'))).toBe(true);
   });
 
   it('invalid: note body sub-declaration with non-string', () => {
@@ -254,6 +254,6 @@ Dep {
   note: 123
 }`).getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some((e) => e.message.includes('note'))).toBe(true);
+    expect(errors.some((error) => error.message.includes('note'))).toBe(true);
   });
 });

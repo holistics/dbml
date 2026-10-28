@@ -11,12 +11,12 @@ import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { enumUtils } from '../enum';
+import { enumUtilities } from '../enum';
 import { tableUtils } from '../table';
 import { tableGroupUtils } from '../tableGroup';
 import { tablePartialUtils } from '../tablePartial';
 import type { GlobalModule } from '../types';
-import { diagramViewUtils } from '../diagramView';
+import { diagramViewUtilities } from '../diagramView';
 import { useUtils } from '../use';
 
 export const schemaModule: GlobalModule = {
@@ -33,9 +33,9 @@ export const schemaModule: GlobalModule = {
       ...usableMembers.nonSchemaMembers,
     ];
     // Child schemas (e.g. `Table auth.users` creates child `auth`), shared across import processing
-    const childSchemas = new Map(usableMembers.schemaMembers.map((m) => [
-      m.name,
-      m,
+    const childSchemas = new Map(usableMembers.schemaMembers.map((member) => [
+      member.name,
+      member,
     ]));
 
     const errors: CompileError[] = [];
@@ -81,16 +81,16 @@ export const schemaModule: GlobalModule = {
     ];
     {
       // Collect TableGroups: from current schema's members + public schema's raw members and imports
-      const tableGroups = members.filter((m) => m.isKind(SymbolKind.TableGroup));
+      const tableGroups = members.filter((member) => member.isKind(SymbolKind.TableGroup));
       if (!symbol.isPublicSchema()) {
         // Public schema's symbolMembers includes all TableGroups (declared + imported)
         // Safe to call here because public schema is always computed first by the program module
         const publicSchema = compiler.usableMembers(symbol.filepath).getFiltered(UNHANDLED)
-          ?.schemaMembers.find((s) => s.isPublicSchema());
+          ?.schemaMembers.find((schema) => schema.isPublicSchema());
         if (publicSchema) {
           const publicMembers = compiler.symbolMembers(publicSchema).getFiltered(UNHANDLED);
           if (publicMembers) {
-            tableGroups.push(...publicMembers.filter((m) => m.isKind(SymbolKind.TableGroup)));
+            tableGroups.push(...publicMembers.filter((member) => member.isKind(SymbolKind.TableGroup)));
           }
         }
       }
@@ -101,11 +101,11 @@ export const schemaModule: GlobalModule = {
 
     // 5 Dedup by (originalSymbol, localName), reuse wins (added first in 2a)
     const dedupKeys = new Set<string>();
-    const uniqueExpandedMembers = membersWithExpansions.filter((m) => {
+    const uniqueExpandedMembers = membersWithExpansions.filter((member) => {
       // Filter out UseSymbols wrapping schemas, as schemas are merged, not "imported" technically
-      if (m instanceof UseSymbol && m.isKind(SymbolKind.Schema)) return false;
+      if (member instanceof UseSymbol && member.isKind(SymbolKind.Schema)) return false;
 
-      const key = `${m.originalSymbol.intern()}:${m.name ?? ''}`;
+      const key = `${member.originalSymbol.intern()}:${member.name ?? ''}`;
 
       if (dedupKeys.has(key)) return false;
       dedupKeys.add(key);
@@ -144,13 +144,13 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
     case SymbolKind.Table:
       return tableUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.Enum:
-      return enumUtils.getDuplicateError(name, schemaLabel, errorNode);
+      return enumUtilities.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.TablePartial:
       return tablePartialUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.TableGroup:
       return tableGroupUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.DiagramView:
-      return diagramViewUtils.getDuplicateError(name, schemaLabel, errorNode);
+      return diagramViewUtilities.getDuplicateError(name, schemaLabel, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
   }
@@ -203,7 +203,7 @@ function mergeImportedSchema (
   const visibleName = useUtils.visibleName(compiler, specifier);
   const qualifiedName = symbol.qualifiedName;
   if (!visibleName || visibleName.length !== qualifiedName.length
-    || !visibleName.every((s, i) => s === qualifiedName[i])) return [];
+    || !visibleName.every((segment, index) => segment === qualifiedName[index])) return [];
 
   return mergeSchemaMembers(compiler, symbol, specifier, externalSchema, visited);
 }
@@ -226,13 +226,13 @@ function mergeSchemaMembers (
 
   // Wrap directly declared importable members as UseSymbols
   const members: NodeSymbol[] = usable.nonSchemaMembers
-    .filter((m) => m.canBeImported)
-    .map((m) => compiler.symbolFactory.create(UseSymbol, {
-      kind: m.kind,
-      declaration: m.originalSymbol.declaration,
-      usedSymbol: m.originalSymbol,
+    .filter((member) => member.canBeImported)
+    .map((member) => compiler.symbolFactory.create(UseSymbol, {
+      kind: member.kind,
+      declaration: member.originalSymbol.declaration,
+      usedSymbol: member.originalSymbol,
       useSpecifierDeclaration: specifier,
-      name: m.name,
+      name: member.name,
     }, symbol.filepath));
 
   // Expand TableGroups: pull member tables belonging to current schema
@@ -245,14 +245,14 @@ function mergeSchemaMembers (
   }
 
   // Recursively follow reuse chains only (use is local-only, not transitive)
-  for (const s of usable.reuses.selective) {
+  for (const specifier_ of usable.reuses.selective) {
     // Follow schema reuse chains (e.g. `reuse { schema x }`)
-    members.push(...mergeImportedSchema(compiler, symbol, s, visited));
+    members.push(...mergeImportedSchema(compiler, symbol, specifier_, visited));
 
     // Include non-schema selective reuses as direct members (e.g. `reuse { table T }`)
-    const membership = schemaMembership(compiler, symbol, s);
+    const membership = schemaMembership(compiler, symbol, specifier_);
     if (membership.kind === 'direct') {
-      const useSymbol = compiler.nodeSymbol(s).getFiltered(UNHANDLED);
+      const useSymbol = compiler.nodeSymbol(specifier_).getFiltered(UNHANDLED);
       if (useSymbol && useSymbol.canBeImported) {
         members.push(compiler.symbolFactory.create(UseSymbol, {
           kind: useSymbol.kind,
@@ -296,13 +296,13 @@ function handleMemberWildcardUses (
 
   // Wrap importable direct members as UseSymbols owned by the current file
   const members: NodeSymbol[] = usableMembers.nonSchemaMembers
-    .filter((m) => m.canBeImported)
-    .map((m) => compiler.symbolFactory.create(UseSymbol, {
-      kind: m.kind,
-      declaration: m.declaration,
-      usedSymbol: m,
+    .filter((member) => member.canBeImported)
+    .map((member) => compiler.symbolFactory.create(UseSymbol, {
+      kind: member.kind,
+      declaration: member.declaration,
+      usedSymbol: member,
       useSpecifierDeclaration: wildcardNode,
-      name: m.name,
+      name: member.name,
     }, symbol.filepath));
 
   // Register child schemas from the external file
@@ -329,10 +329,10 @@ function handleMemberWildcardUses (
     },
   } = usableMembers;
 
-  for (const s of selective) {
-    const externalSymbol = handleMemberSelectiveUses(compiler, symbol, s, childSchemas).getFiltered(UNHANDLED);
+  for (const specifier_ of selective) {
+    const externalSymbol = handleMemberSelectiveUses(compiler, symbol, specifier_, childSchemas).getFiltered(UNHANDLED);
     if (externalSymbol) members.push(externalSymbol);
-    members.push(...mergeImportedSchema(compiler, symbol, s));
+    members.push(...mergeImportedSchema(compiler, symbol, specifier_));
   }
 
   for (const {
@@ -402,7 +402,7 @@ function expandTableGroup (compiler: Compiler, currentSchema: SchemaSymbol, tabl
         ]
       : nameParts.slice(0, -1);
     if (schemaChain.length !== qualifiedName.length) continue;
-    if (!qualifiedName.every((s, i) => s === schemaChain[i])) continue;
+    if (!qualifiedName.every((segment, index) => segment === schemaChain[index])) continue;
 
     const sourceFilepath = field.declaration.filepath;
     const originalTable = lookupTableInFile(compiler, sourceFilepath, nameParts);
@@ -425,16 +425,16 @@ function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: s
   if (nameParts.length === 1) {
     const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
     if (!usable) return undefined;
-    return usable.nonSchemaMembers.find((m) => m.isKind(SymbolKind.Table) && m.name === nameParts[0]);
+    return usable.nonSchemaMembers.find((member) => member.isKind(SymbolKind.Table) && member.name === nameParts[0]);
   }
 
   const schemaName = nameParts[0];
   const tableName = nameParts[nameParts.length - 1];
   const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
-  const schema = usable.schemaMembers.find((s) => s.name === schemaName);
+  const schema = usable.schemaMembers.find((schemaSymbol) => schemaSymbol.name === schemaName);
   if (!schema) return undefined;
   const schemaUsable = compiler.usableMembers(schema).getFiltered(UNHANDLED);
   if (!schemaUsable) return undefined;
-  return schemaUsable.nonSchemaMembers.find((m) => m.isKind(SymbolKind.Table) && m.name === tableName);
+  return schemaUsable.nonSchemaMembers.find((member) => member.isKind(SymbolKind.Table) && member.name === tableName);
 }

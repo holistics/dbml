@@ -16,30 +16,30 @@ export interface DbmlExporterOptions {
 }
 
 class DbmlExporter {
-  static hasWhiteSpace (str: string): boolean {
-    return /\s/g.test(str);
+  static hasWhiteSpace (string_: string): boolean {
+    return /\s/g.test(string_);
   }
 
-  static hasSquareBracket (str: string): boolean {
-    return /\[|\]/.test(str);
+  static hasSquareBracket (string_: string): boolean {
+    return /\[|\]/.test(string_);
   }
 
-  static isExpression (str: string): boolean {
-    return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
+  static isExpression (string_: string): boolean {
+    return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(string_);
   }
 
-  static escapeNote (str: string | null): string {
-    if (str === null) {
+  static escapeNote (string_: string | null): string {
+    if (string_ === null) {
       return '';
     }
-    let newStr = str.replaceAll('\\', '\\\\');
-    if (!newStr.match(/[\n\r']/)) {
+    let newString = string_.replaceAll('\\', '\\\\');
+    if (!newString.match(/[\n\r']/)) {
       // Only safe chars, no simple quotes nor CR/LF
-      return `'${newStr}'`;
+      return `'${newString}'`;
     }
-    newStr = newStr.replaceAll('\'', '\\\'');
-    newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
-    return `'''${newStr}'''`;
+    newString = newString.replaceAll('\'', '\\\'');
+    newString = newString.replaceAll('\r\n', '\n'); // turn all CRLF to LF
+    return `'''${newString}'''`;
   }
 
   static exportEnums (enumIds: number[], model: NormalizedModel): string {
@@ -105,9 +105,9 @@ class DbmlExporter {
               break;
 
             case 'string': {
-              const strValue = String(field.dbdefault.value);
-              const quote = strValue.includes('\n') ? '\'\'\'' : '\'';
-              value += `${quote}${strValue}${quote}`;
+              const stringValue = String(field.dbdefault.value);
+              const quote = stringValue.includes('\n') ? '\'\'\'' : '\'';
+              value += `${quote}${stringValue}${quote}`;
               break;
             }
 
@@ -204,7 +204,7 @@ class DbmlExporter {
     checkContents: string[];
     indexContents: string[];
   }[] {
-    const tableContentArr = tableIds.map((tableId) => {
+    const tableContentArray = tableIds.map((tableId) => {
       const fieldContents = DbmlExporter.getFieldLines(tableId, model);
       const checkContents = DbmlExporter.getCheckLines(tableId, model);
       const indexContents = DbmlExporter.getIndexLines(tableId, model);
@@ -217,52 +217,52 @@ class DbmlExporter {
       };
     });
 
-    return tableContentArr;
+    return tableContentArray;
   }
 
   static getTableSettings (table: NormalizedTable): string {
-    let settingStr = '';
-    const settingSep = ', ';
+    let settingString = '';
+    const settingSeparator = ', ';
     if (table.headerColor) {
-      settingStr += `headerColor: ${table.headerColor}${settingSep}`;
+      settingString += `headerColor: ${table.headerColor}${settingSeparator}`;
     }
-    if (settingStr.endsWith(', ')) {
-      settingStr = settingStr.replace(/,\s$/, '');
+    if (settingString.endsWith(', ')) {
+      settingString = settingString.replace(/,\s$/, '');
     }
-    return settingStr ? ` [${settingStr}]` : '';
+    return settingString ? ` [${settingString}]` : '';
   }
 
   static exportTables (tableIds: number[], model: NormalizedModel): string {
-    const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model);
+    const tableContentArray = DbmlExporter.getTableContentArr(tableIds, model);
 
-    const tableStrs = tableContentArr.map((tableContent) => {
+    const tableStrs = tableContentArray.map((tableContent) => {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
-      const tableSettingStr = DbmlExporter.getTableSettings(table);
+      const tableSettingString = DbmlExporter.getTableSettings(table);
       // Include schema name if needed
       let tableName = `"${table.name}"`;
       if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
       // Include alias if present
-      const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
+      const aliasString = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
 
-      const fieldStr = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
+      const fieldString = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
 
-      let checkStr = '';
+      let checkString = '';
       if (!isEmpty(tableContent.checkContents)) {
         const checkBody = tableContent.checkContents.map((checkLine) => `    ${checkLine}\n`).join('');
-        checkStr = `\n  Checks {\n${checkBody}  }\n`;
+        checkString = `\n  Checks {\n${checkBody}  }\n`;
       }
 
-      let indexStr = '';
+      let indexString = '';
       if (!isEmpty(tableContent.indexContents)) {
         const indexBody = tableContent.indexContents.map((indexLine) => `    ${indexLine}\n`).join('');
-        indexStr = `\n  Indexes {\n${indexBody}  }\n`;
+        indexString = `\n  Indexes {\n${indexBody}  }\n`;
       }
 
-      const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n` : '';
+      const noteString = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n` : '';
 
-      return `Table ${tableName}${aliasStr}${tableSettingStr} {\n${fieldStr}${checkStr}${indexStr}${noteStr}}\n`;
+      return `Table ${tableName}${aliasString}${tableSettingString} {\n${fieldString}${checkString}${indexString}${noteString}}\n`;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
@@ -274,7 +274,7 @@ class DbmlExporter {
   }
 
   static exportRefs (refIds: number[], model: NormalizedModel): string {
-    const strArr = refIds.map((refId) => {
+    const stringArray = refIds.map((refId) => {
       const ref = model.refs[refId];
       // Find the "one" side (max=1) to place on the left, ensuring canonical DBML form:
       // left = REFERENCES target (PK/unique), right = FK source (many side).
@@ -332,7 +332,7 @@ class DbmlExporter {
       return line;
     });
 
-    return strArr.length ? strArr.join('\n') : '';
+    return stringArray.length ? stringArray.join('\n') : '';
   }
 
   static getTableGroupSettings (tableGroup: NormalizedTableGroup): string {
@@ -343,13 +343,13 @@ class DbmlExporter {
     return settings.length ? ` [${settings.join(', ')}]` : '';
   }
 
-  static formatDepEndpoint (ep: { schemaName: string | null; tableName: string; fieldNames: string[] }): string {
-    const schemaPart = ep.schemaName ? `"${ep.schemaName}".` : '';
-    const tablePart = `"${ep.tableName}"`;
-    if (!ep.fieldNames || ep.fieldNames.length === 0) return `${schemaPart}${tablePart}`;
-    const fieldsPart = ep.fieldNames.length === 1
-      ? `"${ep.fieldNames[0]}"`
-      : `(${ep.fieldNames.map((f) => `"${f}"`).join(', ')})`;
+  static formatDepEndpoint (endpoint: { schemaName: string | null; tableName: string; fieldNames: string[] }): string {
+    const schemaPart = endpoint.schemaName ? `"${endpoint.schemaName}".` : '';
+    const tablePart = `"${endpoint.tableName}"`;
+    if (!endpoint.fieldNames || endpoint.fieldNames.length === 0) return `${schemaPart}${tablePart}`;
+    const fieldsPart = endpoint.fieldNames.length === 1
+      ? `"${endpoint.fieldNames[0]}"`
+      : `(${endpoint.fieldNames.map((fieldName) => `"${fieldName}"`).join(', ')})`;
     return `${schemaPart}${tablePart}.${fieldsPart}`;
   }
 
@@ -360,42 +360,42 @@ class DbmlExporter {
   }
 
   static exportDeps (depIds: number[], model: NormalizedModel): string {
-    const strArr = depIds.map((depId) => {
+    const stringArray = depIds.map((depId) => {
       const dep = model.deps[depId];
       const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
 
       const hasNote = !!dep.note;
       const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
-      const hasAttrs = hasNote || customEntries.length > 0;
+      const hasAttributes = hasNote || customEntries.length > 0;
 
-      if (edges.length === 1 && !hasAttrs) {
+      if (edges.length === 1 && !hasAttributes) {
         return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
       }
 
-      let str = 'Dep {\n';
+      let string_ = 'Dep {\n';
       edges.forEach((edge) => {
-        str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
+        string_ += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
       });
 
-      if (hasAttrs) {
-        str += '\n';
-        if (hasNote) str += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
+      if (hasAttributes) {
+        string_ += '\n';
+        if (hasNote) string_ += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
         customEntries.forEach(([key, value]) => {
-          str += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
+          string_ += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
         });
       }
 
-      str += '}\n';
-      return str;
+      string_ += '}\n';
+      return string_;
     });
 
-    return strArr.length ? strArr.join('\n') : '';
+    return stringArray.length ? stringArray.join('\n') : '';
   }
 
   static exportTableGroups (tableGroupIds: number[], model: NormalizedModel): string {
     const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
-      const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
+      const groupSettingString = DbmlExporter.getTableGroupSettings(group);
 
       const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
       const groupName = `"${group.name}"`;
@@ -408,25 +408,25 @@ class DbmlExporter {
           return `${result}${tableName}\n`;
         }, '');
 
-      return `TableGroup ${groupName}${groupSettingStr} {\n${tableNames}${groupNote}}\n`;
+      return `TableGroup ${groupName}${groupSettingString} {\n${tableNames}${groupNote}}\n`;
     });
 
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
   static getStickyNoteSettings (note: NormalizedNote): string {
-    let settingStr = '';
+    let settingString = '';
     if (note.color) {
-      settingStr += `color: ${note.color}`;
+      settingString += `color: ${note.color}`;
     }
-    return settingStr ? ` [${settingStr}]` : '';
+    return settingString ? ` [${settingString}]` : '';
   }
 
   static exportStickyNotes (model: NormalizedModel): string {
     return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
-      const settingStr = DbmlExporter.getStickyNoteSettings(note);
-      const stickyNote = `Note ${note.name}${settingStr} {\n${escapedContent}\n}\n`;
+      const settingString = DbmlExporter.getStickyNoteSettings(note);
+      const stickyNote = `Note ${note.name}${settingString} {\n${escapedContent}\n}\n`;
 
       // Add a blank line between note elements
       return result ? `${result}\n${stickyNote}` : stickyNote;
@@ -452,22 +452,22 @@ class DbmlExporter {
         : addDoubleQuoteIfNeeded(tableName);
 
       // Collect all unique columns in order
-      const allColumns = [...new Set(groupRecords.flatMap((r) => r.columns))];
+      const allColumns = [...new Set(groupRecords.flatMap((record) => record.columns))];
       const columnList = allColumns.map(addDoubleQuoteIfNeeded).join(', ');
 
       // Merge all rows
       const allRows = groupRecords.flatMap((record) => {
         const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
-        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIdx) => colIdx === -1
+        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIndex) => colIndex === -1
           ? { value: null, type: 'expression' }
-          : row[colIdx]));
+          : row[colIndex]));
       });
 
       // Build data rows
       const rowStrs = allRows.map((row) => `  ${row.map(formatRecordValue).join(', ')}`,
       );
 
-      const exampleFlag = groupRecords.some((r) => r.example) ? ' [example]' : '';
+      const exampleFlag = groupRecords.some((record) => record.example) ? ' [example]' : '';
       return `Records ${tableRef}(${columnList})${exampleFlag} {\n${rowStrs.join('\n')}\n}\n`;
     });
 
@@ -541,8 +541,8 @@ class DbmlExporter {
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
     if (includeRecords && !isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
 
-    const metadataStr = DbmlExporter.exportMetadata(model);
-    if (metadataStr) elementStrs.push(metadataStr);
+    const metadataString = DbmlExporter.exportMetadata(model);
+    if (metadataString) elementStrs.push(metadataString);
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

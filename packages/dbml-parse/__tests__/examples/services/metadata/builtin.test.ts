@@ -22,7 +22,7 @@ function db (source: string) {
 }
 
 function table (source: string, name = 'users') {
-  return db(source)?.tables?.find((t) => t.name === name);
+  return db(source)?.tables?.find((token) => token.name === name);
 }
 
 describe('[example] Metadata builtin-key promotion', () => {
@@ -38,13 +38,13 @@ Metadata Table public.users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
+      const tableItem = table(source)!;
       // Written onto the typed inline field
-      expect(t.note?.value).toBe('from metadata');
+      expect(tableItem.note?.value).toBe('from metadata');
       // The note token points at the metadata key/value pair, not the inline declaration (line 7 is the `note: 'from metadata'` line)
-      expect(t.note?.token.start.line).toBe(7);
+      expect(tableItem.note?.token.start.line).toBe(7);
       // Still remaining in the raw metadata (additive)
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({});
     });
 
     it('writes headercolor onto headerColor, overriding the inline value', () => {
@@ -57,9 +57,9 @@ Metadata Table public.users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect(t.headerColor).toBe('#000');
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
+      const tableItem = table(source)!;
+      expect(tableItem.headerColor).toBe('#000');
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({});
     });
 
     it('treats headercolor case-insensitively', () => {
@@ -83,7 +83,7 @@ Metadata Table public.users {
 Metadata Table public.users {
   headercolor: none
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
     });
 
@@ -98,9 +98,9 @@ Metadata Table public.users {
       const result = interpret(source);
       // `color` is free-form custom metadata for a Table: no validation, not written
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
-      expect((t as any).color).toBeUndefined();
-      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+      const tableItem = table(source)!;
+      expect((tableItem as any).color).toBeUndefined();
+      expect(excludeMetadataValueToken(tableItem.metadata)).toMatchObject({
         color: { value: '#aaa', type: 'color' },
       });
     });
@@ -116,11 +116,11 @@ Metadata Table public.users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const t = table(source)!;
+      const tableItem = table(source)!;
       // headercolor was overridden
-      expect(t.headerColor).toBe('#000');
+      expect(tableItem.headerColor).toBe('#000');
       // The inline note (absent from metadata) is untouched
-      expect(t.note?.value).toBe('inline note');
+      expect(tableItem.note?.value).toBe('inline note');
     });
 
     it('errors when a builtin color key is not a color literal', () => {
@@ -131,7 +131,7 @@ Metadata Table public.users {
 Metadata Table public.users {
   headercolor: 'banana'
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
     });
 
@@ -143,7 +143,7 @@ Metadata Table public.users {
 Metadata Table public.users {
   note: 42
 }`;
-      const codes = interpret(source).getErrors().map((e) => e.code);
+      const codes = interpret(source).getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
     });
   });
@@ -164,10 +164,10 @@ Metadata TableGroup g1 {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
-      expect(g?.note?.value).toBe('group note');
-      expect(g?.color).toBe('#123');
-      expect(excludeMetadataValueToken(g?.metadata)).toMatchObject({});
+      const group = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
+      expect(group?.note?.value).toBe('group note');
+      expect(group?.color).toBe('#123');
+      expect(excludeMetadataValueToken(group?.metadata)).toMatchObject({});
     });
   });
 
@@ -183,11 +183,11 @@ Metadata Note overview {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
-      expect(n?.color).toBe('#456');
+      const noteItem = result.getValue()?.notes?.find((note) => note.name === 'overview');
+      expect(noteItem?.color).toBe('#456');
       // content is unchanged, `note` is just custom metadata
-      expect(n?.content).toBe('the note body');
-      expect(excludeMetadataValueToken(n?.metadata)).toMatchObject({
+      expect(noteItem?.content).toBe('the note body');
+      expect(excludeMetadataValueToken(noteItem?.metadata)).toMatchObject({
         note: { value: 'should stay custom', type: 'string' },
       });
     });
@@ -204,8 +204,8 @@ Metadata Note overview {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
-      expect(n?.metadata?.note?.value).toBe('\n    indented\n  ');
+      const noteItem = result.getValue()?.notes?.find((note) => note.name === 'overview');
+      expect(noteItem?.metadata?.note?.value).toBe('\n    indented\n  ');
     });
   });
 
@@ -221,7 +221,7 @@ Metadata Column public.users.id {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const col = table(source)!.fields.find((f) => f.name === 'id')!;
+      const col = table(source)!.fields.find((field) => field.name === 'id')!;
       expect(col.note?.value).toBe('col note from metadata');
       // color is not a column builtin key: free-form, not written, no error
       expect((col as any).color).toBeUndefined();
@@ -243,7 +243,7 @@ Metadata Column public.users.id {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const col = table(source)!.fields.find((f) => f.name === 'id')!;
+      const col = table(source)!.fields.find((field) => field.name === 'id')!;
       // pk is NOT promoted onto the typed field
       expect(col.pk).toBe(false);
       // pk IS stored in the free-form metadata bag
@@ -258,7 +258,7 @@ Metadata Column public.users.id {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      const col = table(source)!.fields.find((f) => f.name === 'id')!;
+      const col = table(source)!.fields.find((field) => field.name === 'id')!;
       expect(col.pk).toBe(true);
       // inline [pk] is a recognized column setting, it must not appear in the bag
       expect(col.metadata?.pk).toBeUndefined();
@@ -328,27 +328,27 @@ describe('[unit] element-owned field parse specs', () => {
 
 describe('[unit] element-owned field assign functions', () => {
   it('Note writes { value, token } onto .note', () => {
-    const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.Note].assign(el, '42', TOKEN);
-    expect((el as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
+    const element = {} as Table;
+    TABLE_METADATA_FIELDS[SettingName.Note].assign(element, '42', TOKEN);
+    expect((element as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
   });
 
   it('Color writes the raw value onto .color', () => {
-    const el = {} as TableGroup;
-    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assign(el, '#fff', TOKEN);
-    expect((el as { color?: unknown }).color).toBe('#fff');
+    const element = {} as TableGroup;
+    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assign(element, '#fff', TOKEN);
+    expect((element as { color?: unknown }).color).toBe('#fff');
   });
 
   it('HeaderColor writes the raw value onto .headerColor (not .color)', () => {
-    const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assign(el, '#fff', TOKEN);
-    expect((el as { headerColor?: unknown }).headerColor).toBe('#fff');
-    expect((el as { color?: unknown }).color).toBeUndefined();
+    const element = {} as Table;
+    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assign(element, '#fff', TOKEN);
+    expect((element as { headerColor?: unknown }).headerColor).toBe('#fff');
+    expect((element as { color?: unknown }).color).toBeUndefined();
   });
 
   it('Column note assign writes { value, token } onto .note', () => {
-    const el = {} as Column;
-    COLUMN_METADATA_FIELDS[SettingName.Note].assign(el, 'col note', TOKEN);
-    expect((el as { note?: unknown }).note).toEqual({ value: 'col note', token: TOKEN });
+    const element = {} as Column;
+    COLUMN_METADATA_FIELDS[SettingName.Note].assign(element, 'col note', TOKEN);
+    expect((element as { note?: unknown }).note).toEqual({ value: 'col note', token: TOKEN });
   });
 });

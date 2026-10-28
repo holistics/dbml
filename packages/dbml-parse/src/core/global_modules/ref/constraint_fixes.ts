@@ -87,11 +87,11 @@ export function validateCardinality (
   if (ownCard.min >= 1 && otherIsSource) {
     const allOtherNullable = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler));
     if (allOtherNullable) {
-      const qnames = otherColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
+      const qnames = otherColumns.map((column) => column.qualifiedName(compiler).join('.')).join(', ');
       const fixes = [
         opToken && suggestChangeOp(opToken, makeCardinalityOptional(rawOwnCard), rawOtherCard, side, `Make '${qnames}' optional in the ref`),
-        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNotNull(col, compiler)).filter((f): f is QuickFix => !!f) : []),
-      ].filter((f): f is QuickFix => !!f);
+        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNotNull(col, compiler)).filter((fix): fix is QuickFix => !!fix) : []),
+      ].filter((fix): fix is QuickFix => !!fix);
 
       pushDiag(otherNode, otherColumns, (target) =>
         refNullableMismatch(compiler, target, {
@@ -107,11 +107,11 @@ export function validateCardinality (
   if (ownCard.min === 0 && otherIsSource) {
     const allOtherNotNull = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler) === false);
     if (allOtherNotNull) {
-      const qnames = otherColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
+      const qnames = otherColumns.map((column) => column.qualifiedName(compiler).join('.')).join(', ');
       const fixes = [
         opToken && suggestChangeOp(opToken, makeCardinalityRequired(rawOwnCard), rawOtherCard, side, `Make '${qnames}' required in the ref`),
-        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNullable(col, compiler)).filter((f): f is QuickFix => !!f) : []),
-      ].filter((f): f is QuickFix => !!f);
+        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNullable(col, compiler)).filter((fix): fix is QuickFix => !!fix) : []),
+      ].filter((fix): fix is QuickFix => !!fix);
 
       pushDiag(otherNode, otherColumns, (target) =>
         refNotNullMismatch(compiler, target, {
@@ -127,10 +127,10 @@ export function validateCardinality (
 
   // card.max === *: if ownColumns are unique/pk, max should be 1
   if (ownCard.max === '*' && isColumnsUnique(compiler, ownColumns)) {
-    const qnames = ownColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
+    const qnames = ownColumns.map((column) => column.qualifiedName(compiler).join('.')).join(', ');
     const fixes = [
       opToken && suggestChangeOp(opToken, CARDINALITY_ONE, rawOtherCard, side, `Make '${qnames}' one in the ref`),
-    ].filter((f): f is QuickFix => !!f);
+    ].filter((fix): fix is QuickFix => !!fix);
 
     pushDiag(ownNode, ownColumns, (target) =>
       refUniqueMismatch(compiler, target, {
@@ -143,11 +143,11 @@ export function validateCardinality (
 
   // card.max === 1: ownColumns should be unique/pk
   if (ownCard.max === 1 && !isColumnsUnique(compiler, ownColumns)) {
-    const qnames = ownColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
+    const qnames = ownColumns.map((column) => column.qualifiedName(compiler).join('.')).join(', ');
     const fixes = [
       opToken && suggestChangeOp(opToken, makeCardinalityMany(rawOwnCard), rawOtherCard, side, `Make '${qnames}' many in the ref`),
       allowOwnColFix && ownColumns.length === 1 && suggestMakeUnique(ownColumns[0], compiler),
-    ].filter((f): f is QuickFix => !!f);
+    ].filter((fix): fix is QuickFix => !!fix);
 
     pushDiag(ownNode, ownColumns, (target) =>
       refNonUniqueMismatch(compiler, target, {
@@ -170,13 +170,13 @@ export function validatePartialRef (compiler: Compiler, meta: PartialRefMetadata
 
 function suggestChangeOp (
   opToken: SyntaxToken,
-  newThisRel: RelationCardinality,
-  otherRel: RelationCardinality,
+  newThisRelative: RelationCardinality,
+  otherRelative: RelationCardinality,
   side: 'left' | 'right',
   description: string,
 ): QuickFix {
-  const newLeft = side === 'left' ? newThisRel : otherRel;
-  const newRight = side === 'right' ? newThisRel : otherRel;
+  const newLeft = side === 'left' ? newThisRelative : otherRelative;
+  const newRight = side === 'right' ? newThisRelative : otherRelative;
   const newOp = getRelationshipOp(newLeft, newRight);
 
   return {
@@ -246,25 +246,25 @@ function isColumnsUnique (compiler: Compiler, columns: ColumnSymbol[]): boolean 
 
   // Find the owner table from the first column's declaration
   const col = columns[0];
-  const decl = col instanceof InjectedColumnSymbol ? col.injectionDeclaration : col.declaration;
-  const tableNode = decl?.parentOfKind(ElementDeclarationNode);
+  const declaration = col instanceof InjectedColumnSymbol ? col.injectionDeclaration : col.declaration;
+  const tableNode = declaration?.parentOfKind(ElementDeclarationNode);
   if (!tableNode) return false;
   const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
   if (!(tableSymbol instanceof TableSymbol)) return false;
 
   // Get all interpreted indexes from the table
   const indexMetas = tableSymbol.mergedIndexes(compiler);
-  const colNames = new Set(columns.map((c) => c.name));
+  const colNames = new Set(columns.map((column) => column.name));
 
   for (const meta of indexMetas) {
     const result = compiler.interpretMetadata(meta, columns[0].filepath);
     const indexes = result.getValue();
     if (!indexes || !Array.isArray(indexes)) continue;
 
-    for (const idx of indexes as Index[]) {
-      if (!idx.unique && !idx.pk) continue;
-      if (idx.columns.length !== colNames.size) continue;
-      if (idx.columns.every((c) => colNames.has(c.value))) return true;
+    for (const index of indexes as Index[]) {
+      if (!index.unique && !index.pk) continue;
+      if (index.columns.length !== colNames.size) continue;
+      if (index.columns.every((column) => colNames.has(column.value))) return true;
     }
   }
 

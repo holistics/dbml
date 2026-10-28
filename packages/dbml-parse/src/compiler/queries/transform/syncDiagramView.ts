@@ -213,9 +213,9 @@ function generateDiagramViewBlock (
   };
 
   // Body-level shortcuts
-  const allNull = (Object.values(states) as DimState[]).every((s) => s === 'null');
+  const allNull = (Object.values(states) as DimState[]).every((state) => state === 'null');
   if (allNull) return `${header}\n}`;
-  const allEmpty = (Object.values(states) as DimState[]).every((s) => s === 'empty');
+  const allEmpty = (Object.values(states) as DimState[]).every((state) => state === 'empty');
   if (allEmpty) return `${header}\n  *\n}`;
 
   const anyTrinityItems = states.tables === 'items' || states.tableGroups === 'items' || states.schemas === 'items';
@@ -279,7 +279,7 @@ export function syncDiagramView (
   }
 
   // Sort edits descending by start position for tail-first application
-  allEdits.sort((a, b) => b.start - a.start);
+  allEdits.sort((left, right) => right.start - left.start);
   const newDbml = applyTextEdits(dbml, allEdits, true);
   return {
     newDbml,
@@ -310,7 +310,7 @@ function computeCreateEdit (
   blocks: DiagramViewBlock[],
 ): TextEdit[] {
   // If a block with this name already exists, treat as update to avoid duplicate blocks
-  const existing = blocks.find((b) => b.name === operation.name);
+  const existing = blocks.find((block) => block.name === operation.name);
   if (existing) {
     return computeUpdateEdit(dbml, operation, blocks);
   }
@@ -331,7 +331,7 @@ function computeUpdateEdit (
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
 ): TextEdit[] {
-  const block = blocks.find((b) => b.name === operation.name);
+  const block = blocks.find((blk) => blk.name === operation.name);
   if (!block) return [];
 
   const edits: TextEdit[] = [];
@@ -357,7 +357,7 @@ function computeDeleteEdit (
   operation: DiagramViewSyncOperation,
   blocks: DiagramViewBlock[],
 ): TextEdit[] {
-  const block = blocks.find((b) => b.name === operation.name);
+  const block = blocks.find((blk) => blk.name === operation.name);
   if (!block) return [];
 
   // Expand range to include surrounding whitespace/newlines
@@ -372,9 +372,9 @@ function computeDeleteEdit (
       start--;
     }
     // Check if the line before is blank - if not, stop
-    const prevLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
-    const prevLine = dbml.substring(prevLineStart, start);
-    if (prevLine.trim() !== '') {
+    const previousLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
+    const previousLine = dbml.substring(previousLineStart, start);
+    if (previousLine.trim() !== '') {
       // Not a blank line, restore position
       start = block.startIndex;
       // But still consume one newline before the block

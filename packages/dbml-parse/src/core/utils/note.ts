@@ -70,10 +70,10 @@ export function addNoteEdit (declaration: SyntaxNode, value: string): TextEdit |
   // For short-form elements, append as a setting attribute
   const body = declaration.body;
   if (body instanceof FunctionApplicationNode) {
-    const settingsList = body.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
+    const settingsList = body.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode);
     if (settingsList && settingsList.listCloseBracket) {
-      const sep = settingsList.elementList.length === 0 ? '' : ', ';
-      return { start: settingsList.listCloseBracket.start, end: settingsList.listCloseBracket.start, newText: `${sep}note: ${quoteNoteValue(value)}` };
+      const separator = settingsList.elementList.length === 0 ? '' : ', ';
+      return { start: settingsList.listCloseBracket.start, end: settingsList.listCloseBracket.start, newText: `${separator}note: ${quoteNoteValue(value)}` };
     }
     return { start: declaration.end, end: declaration.end, newText: ` [note: ${quoteNoteValue(value)}]` };
   }
@@ -108,7 +108,7 @@ function findNote (declaration: SyntaxNode): NoteSetting | undefined {
   // Setting attribute: [note: 'text']
   const settingsList = declaration.attributeList
     ?? (body instanceof FunctionApplicationNode
-      ? body.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode)
+      ? body.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode)
       : undefined);
 
   if (settingsList) {
@@ -136,30 +136,30 @@ function extractNoteValueNode (noteElement: ElementDeclarationNode): SyntaxNode 
 
 function findNoteInSettingsList (settingsList: ListExpressionNode): NoteSetting | undefined {
   const settings = aggregateSettingList(settingsList).getValue();
-  const noteAttrs = settings[SettingName.Note];
-  if (!noteAttrs?.length) return undefined;
+  const noteAttributes = settings[SettingName.Note];
+  if (!noteAttributes?.length) return undefined;
 
-  const attr = noteAttrs[0];
-  if (!attr.value) return undefined;
+  const attribute = noteAttributes[0];
+  if (!attribute.value) return undefined;
 
   const elements = settingsList.elementList;
-  const i = elements.indexOf(attr);
+  const index = elements.indexOf(attribute);
 
-  let fullNoteStart = attr.start;
-  let fullNoteEnd = attr.end;
+  let fullNoteStart = attribute.start;
+  let fullNoteEnd = attribute.end;
   if (elements.length === 1) {
     fullNoteStart = settingsList.start;
     fullNoteEnd = settingsList.end;
-  } else if (i < elements.length - 1) {
-    fullNoteEnd = elements[i + 1].start;
+  } else if (index < elements.length - 1) {
+    fullNoteEnd = elements[index + 1].start;
   } else {
-    fullNoteStart = elements[i - 1].end;
+    fullNoteStart = elements[index - 1].end;
   }
 
   return {
     kind: SyntaxNodeKind.ATTRIBUTE,
-    noteValueStart: attr.value.start,
-    noteValueEnd: attr.value.end,
+    noteValueStart: attribute.value.start,
+    noteValueEnd: attribute.value.end,
     fullNoteStart,
     fullNoteEnd,
   };

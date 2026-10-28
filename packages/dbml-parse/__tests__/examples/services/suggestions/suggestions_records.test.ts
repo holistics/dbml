@@ -31,7 +31,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should NOT have record entry snippet - now handled by inline completions
-      const recordEntrySnippet = result.suggestions.find((s) => s.label === 'Record entry');
+      const recordEntrySnippet = result.suggestions.find((suggestion) => suggestion.label === 'Record entry');
       expect(recordEntrySnippet).toBeUndefined();
     });
 
@@ -55,7 +55,7 @@ describe('[example] CompletionItemProvider - Records', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should NOT have record entry snippet - now handled by inline completions
-      const recordEntrySnippet = result.suggestions.find((s) => s.label === 'Record entry');
+      const recordEntrySnippet = result.suggestions.find((suggestion) => suggestion.label === 'Record entry');
       expect(recordEntrySnippet).toBeUndefined();
     });
   });
@@ -86,12 +86,12 @@ describe('[example] Expand * to all columns in Records', () => {
       expect(suggestions.suggestions.length).toBe(4); // 3 columns + 1 "* (all)"
 
       // Verify "* (all)" suggestion is present
-      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all)');
+      const expandAllSuggestion = suggestions.suggestions.find((suggestion) => suggestion.label === '* (all)');
       expect(expandAllSuggestion).not.toBeUndefined();
       expect(expandAllSuggestion!.insertText).toBe('id, name, email');
 
       // Verify individual column suggestions
-      const columnSuggestions = suggestions.suggestions.filter((s) => s.label !== '* (all)');
+      const columnSuggestions = suggestions.suggestions.filter((suggestion) => suggestion.label !== '* (all)');
       expect(columnSuggestions.length).toBe(3);
       expect(columnSuggestions[0].label).toBe('id');
       expect(columnSuggestions[1].label).toBe('name');
@@ -125,7 +125,7 @@ Records users() {
       expect(suggestions.suggestions.length).toBe(4); // 3 columns + 1 "* (all)"
 
       // Verify "* (all)" suggestion exists
-      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all)');
+      const expandAllSuggestion = suggestions.suggestions.find((suggestion) => suggestion.label === '* (all)');
       expect(expandAllSuggestion).not.toBeUndefined();
       expect(expandAllSuggestion!.insertText).toBe('id, name, email');
 
@@ -529,7 +529,7 @@ Records users(id, name) [] {
     const position = createPosition(6, 26);
     const result = provider.provideCompletionItems(model, position);
 
-    const exampleSuggestion = result.suggestions.find((s) => s.label === 'example');
+    const exampleSuggestion = result.suggestions.find((suggestion) => suggestion.label === 'example');
     expect(exampleSuggestion).not.toBeUndefined();
     expect(exampleSuggestion!.insertText).toBe('example');
   });

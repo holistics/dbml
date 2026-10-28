@@ -105,15 +105,15 @@ export default class Compiler {
     let dirty = false;
     if (this.entrypointsSnapshot !== undefined) {
       if (this.entrypointsSnapshot.length !== entrypoints.length
-        || this.entrypointsSnapshot.some((fp, i) => fp.absolute !== entrypoints[i].absolute)) {
+        || this.entrypointsSnapshot.some((filepath, index) => filepath.absolute !== entrypoints[index].absolute)) {
         dirty = true;
       }
     }
     this.entrypointsSnapshot = entrypoints;
 
     // Ensure local caches are fresh for all reachable files
-    for (const fp of walkDependencies(this, entrypoints)) {
-      this.cleanStaleLocalCache(fp);
+    for (const filepath of walkDependencies(this, entrypoints)) {
+      this.cleanStaleLocalCache(filepath);
     }
 
     if (dirty) {
@@ -130,12 +130,12 @@ export default class Compiler {
   // Turn a normal function into a Compiler's global query
   // Input: A function that only accepts internable types | primitive types
   // Output: A global query wrapping the function
-  private globalQuery<Args extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
-    fn: (this: Compiler, ...args: Args) => Return,
-  ): (...args: Args) => Return {
+  private globalQuery<Arguments extends (Primitive | Primitive[] | Internable<Primitive>)[], Return> (
+    fn: (this: Compiler, ...args: Arguments) => Return,
+  ): (...args: Arguments) => Return {
     const queryKey = Symbol();
 
-    return ((...args: Args): Return => {
+    return ((...args: Arguments): Return => {
       const isTopLevel = !this.globallyQuerying;
       if (isTopLevel) {
         this.globallyQuerying = true;
@@ -149,34 +149,34 @@ export default class Compiler {
           this.globalCache.set(queryKey, subCache);
         }
 
-        const argKey = args.length === 0
+        const argumentKey = args.length === 0
           ? ''
           : args.length === 1
             ? intern(args[0]) as string
-            : args.map((a) => intern(a)).join('\0');
+            : args.map((argument) => intern(argument)).join('\0');
 
-        const cached = subCache.get(argKey);
+        const cached = subCache.get(argumentKey);
         if (cached) {
           if (cached === COMPUTING) {
-            throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
+            throw new Error(`Cycle detected in query: ${fn.name}(${argumentKey})`);
           }
           return cached;
         }
 
         // Sentinel detects cycles when a query re-enters itself
-        subCache.set(argKey, COMPUTING);
+        subCache.set(argumentKey, COMPUTING);
         try {
           const result = fn.apply(this, args);
-          subCache.set(argKey, result);
+          subCache.set(argumentKey, result);
           return result;
-        } catch (e) {
-          subCache.delete(argKey);
-          throw e;
+        } catch (error) {
+          subCache.delete(argumentKey);
+          throw error;
         }
       } finally {
         if (isTopLevel) this.globallyQuerying = false;
       }
-    }) as (...args: Args) => Return;
+    }) as (...args: Arguments) => Return;
   }
 
   // A local cache mapping from:
@@ -187,30 +187,30 @@ export default class Compiler {
   // Input: A function whose first arg is a Filepath or SyntaxNode (from which we extract .filepath)
   //        & accepts internable types | primitive types for the rest
   // Output: A local query wrapping the function, cached per-file
-  private localQuery<Args extends [
+  private localQuery<Arguments extends [
     Filepath | SyntaxNode, // filepath or node as first arg
     ...(Primitive | Primitive[] | Internable<Primitive>)[],
   ], Return> (
-    fn: (this: Compiler, ...args: Args) => Return,
-  ): (...args: Args) => Return {
+    fn: (this: Compiler, ...args: Arguments) => Return,
+  ): (...args: Arguments) => Return {
     // 1. Generates a unique query symbol for the query
     const queryKey = Symbol();
 
-    return ((...args: Args): Return => {
+    return ((...args: Arguments): Return => {
       const [
-        firstArg,
+        firstArgument,
       ] = args;
-      const filepath = firstArg instanceof SyntaxNode ? firstArg.filepath : firstArg;
+      const filepath = firstArgument instanceof SyntaxNode ? firstArgument.filepath : firstArgument;
 
       // Detect source changes before cache lookup
       this.cleanStaleLocalCache(filepath);
 
       const filepathId = filepath.intern();
-      const argKey = args.length === 0
+      const argumentKey = args.length === 0
         ? ''
         : args.length === 1
           ? intern(args[0]) as string
-          : args.map((a) => intern(a)).join('\0');
+          : args.map((argument) => intern(argument)).join('\0');
 
       let filepathCache = this.localCache.get(filepathId);
       if (!filepathCache) {
@@ -224,25 +224,25 @@ export default class Compiler {
         filepathCache.set(queryKey, subCache);
       }
 
-      if (subCache.has(argKey)) {
-        const cached = subCache.get(argKey);
+      if (subCache.has(argumentKey)) {
+        const cached = subCache.get(argumentKey);
         if (cached === COMPUTING) {
-          throw new Error(`Cycle detected in query: ${fn.name}(${filepathId}, ${argKey})`);
+          throw new Error(`Cycle detected in query: ${fn.name}(${filepathId}, ${argumentKey})`);
         }
         return cached;
       }
 
       // Sentinel detects cycles when a query re-enters itself
-      subCache.set(argKey, COMPUTING);
+      subCache.set(argumentKey, COMPUTING);
       try {
         const result = fn.apply(this, args);
-        subCache.set(argKey, result);
+        subCache.set(argumentKey, result);
         return result;
-      } catch (e) {
-        subCache.delete(argKey);
-        throw e;
+      } catch (error) {
+        subCache.delete(argumentKey);
+        throw error;
       }
-    }) as (...args: Args) => Return;
+    }) as (...args: Arguments) => Return;
   }
 
   parseFile = this.localQuery(parseFile);

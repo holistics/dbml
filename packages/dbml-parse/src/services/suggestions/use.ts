@@ -67,69 +67,69 @@ function suggestInUseDeclaration (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,
-  useDecl: UseDeclarationNode,
+  useDeclaration: UseDeclarationNode,
   model: TextModel,
   bOcToken: SyntaxToken | undefined,
   options: SuggestUseCompletionOptions,
 ): CompletionList {
   // Inside importPath string -> filepath completions
-  if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
+  if (useDeclaration.importPath && isOffsetWithinSpan(offset, useDeclaration.importPath)) {
     return suggestUseFilepath(
       compiler,
       filepath,
-      useDecl.importPath,
+      useDeclaration.importPath,
       model,
-      useDecl,
+      useDeclaration,
       options,
     );
   }
 
   // After closing quote of importPath -> no suggestions
-  if (useDecl.importPath && offset >= useDecl.importPath.end) {
+  if (useDeclaration.importPath && offset >= useDeclaration.importPath.end) {
     return noSuggestions();
   }
 
   // After `from` but no importPath yet -> filepath completions
-  if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
+  if (useDeclaration.fromKeyword && offset > useDeclaration.fromKeyword.end) {
     return suggestUseFilepath(
       compiler,
       filepath,
       undefined,
       model,
-      useDecl,
+      useDeclaration,
       options,
     );
   }
 
   // Inside specifier list
-  if (useDecl.specifiers instanceof UseSpecifierListNode) {
+  if (useDeclaration.specifiers instanceof UseSpecifierListNode) {
     // No openBrace -> cursor before specifier list (e.g. `use |`)
-    if (!useDecl.specifiers.openBrace) {
-      const res = suggestUseSpecifierStart();
-      return shouldPrependSpace(useDecl.useKeyword, offset)
-        ? prependSpace(res)
-        : res;
+    if (!useDeclaration.specifiers.openBrace) {
+      const result = suggestUseSpecifierStart();
+      return shouldPrependSpace(useDeclaration.useKeyword, offset)
+        ? prependSpace(result)
+        : result;
     }
     return suggestInUseSpecifierList(
       compiler,
       filepath,
       offset,
-      useDecl.specifiers,
-      useDecl.importPath,
+      useDeclaration.specifiers,
+      useDeclaration.importPath,
       bOcToken,
     );
   }
 
   // After `*` wildcard -> nothing to suggest
-  if (useDecl.specifiers instanceof WildcardNode) {
+  if (useDeclaration.specifiers instanceof WildcardNode) {
     return noSuggestions();
   }
 
   // After `use`/`reuse`, before specifiers
-  const res = suggestUseSpecifierStart();
-  return shouldPrependSpace(useDecl.useKeyword, offset)
-    ? prependSpace(res)
-    : res;
+  const result = suggestUseSpecifierStart();
+  return shouldPrependSpace(useDeclaration.useKeyword, offset)
+    ? prependSpace(result)
+    : result;
 }
 
 function suggestInUseSpecifierList (
@@ -166,9 +166,9 @@ function suggestInUseSpecifierList (
 
 function suggestImportKinds (): CompletionList {
   return {
-    suggestions: Object.keys(ImportKind).map((k) => ({
-      label: k.toLowerCase(),
-      insertText: `${k.toLowerCase()} `,
+    suggestions: Object.keys(ImportKind).map((key) => ({
+      label: key.toLowerCase(),
+      insertText: `${key.toLowerCase()} `,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: CompletionItemKind.Keyword,
       range: undefined as any,
@@ -287,14 +287,14 @@ function suggestUseFilepath (
       currentFilepath,
       existingIncompleteImportPath,
     )) {
-      const isDir = compiler.layout.isDirectory(entry);
-      const fileSpecifier = isDir
+      const isDirectory = compiler.layout.isDirectory(entry);
+      const fileSpecifier = isDirectory
         ? undefined
         : compiler.layout.getFileSpecifierInfo(currentFilepath, entry);
-      if (!isDir && fileSpecifier === undefined) continue;
+      if (!isDirectory && fileSpecifier === undefined) continue;
 
       if (
-        !isDir
+        !isDirectory
         && doesFileProvideAllSpecifiers(compiler, entry, requiredSymbols)
       )
         bestMatches.add(label);
@@ -307,8 +307,8 @@ function suggestUseFilepath (
           ? `'${insertValue}'`
           : insertValue,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-        sortText: `${isDir ? '2' : '3'}${label}`,
+        kind: isDirectory ? CompletionItemKind.Folder : CompletionItemKind.File,
+        sortText: `${isDirectory ? '2' : '3'}${label}`,
         range,
       });
     }
@@ -382,13 +382,13 @@ function listDirectoryEntries (
       resolvedPrefix += '/';
   }
 
-  const dirPath = resolvedPrefix.endsWith('/')
+  const directoryPath = resolvedPrefix.endsWith('/')
     ? resolvedPrefix
     : Filepath.from(resolvedPrefix).dirname;
 
   const results: Array<{ label: string; entry: Filepath }> = [];
 
-  for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
+  for (const entry of compiler.layout.listDirectory(Filepath.from(directoryPath))) {
     if (entry.equals(currentFilepath)) continue;
     if (!entry.fsPath.startsWith(resolvedPrefix)) continue;
 
@@ -408,12 +408,12 @@ function listDirectoryEntries (
 // Collect all files reachable from dirPath up to `depth` directory levels.
 function listFilesRecursive (
   layout: DbmlProjectLayout,
-  dirPath: Filepath,
+  directoryPath: Filepath,
   depth: number,
 ): Filepath[] {
   if (depth <= 0) return [];
   const result: Filepath[] = [];
-  for (const entry of layout.listDirectory(dirPath)) {
+  for (const entry of layout.listDirectory(directoryPath)) {
     if (layout.isFile(entry)) {
       result.push(entry);
     } else if (layout.isDirectory(entry)) {
@@ -453,6 +453,6 @@ function doesFileProvideAllSpecifiers (
   const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return false;
   return required.every(({ name, kind }) =>
-    usable.nonSchemaMembers.some((m) => m.kind === kind && m.name === name),
+    usable.nonSchemaMembers.some((member) => member.kind === kind && member.name === name),
   );
 }

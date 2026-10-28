@@ -24,7 +24,7 @@ import {
   SymbolKind,
 } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { extractVarNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
+import { extractVariableNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
 import {
   isAccessExpression, isElementFieldNode, isElementNode, isInsideSettingList, isTerminalAccessFragment,
 } from '@/core/utils/validate';
@@ -36,7 +36,7 @@ import { CompileError, CompileErrorCode } from '@/core/types';
 import { addDoubleQuoteIfNeeded } from '@/compiler/index';
 
 // Public utils that other modules can use
-export const diagramViewUtils = {
+export const diagramViewUtilities = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `DiagramView '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
@@ -125,7 +125,7 @@ export const diagramViewModule: GlobalModule = {
         const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
         if (symbol) members.push(symbol);
       } else if (node instanceof ElementDeclarationNode) {
-        members.push(...getBody(node).flatMap((n) => compiler.nodeSymbol(n).getFiltered(UNHANDLED) ?? []));
+        members.push(...getBody(node).flatMap((childNode) => compiler.nodeSymbol(childNode).getFiltered(UNHANDLED) ?? []));
       }
     }
 
@@ -147,8 +147,8 @@ export const diagramViewModule: GlobalModule = {
 
         const firstNode = seen.get(key);
         if (firstNode) {
-          errors.push(diagramViewUtils.getFieldDuplicateError(name, member.kind, firstNode));
-          errors.push(diagramViewUtils.getFieldDuplicateError(name, member.kind, errorNode));
+          errors.push(diagramViewUtilities.getFieldDuplicateError(name, member.kind, firstNode));
+          errors.push(diagramViewUtilities.getFieldDuplicateError(name, member.kind, errorNode));
         } else {
           seen.set(key, errorNode);
         }
@@ -217,7 +217,7 @@ function nodeRefereeOfDiagramViewTableRef (
   globalSymbol: NodeSymbol,
   node: PrimaryExpressionNode & { expression: VariableNode },
 ): Report<NodeSymbol | undefined> {
-  const name = extractVarNameFromPrimaryVariable(node);
+  const name = extractVariableNameFromPrimaryVariable(node);
   if (name === undefined) {
     return Report.create(undefined);
   }
@@ -279,7 +279,7 @@ function nodeRefereeOfDiagramViewSimpleRef (
   node: PrimaryExpressionNode & { expression: VariableNode },
   kind: SymbolKind,
 ): Report<NodeSymbol | undefined> {
-  const name = extractVarNameFromPrimaryVariable(node);
+  const name = extractVariableNameFromPrimaryVariable(node);
   if (name === undefined) {
     return Report.create(undefined);
   }
@@ -301,7 +301,7 @@ function nodeRefereeOfDiagramViewSchemaRef (
   globalSymbol: NodeSymbol,
   node: PrimaryExpressionNode & { expression: VariableNode },
 ): Report<NodeSymbol | undefined> {
-  const name = extractVarNameFromPrimaryVariable(node);
+  const name = extractVariableNameFromPrimaryVariable(node);
   if (name === undefined) {
     return Report.create(undefined);
   }

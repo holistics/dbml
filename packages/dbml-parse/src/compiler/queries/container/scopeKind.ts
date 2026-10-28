@@ -4,15 +4,15 @@ import type Compiler from '../../index';
 import { ScopeKind } from '../../types';
 
 export function containerScopeKind (this: Compiler, filepath: Filepath, offset: number): ScopeKind {
-  const elem = this.container.element(filepath, offset);
+  const element = this.container.element(filepath, offset);
 
-  if (elem instanceof ProgramNode) {
+  if (element instanceof ProgramNode) {
     return ScopeKind.TOPLEVEL;
   }
 
-  const typeVal = (elem as ElementDeclarationNode).type?.value.toLowerCase();
+  const typeValue = (element as ElementDeclarationNode).type?.value.toLowerCase();
 
-  switch (typeVal) {
+  switch (typeValue) {
     case 'table':
       return ScopeKind.TABLE;
     case 'enum':

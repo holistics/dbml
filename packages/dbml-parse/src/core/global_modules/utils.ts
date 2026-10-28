@@ -8,7 +8,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { SchemaSymbol, SymbolKind, type NodeSymbol } from '@/core/types/symbol';
-import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+import { extractVariableNameFromPrimaryVariable } from '@/core/utils/expression';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isAccessExpression, isExpressionAVariableNode, isTerminalAccessFragment } from '../utils/validate';
 
@@ -110,12 +110,12 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
 export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNode): NodeSymbol | undefined {
   const parent = node.parentNode;
   if (!parent || !isAccessExpression(parent) || parent.rightExpression !== node) return undefined;
-  let leftExpr = parent.leftExpression;
+  let leftExpression = parent.leftExpression;
   // If the left is also an access expression (a.b.c), resolve the rightmost leaf
-  while (isAccessExpression(leftExpr)) {
-    leftExpr = leftExpr.rightExpression;
+  while (isAccessExpression(leftExpression)) {
+    leftExpression = leftExpression.rightExpression;
   }
-  return compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED) ?? undefined;
+  return compiler.nodeReferee(leftExpression).getFiltered(UNHANDLED) ?? undefined;
 }
 
 // Generic resolution for access expressions like schema.table.column or schema.table
@@ -126,7 +126,7 @@ export function nodeRefereeOfEndpoint (
   terminalKind: SymbolKind.Column | SymbolKind.Table, // `terminalKind` determines what the rightmost fragment resolves as
 ): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Rightmost side of access expression - resolve as terminal kind
   if (
@@ -236,7 +236,7 @@ export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSy
   const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
   if (!membersList) return undefined;
 
-  return membersList.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.isPublicSchema());
+  return membersList.find((member: NodeSymbol) => member instanceof SchemaSymbol && member.isPublicSchema());
 }
 
 export function getProgramSymbol (compiler: Compiler, filepath: Filepath): ProgramSymbol | undefined {

@@ -59,12 +59,12 @@ describe('[fuzz] parser - valid input', () => {
         expect(ast.body.length).toBeGreaterThanOrEqual(1);
 
         // All elements have valid positions within source bounds
-        ast.body.forEach((elem) => {
-          expect(elem.start).toBeGreaterThanOrEqual(0);
-          expect(elem.end).toBeGreaterThan(elem.start);
-          expect(elem.end).toBeLessThanOrEqual(source.length);
-          expect(elem.startPos.line).toBeGreaterThanOrEqual(0);
-          expect(elem.startPos.column).toBeGreaterThanOrEqual(0);
+        ast.body.forEach((element) => {
+          expect(element.start).toBeGreaterThanOrEqual(0);
+          expect(element.end).toBeGreaterThan(element.start);
+          expect(element.end).toBeLessThanOrEqual(source.length);
+          expect(element.startPos.line).toBeGreaterThanOrEqual(0);
+          expect(element.startPos.column).toBeGreaterThanOrEqual(0);
         });
       }),
       FUZZ_CONFIG,
@@ -83,8 +83,8 @@ describe('[fuzz] parser - valid input', () => {
         expect(ast.body.length).toBeGreaterThanOrEqual(1);
 
         // First element should be an enum
-        const firstElem = ast.body[0];
-        expect(firstElem.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
+        const firstElement = ast.body[0];
+        expect(firstElement.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
       }),
       FUZZ_CONFIG,
     );
@@ -149,9 +149,9 @@ describe('[fuzz] parser - valid input', () => {
         expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
 
         // All elements should have valid structure
-        ast.body.forEach((elem) => {
-          expect(elem.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
-          expect(elem.start).toBeLessThanOrEqual(elem.end);
+        ast.body.forEach((element) => {
+          expect(element.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
+          expect(element.start).toBeLessThanOrEqual(element.end);
         });
       }),
       FUZZ_CONFIG,
@@ -162,7 +162,7 @@ describe('[fuzz] parser - valid input', () => {
 describe('[fuzz] parser - robustness (arbitrary input)', () => {
   it('should return valid result structure on arbitrary strings', () => {
     fc.assert(
-      fc.property(fc.string().filter((s) => !s.includes('\0')), (source: string) => {
+      fc.property(fc.string().filter((text) => !text.includes('\0')), (source: string) => {
         const result = parse(source);
 
         // Must return a valid result object
@@ -208,7 +208,7 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
         fc.string({
           minLength: 10000,
           maxLength: 50000,
-        }).filter((s) => !s.includes('\0')),
+        }).filter((text) => !text.includes('\0')),
         (source: string) => {
           const result = parse(source);
           const ast = result.getValue().ast;
@@ -268,7 +268,7 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
     fc.assert(
       fc.property(
         tableArbitrary,
-        fc.string().filter((s) => !s.includes('\0')),
+        fc.string().filter((text) => !text.includes('\0')),
         tableArbitrary,
         (validBefore: string, garbage: string, validAfter: string) => {
           const source = `${validBefore}\n${garbage}\n${validAfter}`;
@@ -347,13 +347,13 @@ describe('[fuzz] parser - consistency', () => {
         const tokens = lex(source).getValue();
 
         // Verify tokens are contiguous (no gaps)
-        for (let i = 1; i < tokens.length; i++) {
-          const prev = tokens[i - 1];
-          const curr = tokens[i];
+        for (let index = 1; index < tokens.length; index++) {
+          const previous = tokens[index - 1];
+          const current = tokens[index];
 
           // Current token should start at or after previous token ends
           // (trivia is attached to tokens, so we use fullEnd/fullStart)
-          expect(curr.start).toBeGreaterThanOrEqual(prev.end);
+          expect(current.start).toBeGreaterThanOrEqual(previous.end);
         }
       }),
       FUZZ_CONFIG,
@@ -370,7 +370,7 @@ describe('[fuzz] parser - mutation resilience', () => {
         fc.string({
           minLength: 1,
           maxLength: 1,
-        }).filter((c) => c !== '\0'),
+        }).filter((character) => character !== '\0'),
         (source: string, position: number, char: string) => {
           const pos = position % (source.length + 1);
           const mutated = source.slice(0, pos) + char + source.slice(pos);
@@ -480,7 +480,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           let result;
           try {
             result = parse(source);
-          } catch (e) {
+          } catch (error) {
             didThrow = true;
           }
 
@@ -661,7 +661,7 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
 
   it('should handle binary garbage with valid result structure', () => {
     fc.assert(
-      fc.property(binaryGarbageArbitrary.filter((s) => !s.includes('\0')), (source: string) => {
+      fc.property(binaryGarbageArbitrary.filter((text) => !text.includes('\0')), (source: string) => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
@@ -791,10 +791,10 @@ describe('[fuzz] parser - semantic correctness', () => {
         const ast = result.getValue().ast;
 
         // Elements should appear in source order
-        for (let i = 1; i < ast.body.length; i++) {
-          const prev = ast.body[i - 1];
-          const curr = ast.body[i];
-          expect(curr.start).toBeGreaterThanOrEqual(prev.end);
+        for (let index = 1; index < ast.body.length; index++) {
+          const previous = ast.body[index - 1];
+          const current = ast.body[index];
+          expect(current.start).toBeGreaterThanOrEqual(previous.end);
         }
       }),
       FUZZ_CONFIG,
@@ -806,14 +806,14 @@ describe('[fuzz] parser - semantic correctness', () => {
       fc.property(
         malformedTableArbitrary,
         malformedEnumArbitrary,
-        (table: string, enumDef: string) => {
-          const combined = `${table}\n\n${enumDef}`;
+        (table: string, enumDefinition: string) => {
+          const combined = `${table}\n\n${enumDefinition}`;
           const result = parse(combined);
           const errors = result.getErrors();
 
           if (errors.length >= 2) {
             // Errors should be at different locations (not all pointing to same spot)
-            const locations = errors.map((e) => `${e.start}-${e.end}`);
+            const locations = errors.map((error) => `${error.start}-${error.end}`);
             const uniqueLocations = new Set(locations);
             // Should have at least some location diversity (not all errors at identical positions)
             expect(uniqueLocations.size).toBeGreaterThanOrEqual(1);

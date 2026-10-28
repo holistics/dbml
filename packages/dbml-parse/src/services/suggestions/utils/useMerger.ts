@@ -123,10 +123,10 @@ export function mergeSymbolIntoUses (
   const existingUses = scanExistingUses(compiler, currentFilepath);
 
   // Normalize source file path relative to the current file's directory
-  const sourceFileStr = sourceFilepath.relativeTo(currentFilepath.dirname).replace(/\.dbml$/, '');
+  const sourceFileString = sourceFilepath.relativeTo(currentFilepath.dirname).replace(/\.dbml$/, '');
 
   // Look for existing use from this source file
-  const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
+  const existingUseIndex = existingUses.findIndex((use) => use.sourceFile === sourceFileString);
 
   const newSpecifier = `${symbolKind} ${symbolName}`;
   const lineEnd = '\n';
@@ -135,7 +135,7 @@ export function mergeSymbolIntoUses (
     const existingUse = existingUses[existingUseIndex];
 
     // Duplicate, nothing to do, surface no edit
-    if (existingUse.specifiers.some((s) => s.name === symbolName)) {
+    if (existingUse.specifiers.some((specifier) => specifier.name === symbolName)) {
       return {
         topInsert: '',
       };
@@ -143,11 +143,11 @@ export function mergeSymbolIntoUses (
 
     const allSpecifiers = uniq([
       ...existingUse.specifiers
-        .filter((s) => s.name !== '*')
-        .map((s) => `${s.kind ?? symbolKind} ${s.name}${s.alias ? ` as ${s.alias}` : ''}`),
+        .filter((specifier) => specifier.name !== '*')
+        .map((specifier) => `${specifier.kind ?? symbolKind} ${specifier.name}${specifier.alias ? ` as ${specifier.alias}` : ''}`),
       newSpecifier,
     ]);
-    const topInsert = buildUseStatement(allSpecifiers, sourceFileStr, lineEnd);
+    const topInsert = buildUseStatement(allSpecifiers, sourceFileString, lineEnd);
 
     return {
       topInsert,
@@ -158,15 +158,15 @@ export function mergeSymbolIntoUses (
   return {
     topInsert: buildUseStatement([
       newSpecifier,
-    ], sourceFileStr, lineEnd),
+    ], sourceFileString, lineEnd),
   };
 }
 
 // Render a multi-line use statement with an extra trailing blank line
 // to cleanly separate it from the element declaration that follows
-function buildUseStatement (specifiers: string[], sourceFileStr: string, lineEnd: string): string {
-  const body = specifiers.map((s) => `  ${s}`).join(lineEnd);
-  return `use {${lineEnd}${body}${lineEnd}} from '${sourceFileStr}'${lineEnd}${lineEnd}`;
+function buildUseStatement (specifiers: string[], sourceFileString: string, lineEnd: string): string {
+  const body = specifiers.map((specifier) => `  ${specifier}`).join(lineEnd);
+  return `use {${lineEnd}${body}${lineEnd}} from '${sourceFileString}'${lineEnd}${lineEnd}`;
 }
 
 // Extend a range so it consumes any trailing newlines, to avoid leaving a blank line behind

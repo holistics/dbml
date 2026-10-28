@@ -111,7 +111,7 @@ describe('[example] validator', () => {
       const source = 'Table users [owner: "a", owner: "b"] { id int }';
       const errors = analyze(source).getErrors();
 
-      expect(errors.every((e) => e.code === CompileErrorCode.DUPLICATE_TABLE_SETTING)).toBe(true);
+      expect(errors.every((error) => error.code === CompileErrorCode.DUPLICATE_TABLE_SETTING)).toBe(true);
       expect(errors.length).toBeGreaterThan(0);
     });
   });
@@ -966,8 +966,8 @@ Table users { name varchar }`;
 
       // 3 errors: 2 for duplicate column (both occurrences), 1 for duplicate table (second occurrence only)
       expect(errors).toHaveLength(3);
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_COLUMN_NAME)).toBe(true);
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_COLUMN_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
 
       // Verify each error has valid location
       errors.forEach((error) => {
@@ -995,9 +995,9 @@ Table users { name varchar }`;
       // - Duplicate enum field (2 - one for each occurrence, uses same code as duplicate column)
       // - Unknown table in ref (1)
       expect(errors).toHaveLength(5);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate column \'id\'')).toHaveLength(2);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field \'active\'')).toHaveLength(2);
-      expect(errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR)).toHaveLength(1);
+      expect(errors.filter((error) => error.diagnostic === 'Duplicate column \'id\'')).toHaveLength(2);
+      expect(errors.filter((error) => error.diagnostic === 'Duplicate enum field \'active\'')).toHaveLength(2);
+      expect(errors.filter((error) => error.code === CompileErrorCode.BINDING_ERROR)).toHaveLength(1);
     });
 
     test('should validate forward references correctly', () => {
@@ -1089,7 +1089,7 @@ Table users { name varchar }`;
     test('should handle table with many columns', () => {
       const columns = Array.from({
         length: 100,
-      }, (_, i) => `col${i} int`).join('\n');
+      }, (_, index) => `col${index} int`).join('\n');
       const source = `Table big_table { ${columns} }`;
       const errors = analyze(source).getErrors();
 
@@ -1099,7 +1099,7 @@ Table users { name varchar }`;
     test('should handle many tables', () => {
       const tables = Array.from({
         length: 50,
-      }, (_, i) => `Table t${i} { id int }`).join('\n');
+      }, (_, index) => `Table t${index} { id int }`).join('\n');
       const errors = analyze(tables).getErrors();
 
       expect(errors).toHaveLength(0);
@@ -1121,8 +1121,8 @@ Table users { name varchar }`;
       // - 2 for duplicate column (both occurrences)
       // - 1 for duplicate table (second occurrence)
       expect(errors).toHaveLength(3);
-      expect(errors.filter((e) => e.code === CompileErrorCode.DUPLICATE_COLUMN_NAME)).toHaveLength(2);
-      expect(errors.filter((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toHaveLength(1);
+      expect(errors.filter((error) => error.code === CompileErrorCode.DUPLICATE_COLUMN_NAME)).toHaveLength(2);
+      expect(errors.filter((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toHaveLength(1);
     });
 
     test('should report invalid custom setting AND binding error in same table', () => {
@@ -1131,8 +1131,8 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_COLUMN_SETTING_VALUE)).toBe(true);
-      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_COLUMN_SETTING_VALUE)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should report multiple binding errors', () => {
@@ -1144,7 +1144,7 @@ Table users { name varchar }`;
 
       // 4 binding errors - one for each unknown table (a, b, c, d)
       expect(errors).toHaveLength(4);
-      expect(errors.every((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.every((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
       expect(errors[0].diagnostic).toBe("Table 'a' does not exist in Schema 'public'");
       expect(errors[1].diagnostic).toBe("Table 'b' does not exist in Schema 'public'");
       expect(errors[2].diagnostic).toBe("Table 'c' does not exist in Schema 'public'");
@@ -1168,7 +1168,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
     });
 
     test('should reject unknown field with block body inside Dep', () => {
@@ -1184,7 +1184,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
     });
 
     test('should reject unknown field with block body (no name) inside Dep', () => {
@@ -1200,7 +1200,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
     });
 
     test('should reject color with block body inside Dep', () => {
@@ -1216,7 +1216,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
     });
 
     test('should allow simple color inside Dep', () => {
@@ -1230,7 +1230,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
     });
 
     test('should allow Note block form inside Dep', () => {
@@ -1246,7 +1246,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
     });
 
     test('should allow Note colon form inside Dep', () => {
@@ -1260,7 +1260,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
     });
 
     test('should allow simple key-value custom field inside Dep', () => {
@@ -1274,7 +1274,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((error) => error.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
     });
   });
 

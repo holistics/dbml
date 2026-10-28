@@ -16,7 +16,7 @@ import {
 } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
   getBody,
 } from '@/core/utils/expression';
 import type { GlobalModule } from '../types';
@@ -70,11 +70,11 @@ export const tableGroupModule: GlobalModule = {
       const members: NodeSymbol[] = [];
       const errors: CompileError[] = [];
       for (const child of children) {
-        const res = compiler.nodeSymbol(child);
-        const symbol = res.getFiltered(UNHANDLED);
+        const result = compiler.nodeSymbol(child);
+        const symbol = result.getFiltered(UNHANDLED);
         if (!symbol) continue;
         members.push(symbol);
-        errors.push(...res.getErrors());
+        errors.push(...result.getErrors());
       }
       // Duplicate checking
       const seen = new Map<string, SyntaxNode>();
@@ -142,13 +142,13 @@ export const tableGroupModule: GlobalModule = {
 
 // nodeReferee utils
 function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSymbol, node: PrimaryExpressionNode & { expression: VariableNode }): Report<NodeSymbol | undefined> {
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: lookup as Table (by name or alias) in public schema only
   if (!isAccessExpression(node.parentNode)) {
     const schemasList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
     if (schemasList) {
-      const publicSchema = schemasList.find((s): s is SchemaSymbol => s instanceof SchemaSymbol && s.isPublicSchema());
+      const publicSchema = schemasList.find((schema): schema is SchemaSymbol => schema instanceof SchemaSymbol && schema.isPublicSchema());
       if (publicSchema) {
         const result = compiler.lookupMembers(publicSchema, SymbolKind.Table, name);
         if (result) return Report.create(result);

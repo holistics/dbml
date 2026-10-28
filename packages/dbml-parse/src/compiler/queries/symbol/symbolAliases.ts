@@ -7,6 +7,6 @@ import { allVisibleMembers } from '../utils';
 export function symbolAliases (this: Compiler, symbol: NodeSymbol): Report<AliasSymbol[]> {
   const target = symbol.originalSymbol;
   return allVisibleMembers(this).map((all) =>
-    all.filter((m): m is AliasSymbol => m instanceof AliasSymbol && m.originalSymbol === target && m !== symbol),
+    all.filter((member): member is AliasSymbol => member instanceof AliasSymbol && member.originalSymbol === target && member !== symbol),
   );
 }

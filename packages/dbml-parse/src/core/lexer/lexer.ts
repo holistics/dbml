@@ -39,11 +39,11 @@ export default class Lexer {
   }
 
   private advance (): string {
-    const c = this.peek();
+    const character = this.peek();
     this.current = {
       ...this.current,
     };
-    if (c === '\n') {
+    if (character === '\n') {
       this.current.line += 1;
       this.current.column = 0;
     } else {
@@ -51,7 +51,7 @@ export default class Lexer {
     }
     this.current.offset += 1;
 
-    return c!;
+    return character!;
   }
 
   private peek (lookahead: number = 0): string | undefined {
@@ -64,8 +64,8 @@ export default class Lexer {
 
   // Check if the sequence ahead matches `sequence`
   check (sequence: string): boolean {
-    for (let i = 0; i < sequence.length; i += 1) {
-      if (sequence[i] !== this.peek(i)) {
+    for (let index = 0; index < sequence.length; index += 1) {
+      if (sequence[index] !== this.peek(index)) {
         return false;
       }
     }
@@ -110,8 +110,8 @@ export default class Lexer {
 
   scanTokens () {
     while (!this.isAtEnd()) {
-      const c = this.advance();
-      switch (c) {
+      const character = this.advance();
+      switch (character) {
         case ' ':
           this.addToken(SyntaxTokenKind.SPACE);
           break;
@@ -172,22 +172,22 @@ export default class Lexer {
           } else if (this.match('*')) {
             this.multilineComment();
           } else {
-            this.operator(c);
+            this.operator(character);
           }
           break;
         case '*':
           this.addToken(SyntaxTokenKind.WILDCARD);
           break;
         default:
-          if (isOp(c)) {
-            this.operator(c);
+          if (isOp(character)) {
+            this.operator(character);
             break;
           }
-          if (isAlphaOrUnderscore(c)) {
+          if (isAlphaOrUnderscore(character)) {
             this.identifier();
             break;
           }
-          if (isDigit(c)) {
+          if (isDigit(character)) {
             this.numericLiteralOrIdentifier();
             break;
           }
@@ -195,7 +195,7 @@ export default class Lexer {
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
-              `Unexpected token '${c}'`,
+              `Unexpected token '${character}'`,
               this.createToken(SyntaxTokenKind.OP, true),
             ),
           );
@@ -245,26 +245,26 @@ export default class Lexer {
   }
 
   gatherInvalid () {
-    let i;
+    let index;
     const newTokenList: SyntaxToken[] = [];
 
     const leadingInvalidList: SyntaxToken[] = [];
-    for (i = 0; i < this.tokens.length && isInvalidToken(this.tokens[i]); i += 1) {
-      leadingInvalidList.push(this.tokens[i]);
+    for (index = 0; index < this.tokens.length && isInvalidToken(this.tokens[index]); index += 1) {
+      leadingInvalidList.push(this.tokens[index]);
     }
 
-    let prevValidToken = this.tokens[i];
-    prevValidToken.leadingInvalid = [
+    let previousValidToken = this.tokens[index];
+    previousValidToken.leadingInvalid = [
       ...leadingInvalidList,
-      ...prevValidToken.leadingInvalid,
+      ...previousValidToken.leadingInvalid,
     ];
 
-    for (; i < this.tokens.length; i += 1) {
-      const token = this.tokens[i];
+    for (; index < this.tokens.length; index += 1) {
+      const token = this.tokens[index];
       if (isInvalidToken(token)) {
-        prevValidToken.trailingInvalid.push(token);
+        previousValidToken.trailingInvalid.push(token);
       } else {
-        prevValidToken = token;
+        previousValidToken = token;
         newTokenList.push(token);
       }
     }
@@ -383,8 +383,8 @@ export default class Lexer {
     this.addToken(SyntaxTokenKind.IDENTIFIER);
   }
 
-  operator (c: string) {
-    switch (c) {
+  operator (character: string) {
+    switch (character) {
       case '<':
         if (this.peek() === '=') {
           this.advance(); // <=
@@ -532,7 +532,7 @@ export default class Lexer {
   }
 
   escapedString (): string {
-    const prevPos: Position = {
+    const previousPos: Position = {
       column: this.current.column - 1,
       offset: this.current.offset - 1,
       line: this.current.line,
@@ -575,12 +575,12 @@ export default class Lexer {
         return '\\ ';
       case 'u': {
         let hex = '';
-        for (let i = 0; i <= 3; i += 1) {
+        for (let index = 0; index <= 3; index += 1) {
           if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
             this.errors.push(new CompileError(
               CompileErrorCode.INVALID_ESCAPE_SEQUENCE,
               `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`,
-              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, this.filepath, prevPos, this.current, `\\u${hex}`, true),
+              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, this.filepath, previousPos, this.current, `\\u${hex}`, true),
             ));
 
             return `\\u${hex}`;

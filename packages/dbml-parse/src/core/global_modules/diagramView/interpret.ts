@@ -104,7 +104,7 @@ export class DiagramViewInterpreter {
 
     const [
       subs,
-    ] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
+    ] = partition(body.body, (element) => element instanceof ElementDeclarationNode);
     const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {
@@ -143,28 +143,28 @@ export class DiagramViewInterpreter {
 
     // Check for wildcard
     const hasWildcard = body.body.some(
-      (e) => e instanceof FunctionApplicationNode && isWildcardExpression(e.callee),
+      (element) => element instanceof FunctionApplicationNode && isWildcardExpression(element.callee),
     );
 
     if (hasWildcard) {
       // Show all for this entity type
-      const envWildcards = this.diagramViewWildcards;
+      const environmentWildcards = this.diagramViewWildcards;
       switch (blockType) {
         case ElementKind.DiagramViewTables:
           this.diagramView.visibleEntities!.tables = [];
-          envWildcards.add('tables');
+          environmentWildcards.add('tables');
           break;
         case ElementKind.DiagramViewNotes:
           this.diagramView.visibleEntities!.stickyNotes = [];
-          envWildcards.add('stickyNotes');
+          environmentWildcards.add('stickyNotes');
           break;
         case ElementKind.DiagramViewTableGroups:
           this.diagramView.visibleEntities!.tableGroups = [];
-          envWildcards.add('tableGroups');
+          environmentWildcards.add('tableGroups');
           break;
         case ElementKind.DiagramViewSchemas:
           this.diagramView.visibleEntities!.schemas = [];
-          envWildcards.add('schemas');
+          environmentWildcards.add('schemas');
           break;
       }
       return;
@@ -219,22 +219,22 @@ export class DiagramViewInterpreter {
         break;
       case ElementKind.DiagramViewNotes:
         this.diagramView.visibleEntities!.stickyNotes = items.length > 0
-          ? items.map((i) => ({
-              name: i.name,
+          ? items.map((index) => ({
+              name: index.name,
             }))
           : null;
         break;
       case ElementKind.DiagramViewTableGroups:
         this.diagramView.visibleEntities!.tableGroups = items.length > 0
-          ? items.map((i) => ({
-              name: i.name,
+          ? items.map((index) => ({
+              name: index.name,
             }))
           : null;
         break;
       case ElementKind.DiagramViewSchemas:
         this.diagramView.visibleEntities!.schemas = items.length > 0
-          ? items.map((i) => ({
-              name: i.name,
+          ? items.map((index) => ({
+              name: index.name,
             }))
           : null;
         break;
@@ -285,12 +285,12 @@ export class DiagramViewInterpreter {
     if (!members) return [];
 
     return uniqBy(
-      members.filter((m) => m.isKind(SymbolKind.TableGroup)),
-      (m) => m.originalSymbol.intern(),
+      members.filter((member) => member.isKind(SymbolKind.TableGroup)),
+      (member) => member.originalSymbol.intern(),
     )
-      .flatMap((m) => m.name !== undefined
+      .flatMap((member) => member.name !== undefined
         ? ({
-            name: m.name,
+            name: member.name,
           })
         : []);
   }

@@ -16,15 +16,15 @@ export class ParsingContextStack {
 
   private numberOfNestedLBraces = 0;
 
-  push (ctx: ParsingContext) {
-    this.stack.push(ctx);
-    if (ctx === ParsingContext.ListExpression) {
+  push (context: ParsingContext) {
+    this.stack.push(context);
+    if (context === ParsingContext.ListExpression) {
       this.numberOfNestedLBrackets += 1;
     }
-    if (ctx === ParsingContext.GroupExpression) {
+    if (context === ParsingContext.GroupExpression) {
       this.numberOfNestedLParens += 1;
     }
-    if (ctx === ParsingContext.BlockExpression) {
+    if (context === ParsingContext.BlockExpression) {
       this.numberOfNestedLBraces += 1;
     }
   }
@@ -68,9 +68,9 @@ export class ParsingContextStack {
       this.push(context);
 
       try {
-        const res = callback();
+        const result = callback();
 
-        return res;
+        return result;
       } finally {
         this.pop();
       }
@@ -78,7 +78,7 @@ export class ParsingContextStack {
   }
 
   // Return the type of the handler context currently in the context stack to handle `token`
-  findHandlerContext (tokens: SyntaxToken[], curTokenId: number): ParsingContext | undefined {
+  findHandlerContext (tokens: SyntaxToken[], currentTokenId: number): ParsingContext | undefined {
     if (
       this.numberOfNestedLBraces <= 0
       && this.numberOfNestedLBrackets <= 0
@@ -87,7 +87,7 @@ export class ParsingContextStack {
       return undefined;
     }
 
-    for (let tokenId = curTokenId; tokenId < tokens.length - 1; tokenId += 1) {
+    for (let tokenId = currentTokenId; tokenId < tokens.length - 1; tokenId += 1) {
       const token = tokens[tokenId];
       switch (token.kind) {
         case SyntaxTokenKind.COMMA:
@@ -96,10 +96,10 @@ export class ParsingContextStack {
               ...this.stack,
             ]
               .reverse()
-              .find((c) => [
+              .find((context) => [
                 ParsingContext.GroupExpression,
                 ParsingContext.ListExpression,
-              ].includes(c))!;
+              ].includes(context))!;
           }
           break;
         case SyntaxTokenKind.RPAREN:

@@ -9,9 +9,9 @@ export function containerElement (
 ): Readonly<ElementDeclarationNode | ProgramNode> {
   const containers = this.container.stack(filepath, offset);
 
-  for (let i = containers.length - 1; i >= 0; i -= 1) {
-    if (containers[i] instanceof ElementDeclarationNode) {
-      return containers[i] as ElementDeclarationNode;
+  for (let index = containers.length - 1; index >= 0; index -= 1) {
+    if (containers[index] instanceof ElementDeclarationNode) {
+      return containers[index] as ElementDeclarationNode;
     }
   }
 

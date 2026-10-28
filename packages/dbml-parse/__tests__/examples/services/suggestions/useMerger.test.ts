@@ -7,8 +7,8 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 function setup (files: Record<string, string>) {
   const layout = new MemoryProjectLayout();
-  for (const [path, src] of Object.entries(files)) {
-    layout.setSource(Filepath.from(path), src);
+  for (const [path, source] of Object.entries(files)) {
+    layout.setSource(Filepath.from(path), source);
   }
   const compiler = new Compiler(layout);
   return compiler;

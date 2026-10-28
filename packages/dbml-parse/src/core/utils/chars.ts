@@ -12,18 +12,18 @@ export function isAlphaOrUnderscore (char: string): boolean {
 
 export function isDigit (char: string): boolean {
   if (!char) return false;
-  const c = char[0];
+  const character = char[0];
 
-  return c >= '0' && c <= '9';
+  return character >= '0' && character <= '9';
 }
 
 // Check if a character is a valid hexadecimal character
 export function isHexChar (char: string): boolean {
   const [
-    c,
+    character,
   ] = char;
 
-  return isDigit(c) || (isAlphaOrUnderscore(c) && c.toLowerCase() >= 'a' && c.toLowerCase() <= 'f');
+  return isDigit(character) || (isAlphaOrUnderscore(character) && character.toLowerCase() >= 'a' && character.toLowerCase() <= 'f');
 }
 
 export function isAlphaNumeric (char: string): boolean {

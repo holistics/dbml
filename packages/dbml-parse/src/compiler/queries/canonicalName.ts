@@ -24,7 +24,7 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
   const candidates = [
     ...this.symbolUses(original).getValue(),
     ...this.symbolAliases(original).getValue(),
-  ].filter((m) => m.filepath.equals(filepath));
+  ].filter((candidate) => candidate.filepath.equals(filepath));
 
   for (const member of candidates) {
     const name = member.name;
@@ -60,15 +60,15 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
 // Walk up symbolParent chain to build the schema qualified name, excluding public
 function getSchemaChain (compiler: Compiler, symbol: NodeSymbol): string[] {
   const chain: string[] = [];
-  let cur: NodeSymbol | undefined = symbol;
-  while (cur) {
-    const parents = compiler.symbolParent(cur);
+  let current: NodeSymbol | undefined = symbol;
+  while (current) {
+    const parents = compiler.symbolParent(current);
     const schemaParent = parents.find(
-      (p): p is SchemaSymbol => p instanceof SchemaSymbol && p.isKind(SymbolKind.Schema),
+      (parent): parent is SchemaSymbol => parent instanceof SchemaSymbol && parent.isKind(SymbolKind.Schema),
     );
     if (!schemaParent || schemaParent.isPublicSchema()) break;
     chain.unshift(schemaParent.name ?? '');
-    cur = schemaParent;
+    current = schemaParent;
   }
   return chain;
 }

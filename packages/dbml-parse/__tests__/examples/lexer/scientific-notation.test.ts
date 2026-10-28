@@ -5,7 +5,7 @@ import { lex } from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
-  return lex(source).getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+  return lex(source).getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 }
 
 describe('[example] lexer - scientific notation', () => {

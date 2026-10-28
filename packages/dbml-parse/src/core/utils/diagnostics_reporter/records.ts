@@ -24,8 +24,8 @@ function formatColumnRef (
   const { schema, name: tableName } = filepath
     ? table.interpretedName(compiler, filepath)
     : { schema: table.schema(compiler), name: table.name ?? '' };
-  const names = columns.map((c) => {
-    const col = c.name ?? '';
+  const names = columns.map((column) => {
+    const col = column.name ?? '';
     return schema ? `${schema}.${tableName}.${col}` : `${tableName}.${col}`;
   });
   return names.length === 1 ? names[0] : `(${names.join(', ')})`;

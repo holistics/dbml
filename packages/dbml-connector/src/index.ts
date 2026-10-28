@@ -1,5 +1,3 @@
 import * as connector from './connectors/connector';
 
-export {
-  connector,
-};
+export { connector };

@@ -11,13 +11,13 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
+import { destructureComplexVariable, extractVariableNameFromPrimaryVariable } from '../../utils/expression';
 import { getIndexColumnSortOrder } from '../../utils/validate';
 import { scanNonListNodeForBinding } from '../utils';
 
 // `name [desc]` refers to the column `name`: take the sort order off before scanning
 function withoutSortOrders (node?: SyntaxNode): (SyntaxNode | undefined)[] {
-  if (node instanceof TupleExpressionNode && node.elementList.some((e) => e instanceof ArrayNode)) {
+  if (node instanceof TupleExpressionNode && node.elementList.some((element) => element instanceof ArrayNode)) {
     return node.elementList.flatMap(withoutSortOrders);
   }
   if (node instanceof ArrayNode && getIndexColumnSortOrder(node)) return [node.array];
@@ -65,7 +65,7 @@ export default class IndexesBinder {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
@@ -110,7 +110,7 @@ export default class IndexesBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee);
+        const columnName = extractVariableNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
         const column = this.compiler.nodeReferee(bindee);
         if (!column.getValue() || column.hasValue(UNHANDLED)) {

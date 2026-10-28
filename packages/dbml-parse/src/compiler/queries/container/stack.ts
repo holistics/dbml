@@ -28,7 +28,7 @@ export function containerStack (
   } = this.container.token(filepath, offset);
   const validIndex = startIndex === undefined
     ? -1
-    : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
+    : findLastIndex(tokens, (token) => !token.isInvalid, startIndex);
 
   if (validIndex === -1) {
     return [
@@ -38,34 +38,34 @@ export function containerStack (
 
   const searchOffset = tokens[validIndex].start;
 
-  let curNode: Readonly<SyntaxNode> = this.parse.ast(filepath);
-  const res: SyntaxNode[] = [
-    curNode,
+  let currentNode: Readonly<SyntaxNode> = this.parse.ast(filepath);
+  const result: SyntaxNode[] = [
+    currentNode,
   ];
 
   while (true) {
-    const memberChain = getMemberChain(curNode);
+    const memberChain = getMemberChain(currentNode);
     const foundMem = memberChain.find((mem) => isOffsetWithinSpan(searchOffset, mem));
     if (foundMem === undefined || foundMem instanceof SyntaxToken) {
       break;
     }
-    res.push(foundMem);
-    curNode = foundMem;
+    result.push(foundMem);
+    currentNode = foundMem;
   }
 
   if (token?.kind === SyntaxTokenKind.COLON) {
-    return res;
+    return result;
   }
 
-  while (res.length > 0) {
+  while (result.length > 0) {
     let popOnce = false;
-    const lastContainer = last(res)!;
+    const lastContainer = last(result)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
       const source = this.getSource(filepath) || '';
-      for (let i = lastContainer.end; i < offset; i += 1) {
-        if (source[i] === '\n') {
-          res.pop();
+      for (let index = lastContainer.end; index < offset; index += 1) {
+        if (source[index] === '\n') {
+          result.pop();
           popOnce = true;
         }
       }
@@ -74,41 +74,41 @@ export function containerStack (
       || lastContainer instanceof InfixExpressionNode
     ) {
       if (this.container.token(filepath, offset).token !== lastContainer.op) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     } else if (lastContainer instanceof ListExpressionNode) {
       if (lastContainer.listCloseBracket && lastContainer.end <= offset) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     } else if (lastContainer instanceof TupleExpressionNode) {
       if (lastContainer.tupleCloseParen && lastContainer.end <= offset) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     } else if (lastContainer instanceof CommaExpressionNode) {
       // CommaExpressionNode has no closing delimiter, so pop when offset is past its end
       if (lastContainer.end <= offset) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     } else if (lastContainer instanceof BlockExpressionNode) {
       if (lastContainer.blockCloseBrace && lastContainer.end <= offset) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     } else if (!(lastContainer instanceof IdentifierStreamNode)) {
       if (lastContainer.end < offset) {
-        res.pop();
+        result.pop();
         popOnce = true;
       }
     }
 
     if (popOnce) {
-      const maybeElement = last(res);
+      const maybeElement = last(result);
       if (maybeElement instanceof ElementDeclarationNode && maybeElement.end <= offset) {
-        res.pop();
+        result.pop();
       }
     }
     if (!popOnce) {
@@ -116,5 +116,5 @@ export function containerStack (
     }
   }
 
-  return res;
+  return result;
 }

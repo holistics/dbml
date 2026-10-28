@@ -107,30 +107,30 @@ export default class TablePartialValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    forIn(settingMap, (attrs, name) => {
+    forIn(settingMap, (attributes, name) => {
       switch (name) {
         case SettingName.HeaderColor:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (!isValidHexColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (!isValidHexColor(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attribute.value || attribute.name!));
             }
           });
           break;
         case SettingName.Note:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (!isExpressionAQuotedString(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attribute.value || attribute.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attribute)));
       }
     });
     return errors;
@@ -148,7 +148,7 @@ export default class TablePartialValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -222,144 +222,144 @@ export default class TablePartialValidator {
       }
     });
 
-    const pkAttrs = settingMap[SettingName.PK] || [];
-    const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
-    if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
+    const pkAttributes = settingMap[SettingName.PK] || [];
+    const pkeyAttributes = settingMap[SettingName.PrimaryKey] || [];
+    if (pkAttributes.length >= 1 && pkeyAttributes.length >= 1) {
       errors.push(...[
-        ...pkAttrs,
-        ...pkeyAttrs,
-      ].map((attr) => new CompileError(
+        ...pkAttributes,
+        ...pkeyAttributes,
+      ].map((attribute) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
         'Either one of \'primary key\' and \'pk\' can appear',
-        attr,
+        attribute,
       )));
     }
 
-    forIn(settingMap, (attrs, name) => {
+    forIn(settingMap, (attributes, name) => {
       switch (name) {
         case SettingName.Note:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (!isExpressionAQuotedString(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.Ref:
-          attrs.forEach((attr) => {
-            if (!isUnaryRelationship(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a valid unary relationship`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (!isUnaryRelationship(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a valid unary relationship`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.PrimaryKey:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.PK:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.NotNull: {
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          const nullAttrs = settingMap[SettingName.Null] || [];
-          if (attrs.length >= 1 && nullAttrs.length >= 1) {
+          const nullAttributes = settingMap[SettingName.Null] || [];
+          if (attributes.length >= 1 && nullAttributes.length >= 1) {
             errors.push(...[
-              ...attrs,
-              ...nullAttrs,
-            ].map((attr) => new CompileError(
+              ...attributes,
+              ...nullAttributes,
+            ].map((attribute) => new CompileError(
               CompileErrorCode.CONFLICTING_SETTING,
               '\'not null\' and \'null\' can not be set at the same time',
-              attr,
+              attribute,
             )));
           }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
         }
 
         case SettingName.Null:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.Unique:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.Increment:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
             }
           });
           break;
 
         case SettingName.Default:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+          if (attributes.length > 1) {
+            errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
           }
-          attrs.forEach((attr) => {
-            if (!isValidDefaultValue(attr.value)) {
+          attributes.forEach((attribute) => {
+            if (!isValidDefaultValue(attribute.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
                 `'${name}' must be a string literal, number literal, function expression, true, false or null`,
-                attr.value || attr.name!,
+                attribute.value || attribute.name!,
               ));
             }
           });
           break;
 
         case SettingName.Check:
-          attrs.forEach((attr) => {
-            if (!(attr.value instanceof FunctionExpressionNode)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
+          attributes.forEach((attribute) => {
+            if (!(attribute.value instanceof FunctionExpressionNode)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attribute.value || attribute.name!));
             }
           });
           break;
 
         default:
           // Any non-builtin key is free-form inline custom metadata
-          errors.push(...validateCustomInlineMetadata(name, attrs, {
+          errors.push(...validateCustomInlineMetadata(name, attributes, {
             duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
             invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
           }));
@@ -390,30 +390,30 @@ export function validateTablePartialSettings (settingList?: ListExpressionNode):
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
 
-  forIn(settingMap, (attrs, name) => {
+  forIn(settingMap, (attributes, name) => {
     switch (name) {
       case SettingName.HeaderColor:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isValidHexColor(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (!isValidHexColor(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attribute.value || attribute.name!));
           }
         });
         break;
       case SettingName.Note:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isExpressionAQuotedString(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (!isExpressionAQuotedString(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attribute.value || attribute.name!));
           }
         });
         break;
       default:
-        errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
+        errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attribute)));
     }
   });
   return new Report(settingMap, errors);
@@ -462,144 +462,144 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
     }
   });
 
-  const pkAttrs = settingMap[SettingName.PK] || [];
-  const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
-  if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
+  const pkAttributes = settingMap[SettingName.PK] || [];
+  const pkeyAttributes = settingMap[SettingName.PrimaryKey] || [];
+  if (pkAttributes.length >= 1 && pkeyAttributes.length >= 1) {
     errors.push(...[
-      ...pkAttrs,
-      ...pkeyAttrs,
-    ].map((attr) => new CompileError(
+      ...pkAttributes,
+      ...pkeyAttributes,
+    ].map((attribute) => new CompileError(
       CompileErrorCode.DUPLICATE_COLUMN_SETTING,
       'Either one of \'primary key\' and \'pk\' can appear',
-      attr,
+      attribute,
     )));
   }
 
-  forIn(settingMap, (attrs, name) => {
+  forIn(settingMap, (attributes, name) => {
     switch (name) {
       case SettingName.Note:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isExpressionAQuotedString(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (!isExpressionAQuotedString(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.Ref:
-        attrs.forEach((attr) => {
-          if (!isUnaryRelationship(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a valid unary relationship`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (!isUnaryRelationship(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a valid unary relationship`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.PrimaryKey:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.PK:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.NotNull: {
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        const nullAttrs = settingMap[SettingName.Null] || [];
-        if (attrs.length >= 1 && nullAttrs.length >= 1) {
+        const nullAttributes = settingMap[SettingName.Null] || [];
+        if (attributes.length >= 1 && nullAttributes.length >= 1) {
           errors.push(...[
-            ...attrs,
-            ...nullAttrs,
-          ].map((attr) => new CompileError(
+            ...attributes,
+            ...nullAttributes,
+          ].map((attribute) => new CompileError(
             CompileErrorCode.CONFLICTING_SETTING,
             '\'not null\' and \'null\' can not be set at the same time',
-            attr,
+            attribute,
           )));
         }
-        attrs.forEach((attr) => {
-          if (attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
       }
 
       case SettingName.Null:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.Unique:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.Increment:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr instanceof AttributeNode && attr.value !== undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (attribute instanceof AttributeNode && attribute.value !== undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attribute.value || attribute.name!));
           }
         });
         break;
 
       case SettingName.Default:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isValidDefaultValue(attr.value)) {
+        attributes.forEach((attribute) => {
+          if (!isValidDefaultValue(attribute.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
               `'${name}' must be a string literal, number literal, function expression, true, false or null`,
-              attr.value || attr.name!,
+              attribute.value || attribute.name!,
             ));
           }
         });
         break;
 
       case SettingName.Check:
-        attrs.forEach((attr) => {
-          if (!(attr.value instanceof FunctionExpressionNode)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
+        attributes.forEach((attribute) => {
+          if (!(attribute.value instanceof FunctionExpressionNode)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attribute.value || attribute.name!));
           }
         });
         break;
 
       default:
         // Any non-builtin key is free-form inline custom metadata
-        errors.push(...validateCustomInlineMetadata(name, attrs, {
+        errors.push(...validateCustomInlineMetadata(name, attributes, {
           duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
           invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
         }));

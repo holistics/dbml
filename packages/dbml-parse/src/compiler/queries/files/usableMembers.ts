@@ -105,7 +105,7 @@ export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, elem
   if (elementSchemaChain.length < qualifiedName.length) return {
     kind: 'none',
   };
-  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return {
+  if (!qualifiedName.every((segment, index) => segment === elementSchemaChain[index])) return {
     kind: 'none',
   };
 
@@ -228,7 +228,7 @@ function usableMembersForProgram (
   ];
   const nonSchemaMembers: NodeSymbol[] = [];
 
-  const publicSchema = schemaMembers.find((s) => s.isPublicSchema());
+  const publicSchema = schemaMembers.find((schema) => schema.isPublicSchema());
   if (publicSchema) {
     const publicUsable = compiler.usableMembers(publicSchema).getFiltered(UNHANDLED);
     if (publicUsable) {
@@ -365,7 +365,7 @@ function registerSchemaChildren (
     if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
     const parts = useUtils.visibleName(compiler, specifier);
     if (!parts || parts.length <= qualifiedName.length) continue;
-    if (!qualifiedName.every((s, i) => s === parts[i])) continue;
+    if (!qualifiedName.every((segment, index) => segment === parts[index])) continue;
     const childName = parts[qualifiedName.length];
     if (childName && !childSchemas.has(childName)) {
       childSchemas.set(
@@ -425,7 +425,7 @@ function collectChildSchemaNames (compiler: Compiler, filepath: Filepath, parent
         ]
       : fullname.slice(0, -1);
     if (schemaChain.length > parentQualifiedName.length
-      && parentQualifiedName.every((s, i) => s === schemaChain[i])) {
+      && parentQualifiedName.every((segment, index) => segment === schemaChain[index])) {
       names.push(schemaChain[parentQualifiedName.length]);
     }
   }
@@ -438,7 +438,7 @@ function collectChildSchemaNames (compiler: Compiler, filepath: Filepath, parent
     if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
     const parts = useUtils.visibleName(compiler, specifier);
     if (!parts || parts.length <= parentQualifiedName.length) continue;
-    if (!parentQualifiedName.every((s, i) => s === parts[i])) continue;
+    if (!parentQualifiedName.every((segment, index) => segment === parts[index])) continue;
     names.push(parts[parentQualifiedName.length]);
   }
 

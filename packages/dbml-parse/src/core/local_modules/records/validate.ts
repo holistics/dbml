@@ -183,7 +183,7 @@ export default class RecordsValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateDataRows(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -286,20 +286,20 @@ export function validateRecordsSettings (settingList?: ListExpressionNode): Repo
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
 
-  forIn(settingMap, (attrs, name) => {
+  forIn(settingMap, (attributes, name) => {
     switch (name) {
       case SettingName.Example:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_RECORDS_SETTING, '\'example\' can only appear once', attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_RECORDS_SETTING, '\'example\' can only appear once', attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr.value) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_SETTING_VALUE, '\'example\' cannot have a value', attr!));
+        attributes.forEach((attribute) => {
+          if (attribute.value) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_SETTING_VALUE, '\'example\' cannot have a value', attribute!));
           }
         });
         break;
       default:
-        errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_RECORDS_SETTING, `Unknown '${name}' setting`, attr)));
+        errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.UNKNOWN_RECORDS_SETTING, `Unknown '${name}' setting`, attribute)));
     }
   });
   return new Report(settingMap, errors);

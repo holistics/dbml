@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - enum across files', () => {
   const { compiler } = setupCompiler({
@@ -21,7 +21,7 @@ Table jobs {
   });
 
   test('no binding errors in consumer', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     // expect: zero binding errors - job_status resolves across file boundary
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
@@ -29,21 +29,21 @@ Table jobs {
   test('imported enum appears in exported schema', () => {
     const db = getDatabase(compiler, '/main.dbml');
     // expect: job_status enum is included as an external in the consumer's schema
-    const e = db.enums.find((e) => e.name === 'job_status');
-    expect(e).toBeDefined();
+    const enumItem = db.enums.find((error) => error.name === 'job_status');
+    expect(enumItem).toBeDefined();
   });
 
   test('imported enum values are preserved', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const e = db.enums.find((e) => e.name === 'job_status')!;
+    const enumItem = db.enums.find((error) => error.name === 'job_status')!;
     // expect: all three enum values present, order preserved
-    expect(e.values.map((v) => v.name)).toEqual(['pending', 'running', 'done']);
+    expect(enumItem.values.map((value) => value.name)).toEqual(['pending', 'running', 'done']);
   });
 
   test('column that uses the imported enum has correct type_name', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const jobs = db.tables.find((t) => t.name === 'jobs')!;
-    const statusField = jobs.fields.find((f) => f.name === 'status')!;
+    const jobs = db.tables.find((token) => token.name === 'jobs')!;
+    const statusField = jobs.fields.find((field) => field.name === 'status')!;
     // expect: field type resolves to the imported enum name
     expect(statusField.type.schemaName).toBeNull();
     expect(statusField.type.type_name).toBe('job_status');
@@ -70,27 +70,27 @@ Table jobs {
   });
 
   test('no binding errors - alias is the resolvable name', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('alias name appears in exported schema (original name stripped)', () => {
     const db = getDatabase(compiler, '/main.dbml');
     // expect: exported under the alias "Status", not "job_status"
-    expect(db.enums.find((e) => e.name === 'Status')).toBeDefined();
-    expect(db.enums.find((e) => e.name === 'job_status')).toBeUndefined();
+    expect(db.enums.find((error) => error.name === 'Status')).toBeDefined();
+    expect(db.enums.find((error) => error.name === 'job_status')).toBeUndefined();
   });
 
   test('enum values are preserved under the alias', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const e = db.enums.find((e) => e.name === 'Status')!;
-    expect(e.values.map((v) => v.name)).toEqual(['pending', 'running', 'done']);
+    const enumItem = db.enums.find((error) => error.name === 'Status')!;
+    expect(enumItem.values.map((value) => value.name)).toEqual(['pending', 'running', 'done']);
   });
 
   test('column type references the alias name', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const jobs = db.tables.find((t) => t.name === 'jobs')!;
-    const statusField = jobs.fields.find((f) => f.name === 'status')!;
+    const jobs = db.tables.find((token) => token.name === 'jobs')!;
+    const statusField = jobs.fields.find((field) => field.name === 'status')!;
     // expect: column type is "Status", the consumer-side alias
     expect(statusField.type.type_name).toBe('Status');
   });
@@ -117,8 +117,8 @@ use { table jobs } from './types.dbml'
 `,
     });
     const db = getDatabase(compiler, '/main.dbml');
-    const jobs = db.tables.find((t) => t.name === 'jobs')!;
-    const statusField = jobs.fields.find((f) => f.name === 'status')!;
+    const jobs = db.tables.find((token) => token.name === 'jobs')!;
+    const statusField = jobs.fields.find((field) => field.name === 'status')!;
     // expect: the column type is the original enum, not the alias
     expect(statusField.type.schemaName).toBe('users');
     expect(statusField.type.type_name).toBe('status');
@@ -136,8 +136,8 @@ Table tasks {
 `,
     });
     const db = getDatabase(compiler, '/main.dbml');
-    const tasks = db.tables.find((t) => t.name === 'tasks')!;
-    const statusField = tasks.fields.find((f) => f.name === 'status')!;
+    const tasks = db.tables.find((token) => token.name === 'tasks')!;
+    const statusField = tasks.fields.find((field) => field.name === 'status')!;
     expect(statusField.type.schemaName).toBe('users');
     expect(statusField.type.type_name).toBe('status');
   });
@@ -156,10 +156,10 @@ Table tasks {
 `,
     });
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.enums.find((e) => e.name === 'S')).toBeDefined();
-    const tasks = db.tables.find((t) => t.name === 'tasks')!;
-    const byName = tasks.fields.find((f) => f.name === 'by_name')!;
-    const byAlias = tasks.fields.find((f) => f.name === 'by_alias')!;
+    expect(db.enums.find((error) => error.name === 'S')).toBeDefined();
+    const tasks = db.tables.find((token) => token.name === 'tasks')!;
+    const byName = tasks.fields.find((field) => field.name === 'by_name')!;
+    const byAlias = tasks.fields.find((field) => field.name === 'by_alias')!;
     // both reference the same enum, canonical name is consistent
     expect(byName.type.schemaName).toBeNull();
     expect(byName.type.type_name).toBe('S');
@@ -179,9 +179,9 @@ Table tasks {
 `,
     });
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.enums.find((e) => e.name === 'X')).toBeDefined();
-    const tasks = db.tables.find((t) => t.name === 'tasks')!;
-    const statusField = tasks.fields.find((f) => f.name === 'status')!;
+    expect(db.enums.find((error) => error.name === 'X')).toBeDefined();
+    const tasks = db.tables.find((token) => token.name === 'tasks')!;
+    const statusField = tasks.fields.find((field) => field.name === 'status')!;
     expect(statusField.type.schemaName).toBeNull();
     expect(statusField.type.type_name).toBe('X');
   });
@@ -199,9 +199,9 @@ Table tasks {
     });
     const db = getDatabase(compiler, '/main.dbml');
     // expect: same as `use { enum users.status as S }`, so the consumer sees the name S
-    expect(db.enums.find((e) => e.name === 'S')).toBeDefined();
-    const tasks = db.tables.find((t) => t.name === 'tasks')!;
-    expect(tasks.fields.find((f) => f.name === 'status')!.type.type_name).toBe('S');
+    expect(db.enums.find((error) => error.name === 'S')).toBeDefined();
+    const tasks = db.tables.find((token) => token.name === 'tasks')!;
+    expect(tasks.fields.find((field) => field.name === 'status')!.type.type_name).toBe('S');
   });
 });
 
@@ -230,20 +230,20 @@ use { tablegroup user_group } from './base.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('pulled table has correct enum type on column', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const statusField = users.fields.find((f) => f.name === 'status')!;
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const statusField = users.fields.find((field) => field.name === 'status')!;
     expect(statusField.type.type_name).toBe('status');
   });
 
   test('non-imported enum does NOT appear in schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.enums.find((e) => e.name === 'status')).toBeUndefined();
+    expect(db.enums.find((error) => error.name === 'status')).toBeUndefined();
   });
 });
 
@@ -268,12 +268,12 @@ use { table users } from './source.dbml'
 
   test('explicitly imported enum in schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.enums.find((e) => e.name === 'status')).toBeDefined();
+    expect(db.enums.find((error) => error.name === 'status')).toBeDefined();
   });
 
   test('column type resolves to imported enum', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    expect(users.fields.find((f) => f.name === 'status')!.type.type_name).toBe('status');
+    const users = db.tables.find((token) => token.name === 'users')!;
+    expect(users.fields.find((field) => field.name === 'status')!.type.type_name).toBe('status');
   });
 });

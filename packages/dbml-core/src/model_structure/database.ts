@@ -85,7 +85,7 @@ class Database extends Element {
     this.injectedRawRefs.forEach((rawRef) => {
       const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
       const ref = new Ref({ ...rawRef, schema });
-      if (schema.refs.some((r) => r.equals(ref as any))) return;
+      if (schema.refs.some((existingRef) => existingRef.equals(ref as any))) return;
       schema.pushRef(ref);
     });
   }
@@ -128,7 +128,7 @@ class Database extends Element {
   }
 
   private checkNote (note: StickyNote): void {
-    if (this.notes.some((n) => n.name === note.name)) {
+    if (this.notes.some((existingNote) => existingNote.name === note.name)) {
       note.error(`Notes ${note.name} existed`);
     }
   }
@@ -145,7 +145,7 @@ class Database extends Element {
   }
 
   private checkSchema (schema: Schema): void {
-    if (this.schemas.some((s) => s.name === schema.name)) {
+    if (this.schemas.some((existingSchema) => existingSchema.name === schema.name)) {
       schema.error(`Schemas ${schema.name} existed`);
     }
   }
@@ -213,7 +213,7 @@ class Database extends Element {
   }
 
   findOrCreateSchema (schemaName: string): Schema {
-    let schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
+    let schema = this.schemas.find((existingSchema) => existingSchema.name === schemaName || existingSchema.alias === schemaName);
     // create new schema if schema not found
     if (!schema) {
       schema = new Schema({
@@ -231,22 +231,21 @@ class Database extends Element {
   }
 
   findTableAlias (alias: string): Table | null {
-    const sym = this.aliases.find((a) => a.name === alias);
+    const sym = this.aliases.find((aliasEntry) => aliasEntry.name === alias);
     if (!sym || sym.kind !== 'table') return null;
 
     const schemaName = sym.value.schemaName || DEFAULT_SCHEMA_NAME;
-    const schema = this.schemas.find((s) => s.name === schemaName);
+    const schema = this.schemas.find((existingSchema) => existingSchema.name === schemaName);
     if (!schema) return null;
 
     const { tableName } = sym.value;
-    const table = schema.tables.find((t) => t.name === tableName);
+    const table = schema.tables.find((tableEntry) => tableEntry.name === tableName);
     return table || null;
   }
 
   findTable (schemaName: string | null, tableName: string): Table | undefined {
-    let table: Table | null | undefined = null;
     if (!schemaName) {
-      table = this.findTableAlias(tableName);
+      const table = this.findTableAlias(tableName);
       if (table) return table;
     }
 
@@ -258,9 +257,9 @@ class Database extends Element {
   }
 
   findEnum (schemaName: string, name: string): Enum | undefined {
-    const schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
+    const schema = this.schemas.find((existingSchema) => existingSchema.name === schemaName || existingSchema.alias === schemaName);
     if (!schema) return undefined;
-    const _enum = schema.enums.find((e) => e.name === name);
+    const _enum = schema.enums.find((enumEntry) => enumEntry.name === name);
     return _enum;
   }
 
@@ -274,8 +273,8 @@ class Database extends Element {
   adjustCardinalitiesFromColumns (): void {
     this.schemas.forEach((schema) => {
       schema.refs.forEach((ref) => {
-        const manyEndpoint = ref.endpoints.find((e: any) => parseCardinality(e.relation).max === '*');
-        const oneEndpoint = ref.endpoints.find((e: any) => parseCardinality(e.relation).max === 1);
+        const manyEndpoint = ref.endpoints.find((endpoint: any) => parseCardinality(endpoint.relation).max === '*');
+        const oneEndpoint = ref.endpoints.find((endpoint: any) => parseCardinality(endpoint.relation).max === 1);
 
         // Many-to-many, no need to adjust
         if (!oneEndpoint) return;
@@ -296,7 +295,7 @@ class Database extends Element {
 
         if (!sourceFkEndpoint || !targetFkEndpoint) return; // not simple many-to-one or one-to-many
 
-        const isSourceNotNull = sourceFkEndpoint.fields.every((f: any) => f.not_null || f.pk || f.increment);
+        const isSourceNotNull = sourceFkEndpoint.fields.every((field: any) => field.not_null || field.pk || field.increment);
 
         if (isSourceNotNull) {
           targetFkEndpoint.relation = makeCardinalityRequired(targetFkEndpoint.relation);
@@ -322,16 +321,16 @@ class Database extends Element {
 
   private exportChild () {
     return {
-      schemas: this.schemas.map((s) => s.export()),
-      notes: this.notes.map((n) => n.export()),
-      records: this.records.map((r) => ({ ...r })),
+      schemas: this.schemas.map((schema) => schema.export()),
+      notes: this.notes.map((note) => note.export()),
+      records: this.records.map((record) => ({ ...record })),
     };
   }
 
   private exportChildIds () {
     return {
-      schemaIds: this.schemas.map((s) => s.id),
-      noteIds: this.notes.map((n) => n.id),
+      schemaIds: this.schemas.map((schema) => schema.id),
+      noteIds: this.notes.map((note) => note.id),
     };
   }
 

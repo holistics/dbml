@@ -92,7 +92,7 @@ export default class RefValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -152,7 +152,7 @@ export default class RefValidator {
       }
 
       if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
+        errors.push(...args.map((argument) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', argument)));
       }
     });
 
@@ -215,45 +215,45 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
 
   for (const [
     name,
-    attrs,
+    attributes,
   ] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Delete:
       case SettingName.Update:
-        if (attrs.length > 1) {
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
+        if (attributes.length > 1) {
+          attributes.forEach((attribute) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isValidPolicy(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+        attributes.forEach((attribute) => {
+          if (!isValidPolicy(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attribute));
           }
         });
-        clean[name] = attrs;
+        clean[name] = attributes;
         break;
       case SettingName.Color:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attribute)));
         }
-        attrs.forEach((attr) => {
-          if (!isValidHexColor(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+        attributes.forEach((attribute) => {
+          if (!isValidHexColor(attribute.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attribute!));
           }
         });
-        clean[name] = attrs;
+        clean[name] = attributes;
         break;
       case SettingName.Inactive:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attr)));
+        if (attributes.length > 1) {
+          errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attribute)));
         }
-        attrs.forEach((attr) => {
-          if (attr.value) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attr!));
+        attributes.forEach((attribute) => {
+          if (attribute.value) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attribute!));
           }
         });
-        clean[name] = attrs;
+        clean[name] = attributes;
         break;
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+        attributes.forEach((attribute) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attribute)));
     }
   }
   return new Report(clean, errors);

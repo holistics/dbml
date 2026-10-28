@@ -8,7 +8,7 @@ export type ImportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'p
 export type ImportOptions = Partial<DbmlExporterOptions>;
 
 function _import (
-  str: string,
+  string_: string,
   format: ImportFormat,
   options: ImportOptions = {
     includeRecords: true,
@@ -18,7 +18,7 @@ function _import (
     includeRecords = true,
   } = options;
 
-  const database = (new Parser()).parse(str, format);
+  const database = (new Parser()).parse(string_, format);
   const dbml = ModelExporter.export(database.normalize(), 'dbml', { includeRecords });
 
   return dbml;

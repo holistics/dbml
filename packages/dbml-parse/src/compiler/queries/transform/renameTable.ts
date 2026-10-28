@@ -77,26 +77,26 @@ function checkIfPartOfQualifiedReference (
   start: number;
   end: number;
 } | null {
-  let i = node.start - 1;
-  while (i >= 0 && /\s/.test(source[i])) i--;
-  if (i < 0 || source[i] !== '.') return null;
-  i--;
-  while (i >= 0 && /\s/.test(source[i])) i--;
-  if (i < 0) return null;
+  let index = node.start - 1;
+  while (index >= 0 && /\s/.test(source[index])) index--;
+  if (index < 0 || source[index] !== '.') return null;
+  index--;
+  while (index >= 0 && /\s/.test(source[index])) index--;
+  if (index < 0) return null;
 
   let schemaStart: number;
   let schemaEnd: number;
 
-  if (source[i] === '"') {
-    schemaEnd = i + 1;
-    i--;
-    while (i >= 0 && source[i] !== '"') i--;
-    if (i < 0) return null;
-    schemaStart = i;
+  if (source[index] === '"') {
+    schemaEnd = index + 1;
+    index--;
+    while (index >= 0 && source[index] !== '"') index--;
+    if (index < 0) return null;
+    schemaStart = index;
   } else {
-    schemaEnd = i + 1;
-    while (i >= 0 && /[a-zA-Z0-9_]/.test(source[i])) i--;
-    schemaStart = i + 1;
+    schemaEnd = index + 1;
+    while (index >= 0 && /[a-zA-Z0-9_]/.test(source[index])) index--;
+    schemaStart = index + 1;
   }
 
   const schemaText = source.substring(schemaStart, schemaEnd);
@@ -263,26 +263,26 @@ function renameRealDeclaration (
   newTable: string,
 ): Map<string, string> {
   const original = tableSymbol.originalSymbol;
-  const declNode = original.declaration;
-  if (!declNode || !(declNode instanceof ElementDeclarationNode)) return new Map();
+  const declarationNode = original.declaration;
+  if (!declarationNode || !(declarationNode instanceof ElementDeclarationNode)) return new Map();
 
-  const declFp = declNode.filepath;
-  if (!declFp) return new Map();
+  const declarationFilepath = declarationNode.filepath;
+  if (!declarationFilepath) return new Map();
 
-  const declSource = compiler.getSource(declFp) ?? '';
-  const usedQuotes = checkIfDeclarationUsesQuotes(declNode, declSource);
+  const declarationSource = compiler.getSource(declarationFilepath) ?? '';
+  const usedQuotes = checkIfDeclarationUsesQuotes(declarationNode, declarationSource);
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
   const editsByFile = new Map<string, {
-    fp: Filepath;
+    filepath: Filepath;
     edits: TextEdit[];
   }>();
-  const addEdit = (fp: Filepath, edit: TextEdit): void => {
-    const key = fp.absolute;
+  const addEdit = (filepath: Filepath, edit: TextEdit): void => {
+    const key = filepath.absolute;
     let bucket = editsByFile.get(key);
     if (!bucket) {
       bucket = {
-        fp,
+        filepath,
         edits: [],
       };
       editsByFile.set(key, bucket);
@@ -291,11 +291,11 @@ function renameRealDeclaration (
   };
 
   // 1. Declaration name token in the declaring file
-  const declNameNode = declNode.name;
-  if (declNameNode) {
-    addEdit(declFp, {
-      start: declNameNode.start,
-      end: declNameNode.end,
+  const declarationNameNode = declarationNode.name;
+  if (declarationNameNode) {
+    addEdit(declarationFilepath, {
+      start: declarationNameNode.start,
+      end: declarationNameNode.end,
       newText: buildReplacementText(newFormatted),
     });
   }
@@ -304,22 +304,22 @@ function renameRealDeclaration (
   //    findReplacements filters by source text, skipping alias-side refs and rewriting source-name refs in use specifiers and unaliased importers
   const directRefs = compiler.symbolReferences(original);
   for (const ref of directRefs) {
-    if (ref === declNameNode) continue; // already handled above
-    const fp = ref.filepath;
-    const src = compiler.getSource(fp) ?? '';
-    for (const e of findReplacements([
+    if (ref === declarationNameNode) continue; // already handled above
+    const filepath = ref.filepath;
+    const source = compiler.getSource(filepath) ?? '';
+    for (const edit of findReplacements([
       ref,
-    ], oldSchema, oldTable, newFormatted, src)) {
-      addEdit(fp, e);
+    ], oldSchema, oldTable, newFormatted, source)) {
+      addEdit(filepath, edit);
     }
   }
 
   const result = new Map<string, string>();
   for (const {
-    fp, edits,
+    filepath, edits,
   } of editsByFile.values()) {
-    const src = compiler.getSource(fp) ?? '';
-    result.set(fp.absolute, applyTextEdits(src, edits));
+    const source = compiler.getSource(filepath) ?? '';
+    result.set(filepath.absolute, applyTextEdits(source, edits));
   }
 
   return result;

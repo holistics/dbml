@@ -50,15 +50,15 @@ export const indexesModule: GlobalModule = {
     if (!tableSymbol) return new Report(undefined); // If no table found, return nothing
 
     // Extract the column this node refer to
-    const varName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
-    const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, varName);
+    const variableName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
+    const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, variableName);
     if (symbol) {
       return Report.create(symbol);
     }
 
     const containerKind = isElementNode(tableNode, ElementKind.TablePartial) ? 'TablePartial' : 'Table';
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${varName}' does not exist in ${containerKind} 'public.${tableSymbol.name}'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${variableName}' does not exist in ${containerKind} 'public.${tableSymbol.name}'`, node),
     ]);
   },
 

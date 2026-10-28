@@ -42,37 +42,37 @@ class ModelExporter {
       ? model.normalize()
       : model;
 
-    let res = '';
+    let result = '';
     switch (format) {
       case 'dbml':
-        res = DbmlExporter.export(normalizedModel, { includeRecords });
+        result = DbmlExporter.export(normalizedModel, { includeRecords });
         break;
 
       case 'mysql':
-        res = MysqlExporter.export(normalizedModel);
+        result = MysqlExporter.export(normalizedModel);
         break;
 
       case 'postgres':
-        res = PostgresExporter.export(normalizedModel);
+        result = PostgresExporter.export(normalizedModel);
         break;
 
       case 'json':
-        res = JsonExporter.export(model, { isNormalized });
+        result = JsonExporter.export(model, { isNormalized });
         break;
 
       case 'mssql':
-        res = SqlServerExporter.export(normalizedModel);
+        result = SqlServerExporter.export(normalizedModel);
         break;
 
       case 'oracle':
-        res = OracleExporter.export(normalizedModel);
+        result = OracleExporter.export(normalizedModel);
         break;
 
       default:
         break;
     }
 
-    return res;
+    return result;
   }
 }
 

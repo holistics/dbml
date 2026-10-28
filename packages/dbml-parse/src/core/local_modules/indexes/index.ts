@@ -89,46 +89,46 @@ export const indexesModule: LocalModule = {
 
       for (const [
         name,
-        attrs,
+        attributes,
       ] of Object.entries(settingMap)) {
         switch (name) {
           case SettingName.Note:
           case SettingName.Name:
-            if (attrs.length > 1) {
-              attrs.forEach((attr: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
+            if (attributes.length > 1) {
+              attributes.forEach((attribute: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attribute)));
             }
-            attrs.forEach((attr: AttributeNode) => {
-              if (!isExpressionAQuotedString(attr.value)) {
-                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
+            attributes.forEach((attribute: AttributeNode) => {
+              if (!isExpressionAQuotedString(attribute.value)) {
+                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attribute));
               }
             });
-            clean[name] = attrs;
+            clean[name] = attributes;
             break;
           case SettingName.Unique:
           case SettingName.PK:
-            if (attrs.length > 1) {
-              attrs.forEach((attr: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
+            if (attributes.length > 1) {
+              attributes.forEach((attribute: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attribute)));
             }
-            attrs.forEach((attr: AttributeNode) => {
-              if (attr.value !== undefined) {
-                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
+            attributes.forEach((attribute: AttributeNode) => {
+              if (attribute.value !== undefined) {
+                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attribute));
               }
             });
-            clean[name] = attrs;
+            clean[name] = attributes;
             break;
           case SettingName.Type:
-            if (attrs.length > 1) {
-              attrs.forEach((attr: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
+            if (attributes.length > 1) {
+              attributes.forEach((attribute: AttributeNode) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attribute)));
             }
-            attrs.forEach((attr: AttributeNode) => {
-              if (!isExpressionAVariableNode(attr.value)) {
-                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
+            attributes.forEach((attribute: AttributeNode) => {
+              if (!isExpressionAVariableNode(attribute.value)) {
+                errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attribute));
               }
             });
-            clean[name] = attrs;
+            clean[name] = attributes;
             break;
           default:
-            attrs.forEach((attr: AttributeNode) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
+            attributes.forEach((attribute: AttributeNode) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attribute)));
         }
       }
 

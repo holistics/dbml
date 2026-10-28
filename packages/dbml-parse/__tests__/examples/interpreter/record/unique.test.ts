@@ -326,14 +326,14 @@ describe('[example - record] simple unique constraints', () => {
     expect(infos.length).toBeGreaterThan(0);
 
     // Verify users.email duplicate infos
-    const userWarnings = infos.filter((i) => i.diagnostic.includes('users.email') && i.diagnostic.includes('alice@example.com'));
+    const userWarnings = infos.filter((index) => index.diagnostic.includes('users.email') && index.diagnostic.includes('alice@example.com'));
     expect(userWarnings.length).toBeGreaterThan(0);
-    expect(userWarnings.every((i) => i.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
+    expect(userWarnings.every((index) => index.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
 
     // Verify products.sku duplicate infos
-    const productWarnings = infos.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
+    const productWarnings = infos.filter((warning) => warning.diagnostic.includes('products.sku') && warning.diagnostic.includes('PROD-001'));
     expect(productWarnings.length).toBeGreaterThan(0);
-    expect(productWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
+    expect(productWarnings.every((warning) => warning.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
   });
 
   test('should allow multiple NULL values in unique columns', () => {
@@ -403,7 +403,7 @@ describe('[example - record] simple unique constraints', () => {
 
     // Should have infos for duplicate PK
     expect(infos.length).toBeGreaterThan(0);
-    expect(infos.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
+    expect(infos.every((warning) => warning.diagnostic.includes('Duplicate PK') && warning.diagnostic.includes('users.id'))).toBe(true);
   });
 
   test('should validate multiple unique columns on same table', () => {
@@ -427,8 +427,8 @@ describe('[example - record] simple unique constraints', () => {
     // username "alice" is duplicate (rows 1 and 3) and phone "111-111" is duplicate (rows 1 and 4)
     // Each duplicate generates one warning per affected row
     expect(infos.length).toBeGreaterThan(0);
-    expect(infos.some((i) => i.diagnostic.includes('users.username') && i.diagnostic.includes('alice'))).toBe(true);
-    expect(infos.some((i) => i.diagnostic.includes('users.phone') && i.diagnostic.includes('111-111'))).toBe(true);
+    expect(infos.some((index) => index.diagnostic.includes('users.username') && index.diagnostic.includes('alice'))).toBe(true);
+    expect(infos.some((index) => index.diagnostic.includes('users.phone') && index.diagnostic.includes('111-111'))).toBe(true);
   });
 
   test('should report error for duplicate records blocks', () => {

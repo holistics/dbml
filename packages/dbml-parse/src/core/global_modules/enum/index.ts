@@ -21,7 +21,7 @@ import EnumBinder from './bind';
 import { EnumInterpreter } from './interpret';
 
 // Public utils that other modules can use
-export const enumUtils = {
+export const enumUtilities = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
@@ -60,11 +60,11 @@ export const enumModule: GlobalModule = {
     const members: NodeSymbol[] = [];
     const errors: CompileError[] = [];
     for (const child of children) {
-      const res = compiler.nodeSymbol(child);
-      const symbol = res.getFiltered(UNHANDLED);
+      const result = compiler.nodeSymbol(child);
+      const symbol = result.getFiltered(UNHANDLED);
       if (!symbol) continue;
       members.push(symbol);
-      errors.push(...res.getErrors());
+      errors.push(...result.getErrors());
     }
 
     // Duplicate checking
@@ -78,8 +78,8 @@ export const enumModule: GlobalModule = {
 
         const firstNode = seen.get(name);
         if (firstNode) {
-          errors.push(enumUtils.getFieldDuplicateError(name, firstNode));
-          errors.push(enumUtils.getFieldDuplicateError(name, errorNode));
+          errors.push(enumUtilities.getFieldDuplicateError(name, firstNode));
+          errors.push(enumUtilities.getFieldDuplicateError(name, errorNode));
         } else {
           seen.set(name, errorNode);
         }

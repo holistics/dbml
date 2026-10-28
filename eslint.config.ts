@@ -64,6 +64,9 @@ const sharedRules = {
       ref: false,
       refs: false,
       ep: { endpoint: true },
+      fp: { filepath: true },
+      orig: { original: true },
+      utils: false,
     },
     extendDefaultAllowList: true,
     allowList: {

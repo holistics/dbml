@@ -115,12 +115,12 @@ export default class DBMLDiagnosticsProvider {
 
     const details = errorOrWarning.details;
     const quickFixes = details?.quickFixes
-      ?.filter((f) => f.edits.length > 0)
-      .map((f) => ({
-        title: f.title,
-        shortTitle: f.shortTitle,
-        edits: f.edits.map((e) => ({ start: e.start, end: e.end, newText: e.newText })),
-        isPreferred: f.isPreferred,
+      ?.filter((fix) => fix.edits.length > 0)
+      .map((fix) => ({
+        title: fix.title,
+        shortTitle: fix.shortTitle,
+        edits: fix.edits.map((edit) => ({ start: edit.start, end: edit.end, newText: edit.newText })),
+        isPreferred: fix.isPreferred,
       }));
 
     return {

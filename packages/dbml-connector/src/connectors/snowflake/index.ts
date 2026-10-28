@@ -37,23 +37,23 @@ type GeneratedIndexes = {
 };
 
 const parseConnectionString = (connectionString: string): Record<string, string> => {
-  const params: Record<string, string> = {};
+  const parameters: Record<string, string> = {};
   const regex = /([^;=]+)=([^;]*)/g;
   let match;
 
   while ((match = regex.exec(connectionString)) !== null) {
-    params[match[1].trim()] = match[2].trim();
+    parameters[match[1].trim()] = match[2].trim();
   }
 
-  return params;
+  return parameters;
 };
 
 const connect = async (connection: Connection): Promise<void> => {
   return new Promise((resolve, reject) => {
     console.log('Attempting to connect...');
-    connection.connect((err) => {
-      if (err) {
-        reject(err);
+    connection.connect((error) => {
+      if (error) {
+        reject(error);
       } else {
         resolve();
       }
@@ -66,9 +66,9 @@ const executeQuery = (connection: Connection, sqlText: string): Promise<any[]> =
     console.log('Executing query...');
     connection.execute({
       sqlText,
-      complete: (err, stmt, rows) => {
-        if (err) {
-          reject(err);
+      complete: (error, statement, rows) => {
+        if (error) {
+          reject(error);
         } else {
           console.log('Query executed successfully.');
           if (rows) {
@@ -93,7 +93,7 @@ const connectToSnowflake = async (config: Record<string, string>): Promise<Conne
   });
 
   // https://docs.snowflake.com/en/developer-guide/node-js/nodejs-driver-options#authentication-options
-  let authConfig = {};
+  let authConfig: Record<string, unknown>;
   switch (config.AUTHENTICATOR) {
     case 'SNOWFLAKE_JWT':
       // https://docs.snowflake.com/en/developer-guide/node-js/nodejs-driver-authenticate#label-nodejs-key-pair-authentication
@@ -138,7 +138,7 @@ const connectToSnowflake = async (config: Record<string, string>): Promise<Conne
   return connection;
 };
 
-const convertQueryBoolean = (val: string | null) => val === 'YES';
+const convertQueryBoolean = (value: string | null) => value === 'YES';
 
 const getFieldType = (data_type: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (character_maximum_length) {
@@ -237,12 +237,12 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
   `;
 
   const tablesAndFieldsResult = await executeQuery(conn, tablesAndFieldsSql);
-  const tables = tablesAndFieldsResult.reduce((acc: Record<string, Table>, row: Record<string, string>) => {
+  const tables = tablesAndFieldsResult.reduce((accumulator: Record<string, Table>, row: Record<string, string>) => {
     const { TABLE_SCHEMA: table_schema, TABLE_NAME: table_name, TABLE_COMMENT: table_comment } = row;
     const key = `${table_schema}.${table_name}`;
 
-    if (!acc[key]) {
-      acc[key] = {
+    if (!accumulator[key]) {
+      accumulator[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -253,7 +253,7 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
     const field = generateField(row);
     fields[key].push(field);
 
-    return acc;
+    return accumulator;
   }, {});
 
   return {
@@ -263,33 +263,33 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
 };
 
 const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string[], constraintType: 'primary' | 'unique'): Record<string, ConstraintRow> => {
-  return keys.reduce((acc: Record<string, ConstraintRow>, row: Record<string, string>) => {
+  return keys.reduce((accumulator: Record<string, ConstraintRow>, row: Record<string, string>) => {
     const {
       schema_name, table_name, column_name, constraint_name,
     } = row;
     const selectedSchema = schemas.length > 0 ? schemas.includes(schema_name) : true;
     if (!selectedSchema) {
-      return acc;
+      return accumulator;
     }
 
     const key = `${schema_name}.${table_name}.${constraint_name}`;
 
-    if (acc[key]) {
-      const { columnNames } = acc[key];
+    if (accumulator[key]) {
+      const { columnNames } = accumulator[key];
       columnNames.push(column_name);
-      return acc;
+      return accumulator;
     }
 
-    acc[key] = {
+    accumulator[key] = {
       schemaName: schema_name,
       tableName: table_name,
       constraintName: constraint_name,
       columnNames: [column_name],
       type: '',
     };
-    acc[key][constraintType] = true;
+    accumulator[key][constraintType] = true;
 
-    return acc;
+    return accumulator;
   }, {});
 };
 const generateIndexes = async (conn: Connection, databaseName: string, schemas: string[]) => {
@@ -308,21 +308,21 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
   const uniqueKeysByConstraint: Record<string, ConstraintRow> = createConstraintKeysMap(uniqueKeys, schemas, 'unique');
 
   const allConstraints: ConstraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
-  const { indexes, tableConstraints } = allConstraints.reduce((acc: GeneratedIndexes, row: ConstraintRow): GeneratedIndexes => {
+  const { indexes, tableConstraints } = allConstraints.reduce((accumulator: GeneratedIndexes, row: ConstraintRow): GeneratedIndexes => {
     const {
       schemaName, tableName, constraintName, columnNames, type, primary, unique,
     } = row;
     const key = `${schemaName}.${tableName}`;
 
     if (columnNames.length < 2) {
-      acc.tableConstraints[key] = {
+      accumulator.tableConstraints[key] = {
         [columnNames[0]]: {
           pk: primary,
           unique,
           checks: [],
         },
       };
-      return acc;
+      return accumulator;
     }
 
     const index: Index = {
@@ -336,13 +336,13 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
       })),
     };
 
-    if (acc.indexes[key]) {
-      acc.indexes[key].push(index);
+    if (accumulator.indexes[key]) {
+      accumulator.indexes[key].push(index);
     } else {
-      acc.indexes[key] = [index];
+      accumulator.indexes[key] = [index];
     }
 
-    return acc;
+    return accumulator;
   }, { indexes: {}, tableConstraints: {} });
 
   return {
@@ -361,24 +361,24 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const schemas = config.SCHEMAS ? parseSchema(config.SCHEMAS) : [];
   const databaseName = config.DATABASE;
 
-  const tablesAndFieldsRes = generateTablesAndFields(conn, schemas);
-  const indexesRes = generateIndexes(conn, databaseName, schemas);
+  const tablesAndFieldsResult = generateTablesAndFields(conn, schemas);
+  const indexesResult = generateIndexes(conn, databaseName, schemas);
 
-  const res = await Promise.all([
-    tablesAndFieldsRes,
-    indexesRes,
+  const result = await Promise.all([
+    tablesAndFieldsResult,
+    indexesResult,
   ]);
 
-  conn.destroy((err) => {
-    if (err) {
-      throw err;
+  conn.destroy((error) => {
+    if (error) {
+      throw error;
     } else {
       console.log('Connection destroyed successfully.');
     }
   });
 
-  const { tables, fields } = res[0];
-  const { indexes, tableConstraints } = res[1];
+  const { tables, fields } = result[0];
+  const { indexes, tableConstraints } = result[1];
 
   return {
     tables,
@@ -392,6 +392,4 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   };
 };
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

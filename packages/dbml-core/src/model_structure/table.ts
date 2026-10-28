@@ -9,7 +9,7 @@ import { shouldPrintSchema } from './utils';
 import type { Token, Color } from '../../types/model_structure/element';
 import type { NormalizedModel } from '../../types/model_structure/database';
 import type SchemaType from '../../types/model_structure/schema';
-import type TablePartialType from '../../types/model_structure/tablePartial';
+import type _TablePartialType from '../../types/model_structure/tablePartial';
 import type TableGroupType from '../../types/model_structure/tableGroup';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { CustomMetadata } from '@dbml/parse';
@@ -97,7 +97,7 @@ class Table extends Element {
   }
 
   checkField (field: Field) {
-    if (this.fields.some((f) => f.name === field.name)) {
+    if (this.fields.some((existingField) => existingField.name === field.name)) {
       field.error(`Field "${field.name}" existed in table ${shouldPrintSchema(this.schema)
         ? `"${this.schema.name}".`
         : ''}"${this.name}"`);
@@ -136,7 +136,7 @@ class Table extends Element {
   }
 
   findField (fieldName: string): Field | undefined {
-    return this.fields.find((f) => f.name === fieldName);
+    return this.fields.find((field) => field.name === fieldName);
   }
 
   checkSameId (table: any): boolean {
@@ -162,13 +162,13 @@ class Table extends Element {
      *   token, // token of the partial definition
      * }
      */
-    const existingFieldNames = new Set(this.fields.map((f) => f.name));
+    const existingFieldNames = new Set(this.fields.map((field) => field.name));
     const existingSettingNames = new Set<string>();
     if (!isNil(this.note)) existingSettingNames.add('note');
     if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
 
     // descending order, we'll inserted the partial fields from tail to head
-    const sortedPartials = this.partials.sort((a: any, b: any) => b.order - a.order);
+    const sortedPartials = this.partials.sort((partialA: any, partialB: any) => partialB.order - partialA.order);
 
     // insert placeholder into table.fields
     sortedPartials.toReversed().forEach((partial: any) => {
@@ -182,7 +182,7 @@ class Table extends Element {
 
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
-        const rawFields = tablePartial.fields.filter((f: any) => !existingFieldNames.has(f.name));
+        const rawFields = tablePartial.fields.filter((rawField: any) => !existingFieldNames.has(rawField.name));
         const fields = rawFields.map((rawField: any) => {
           existingFieldNames.add(rawField.name);
 
@@ -262,16 +262,16 @@ class Table extends Element {
 
   exportChild () {
     return {
-      fields: this.fields.map((f) => f.export()),
-      indexes: this.indexes.map((i) => (i as any).export()),
+      fields: this.fields.map((field) => field.export()),
+      indexes: this.indexes.map((index) => (index as any).export()),
     };
   }
 
   exportChildIds () {
     return {
-      fieldIds: this.fields.map((f) => f.id),
-      indexIds: this.indexes.map((i) => (i as any).id),
-      checkIds: this.checks.map((c) => c.id),
+      fieldIds: this.fields.map((field) => field.id),
+      indexIds: this.indexes.map((index) => (index as any).id),
+      checkIds: this.checks.map((check) => check.id),
     };
   }
 
@@ -289,7 +289,7 @@ class Table extends Element {
       note: this.note,
       headerColor: this.headerColor,
       partials: this.partials,
-      recordIds: this.records.map((r: any) => r.id),
+      recordIds: this.records.map((record: any) => record.id),
       metadata: this.metadata,
     };
   }

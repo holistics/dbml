@@ -345,7 +345,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '-':
           case DEP_DOWNSTREAM:
           case DEP_UPSTREAM:
-            return suggestOnRelOp(
+            return suggestOnRelativeOp(
               this.compiler,
               filepath,
               offset,
@@ -367,7 +367,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '-':
           case DEP_DOWNSTREAM:
           case DEP_UPSTREAM:
-            return suggestOnRelOp(
+            return suggestOnRelativeOp(
               this.compiler,
               filepath,
               offset,
@@ -423,7 +423,7 @@ function suggestOnPartialInjectionOp (
   ]);
 }
 
-function suggestOnRelOp (
+function suggestOnRelativeOp (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,
@@ -437,13 +437,13 @@ function suggestOnRelOp (
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
-    const res = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
+    const result = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
       SymbolKind.Column,
     ]);
 
-    return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
+    return !shouldPrependSpace(container.op, offset) ? result : prependSpace(result);
   }
 
   return noSuggestions();
@@ -469,9 +469,9 @@ function suggestMembersOfSymbol (
         if (name === undefined) return [];
         // Every suggestion shows where it comes from
         // `this file` for local symbols, `from <basename>` for imports
-        const originFp = member.originalFilepath;
-        const detail = originFp && !originFp.equals(symbol.filepath)
-          ? `from ${compiler.layout.getFileSpecifierInfo(symbol.filepath, originFp)?.label ?? originFp.basename}`
+        const originFilepath = member.originalFilepath;
+        const detail = originFilepath && !originFilepath.equals(symbol.filepath)
+          ? `from ${compiler.layout.getFileSpecifierInfo(symbol.filepath, originFilepath)?.label ?? originFilepath.basename}`
           : 'this file';
         return {
           label: name,
@@ -483,7 +483,7 @@ function suggestMembersOfSymbol (
           range: undefined as any,
         };
       })
-      .filter((s) => s.label !== ''),
+      .filter((suggestion) => suggestion.label !== ''),
   });
 }
 
@@ -498,14 +498,14 @@ function suggestNamesInScope (
     return noSuggestions();
   }
 
-  let curElement: SyntaxNode | undefined = parent;
-  const res: CompletionList = {
+  let currentElement: SyntaxNode | undefined = parent;
+  const result: CompletionList = {
     suggestions: [],
   };
   let programNode: ProgramNode | undefined;
-  while (curElement) {
-    if (curElement instanceof ProgramNode) programNode = curElement;
-    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+  while (currentElement) {
+    if (currentElement instanceof ProgramNode) programNode = currentElement;
+    const symbol = compiler.nodeSymbol(currentElement).getFiltered(UNHANDLED);
     if (symbol) {
       const memberSuggestions = suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions;
       // Sort within each scope level: columns first, then schemas, then tables/other
@@ -517,28 +517,28 @@ function suggestNamesInScope (
           default: return 3;
         }
       };
-      memberSuggestions.sort((a, b) => kindPriority(a.kind) - kindPriority(b.kind));
-      res.suggestions.push(...memberSuggestions);
+      memberSuggestions.sort((left, right) => kindPriority(left.kind) - kindPriority(right.kind));
+      result.suggestions.push(...memberSuggestions);
     }
-    curElement = curElement instanceof ElementDeclarationNode
-      ? curElement.parent
+    currentElement = currentElement instanceof ElementDeclarationNode
+      ? currentElement.parent
       : undefined;
   }
 
   // Global-scope lookups also surface symbols from other project files
   // They come with an additionalTextEdit that inserts a matching `use { ... }` statement when accepted
   if (programNode?.filepath) {
-    const fp = programNode.filepath;
-    const seen = new Set(res.suggestions.map((s) => typeof s.label === 'string' ? s.label : s.label.label));
-    for (const item of collectCrossFileSuggestions(compiler, acceptedKinds, fp)) {
+    const filepath_ = programNode.filepath;
+    const seen = new Set(result.suggestions.map((suggestion) => typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.label));
+    for (const item of collectCrossFileSuggestions(compiler, acceptedKinds, filepath_)) {
       const name = typeof item.label === 'string' ? item.label : item.label.label;
       if (seen.has(name)) continue;
       seen.add(name);
-      res.suggestions.push(item);
+      result.suggestions.push(item);
     }
   }
 
-  return addQuoteToSuggestionIfNeeded(res);
+  return addQuoteToSuggestionIfNeeded(result);
 }
 
 function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
@@ -549,9 +549,9 @@ function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number,
   const containers = [
     ...compiler.container.stack(filepath, offset),
   ];
-  for (const c of containers) {
-    if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
-      return suggestInCallExpression(compiler, filepath, offset, c);
+  for (const container_ of containers) {
+    if (container_ instanceof CallExpressionNode && container_.argumentList === tupleContainer) {
+      return suggestInCallExpression(compiler, filepath, offset, container_);
     }
   }
 
@@ -632,11 +632,11 @@ function suggestInAttribute (
     SyntaxTokenKind.COMMA,
     SyntaxTokenKind.LBRACKET,
   ].includes(token?.kind as any)) {
-    const res = suggestAttributeName(compiler, filepath, offset);
+    const result = suggestAttributeName(compiler, filepath, offset);
 
     return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset)
-      ? prependSpace(res)
-      : res;
+      ? prependSpace(result)
+      : result;
   }
 
   if (container.name && container.name.start <= offset && container.name.end >= offset) {
@@ -644,14 +644,14 @@ function suggestInAttribute (
   }
 
   if (container.name instanceof IdentifierStreamNode) {
-    const res = suggestAttributeValue(
+    const result = suggestAttributeValue(
       compiler,
       filepath,
       offset,
       extractStringFromIdentifierStream(container.name) ?? '',
     );
 
-    return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
+    return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(result) : result;
   }
 
   return noSuggestions();
@@ -775,9 +775,9 @@ function buildSettingSuggestions (
   labels: readonly string[],
   insertTexts: readonly string[],
 ) {
-  return labels.map((name, i) => ({
+  return labels.map((name, index) => ({
     label: name,
-    insertText: insertTexts[i],
+    insertText: insertTexts[index],
     kind: CompletionItemKind.Property,
     insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
     range: undefined as any,
@@ -850,15 +850,15 @@ function resolveNameStack (
 
   // Collect all symbols from the scope hierarchy
   let candidates: NodeSymbol[] = [];
-  let curElement: SyntaxNode | undefined = scopeElement;
-  while (curElement) {
-    const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
+  let currentElement: SyntaxNode | undefined = scopeElement;
+  while (currentElement) {
+    const symbol = compiler.nodeSymbol(currentElement).getFiltered(UNHANDLED);
     if (symbol) {
       const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
       candidates.push(...members || []);
     }
-    curElement = curElement instanceof ElementDeclarationNode
-      ? curElement.parent
+    currentElement = currentElement instanceof ElementDeclarationNode
+      ? currentElement.parent
       : undefined;
   }
 
@@ -883,11 +883,11 @@ function suggestMembers (
 ): CompletionList {
   const fragments = destructureMemberAccessExpression(container) ?? [];
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
-  if (fragments.some((f) => !isExpressionAVariableNode(f))) {
+  if (fragments.some((fragment) => !isExpressionAVariableNode(fragment))) {
     return noSuggestions();
   }
 
-  const nameStack = fragments.map((f) => extractVariableFromExpression(f)!);
+  const nameStack = fragments.map((fragment) => extractVariableFromExpression(fragment)!);
 
   // Resolve the name stack by walking from the scope's symbol through members
   const resolvedSymbols = resolveNameStack(compiler, nameStack, compiler.container.element(filepath, offset));
@@ -942,12 +942,12 @@ function suggestInSubField (
     case ScopeKind.DIAGRAMVIEW:
       return suggestInDiagramViewBody();
     case ScopeKind.CUSTOM: {
-      const elem = compiler.container.element(filepath, offset);
-      if (elem instanceof ElementDeclarationNode) {
-        const bodyBlock = elem.parentNode;
-        const parentElem = bodyBlock instanceof BlockExpressionNode ? bodyBlock.parentNode : undefined;
-        if (parentElem instanceof ElementDeclarationNode && parentElem.isKind(ElementKind.DiagramView)) {
-          return suggestInDiagramViewSubBlock(compiler, filepath, offset, elem);
+      const element = compiler.container.element(filepath, offset);
+      if (element instanceof ElementDeclarationNode) {
+        const bodyBlock = element.parentNode;
+        const parentElement = bodyBlock instanceof BlockExpressionNode ? bodyBlock.parentNode : undefined;
+        if (parentElement instanceof ElementDeclarationNode && parentElement.isKind(ElementKind.DiagramView)) {
+          return suggestInDiagramViewSubBlock(compiler, filepath, offset, element);
         }
       }
       return noSuggestions();
@@ -993,9 +993,9 @@ function suggestInEnumField (
   if (!container?.callee) {
     return noSuggestions();
   }
-  const containerArgId = findContainerArg(offset, container);
+  const containerArgumentId = findContainerArgument(offset, container);
 
-  if (containerArgId === 1) {
+  if (containerArgumentId === 1) {
     return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Schema,
       SymbolKind.Table,
@@ -1026,9 +1026,9 @@ function suggestInColumn (
     };
   }
 
-  const containerArgId = findContainerArg(offset, container);
+  const containerArgumentId = findContainerArgument(offset, container);
 
-  if (containerArgId === 0) {
+  if (containerArgumentId === 0) {
     return {
       suggestions: elements.map((name) => ({
         label: name,
@@ -1039,7 +1039,7 @@ function suggestInColumn (
       })),
     };
   }
-  if (containerArgId === 1) {
+  if (containerArgumentId === 1) {
     return suggestColumnType(compiler, filepath, offset);
   }
 
@@ -1065,9 +1065,9 @@ function suggestInProjectField (
     };
   }
 
-  const containerArgId = findContainerArg(offset, container);
+  const containerArgumentId = findContainerArgument(offset, container);
 
-  if (containerArgId === 0) {
+  if (containerArgumentId === 0) {
     return {
       suggestions: elements.map((name) => ({
         label: name,
@@ -1176,7 +1176,7 @@ function suggestInCallExpression (
 
   // Determine if we're in the callee or in the arguments
   const inCallee = container.callee && isOffsetWithinSpan(offset, container.callee);
-  const inArgs = container.argumentList && isOffsetWithinSpan(offset, container.argumentList);
+  const inArguments = container.argumentList && isOffsetWithinSpan(offset, container.argumentList);
 
   // Check if we're in a Records element header (top-level Records)
   if (
@@ -1188,7 +1188,7 @@ function suggestInCallExpression (
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
-    if (!inArgs) return noSuggestions();
+    if (!inArguments) return noSuggestions();
 
     const callee = container.callee;
     if (!callee) return noSuggestions();
@@ -1196,8 +1196,8 @@ function suggestInCallExpression (
     const fragments = destructureMemberAccessExpression(callee) ?? [
       callee,
     ];
-    const rightmostExpr = fragments[fragments.length - 1];
-    const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr).getFiltered(UNHANDLED) : undefined;
+    const rightmostExpression = fragments[fragments.length - 1];
+    const tableSymbol = rightmostExpression ? compiler.nodeReferee(rightmostExpression).getFiltered(UNHANDLED) : undefined;
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [
@@ -1219,10 +1219,10 @@ function suggestInCallExpression (
   const containers = [
     ...compiler.container.stack(filepath, offset),
   ];
-  for (const c of containers) {
-    if (!inArgs) continue;
-    if (!(c instanceof FunctionApplicationNode)) continue;
-    if (c.callee !== container) continue;
+  for (const containerItem of containers) {
+    if (!inArguments) continue;
+    if (!(containerItem instanceof FunctionApplicationNode)) continue;
+    if (containerItem.callee !== container) continue;
     if ((extractVariableFromExpression(container.callee) ?? '').toLowerCase() !== ElementKind.Records) continue;
     const tableSymbol = compiler.nodeSymbol(compiler.container.element(filepath, offset)).getFiltered(UNHANDLED);
     if (!tableSymbol) return noSuggestions();
@@ -1326,16 +1326,16 @@ function suggestColumnNameInIndexes (compiler: Compiler, filepath: Filepath, off
 }
 
 // Return the index of the argument we're at in an element's subfield
-function findContainerArg (offset: number, node: FunctionApplicationNode): number {
+function findContainerArgument (offset: number, node: FunctionApplicationNode): number {
   if (!node.callee) return -1;
   const args = [
     node.callee,
     ...node.args,
   ];
 
-  const containerArgId = args.findIndex((c) => offset <= c.end);
+  const containerArgumentId = args.findIndex((argument) => offset <= argument.end);
 
-  return containerArgId === -1 ? args.length : containerArgId;
+  return containerArgumentId === -1 ? args.length : containerArgumentId;
 }
 
 const wildcardSuggestion = {
@@ -1370,9 +1370,9 @@ function suggestInDiagramViewSubBlock (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,
-  elem: ElementDeclarationNode,
+  element: ElementDeclarationNode,
 ): CompletionList {
-  switch (elem.getElementKind()) {
+  switch (element.getElementKind()) {
     case ElementKind.DiagramViewTables: {
       const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Table,

@@ -26,7 +26,7 @@ describe('[example] CompletionItemProvider - use declaration', () => {
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 5));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('* from');
       expect(labels).toContain('{ } from');
     });
@@ -39,7 +39,7 @@ describe('[example] CompletionItemProvider - use declaration', () => {
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 5));
-      const wildcard = result.suggestions.find((s) => s.label === '* from');
+      const wildcard = result.suggestions.find((suggestion) => suggestion.label === '* from');
       expect(wildcard?.insertText).toContain('${1:');
     });
   });
@@ -54,7 +54,7 @@ describe('[example] CompletionItemProvider - use declaration', () => {
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after '{'
       const result = provider.provideCompletionItems(model, createPosition(1, 6));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('table');
       expect(labels).toContain('enum');
       expect(labels).toContain('tablegroup');
@@ -78,7 +78,7 @@ Table orders { id int [pk] }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor between 'table' and '}'
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
       expect(labels).toContain('orders');
     });
@@ -95,7 +95,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 12));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('job_status');
       expect(labels).toContain('color');
     });
@@ -109,7 +109,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('auth.users');
     });
 
@@ -122,7 +122,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
       // No file to resolve -> no name suggestions (may still return import kinds for the kind token)
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).not.toContain('users');
     });
   });
@@ -137,8 +137,8 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 26));
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels.some((l) => l.toString().includes('schema'))).toBe(true);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
+      expect(labels.some((label) => label.toString().includes('schema'))).toBe(true);
     });
 
     it('suggests filepaths with quote-wrapped insertText', () => {
@@ -167,9 +167,9 @@ Enum color { red blue }
       const result = provider.provideCompletionItems(model, createPosition(1, 18));
       expect(result.suggestions.length).toBeGreaterThan(0);
       // All suggestions should carry an explicit range covering the existing token
-      for (const s of result.suggestions) {
-        expect(s.range).toBeDefined();
-        expect((s.range as any).startLineNumber).toBe(1);
+      for (const suggestion of result.suggestions) {
+        expect(suggestion.range).toBeDefined();
+        expect((suggestion.range as any).startLineNumber).toBe(1);
       }
     });
 
@@ -182,7 +182,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 12));
-      expect(result.suggestions.every((s) => !String(s.label).includes('main'))).toBe(true);
+      expect(result.suggestions.every((suggestion) => !String(suggestion.label).includes('main'))).toBe(true);
     });
 
     it('suggests only direct children of the typed prefix', () => {
@@ -197,7 +197,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after `./sub/`
       const result = provider.provideCompletionItems(model, createPosition(1, 19));
-      const labels = result.suggestions.map((s) => String(s.label));
+      const labels = result.suggestions.map((suggestion) => String(suggestion.label));
       expect(labels).toContain('./sub/a.dbml');
       expect(labels).toContain('./sub/b.dbml');
       expect(labels).not.toContain('./other.dbml');
@@ -212,7 +212,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const labels = result.suggestions.map((s) => String(s.label));
+      const labels = result.suggestions.map((suggestion) => String(suggestion.label));
       // listDirectory shows direct children only; deeper files hidden until user descends
       expect(labels).toContain('./sub/');
       expect(labels).not.toContain('./sub/deeper/a.dbml');
@@ -228,8 +228,8 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const folder = result.suggestions.find((s) => String(s.label) === './sub/');
-      const file = result.suggestions.find((s) => String(s.label) === './other.dbml');
+      const folder = result.suggestions.find((suggestion) => String(suggestion.label) === './sub/');
+      const file = result.suggestions.find((suggestion) => String(suggestion.label) === './other.dbml');
       expect(folder?.kind).toBe(CompletionItemKind.Folder);
       expect(file?.kind).toBe(CompletionItemKind.File);
     });
@@ -244,7 +244,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor inside the `'./'` literal
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema.dbml');
+      const schemaItem = result.suggestions.find((suggestion) => String(suggestion.label) === './schema.dbml');
       expect(schemaItem).toBeDefined();
       // insertText is the specifier (without .dbml), not the raw filename
       expect(schemaItem!.insertText).toBe('./schema');
@@ -259,7 +259,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/sub/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 23));
-      const item = result.suggestions.find((s) => String(s.label) === '../shared/types.dbml');
+      const item = result.suggestions.find((suggestion) => String(suggestion.label) === '../shared/types.dbml');
       expect(item).toBeDefined();
       expect(item!.insertText).toBe('../shared/types');
     });
@@ -273,7 +273,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const labels = result.suggestions.map((s) => String(s.label));
+      const labels = result.suggestions.map((suggestion) => String(suggestion.label));
       expect(labels).not.toContain('./main.dbml');
       expect(labels).toContain('./schema.dbml');
     });
@@ -290,7 +290,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 21));
-      const labels = result.suggestions.map((s) => String(s.label));
+      const labels = result.suggestions.map((suggestion) => String(suggestion.label));
       expect(labels).toContain('/schemas/users.dbml');
       expect(labels).toContain('/schemas/orders.dbml');
     });
@@ -304,7 +304,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 21));
-      const item = result.suggestions.find((s) => String(s.label) === '/schemas/users.dbml');
+      const item = result.suggestions.find((suggestion) => String(suggestion.label) === '/schemas/users.dbml');
       expect(item).toBeDefined();
       // main.dbml is at /, so relative specifier is ./schemas/users
       expect(item!.insertText).toBe('./schemas/users');
@@ -319,7 +319,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 21));
-      const item = result.suggestions.find((s) => String(s.label) === '/schemas/sub/');
+      const item = result.suggestions.find((suggestion) => String(suggestion.label) === '/schemas/sub/');
       expect(item).toBeDefined();
       expect(item!.insertText).toBe('/schemas/sub/');
       expect(item!.kind).toBe(CompletionItemKind.Folder);
@@ -335,7 +335,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 23));
-      const labels = result.suggestions.map((s) => String(s.label));
+      const labels = result.suggestions.map((suggestion) => String(suggestion.label));
       expect(labels).toContain('/schemas/users.dbml');
       expect(labels).not.toContain('/other/orders.dbml');
     });
@@ -352,7 +352,7 @@ Enum color { red blue }
       // cursor after 'as '
       const result = provider.provideCompletionItems(model, createPosition(1, 22));
       // alias is user-defined, may return import kinds but not element names
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).not.toContain('users');
     });
 
@@ -379,7 +379,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
       expect(labels).toContain('products');
     });
@@ -394,7 +394,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
       expect(labels).not.toContain('products');
     });
@@ -409,7 +409,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 12));
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('status');
     });
   });

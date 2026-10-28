@@ -18,7 +18,7 @@ import type { RelationshipOp } from '@/core/types/relation';
 import { getSourceSnippet } from '@/core/utils/span';
 
 function qualifiedColumnNames (compiler: Compiler, columns: ColumnSymbol[]): string {
-  return columns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
+  return columns.map((column) => column.qualifiedName(compiler).join('.')).join(', ');
 }
 
 // Column is nullable but the ref operator requires NOT NULL
@@ -42,8 +42,8 @@ export function refNullableMismatch (
     : `Column \`${names}\` is nullable but operator \`${relOp}\` requires it to be NOT NULL`;
 
   const refSnippet = getSourceSnippet(compiler, refNode);
-  const colDecl = columns[0]?.declaration;
-  const colSnippet = colDecl && getSourceSnippet(compiler, colDecl);
+  const colDeclaration = columns[0]?.declaration;
+  const colSnippet = colDeclaration && getSourceSnippet(compiler, colDeclaration);
   const explanation = [
     `- In ref definition \`${refSnippet ?? relOp}\`, the operator \`${relOp}\` requires \`${names}\` to reference an existing row.`,
     colSnippet
@@ -80,8 +80,8 @@ export function refNotNullMismatch (
     : `Column \`${names}\` is NOT NULL but operator \`${relOp}\` allows it to be optional`;
 
   const refSnippet = getSourceSnippet(compiler, refNode);
-  const colDecl = columns[0]?.declaration;
-  const colSnippet = colDecl && getSourceSnippet(compiler, colDecl);
+  const colDeclaration = columns[0]?.declaration;
+  const colSnippet = colDeclaration && getSourceSnippet(compiler, colDeclaration);
 
   const explanation = [
     `- In ref definition \`${refSnippet ?? relOp}\`, the operator \`${relOp}\` marks \`${names}\` as optional.`,

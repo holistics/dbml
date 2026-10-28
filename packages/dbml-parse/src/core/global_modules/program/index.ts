@@ -61,7 +61,7 @@ export const programModule: GlobalModule = {
     if (!publicSymbol) return Report.create([
       ...schemaMembers.values(),
     ]);
-    const publicMembers = compiler.symbolMembers(publicSymbol).getFiltered(UNHANDLED)?.filter((s) => !s.isKind(SymbolKind.Schema)); // Do not include nested schema
+    const publicMembers = compiler.symbolMembers(publicSymbol).getFiltered(UNHANDLED)?.filter((symbol) => !symbol.isKind(SymbolKind.Schema)); // Do not include nested schema
     if (!publicMembers) return Report.create([
       ...schemaMembers.values(),
     ]);

@@ -67,36 +67,36 @@ function dispatch<K extends keyof GlobalModule> (
 }
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<Unhandled> {
-  const res = dispatch('nodeSymbol', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeSymbol', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function symbolMembers (this: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<Unhandled> {
-  const res = dispatch('symbolMembers', this, symbol);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('symbolMembers', this, symbol);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<Unhandled> {
-  const res = dispatch('nodeReferee', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeReferee', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('bindNode', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('bindNode', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function nodeMetadata (this: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<Unhandled> {
-  const res = dispatch('nodeMetadata', this, node);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('nodeMetadata', this, node);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpretSymbol', this, symbol, filepath);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('interpretSymbol', this, symbol, filepath);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }
 
 export function interpretMetadata (this: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpretMetadata', this, metadata, filepath);
-  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+  const result = dispatch('interpretMetadata', this, metadata, filepath);
+  return result.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : result;
 }

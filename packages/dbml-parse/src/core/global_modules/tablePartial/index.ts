@@ -19,7 +19,7 @@ import {
 } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
   getBody,
 } from '@/core/utils/expression';
 import {
@@ -29,7 +29,7 @@ import {
   isExpressionAVariableNode,
   isInsideElementBody,
   isInsideSettingValue,
-  isWithinNthArgOfField,
+  isWithinNthArgumentOfField,
 } from '@/core/utils/validate';
 import { tableUtils } from '../table';
 import type { GlobalModule } from '../types';
@@ -71,11 +71,11 @@ export const tablePartialModule: GlobalModule = {
       const members: NodeSymbol[] = [];
       const errors: CompileError[] = [];
       for (const child of children) {
-        const res = compiler.nodeSymbol(child);
-        const symbol = res.getFiltered(UNHANDLED);
+        const result = compiler.nodeSymbol(child);
+        const symbol = result.getFiltered(UNHANDLED);
         if (!symbol) continue;
         members.push(symbol);
-        errors.push(...res.getErrors());
+        errors.push(...result.getErrors());
       }
       const seen = new Map<string, SyntaxNode>();
 
@@ -113,7 +113,7 @@ export const tablePartialModule: GlobalModule = {
     if (globalSymbol === UNHANDLED) return Report.create(undefined);
 
     // Case 1: Column's enum type
-    if (isWithinNthArgOfField(node, 1)) {
+    if (isWithinNthArgumentOfField(node, 1)) {
       return nodeRefereeOfEnumType(compiler, globalSymbol, node);
     }
 
@@ -147,7 +147,7 @@ export const tablePartialModule: GlobalModule = {
 // nodeReferee utils
 function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: try as enum in default schema, ignore if not found (could be a raw type like varchar)
   if (!isAccessExpression(node.parentNode)) {
@@ -194,7 +194,7 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
 // Always report errors, never ignore not found
 function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone variable in inline ref - look up in the enclosing table
   if (!isAccessExpression(node.parentNode)) {
@@ -283,7 +283,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
 // Default value: enum.field or schema.enum.field
 function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
-  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+  const name = extractVariableNameFromPrimaryVariable(node) ?? '';
 
   // Standalone: ignore default keywords (true/false/null), everything else is an enum lookup
   if (!isAccessExpression(node.parentNode)) {

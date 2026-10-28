@@ -75,9 +75,9 @@ export function normalizeQualifiedName (...parts: string[]): string {
  * unescapeString('\\u0041BC') => 'ABC'
  * unescapeString('\\x') => 'x'
  */
-export function unescapeString (str: string): string {
+export function unescapeString (string_: string): string {
   let result = '';
-  let i = 0;
+  let index = 0;
 
   // Handle common escape sequences
   const escapeMap: Record<string, string> = {
@@ -94,31 +94,31 @@ export function unescapeString (str: string): string {
     '`': '`',
   };
 
-  while (i < str.length) {
-    if (str[i] === '\\' && i + 1 < str.length) {
-      const nextChar = str[i + 1];
+  while (index < string_.length) {
+    if (string_[index] === '\\' && index + 1 < string_.length) {
+      const nextChar = string_[index + 1];
 
       // Handle unicode escape sequences \uHHHH
-      if (nextChar === 'u' && i + 5 < str.length) {
-        const hex = str.slice(i + 2, i + 6);
+      if (nextChar === 'u' && index + 5 < string_.length) {
+        const hex = string_.slice(index + 2, index + 6);
         if (/^[0-9a-fA-F]{4}$/.test(hex)) {
           result += String.fromCharCode(parseInt(hex, 16));
-          i += 6;
+          index += 6;
           continue;
         }
       }
 
       if (nextChar in escapeMap) {
         result += escapeMap[nextChar];
-        i += 2;
+        index += 2;
       } else {
         // Unknown escape sequence - just use the character after backslash
         result += nextChar;
-        i += 2;
+        index += 2;
       }
     } else {
-      result += str[i];
-      i++;
+      result += string_[index];
+      index++;
     }
   }
 
@@ -136,11 +136,11 @@ export function unescapeString (str: string): string {
  * escapeString('table"name') => 'table\\"name'
  * escapeString('line1\nline2') => 'line1\\nline2'
  */
-export function escapeString (str: string): string {
+export function escapeString (string_: string): string {
   let result = '';
 
-  for (let i = 0; i < str.length; i++) {
-    const char = str[i];
+  for (let index = 0; index < string_.length; index++) {
+    const char = string_[index];
 
     switch (char) {
       case '\\':

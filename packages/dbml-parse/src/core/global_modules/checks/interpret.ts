@@ -34,7 +34,7 @@ export default class ChecksInterpreter {
 
       // Extract optional name from settings (e.g. [name: 'check_name'])
       let name: string | undefined;
-      const settingsList = field.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
+      const settingsList = field.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode);
       if (settingsList) {
         const settingsReport = aggregateSettingList(settingsList);
         const settingMap = settingsReport.getValue();

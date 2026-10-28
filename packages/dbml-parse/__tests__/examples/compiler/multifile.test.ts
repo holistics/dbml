@@ -178,9 +178,9 @@ Table users {
     const membersA = compiler.symbolMembers(programSymA!).getFiltered(UNHANDLED);
     expect(membersA).toBeDefined();
     // Should find Table A and TablePartial PA among members (at schema level)
-    const names = membersA!.flatMap((m) => {
-      const sub = compiler.symbolMembers(m).getFiltered(UNHANDLED);
-      return sub ? sub.map((s) => s.name) : [m.name];
+    const names = membersA!.flatMap((member) => {
+      const sub = compiler.symbolMembers(member).getFiltered(UNHANDLED);
+      return sub ? sub.map((symbol) => symbol.name) : [member.name];
     });
     expect(names).toContain('A');
     expect(names).toContain('PA');
@@ -214,7 +214,7 @@ Table users {
     const reachable = compiler.reachableFiles(fileC);
     expect(Array.isArray(reachable)).toBe(true);
     expect(reachable.length).toBe(3);
-    const paths = reachable.map((f: Filepath) => f.absolute);
+    const paths = reachable.map((file: Filepath) => file.absolute);
     expect(paths).toContain(fileA.absolute);
     expect(paths).toContain(fileB.absolute);
     expect(paths).toContain(fileC.absolute);

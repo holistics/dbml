@@ -42,11 +42,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual(TOP_LEVEL_SUGGESTION_LABELS);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual(TOP_LEVEL_SUGGESTION_LABELS);
     });
   });
@@ -63,11 +63,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).not.toEqual(TABLE_SETTING_SUGGESTION_LABELS);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).not.toEqual(TABLE_SETTING_SUGGESTION_TEXT_INSERTS);
     });
 
@@ -86,11 +86,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual(TABLE_SETTING_SUGGESTION_LABELS);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual(TABLE_SETTING_SUGGESTION_TEXT_INSERTS);
     });
   });
@@ -107,11 +107,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toContain('Note');
       expect(insertTexts).toContain('Records');
     });
@@ -127,11 +127,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toContain('Note');
       expect(insertTexts).toContain('Records');
     });
@@ -149,11 +149,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS]);
     });
 
@@ -168,11 +168,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'status']);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'status']);
     });
 
@@ -187,11 +187,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'myschema']);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'myschema']);
     });
   });
@@ -208,11 +208,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
 
@@ -227,11 +227,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
 
@@ -246,11 +246,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
   });
@@ -267,14 +267,14 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'status',
 
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'status',
 
@@ -292,14 +292,14 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'myschema',
 
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'myschema',
 
@@ -319,7 +319,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'order_id',
         'orders',
@@ -328,7 +328,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'order_id',
         'orders',
@@ -348,14 +348,14 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'id',
 
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'id',
 
@@ -373,7 +373,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'order_id',
         'myschema',
@@ -382,7 +382,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'order_id',
         'myschema',
@@ -404,7 +404,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'orders',
         'users',
@@ -412,7 +412,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'orders',
         'users',
@@ -431,14 +431,14 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'id',
 
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'id',
 
@@ -456,7 +456,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'orders',
         'users',
@@ -464,7 +464,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'orders',
         'users',
@@ -483,7 +483,7 @@ describe('[example] CompletionItemProvider', () => {
       const position = createPosition(4, 'Ref: T.id > T.'.length + 1);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('id');
       expect(labels).toContain('name');
       expect(labels).not.toContain('Table');
@@ -495,18 +495,18 @@ describe('[example] CompletionItemProvider', () => {
       const baseContent = 'Table T {\n  id int [pk]\n  name varchar\n}';
       const consumerContent = "use { table T } from './base.dbml'\nRef: T.id > T.";
       const layout = new MemoryProjectLayout();
-      const baseFp = Filepath.from('/base.dbml');
-      const consumerFp = Filepath.from('/consumer.dbml');
-      layout.setSource(baseFp, baseContent);
-      layout.setSource(consumerFp, consumerContent);
+      const baseFilepath = Filepath.from('/base.dbml');
+      const consumerFilepath = Filepath.from('/consumer.dbml');
+      layout.setSource(baseFilepath, baseContent);
+      layout.setSource(consumerFilepath, consumerContent);
       const compiler = new Compiler(layout);
       compiler.bindProject();
-      const model = createMockTextModel(consumerContent, consumerFp.toUri());
+      const model = createMockTextModel(consumerContent, consumerFilepath.toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 'Ref: T.id > T.'.length + 1);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('id');
       expect(labels).toContain('name');
       expect(labels).not.toContain('Table');
@@ -525,11 +525,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...REF_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...REF_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
@@ -544,11 +544,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...REF_ACTION_VALUE_SUGGESTIONS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...REF_ACTION_VALUE_SUGGESTIONS]);
     });
   });
@@ -565,7 +565,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'id',
         'email',
@@ -573,7 +573,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'id',
         'email',
@@ -592,7 +592,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'id',
         'email',
@@ -600,7 +600,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'id',
         'email',
@@ -621,11 +621,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...INDEX_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...INDEX_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
@@ -640,11 +640,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...INDEX_TYPE_VALUE_SUGGESTIONS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...INDEX_TYPE_VALUE_SUGGESTIONS]);
     });
   });
@@ -661,11 +661,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...CHECK_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...CHECK_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
   });
@@ -682,7 +682,7 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'users',
         'orders',
@@ -691,7 +691,7 @@ describe('[example] CompletionItemProvider', () => {
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'users',
         'orders',
@@ -711,14 +711,14 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'myschema',
         'Note',
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'myschema',
         'Note',
@@ -738,11 +738,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toContain('Note');
       expect(insertTexts).toContain('Records');
     });
@@ -758,13 +758,13 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'mypartial',
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'mypartial',
       ]);
@@ -783,11 +783,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([]);
     });
 
@@ -802,13 +802,13 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'id',
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         'id',
       ]);
@@ -866,11 +866,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([]);
     });
 
@@ -899,13 +899,13 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([
         'user-table',
       ]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([
         '"user-table"',
       ]);
@@ -922,11 +922,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...ENUM_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...ENUM_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
@@ -941,11 +941,11 @@ describe('[example] CompletionItemProvider', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toEqual([...PROJECT_FIELD_SUGGESTION_LABELS]);
 
       // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
+      const insertTexts = result.suggestions.map((suggestion) => suggestion.insertText);
       expect(insertTexts).toEqual([...PROJECT_FIELD_SUGGESTION_LABELS]);
     });
   });
@@ -964,7 +964,7 @@ Ref: `;
       const position = createPosition(4, 6);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should suggest schemas that have tables
       expect(labels).toContain('auth');
       expect(labels).toContain('billing');
@@ -984,7 +984,7 @@ Ref: auth.`;
       const position = createPosition(4, 11);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should suggest tables in auth schema
       expect(labels).toContain('users');
       expect(labels).toContain('sessions');
@@ -1005,7 +1005,7 @@ Ref: auth.users.`;
       const position = createPosition(6, 16);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // May suggest 'users' (the table) since column lookup may not be fully qualified
       // This tests the completion behavior at this position
       expect(Array.isArray(labels)).toBe(true);
@@ -1025,7 +1025,7 @@ Table users {
       const position = createPosition(5, 10);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should suggest schema names for qualified enums
       expect(labels).toContain('auth');
       expect(labels).toContain('billing');
@@ -1043,7 +1043,7 @@ Table users {
       const position = createPosition(2, 32);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should still suggest available settings
       expect(labels).toContain('ref');
       expect(labels).toContain('default');
@@ -1063,7 +1063,7 @@ Table users {
       const position = createPosition(3, 33);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('orders');
     });
 
@@ -1142,7 +1142,7 @@ Table users {
       const position = createPosition(8, 13);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('created_at');
       expect(labels).toContain('customer_id');
     });
@@ -1165,7 +1165,7 @@ Table users {
       const position = createPosition(7, 38);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('unique');
       expect(labels).toContain('pk');
       expect(labels).toContain('name');
@@ -1197,7 +1197,7 @@ Table users {
       const result = provider.provideCompletionItems(model, position);
 
       // Should suggest table sub-elements
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(Array.isArray(labels)).toBe(true);
     });
 
@@ -1283,7 +1283,7 @@ Table payments {
       const position = createPosition(3, 11);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('note');
     });
   });
@@ -1301,7 +1301,7 @@ Ref order_user [update: cascade, delete: ]: orders.user_id > users.id`;
       const position = createPosition(3, 42);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('cascade');
       expect(labels).toContain('set null');
       expect(labels).toContain('restrict');
@@ -1327,7 +1327,7 @@ Ref: (inventory.)`;
       const position = createPosition(11, 17);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('warehouse_id');
       expect(labels).toContain('warehouse_region');
     });
@@ -1344,7 +1344,7 @@ Ref: public.orders.user_id > auth.`;
       const position = createPosition(3, 35);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
     });
 
@@ -1370,7 +1370,7 @@ Ref order_user {
       const position = createPosition(12, 26);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('id');
     });
   });
@@ -1392,7 +1392,7 @@ TableGroup authentication {
       const position = createPosition(6, 8);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
       expect(labels).toContain('sessions');
     });
@@ -1414,7 +1414,7 @@ TableGroup ecommerce {
       const position = createPosition(7, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should still suggest other tables
       expect(labels).toContain('orders');
       expect(labels).toContain('products');
@@ -1434,7 +1434,7 @@ TableGroup core {
       const position = createPosition(4, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('Note');
     });
   });
@@ -1476,7 +1476,7 @@ Table notifications {
       const position = createPosition(26, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should suggest table sub-elements
       expect(labels).toContain('Note');
       expect(labels).toContain('indexes');
@@ -1497,7 +1497,7 @@ Table users {
       const position = createPosition(5, 41);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('id');
     });
 
@@ -1518,7 +1518,7 @@ Ref: products.category_id > categories.`;
       const position = createPosition(8, 41);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('id');
     });
 
@@ -1542,7 +1542,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const position = createPosition(11, 62);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should suggest something at this position (may be 'ecommerce' or tables)
       expect(Array.isArray(labels)).toBe(true);
       expect(labels.length).toBeGreaterThan(0);
@@ -1581,7 +1581,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const position = createPosition(3, 18);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       // Should provide some suggestions in incomplete syntax
       // May suggest column settings or table header settings depending on parsing
       expect(Array.isArray(labels)).toBe(true);
@@ -1647,8 +1647,8 @@ Records `;
       const position = createPosition(10, 9);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'users')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'orders')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'users')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'orders')).toBe(true);
     });
 
     it('- should suggest column names for Records column list', () => {
@@ -1668,9 +1668,9 @@ Records users(id, )`;
       const position = createPosition(8, 19);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'email')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'age')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'name')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'email')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'age')).toBe(true);
     });
 
     it('- should suggest schema-qualified table names', () => {
@@ -1691,8 +1691,8 @@ Records s.`;
       const position = createPosition(9, 11);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'users')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'orders')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'users')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'orders')).toBe(true);
     });
 
     it('- should suggest column names for Records inside table', () => {
@@ -1711,9 +1711,9 @@ Records s.`;
       const position = createPosition(6, 12);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'id')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'price')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'id')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'name')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'price')).toBe(true);
     });
 
     it('- should suggest enum values in Records data rows', () => {
@@ -1739,9 +1739,9 @@ Records users(id, user_status) {
       const position = createPosition(13, 14);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'active')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'inactive')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'pending')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'active')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'inactive')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'pending')).toBe(true);
     });
 
     it('- should suggest Records keyword in table body', () => {
@@ -1759,7 +1759,7 @@ Records users(id, user_status) {
       const position = createPosition(5, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'Records')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'Records')).toBe(true);
     });
 
     it('- should suggest column names in Records call expression', () => {
@@ -1778,9 +1778,9 @@ Records users()`;
       const position = createPosition(7, 15);
       const result = provider.provideCompletionItems(model, position);
 
-      expect(result.suggestions.some((s) => s.label === 'id')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
-      expect(result.suggestions.some((s) => s.label === 'email')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'id')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'name')).toBe(true);
+      expect(result.suggestions.some((suggestion) => suggestion.label === 'email')).toBe(true);
     });
   });
 });
@@ -1917,7 +1917,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       // Should suggest record row snippet if positioned on a new empty line
       // This test position is at the end of the line, not on an empty line
       // So it should not suggest the record row snippet
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       // Note: This may not trigger since position is at end of line, not on empty line
       if (recordSnippet) {
         expect(recordSnippet.insertText).toEqual('${1:id (int)}, ${2:name (varchar)}, ${3:email (varchar)}');
@@ -1995,7 +1995,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
 
       // Should not suggest record row snippet when inside a function application
       // (may return other suggestions or empty array)
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -2021,7 +2021,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
 
       // Should not suggest record row snippet in header
       // (may return other suggestions like schema.table names)
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -2042,7 +2042,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should not suggest record row snippet when not in RECORDS scope
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -2116,7 +2116,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       expect(result).toBeDefined();
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
       expect(recordSnippet?.insertText).toEqual('${1:id (int)}, ${2:email (varchar)}, ${3:name (varchar)}, ${4:age (int)}');
     });
@@ -2147,7 +2147,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       expect(result).toBeDefined();
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
       const insertText = recordSnippet?.insertText as string;
       expect(insertText).toContain('id (int)');
@@ -2181,7 +2181,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       expect(result).toBeDefined();
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
       expect(recordSnippet?.insertText).toEqual('${1:id (int)}, ${2:total (decimal)}, ${3:updated_at (timestamp)}');
     });
@@ -2216,7 +2216,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       expect(result).toBeDefined();
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
       const insertText = recordSnippet?.insertText as string;
       // Should include all columns: injected from id, regular column, and injected from timestamps
@@ -2246,7 +2246,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should not return record row snippet when no columns
-      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((suggestion) => suggestion.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 

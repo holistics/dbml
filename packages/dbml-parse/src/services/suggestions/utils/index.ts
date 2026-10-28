@@ -60,9 +60,9 @@ export function noSuggestions (): CompletionList {
 export function prependSpace (completionList: CompletionList): CompletionList {
   return {
     ...completionList,
-    suggestions: completionList.suggestions.map((s) => ({
-      ...s,
-      insertText: ` ${s.insertText}`,
+    suggestions: completionList.suggestions.map((suggestion) => ({
+      ...suggestion,
+      insertText: ` ${suggestion.insertText}`,
     })),
   };
 }
@@ -70,9 +70,9 @@ export function prependSpace (completionList: CompletionList): CompletionList {
 export function addQuoteToSuggestionIfNeeded (completionList: CompletionList): CompletionList {
   return {
     ...completionList,
-    suggestions: completionList.suggestions.map((s) => ({
-      ...s,
-      insertText: s.quoted ? s.insertText : addDoubleQuoteIfNeeded(s.insertText ?? ''),
+    suggestions: completionList.suggestions.map((suggestion) => ({
+      ...suggestion,
+      insertText: suggestion.quoted ? suggestion.insertText : addDoubleQuoteIfNeeded(suggestion.insertText ?? ''),
       quoted: true,
     })),
   };
@@ -82,7 +82,7 @@ export function addQuoteToSuggestionIfNeeded (completionList: CompletionList): C
 // This function returns a new completion list augmented with `a, b, c`
 export function addSuggestAllSuggestion (completionList: CompletionList, separator = ', '): CompletionList {
   const allColumns = completionList.suggestions
-    .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
+    .map((suggestion) => typeof suggestion.label === 'string' ? suggestion.label : suggestion.label.label)
     .join(separator);
 
   if (!allColumns) {

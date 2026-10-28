@@ -3,13 +3,12 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError } from '@/core/types/errors';
 import type {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ListExpressionNode,
-  SyntaxNode,
 } from '@/core/types/nodes';
 import type {
   Enum,

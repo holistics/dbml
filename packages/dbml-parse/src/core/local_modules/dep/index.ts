@@ -60,9 +60,9 @@ export const depModule: LocalModule = {
     if (isElementNode(node, ElementKind.Dep)) {
       settingsList = node.attributeList;
     } else {
-      const lastArg = node.args.at(-1);
-      if (lastArg instanceof ListExpressionNode) {
-        settingsList = lastArg;
+      const lastArgument = node.args.at(-1);
+      if (lastArgument instanceof ListExpressionNode) {
+        settingsList = lastArgument;
       } else if (node.args[0] instanceof ListExpressionNode) {
         settingsList = node.args[0];
       }
@@ -72,32 +72,32 @@ export const depModule: LocalModule = {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const [name, attrs] of Object.entries(settingMap)) {
+    for (const [name, attributes] of Object.entries(settingMap)) {
       switch (name) {
         case SettingName.Color:
-          if (attrs.length > 1) errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attr)));
-          attrs.forEach((attr) => {
-            if (!isValidHexColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attr));
+          if (attributes.length > 1) errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attribute)));
+          attributes.forEach((attribute) => {
+            if (!isValidHexColor(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attribute));
             }
           });
           break;
         case SettingName.Note:
-          if (attrs.length > 1) errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attr)));
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attr));
+          if (attributes.length > 1) errors.push(...attributes.map((attribute) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attribute)));
+          attributes.forEach((attribute) => {
+            if (!isExpressionAQuotedString(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attribute));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => {
-            if (attr.value
-              && !isExpressionAQuotedString(attr.value)
-              && !isValidHexColor(attr.value)
-              && !isExpressionASignedNumberExpression(attr.value)
-              && !isSimpleName(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attr));
+          attributes.forEach((attribute) => {
+            if (attribute.value
+              && !isExpressionAQuotedString(attribute.value)
+              && !isValidHexColor(attribute.value)
+              && !isExpressionASignedNumberExpression(attribute.value)
+              && !isSimpleName(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attribute));
             }
           });
           break;

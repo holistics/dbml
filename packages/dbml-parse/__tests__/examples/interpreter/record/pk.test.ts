@@ -165,14 +165,14 @@ describe('[example - record] simple primary key constraints', () => {
     const db = result.getValue();
     if (!db || !db.records) {
       const errors = result.getErrors();
-      console.error('Compilation errors:', errors.map((e) => e.diagnostic));
+      console.error('Compilation errors:', errors.map((error) => error.diagnostic));
       throw new Error('Failed to compile DBML source');
     }
     expect(db.records).toBeDefined();
     expect(db.records.length).toBe(3);
 
     // Verify users table
-    const usersRecord = db.records.find((r) => r.tableName === 'users');
+    const usersRecord = db.records.find((record) => record.tableName === 'users');
     expect(usersRecord).toBeDefined();
     expect(usersRecord!.values.length).toBe(2);
     expect(usersRecord!.values[0][0]).toMatchObject({
@@ -193,7 +193,7 @@ describe('[example - record] simple primary key constraints', () => {
     });
 
     // Verify countries table with string PK
-    const countriesRecord = db.records.find((r) => r.tableName === 'countries');
+    const countriesRecord = db.records.find((record) => record.tableName === 'countries');
     expect(countriesRecord).toBeDefined();
     expect(countriesRecord!.values.length).toBe(2);
     expect(countriesRecord!.values[0][0]).toMatchObject({
@@ -206,7 +206,7 @@ describe('[example - record] simple primary key constraints', () => {
     });
 
     // Verify accounts table with zero PK
-    const accountsRecord = db.records.find((r) => r.tableName === 'accounts');
+    const accountsRecord = db.records.find((record) => record.tableName === 'accounts');
     expect(accountsRecord).toBeDefined();
     expect(accountsRecord!.values.length).toBe(3);
     expect(accountsRecord!.values[0][0]).toMatchObject({
@@ -249,14 +249,14 @@ describe('[example - record] simple primary key constraints', () => {
     expect(infos.length).toBeGreaterThan(0);
 
     // Verify users.id duplicate infos
-    const userWarnings = infos.filter((w) => w.diagnostic.includes('users.id'));
+    const userWarnings = infos.filter((warning) => warning.diagnostic.includes('users.id'));
     expect(userWarnings.length).toBeGreaterThan(0);
-    expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
+    expect(userWarnings.every((warning) => warning.diagnostic.includes('Duplicate PK'))).toBe(true);
 
     // Verify countries.code duplicate infos
-    const countryWarnings = infos.filter((w) => w.diagnostic.includes('countries.code'));
+    const countryWarnings = infos.filter((warning) => warning.diagnostic.includes('countries.code'));
     expect(countryWarnings.length).toBeGreaterThan(0);
-    expect(countryWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
+    expect(countryWarnings.every((warning) => warning.diagnostic.includes('Duplicate PK'))).toBe(true);
   });
 
   test('should reject NULL PK values', () => {

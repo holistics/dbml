@@ -16,7 +16,7 @@ async function connectMySQL (connection: string): Promise<Connection> {
   } catch (error) {
     await client.end();
     if (error instanceof Error) {
-      throw new Error(`MySQL connection error: ${error.message}`);
+      throw new Error(`MySQL connection error: ${error.message}`, { cause: error });
     }
 
     throw error;
@@ -105,13 +105,13 @@ function generateField (row: Record<string, any>): Field {
 }
 
 // Do not get the index sub part since in DBML, it is impossible to create index on part of column.
-function getIndexColumn (columnName: string, idxExpression: string, idxSubPart: any): IndexColumn | null {
-  if (idxExpression) {
-    return { value: idxExpression, type: 'expression' };
+function getIndexColumn (columnName: string, indexExpression: string, indexSubPart: any): IndexColumn | null {
+  if (indexExpression) {
+    return { value: indexExpression, type: 'expression' };
   }
 
-  if (idxSubPart) {
-    return { value: `${columnName}(${idxSubPart})`, type: 'expression' };
+  if (indexSubPart) {
+    return { value: `${columnName}(${indexSubPart})`, type: 'expression' };
   }
 
   if (columnName) {
@@ -261,19 +261,19 @@ async function generateIndexes (client: Connection, schemaName: string): Promise
   const queryResponse = await client.query(query, [schemaName, schemaName]);
   const rows: any = queryResponse[0];
 
-  const tableIndexMap = rows.reduce((acc: Record<string, Record<string, Index>>, row: Record<string, any>) => {
+  const tableIndexMap = rows.reduce((accumulator: Record<string, Record<string, Index>>, row: Record<string, any>) => {
     const {
       tableName, idxName, idxType, isIdxUnique, columnName, idxExpression, idxSubPart,
     } = row;
     const key = tableName;
 
-    if (!acc[key]) {
-      acc[key] = {};
+    if (!accumulator[key]) {
+      accumulator[key] = {};
     }
 
-    if (!acc[key][idxName]) {
+    if (!accumulator[key][idxName]) {
       // init first index
-      acc[key][idxName] = {
+      accumulator[key][idxName] = {
         name: idxName,
         type: idxType,
         columns: [],
@@ -281,13 +281,13 @@ async function generateIndexes (client: Connection, schemaName: string): Promise
       };
     }
 
-    const currentIndex = acc[key][idxName];
+    const currentIndex = accumulator[key][idxName];
     const column = getIndexColumn(columnName, idxExpression, idxSubPart);
     if (column) {
       currentIndex.columns.push(column);
     }
 
-    return acc;
+    return accumulator;
   }, {});
 
   const indexMap: IndexesDictionary = {};
@@ -325,36 +325,36 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
   const inlineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount === 1);
   const outOfLineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount > 1);
 
-  const compositeTableConstraintMap = outOfLineConstraintList.reduce((acc: any, row: Record<string, any>) => {
+  const compositeTableConstraintMap = outOfLineConstraintList.reduce((accumulator: any, row: Record<string, any>) => {
     const {
       tableName, constraintName, columnNames, constraintType,
     } = row;
 
     const key = tableName;
-    if (!acc[key]) {
-      acc[key] = {};
+    if (!accumulator[key]) {
+      accumulator[key] = {};
     }
 
-    if (!acc[key][constraintName]) {
-      acc[key][constraintName] = {
+    if (!accumulator[key][constraintName]) {
+      accumulator[key][constraintName] = {
         name: constraintName,
       };
     }
 
     if (constraintType === 'PRIMARY KEY') {
-      acc[key][constraintName].pk = true;
+      accumulator[key][constraintName].pk = true;
     }
 
     if (constraintType === 'UNIQUE') {
-      acc[key][constraintName].unique = true;
+      accumulator[key][constraintName].unique = true;
     }
 
     const columnList = columnNames
       .split(',')
       .map((col: string) => ({ type: 'column', value: col }));
-    acc[key][constraintName].columns = columnList;
+    accumulator[key][constraintName].columns = columnList;
 
-    return acc;
+    return accumulator;
   }, {});
 
   const compositeConstraintMap: IndexesDictionary = {};
@@ -362,30 +362,30 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
     compositeConstraintMap[tableName] = flatten(Object.values(compositeTableConstraintMap[tableName]));
   });
 
-  const constraintMap = inlineConstraintList.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
+  const constraintMap = inlineConstraintList.reduce((accumulator: TableConstraintsDictionary, row: Record<string, any>) => {
     const { tableName, columnNames, constraintType } = row;
 
     const key = tableName;
-    if (!acc[key]) {
-      acc[key] = {};
+    if (!accumulator[key]) {
+      accumulator[key] = {};
     }
 
     const columnList = columnNames.split(',');
 
     columnList.forEach((columnName: string) => {
-      if (!acc[key][columnName]) {
-        acc[key][columnName] = { checks: [] };
+      if (!accumulator[key][columnName]) {
+        accumulator[key][columnName] = { checks: [] };
       }
 
       if (constraintType === 'PRIMARY KEY') {
-        acc[key][columnName].pk = true;
+        accumulator[key][columnName].pk = true;
       }
 
-      if (constraintType === 'UNIQUE' && !acc[key][columnName].pk) {
-        acc[key][columnName].unique = true;
+      if (constraintType === 'UNIQUE' && !accumulator[key][columnName].pk) {
+        accumulator[key][columnName].unique = true;
       }
     });
-    return acc;
+    return accumulator;
   }, {});
 
   return { compositeConstraintMap, primaryAndUniqueConstraintMap: constraintMap };
@@ -576,6 +576,4 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
   }
 }
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

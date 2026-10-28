@@ -5,9 +5,7 @@ import {
   type CompilerDiagnostic,
   type ExportFormat,
 } from '@dbml/core';
-import {
-  reduce,
-} from 'lodash-es';
+import { reduce } from 'lodash-es';
 
 interface OutputPlugin {
   write(content: string): void;
@@ -31,16 +29,16 @@ function validateInputFilePaths (paths: string[], validatePlugin: (_path: string
   return paths.every((_path) => validatePlugin(_path));
 }
 
-function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
-  const formatOpts = Object.keys(opts).filter((opt) => {
+function getFormatOpt (options: Record<string, unknown>): ExportFormat {
+  const formatOptions = Object.keys(options).filter((opt) => {
     return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'mssqlLegacy', 'oracle', 'snowflake'].includes(opt);
   });
 
   let format: ExportFormat = 'postgres';
   let cnt = 0;
 
-  formatOpts.forEach((opt) => {
-    if (opts[opt]) {
+  formatOptions.forEach((opt) => {
+    if (options[opt]) {
       cnt += 1;
       if (cnt > 1) throw new Error('Too many format options');
       format = opt as ExportFormat;
@@ -57,21 +55,21 @@ function getConnectionOpt (args: string[]): ConnectionOpt {
     databaseType: 'unknown',
   };
 
-  return reduce(args, (connectionOpt, arg) => {
-    if (supportedDatabases.includes(arg)) connectionOpt.databaseType = arg;
+  return reduce(args, (connectionOpt, argument) => {
+    if (supportedDatabases.includes(argument)) connectionOpt.databaseType = argument;
     // Check if the arg is a connection string using regex
     const connectionStringRegex = /^.*[:;]/;
-    if (connectionStringRegex.test(arg)) {
+    if (connectionStringRegex.test(argument)) {
       // Example: jdbc:mysql://localhost:3306/mydatabase
       // Example: odbc:Driver={SQL Server};Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
-      connectionOpt.connection = arg;
+      connectionOpt.connection = argument;
     }
 
     const windowFilepathRegex = /^[a-zA-Z]:[\\/](?:[^<>:"/\\|?*\n\r]+[\\/])*[^<>:"/\\|?*\n\r]*$/;
     const unixFilepathRegex = /^(\/|\.\/|~\/|\.\.\/)([^<>:"|?*\n\r]*\/?)*[^<>:"|?*\n\r]*$/;
 
-    if (windowFilepathRegex.test(arg) || unixFilepathRegex.test(arg)) {
-      connectionOpt.connection = arg;
+    if (windowFilepathRegex.test(argument) || unixFilepathRegex.test(argument)) {
+      connectionOpt.connection = argument;
     }
 
     return connectionOpt;
@@ -88,16 +86,16 @@ function generate (
     try {
       const content = transform(source);
       outputPlugin.write(content);
-    } catch (e) {
-      if (e instanceof CompilerDiagnostics) {
-        throw e.map((diag: CompilerDiagnostic) => ({
+    } catch (error) {
+      if (error instanceof CompilerDiagnostics) {
+        throw error.map((diag: CompilerDiagnostic) => ({
           ...diag,
           message: diag.message,
           filepath: path.basename(_path),
           stack: diag.stack,
         }));
       }
-      throw e;
+      throw error;
     }
   });
 }

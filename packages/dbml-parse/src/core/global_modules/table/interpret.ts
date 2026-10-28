@@ -20,7 +20,7 @@ import { RefMetadata } from '@/core/types/symbol/metadata';
 import type { ColumnSymbol, TableSymbol } from '@/core/types/symbol/symbols';
 import { ProgramSymbol } from '@/core/types/symbol/symbols';
 import {
-  extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractQuotedStringToken, extractVariableNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
@@ -125,7 +125,7 @@ export class TableInterpreter {
     const members = this.compiler.symbolMembers(this.symbol).getFiltered(UNHANDLED) ?? [];
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column)) continue;
-      const column = this.table.fields!.find((f) => f.name === member.name);
+      const column = this.table.fields!.find((field) => field.name === member.name);
       if (!column) continue;
       attachCustomMetadata(this.compiler, column, member, COLUMN_METADATA_FIELDS, this.filepath);
     }
@@ -156,7 +156,7 @@ export class TableInterpreter {
       return [];
     }
 
-    const alias = extractVarNameFromPrimaryVariable(aliasNode as any);
+    const alias = extractVariableNameFromPrimaryVariable(aliasNode as any);
     if (alias) {
       this.table.alias = alias;
     }
@@ -176,7 +176,7 @@ export class TableInterpreter {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),
@@ -228,7 +228,7 @@ export class TableInterpreter {
     // FIXME: Should support this in the future
     if (partialSymbol && !programSymbol.inNestedSchema(this.compiler, partialSymbol)) {
       const tableSymbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
-      const tableUseInThisFile = tableSymbol ? (this.compiler.symbolUses(tableSymbol).getFiltered(UNHANDLED) ?? []).find((u) => u.filepath.equals(this.filepath)) : undefined;
+      const tableUseInThisFile = tableSymbol ? (this.compiler.symbolUses(tableSymbol).getFiltered(UNHANDLED) ?? []).find((useSymbol) => useSymbol.filepath.equals(this.filepath)) : undefined;
       errors.push(new CompileError(
         CompileErrorCode.UNSUPPORTED,
         `TablePartial ${partial.name} from '${partialSymbol.filepath}' should be imported. Currently, importing a table that uses a table partial requires that table partial to also be in scope.`,
@@ -272,7 +272,7 @@ export class TableInterpreter {
     const column: Partial<Column> = {};
     const columnSymbol = this.compiler.nodeSymbol(field).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any)!;
+    column.name = extractVariableNameFromPrimaryVariable(field.callee as any)!;
     column.token = getTokenPosition(field);
 
     const typeReport = processColumnType(this.compiler, field.args[0]);
@@ -298,7 +298,7 @@ export class TableInterpreter {
       if (!meta) return [];
 
       const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && owners.length > 0 && !owners.some((owner) => owner === programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];
@@ -307,27 +307,27 @@ export class TableInterpreter {
       const value = result.getValue() as Ref | undefined;
       if (!value?.endpoints?.[0]) return [];
 
-      const ep = value.endpoints[0];
+      const endpoint = value.endpoints[0];
       const op = (meta as RefMetadata).op(this.compiler);
       if (!op) return [];
 
       const inlineRef: InlineRef = {
-        schemaName: ep.schemaName,
-        tableName: ep.tableName,
-        fieldNames: ep.fieldNames,
+        schemaName: endpoint.schemaName,
+        tableName: endpoint.tableName,
+        fieldNames: endpoint.fieldNames,
         relation: op,
-        token: ep.token,
+        token: endpoint.token,
       };
       return inlineRef;
     });
 
     const deps = settingMap[SettingName.Dep] || [];
-    column.inline_deps = deps.flatMap((depAttr) => {
-      const meta = this.compiler.nodeMetadata(depAttr).getFiltered(UNHANDLED);
+    column.inline_deps = deps.flatMap((depAttribute) => {
+      const meta = this.compiler.nodeMetadata(depAttribute).getFiltered(UNHANDLED);
       if (!meta) return [];
 
       const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && owners.length > 0 && !owners.some((owner) => owner === programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];
@@ -336,7 +336,7 @@ export class TableInterpreter {
       const value = result.getValue() as Dep | undefined;
       if (!value?.edges?.[0]) return [];
 
-      const prefix = (depAttr as any).value;
+      const prefix = (depAttribute as any).value;
       if (!(prefix instanceof PrefixExpressionNode)) return [];
       const direction = prefix.op?.value as DepDirection | undefined;
       if (direction !== DEP_DOWNSTREAM && direction !== DEP_UPSTREAM) return [];

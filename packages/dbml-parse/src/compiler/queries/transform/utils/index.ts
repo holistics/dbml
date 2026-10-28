@@ -94,20 +94,20 @@ export function lookupElementSymbol (
 /**
  * Removes surrounding double quotes from a string if present.
  */
-export function stripQuotes (str: string): string {
-  if (str.startsWith('"') && str.endsWith('"') && str.length >= 2) {
-    return str.slice(1, -1);
+export function stripQuotes (string_: string): string {
+  if (string_.startsWith('"') && string_.endsWith('"') && string_.length >= 2) {
+    return string_.slice(1, -1);
   }
-  return str;
+  return string_;
 }
 
 // Serialize endpoint to a nice string
-export function formatEndpoint (ep: EndpointRef): string {
+export function formatEndpoint (endpoint: EndpointRef): string {
   const parts: string[] = [];
-  if (ep.schemaName && ep.schemaName !== DEFAULT_SCHEMA_NAME)
-    parts.push(addDoubleQuoteIfNeeded(ep.schemaName));
-  parts.push(addDoubleQuoteIfNeeded(ep.tableName));
-  for (const f of ep.fieldNames ?? []) parts.push(addDoubleQuoteIfNeeded(f));
+  if (endpoint.schemaName && endpoint.schemaName !== DEFAULT_SCHEMA_NAME)
+    parts.push(addDoubleQuoteIfNeeded(endpoint.schemaName));
+  parts.push(addDoubleQuoteIfNeeded(endpoint.tableName));
+  for (const field of endpoint.fieldNames ?? []) parts.push(addDoubleQuoteIfNeeded(field));
   return parts.join('.');
 }
 

@@ -30,8 +30,8 @@ describe('[property] lexer', () => {
     fc.assert(
       fc.property(tokenStreamArbitrary, (source: string) => {
         const tokens = lex(source).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
-        tokens.reduce((prevTokenEnd, token) => {
-          expect(prevTokenEnd).toBe(token.start);
+        tokens.reduce((previousTokenEnd, token) => {
+          expect(previousTokenEnd).toBe(token.start);
           return token.end;
         }, 0);
       }),
@@ -43,7 +43,7 @@ describe('[property] lexer', () => {
     // Property: Lexed tokens' lines and columns should locate the same text as their offsets
     // Converts line (0-indexed) and column to character offset by summing line lengths
     function convertLineAndColumnToOffset (source: string, line: number, col: number): number {
-      return source.split(/(?<=\n|\r\n)/).slice(0, line).map((str) => str.length).reduce((acc, cur) => acc + cur, 0) + col;
+      return source.split(/(?<=\n|\r\n)/).slice(0, line).map((string_) => string_.length).reduce((accumulator, current) => accumulator + current, 0) + col;
     }
 
     fc.assert(
@@ -114,8 +114,8 @@ describe('[property] lexer', () => {
       fc.property(tokenStreamArbitrary, (source: string) => {
         const tokens = lex(source).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
 
-        for (let i = 1; i < tokens.length; i++) {
-          expect(tokens[i].start).toBeGreaterThanOrEqual(tokens[i - 1].end);
+        for (let index = 1; index < tokens.length; index++) {
+          expect(tokens[index].start).toBeGreaterThanOrEqual(tokens[index - 1].end);
         }
       }),
       PROPERTY_TEST_CONFIG,
@@ -257,12 +257,12 @@ describe('[property] lexer', () => {
         const tokens = lex(source).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
 
         // Check no overlaps between consecutive tokens
-        for (let i = 1; i < tokens.length; i++) {
-          const prev = tokens[i - 1];
-          const curr = tokens[i];
+        for (let index = 1; index < tokens.length; index++) {
+          const previous = tokens[index - 1];
+          const current = tokens[index];
 
           // Current token should not start before previous token ends
-          expect(curr.start).toBeGreaterThanOrEqual(prev.end);
+          expect(current.start).toBeGreaterThanOrEqual(previous.end);
         }
       }),
       EXTENDED_CONFIG,
@@ -299,7 +299,7 @@ describe('[property] lexer - negative tests', () => {
           const errors = result.getErrors();
 
           expect(errors.length).toBeGreaterThan(0);
-          expect(errors.some((e) => e.diagnostic.includes('$'))).toBe(true);
+          expect(errors.some((error) => error.diagnostic.includes('$'))).toBe(true);
         },
       ),
       EXTENDED_CONFIG,
@@ -312,7 +312,7 @@ describe('[property] lexer - negative tests', () => {
         fc.string({
           minLength: 0,
           maxLength: 100,
-        }).filter((s) => !s.includes("'")),
+        }).filter((text) => !text.includes("'")),
         (content: string) => {
           // String with opening quote but no closing
           const source = `'${content}`;
@@ -332,7 +332,7 @@ describe('[property] lexer - negative tests', () => {
         fc.string({
           minLength: 0,
           maxLength: 100,
-        }).filter((s) => !s.includes('"')),
+        }).filter((text) => !text.includes('"')),
         (content: string) => {
           const source = `"${content}`;
           const result = lex(source);
@@ -351,7 +351,7 @@ describe('[property] lexer - negative tests', () => {
         fc.string({
           minLength: 0,
           maxLength: 100,
-        }).filter((s) => !s.includes('`')),
+        }).filter((text) => !text.includes('`')),
         (content: string) => {
           const source = `\`${content}`;
           const result = lex(source);
@@ -380,8 +380,8 @@ describe('[property] lexer - negative tests', () => {
           min: 0,
           max: 999,
         }),
-        (a: number, b: number, c: number) => {
-          const source = `${a}.${b}.${c}`;
+        (first: number, second: number, third: number) => {
+          const source = `${first}.${second}.${third}`;
           const result = lex(source);
           const errors = result.getErrors();
 

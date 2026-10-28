@@ -8,42 +8,42 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 export function setupCompiler (files: Record<string, string>): { compiler: Compiler; sources: Map<Filepath, string> } {
   const layout = new MemoryProjectLayout();
   const sources = new Map<Filepath, string>();
-  for (const [path, src] of Object.entries(files)) {
+  for (const [path, source] of Object.entries(files)) {
     const filepath = Filepath.from(path);
-    layout.setSource(filepath, src);
-    sources.set(filepath, src);
+    layout.setSource(filepath, source);
+    sources.set(filepath, source);
   }
   const compiler = new Compiler(layout);
   return { compiler, sources };
 }
 
-export function fp (path: string): Filepath {
+export function filepath (path: string): Filepath {
   return Filepath.from(path);
 }
 
 export function getDatabase (compiler: Compiler, path: string): Database {
-  const result = compiler.interpretFile(fp(path));
+  const result = compiler.interpretFile(filepath(path));
   expect(result.getErrors()).toHaveLength(0);
   return result.getValue()! as Database;
 }
 
 export function findTable (compiler: Compiler, path: string, name: string) {
-  const ast = compiler.parseFile(fp(path)).getValue().ast;
+  const ast = compiler.parseFile(filepath(path)).getValue().ast;
   const prog = compiler.nodeSymbol(ast).getFiltered(UNHANDLED)!;
   const members = compiler.symbolMembers(prog).getFiltered(UNHANDLED) ?? [];
-  for (const m of members) {
-    if (m.isKind(SymbolKind.Schema)) {
-      const sub = compiler.symbolMembers(m).getFiltered(UNHANDLED) ?? [];
-      const found = sub.find((s) => s.isKind(SymbolKind.Table) && s.name === name);
+  for (const member of members) {
+    if (member.isKind(SymbolKind.Schema)) {
+      const sub = compiler.symbolMembers(member).getFiltered(UNHANDLED) ?? [];
+      const found = sub.find((symbol) => symbol.isKind(SymbolKind.Table) && symbol.name === name);
       if (found) return found;
     }
-    if (m.isKind(SymbolKind.Table) && m.name === name) return m;
+    if (member.isKind(SymbolKind.Table) && member.name === name) return member;
   }
   return undefined;
 }
 
 export function canonicalName (compiler: Compiler, path: string, tableName: string): CanonicalName | undefined {
-  const t = findTable(compiler, path, tableName);
-  if (!t) return undefined;
-  return compiler.canonicalName(fp(path), t.originalSymbol).getValue();
+  const table = findTable(compiler, path, tableName);
+  if (!table) return undefined;
+  return compiler.canonicalName(filepath(path), table.originalSymbol).getValue();
 }

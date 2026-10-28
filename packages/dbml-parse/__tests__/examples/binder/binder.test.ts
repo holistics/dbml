@@ -10,7 +10,7 @@ import type Compiler from '@/compiler';
 
 function findMember (compiler: Compiler, symbol: NodeSymbol, kind: SymbolKind, name: string): NodeSymbol | undefined {
   const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? [];
-  return members.find((m) => m.kind === kind && m.name === name);
+  return members.find((member) => member.kind === kind && member.name === name);
 }
 
 function nodeSymbol (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): NodeSymbol | undefined {
@@ -21,16 +21,16 @@ describe('[example] binder', () => {
   describe('Table', () => {
     test('should create TableSymbol with correct properties', () => {
       const { ast, compiler } = analyze('Table users { id int }').getValue();
-      const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+      const elements = ast.body.filter((node): node is ElementDeclarationNode => node.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const tableNode = elements[0];
       const tableSymbol = nodeSymbol(compiler, tableNode);
 
       // Verify symbol properties
-      expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(tableSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
       expect(tableSymbol!.declaration).toBe(tableNode);
 
       // Verify symbolTable contains column
-      expect(findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
 
       // Verify column symbol properties
       const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id');
@@ -40,7 +40,7 @@ describe('[example] binder', () => {
 
       // Verify public schema symbol table (publicSymbolTable concept)
       const schemaSymbol = nodeSymbol(compiler, ast);
-      expect(schemaSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Program));
+      expect(schemaSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Program));
       expect(findMember(compiler, schemaSymbol!, SymbolKind.Table, 'users')).toBe(tableSymbol);
     });
 
@@ -58,16 +58,16 @@ describe('[example] binder', () => {
       const tableBody = tableNode.body as BlockExpressionNode;
 
       // Verify all columns are in symbolTable
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
 
       // Verify each column's symbol and declaration relationship
       tableBody.body.forEach((field, index) => {
         const columnNode = field as ElementDeclarationNode;
         const columnSymbol = nodeSymbol(compiler, columnNode);
 
-        expect(columnSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+        expect(columnSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
         expect(columnSymbol!.declaration).toBe(columnNode);
 
         // Verify column is accessible from table's symbolTable
@@ -86,15 +86,15 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
 
       const usersSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
       const postsSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')!;
-      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, postsSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, postsSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, postsSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, postsSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
 
     test('should detect duplicate table names within same schema', () => {
@@ -120,12 +120,12 @@ describe('[example] binder', () => {
       const schemaSymbol = nodeSymbol(compiler, ast)!;
 
       // Root has auth schema and public.users table
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Schema, 'auth')).toSatisfy((s: any) => s?.isKind(SymbolKind.Schema));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Schema, 'auth')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Schema));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
 
       // auth schema has users table
       const authSchema = findMember(compiler, schemaSymbol, SymbolKind.Schema, 'auth')!;
-      expect(findMember(compiler, authSchema, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, authSchema, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should handle table aliases', () => {
@@ -173,13 +173,13 @@ describe('[example] binder', () => {
       expect(result1.getErrors()).toHaveLength(0);
       const { ast: ast1, compiler: compiler1 } = result1.getValue();
       const schemaSymbol1 = nodeSymbol(compiler1, ast1)!;
-      expect(findMember(compiler1, schemaSymbol1, SymbolKind.Schema, 'a')).toSatisfy((s: any) => s?.isKind(SymbolKind.Schema));
+      expect(findMember(compiler1, schemaSymbol1, SymbolKind.Schema, 'a')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Schema));
 
       const result2 = analyze('Table "user-table" { "user-id" int }');
       expect(result2.getErrors()).toHaveLength(0);
       const { ast: ast2, compiler: compiler2 } = result2.getValue();
       const schemaSymbol2 = nodeSymbol(compiler2, ast2)!;
-      expect(findMember(compiler2, schemaSymbol2, SymbolKind.Table, 'user-table')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler2, schemaSymbol2, SymbolKind.Table, 'user-table')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
   });
 
@@ -192,7 +192,7 @@ describe('[example] binder', () => {
       const columnNode = tableBody.body[0] as ElementDeclarationNode;
       const columnSymbol = nodeSymbol(compiler, columnNode);
 
-      expect(columnSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(columnSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
       expect(columnSymbol!.declaration).toBe(columnNode);
 
       // Verify column is in table's symbol table
@@ -231,10 +231,10 @@ describe('[example] binder', () => {
       const tableElement = ast.body[0] as ElementDeclarationNode;
       const tableSymbol = nodeSymbol(compiler, tableElement)!;
 
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'status')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'status')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
 
     test('should track column references from inline refs', () => {
@@ -274,8 +274,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const tableSymbol = nodeSymbol(compiler, ast.body[0] as ElementDeclarationNode)!;
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
 
     test('should detect unknown columns in indexes', () => {
@@ -329,9 +329,9 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const tableSymbol = nodeSymbol(compiler, ast.body[0] as ElementDeclarationNode)!;
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'first_name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'last_name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'first_name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'last_name')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
   });
 
@@ -344,14 +344,14 @@ describe('[example] binder', () => {
         }
       `;
       const { ast, compiler } = analyze(source).getValue();
-      const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+      const elements = ast.body.filter((node): node is ElementDeclarationNode => node.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const enumNode = elements[0];
       const enumSymbol = nodeSymbol(compiler, enumNode)!;
 
-      expect(enumSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
+      expect(enumSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
       expect(enumSymbol.declaration).toBe(enumNode);
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'inactive')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'inactive')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
 
       // Verify enum is in public schema symbol table
       const schemaSymbol = nodeSymbol(compiler, ast)!;
@@ -373,14 +373,14 @@ describe('[example] binder', () => {
       const enumElement = ast.body[0] as ElementDeclarationNode;
       const enumSymbol = nodeSymbol(compiler, enumElement)!;
 
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'approved')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'rejected')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'approved')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'rejected')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
 
       const enumBody = enumElement.body as BlockExpressionNode;
       enumBody.body.forEach((field) => {
         const fieldSymbol = nodeSymbol(compiler, field as ElementDeclarationNode);
-        expect(fieldSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+        expect(fieldSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
         expect(fieldSymbol!.declaration).toBe(field);
       });
     });
@@ -412,10 +412,10 @@ describe('[example] binder', () => {
 
       const enumA = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'a')!;
       const enumB = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'b')!;
-      expect(findMember(compiler, enumA, SymbolKind.EnumField, 'val1')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumA, SymbolKind.EnumField, 'val2')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumB, SymbolKind.EnumField, 'val1')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
-      expect(findMember(compiler, enumB, SymbolKind.EnumField, 'val2')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumA, SymbolKind.EnumField, 'val1')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumA, SymbolKind.EnumField, 'val2')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumB, SymbolKind.EnumField, 'val1')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumB, SymbolKind.EnumField, 'val2')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
     });
 
     test('should allow enum type reference in column', () => {
@@ -434,8 +434,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should allow enum from different schema', () => {
@@ -455,7 +455,7 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
       const typesSchema = findMember(compiler, schemaSymbol, SymbolKind.Schema, 'types')!;
-      expect(findMember(compiler, typesSchema, SymbolKind.Enum, 'status')).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
+      expect(findMember(compiler, typesSchema, SymbolKind.Enum, 'status')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
     });
 
     test('should allow forward reference to enum', () => {
@@ -470,8 +470,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status_enum')).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status_enum')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Enum));
     });
 
     test('should bind enum field references in default values', () => {
@@ -492,7 +492,7 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
       const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'order_status')!;
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
     });
 
     test('should bind schema-qualified enum field references in default values', () => {
@@ -512,7 +512,7 @@ describe('[example] binder', () => {
       const publicSchema = nodeSymbol(compiler, ast)!;
       const typesSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'types')!;
       const enumSymbol = findMember(compiler, typesSchema, SymbolKind.Enum, 'status')!;
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
     });
 
     test('should detect invalid enum field in default value', () => {
@@ -631,7 +631,7 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
       const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'true')!;
-      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'value')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+      expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'value')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.EnumField));
     });
 
     test('should bind quoted string with field as enum access', () => {
@@ -706,8 +706,8 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
 
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should error when inline ref target matches table name but resolves differently', () => {
@@ -721,7 +721,7 @@ describe('[example] binder', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors.some((e) => e.diagnostic.includes('R'))).toBe(true);
+      expect(errors.some((error) => error.diagnostic.includes('R'))).toBe(true);
     });
 
     test('should allow forward reference to table', () => {
@@ -735,8 +735,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should track multiple references to the same symbol', () => {
@@ -772,10 +772,10 @@ describe('[example] binder', () => {
       const ordersSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'orders')!;
 
       // Check column membership
-      expect(findMember(compiler, merchantsSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, merchantsSymbol, SymbolKind.Column, 'country_code')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, ordersSymbol, SymbolKind.Column, 'merchant_id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
-      expect(findMember(compiler, ordersSymbol, SymbolKind.Column, 'country')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, merchantsSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, merchantsSymbol, SymbolKind.Column, 'country_code')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, ordersSymbol, SymbolKind.Column, 'merchant_id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, ordersSymbol, SymbolKind.Column, 'country')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
 
     test('should bind composite foreign key with schema-qualified names', () => {
@@ -796,8 +796,8 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const publicSchema = nodeSymbol(compiler, ast)!;
       const shopSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'shop')!;
-      expect(findMember(compiler, shopSchema, SymbolKind.Table, 'products')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, shopSchema, SymbolKind.Table, 'orders')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, shopSchema, SymbolKind.Table, 'products')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, shopSchema, SymbolKind.Table, 'orders')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should detect errors in composite foreign key references', () => {
@@ -816,13 +816,13 @@ describe('[example] binder', () => {
   describe('TablePartial', () => {
     test('should create TablePartialSymbol with correct properties', () => {
       const { ast, compiler } = analyze('TablePartial timestamps { created_at timestamp }').getValue();
-      const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+      const elements = ast.body.filter((node): node is ElementDeclarationNode => node.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
       const partialNode = elements[0];
       const partialSymbol = nodeSymbol(compiler, partialNode)!;
 
-      expect(partialSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.TablePartial));
+      expect(partialSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TablePartial));
       expect(partialSymbol.declaration).toBe(partialNode);
-      expect(findMember(compiler, partialSymbol, SymbolKind.Column, 'created_at')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, partialSymbol, SymbolKind.Column, 'created_at')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
 
       // Verify TablePartial is in public schema symbol table
       const schemaSymbol = nodeSymbol(compiler, ast)!;
@@ -870,8 +870,8 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
 
-      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'timestamps')).toSatisfy((s: any) => s?.isKind(SymbolKind.TablePartial));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'audit')).toSatisfy((s: any) => s?.isKind(SymbolKind.TablePartial));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'timestamps')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TablePartial));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'audit')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TablePartial));
     });
 
     test('should handle tables with only partial injections', () => {
@@ -884,8 +884,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'base')).toSatisfy((s: any) => s?.isKind(SymbolKind.TablePartial));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'derived')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'base')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TablePartial));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'derived')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
 
     test('should allow forward reference to TablePartial', () => {
@@ -901,8 +901,8 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
-      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'timestamps')).toSatisfy((s: any) => s?.isKind(SymbolKind.TablePartial));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.TablePartial, 'timestamps')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TablePartial));
     });
 
     test('should detect non-existent TablePartial injection', () => {
@@ -934,7 +934,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(4);
 
-      const errorDiagnostics = errors.map((e) => e.diagnostic);
+      const errorDiagnostics = errors.map((error) => error.diagnostic);
       expect(errorDiagnostics).toContain("Column 'un_col1' does not exist in TablePartial 'T1'");
       expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'public.T1'");
       expect(errorDiagnostics).toContain("Table 'un_T' does not exist in Schema 'public'");
@@ -1009,7 +1009,7 @@ describe('[example] binder', () => {
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
       const usersSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
-      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+      expect(findMember(compiler, usersSymbol, SymbolKind.Column, 'id')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Column));
     });
   });
 
@@ -1022,11 +1022,11 @@ describe('[example] binder', () => {
         }
       `;
       const { ast, compiler } = analyze(source).getValue();
-      const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
-      const tableGroup = elements.find((e) => e.type?.value === 'TableGroup');
+      const elements = ast.body.filter((node): node is ElementDeclarationNode => node.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+      const tableGroup = elements.find((element) => element.type?.value === 'TableGroup');
       const groupSymbol = nodeSymbol(compiler, tableGroup!)!;
 
-      expect(groupSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.TableGroup));
+      expect(groupSymbol).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.TableGroup));
       expect(groupSymbol.declaration).toBe(tableGroup);
 
       // Verify TableGroup is in public schema symbol table
@@ -1058,7 +1058,7 @@ describe('[example] binder', () => {
       `;
       const result = analyze(source);
       const errors = result.getErrors();
-      expect(errors.some((e) => e.message.includes("'G'") && e.message.includes('does not exist'))).toBe(true);
+      expect(errors.some((error) => error.message.includes("'G'") && error.message.includes('does not exist'))).toBe(true);
     });
   });
 
@@ -1075,7 +1075,7 @@ describe('[example] binder', () => {
 
       const { ast, compiler } = result.getValue();
       const schemaSymbol = nodeSymbol(compiler, ast)!;
-      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+      expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((symbol: any) => symbol?.isKind(SymbolKind.Table));
     });
   });
 
@@ -1110,7 +1110,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce no binding errors when DiagramView.Tables references aliased table', () => {
@@ -1131,7 +1131,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce no binding errors for schema-qualified table reference', () => {
@@ -1151,7 +1151,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce binding error when DiagramView.Notes references non-existent note', () => {
@@ -1161,7 +1161,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce no binding errors when DiagramView.Notes references existing note', () => {
@@ -1181,7 +1181,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce no binding errors when DiagramView.TableGroups references existing tablegroup', () => {
@@ -1202,7 +1202,7 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error: any) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('should produce no binding errors when DiagramView.Schemas references existing schema', () => {

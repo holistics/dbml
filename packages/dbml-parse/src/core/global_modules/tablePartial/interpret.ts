@@ -17,7 +17,7 @@ import type {
 } from '@/core/types/schemaJson';
 import type { Filepath } from '@/core/types/filepath';
 import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
-import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+import { extractQuotedStringToken, extractVariableNameFromPrimaryVariable } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { RECOGNIZED_COLUMN_SETTINGS } from '@/core/global_modules/table/interpret';
 import {
@@ -133,7 +133,7 @@ export class TablePartialInterpreter {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),
@@ -177,7 +177,7 @@ export class TablePartialInterpreter {
     const column: Partial<Column> = {};
     const columnSymbol = this.compiler.nodeSymbol(field).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any) ?? '';
+    column.name = extractVariableNameFromPrimaryVariable(field.callee as any) ?? '';
     column.token = getTokenPosition(field);
 
     const typeReport = processColumnType(this.compiler, field.args[0]);
@@ -204,7 +204,7 @@ export class TablePartialInterpreter {
       if (!(meta instanceof PartialRefMetadata)) return [];
 
       const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && owners.length > 0 && !owners.some((owner) => owner === programSymbol)) return [];
 
       const op = meta.op(this.compiler);
       if (!op) return [];
@@ -217,7 +217,7 @@ export class TablePartialInterpreter {
       const inlineRef: InlineRef = {
         schemaName: rightName.schema,
         tableName: rightName.name,
-        fieldNames: rightColumns.map((c) => c.name ?? ''),
+        fieldNames: rightColumns.map((column) => column.name ?? ''),
         relation: op,
         token: getTokenPosition(meta.rightToken()),
       };

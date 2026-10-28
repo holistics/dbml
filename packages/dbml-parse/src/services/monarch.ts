@@ -1,9 +1,9 @@
 import type {
-  LanguageConfiguration,
+  LanguageConfig,
   MonarchLanguage,
 } from './types';
 
-export const dbmlLanguageConfig: LanguageConfiguration = {
+export const dbmlLanguageConfig: LanguageConfig = {
   comments: {
     lineComment: '//',
     blockComment: [

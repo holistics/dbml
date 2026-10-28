@@ -140,8 +140,8 @@ TableGroup group_b {
 };
 
 function pickFile (files: Map<Filepath, string>, basename: string): Filepath {
-  for (const fp of files.keys()) {
-    if (fp.basename === basename) return fp;
+  for (const filepath of files.keys()) {
+    if (filepath.basename === basename) return filepath;
   }
   throw new Error(`${basename} not found`);
 }
@@ -215,7 +215,7 @@ describe('[inline] multifile language services', () => {
     it('should navigate through transitive references', () => {
       const { compiler, files } = setupCompiler(TRANSITIVE_REF_CHAIN);
       expect(files.size).toBe(3);
-      expect(Array.from(files.keys()).map((f) => f.basename)).toContain('a.dbml');
+      expect(Array.from(files.keys()).map((field) => field.basename)).toContain('a.dbml');
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);

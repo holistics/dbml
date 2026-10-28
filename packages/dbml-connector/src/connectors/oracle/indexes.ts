@@ -32,12 +32,12 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
     ORDER BY obj.CREATED, obj.OBJECT_ID, i.INDEX_NAME, ic.COLUMN_POSITION
   `;
 
-  const res = await client.execute(query, [], EXECUTE_OPTIONS);
+  const result = await client.execute(query, [], EXECUTE_OPTIONS);
 
   const indexes: IndexesDictionary = {};
   const indexMap: Record<string, { table: string; type: string; unique: boolean; columns: Array<{ type: 'column' | 'expression'; value: string }> }> = {};
 
-  res.rows?.forEach((row) => {
+  result.rows?.forEach((row) => {
     const { index_name, table_name, index_type, is_unique, column_name, column_expression } = row as Record<string, unknown>;
 
     const name = index_name as string;

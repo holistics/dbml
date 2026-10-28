@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - imported tablegroup', () => {
   // base.dbml:   Table users { id int [pk]; email varchar }
@@ -30,20 +30,20 @@ use { tablegroup content } from './base.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/main.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('imported tablegroup appears in exported schema', () => {
     const db = getDatabase(compiler, '/main.dbml');
     // expect: "content" tablegroup is included from base.dbml
-    expect(db.tableGroups.find((g) => g.name === 'content')).toBeDefined();
+    expect(db.tableGroups.find((group) => group.name === 'content')).toBeDefined();
   });
 
   test('tablegroup members list both tables', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const tg = db.tableGroups.find((g) => g.name === 'content')!;
-    const memberNames = tg.tables.map((t) => t.name);
+    const tg = db.tableGroups.find((group) => group.name === 'content')!;
+    const memberNames = tg.tables.map((token) => token.name);
     // expect: users and posts are the declared members
     expect(memberNames).toContain('users');
     expect(memberNames).toContain('posts');
@@ -78,36 +78,36 @@ use { tablegroup social } from './base.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('both member tables appear in exported schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const names = db.tables.map((t) => t.name);
+    const names = db.tables.map((token) => token.name);
     expect(names).toContain('users');
     expect(names).toContain('posts');
   });
 
   test('users table retains its fields', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const fieldNames = users.fields.map((f) => f.name);
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const fieldNames = users.fields.map((field) => field.name);
     expect(fieldNames).toContain('id');
     expect(fieldNames).toContain('email');
   });
 
   test('users table retains its unique index on email', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const users = db.tables.find((t) => t.name === 'users')!;
-    const emailIdx = users.indexes.find((i) => i.columns.some((c) => c.value === 'email'))!;
-    expect(emailIdx).toBeDefined();
-    expect(emailIdx.unique).toBe(true);
+    const users = db.tables.find((token) => token.name === 'users')!;
+    const emailIndex = users.indexes.find((index) => index.columns.some((column) => column.value === 'email'))!;
+    expect(emailIndex).toBeDefined();
+    expect(emailIndex.unique).toBe(true);
   });
 
   test('imported tablegroup appears in db.tableGroups', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tableGroups.find((g) => g.name === 'social')).toBeDefined();
+    expect(db.tableGroups.find((group) => group.name === 'social')).toBeDefined();
   });
 });
 
@@ -144,22 +144,22 @@ use { tablegroup content } from './base.dbml'
   });
 
   test('no binding errors', () => {
-    const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
+    const ast = compiler.parseFile(filepath('/consumer.dbml')).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
   test('pulled tables have own columns and partial reference', () => {
-    const db = compiler.interpretFile(fp('/consumer.dbml')).getValue()! as any;
-    const users = db.tables.find((t: any) => t.name === 'users')!;
-    expect(users.fields.map((f: any) => f.name)).toEqual(['id', 'name']);
+    const db = compiler.interpretFile(filepath('/consumer.dbml')).getValue()! as any;
+    const users = db.tables.find((table: any) => table.name === 'users')!;
+    expect(users.fields.map((field: any) => field.name)).toEqual(['id', 'name']);
     expect(users.partials).toHaveLength(1);
     expect(users.partials[0].name).toBe('timestamps');
   });
 
   test('UNSUPPORTED error when importing tablegroup with tables that use out-of-scope partial', () => {
-    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    const result = compiler.interpretFile(filepath('/consumer.dbml'));
     const errors = result.getErrors();
-    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
+    expect(errors.some((error) => error.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -190,12 +190,12 @@ use { tablegroup shop } from './base.dbml'
 
   test('pulled table appears in schema', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'products')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'products')).toBeDefined();
   });
 
   test('categories (not in tablegroup) is not pulled', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    expect(db.tables.find((t) => t.name === 'categories')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 'categories')).toBeUndefined();
   });
 });
 
@@ -219,7 +219,7 @@ use { tablegroup main } from './source.dbml'
 
   test('records pulled for tablegroup-expanded table', () => {
     const db = getDatabase(compiler, '/consumer.dbml');
-    const record = db.records.find((r) => r.tableName === 'users');
+    const record = db.records.find((recordItem) => recordItem.tableName === 'users');
     expect(record).toBeDefined();
     expect(record!.values).toHaveLength(2);
   });

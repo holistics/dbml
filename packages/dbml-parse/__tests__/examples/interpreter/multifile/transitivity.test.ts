@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { filepath, getDatabase, setupCompiler } from './utils';
 
 describe('[example] use + reuse same symbol, reuse makes it transitive', () => {
   const { compiler } = setupCompiler({
@@ -19,12 +19,12 @@ use { table t } from './a.dbml'
 
   test('use+reuse file exports the table', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 't')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't')).toBeDefined();
   });
 
   test('downstream file sees the table via transitive reuse', () => {
     const db = getDatabase(compiler, '/c.dbml');
-    expect(db.tables.find((t) => t.name === 't')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't')).toBeDefined();
   });
 });
 
@@ -47,17 +47,17 @@ use { table u } from './a.dbml'
 
   test('reuse alias is visible in declaring file', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 'u')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'u')).toBeDefined();
   });
 
   test('reuse alias is transitively visible downstream', () => {
     const db = getDatabase(compiler, '/c.dbml');
-    expect(db.tables.find((t) => t.name === 'u')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 'u')).toBeDefined();
   });
 
   test('use-only original name is not visible downstream', () => {
-    const db = compiler.interpretFile(fp('/c.dbml')).getValue()!;
-    expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
+    const db = compiler.interpretFile(filepath('/c.dbml')).getValue()!;
+    expect(db.tables.find((token) => token.name === 'users')).toBeUndefined();
   });
 });
 
@@ -73,12 +73,12 @@ Table t2 { id int [pk] }
 
   test('wildcard import includes direct table from source', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 't2')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't2')).toBeDefined();
   });
 
   test('wildcard import includes table re-exported via reuse', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 't1')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't1')).toBeDefined();
   });
 });
 
@@ -94,12 +94,12 @@ Table t2 { id int [pk] }
 
   test('wildcard import includes direct table from source', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 't2')).toBeDefined();
+    expect(db.tables.find((token) => token.name === 't2')).toBeDefined();
   });
 
   test('wildcard use does not re-export tables from upstream', () => {
     const db = getDatabase(compiler, '/a.dbml');
-    expect(db.tables.find((t) => t.name === 't1')).toBeUndefined();
+    expect(db.tables.find((token) => token.name === 't1')).toBeUndefined();
   });
 });
 
@@ -114,17 +114,17 @@ use { table users } from './alt.dbml'
   });
 
   test('importing same table from two paths produces no errors', () => {
-    expect(compiler.interpretFile(fp('/main.dbml')).getErrors()).toHaveLength(0);
+    expect(compiler.interpretFile(filepath('/main.dbml')).getErrors()).toHaveLength(0);
   });
 
   test('deduplicates to single table in output', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.filter((t) => t.name === 'users')).toHaveLength(1);
+    expect(db.tables.filter((token) => token.name === 'users')).toHaveLength(1);
   });
 
   test('deduplicated table preserves all fields', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    expect(db.tables.find((t) => t.name === 'users')!.fields.map((f) => f.name)).toEqual(['id', 'email']);
+    expect(db.tables.find((token) => token.name === 'users')!.fields.map((field) => field.name)).toEqual(['id', 'email']);
   });
 });
 
@@ -143,8 +143,8 @@ Ref: orders.user_id > u.id
   });
 
   test('refs to same original table via real name and alias produce duplicate error', () => {
-    const errors = compiler.interpretFile(fp('/main.dbml')).getErrors();
-    expect(errors.some((e) => e.message === 'References with same endpoints exist')).toBe(true);
+    const errors = compiler.interpretFile(filepath('/main.dbml')).getErrors();
+    expect(errors.some((error) => error.message === 'References with same endpoints exist')).toBe(true);
   });
 });
 
@@ -168,7 +168,7 @@ Ref: invoices.user_id > u.id
   });
 
   test('refs with different source tables but same target original produce no error', () => {
-    const errors = compiler.interpretFile(fp('/main.dbml')).getErrors();
+    const errors = compiler.interpretFile(filepath('/main.dbml')).getErrors();
     expect(errors).toHaveLength(0);
   });
 

@@ -236,12 +236,12 @@ describe('[example - record] type compatibility validation', () => {
       expect(infos.length).toBeGreaterThan(0);
 
       // Verify all infos are about exceeding precision or scale
-      expect(infos.every((w) => w.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
-      expect(infos.every((w) => w.diagnostic.includes('exceeds'))).toBe(true);
+      expect(infos.every((warning) => warning.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+      expect(infos.every((warning) => warning.diagnostic.includes('exceeds'))).toBe(true);
 
       // Verify specific precision/scale violations exist
-      const precisionWarnings = infos.filter((w) => w.diagnostic.includes('exceeds precision'));
-      const scaleWarnings = infos.filter((w) => w.diagnostic.includes('exceeds scale'));
+      const precisionWarnings = infos.filter((warning) => warning.diagnostic.includes('exceeds precision'));
+      const scaleWarnings = infos.filter((warning) => warning.diagnostic.includes('exceeds scale'));
 
       expect(precisionWarnings.length).toBeGreaterThan(0);
       expect(scaleWarnings.length).toBeGreaterThan(0);
@@ -683,9 +683,9 @@ describe('[example - record] type compatibility validation', () => {
 
       // Enum access with invalid value produces a BINDING_ERROR
       expect(errors.length).toBeGreaterThan(0);
-      const bindingErrors = errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR);
+      const bindingErrors = errors.filter((error) => error.code === CompileErrorCode.BINDING_ERROR);
       expect(bindingErrors.length).toBeGreaterThan(0);
-      expect(bindingErrors.some((e) => e.diagnostic.includes('invalid'))).toBe(true);
+      expect(bindingErrors.some((error) => error.diagnostic.includes('invalid'))).toBe(true);
     });
 
     test('- should validate schema-qualified enums', () => {

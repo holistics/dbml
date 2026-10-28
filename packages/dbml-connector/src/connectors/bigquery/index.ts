@@ -55,7 +55,7 @@ async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQue
     return client;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`BigQuery connection error: ${error.message}`);
+      throw new Error(`BigQuery connection error: ${error.message}`, { cause: error });
     }
 
     throw error;
@@ -354,15 +354,15 @@ async function fetchSchemaJsonByDataset (
   projectId: string,
   datasetId: string,
 ): Promise<DatabaseSchema> {
-  const res = await Promise.all([
+  const result = await Promise.all([
     generateTablesAndFields(client, projectId, datasetId),
     generateIndexes(client, projectId, datasetId),
     generateTableConstraints(client, projectId, datasetId),
   ]);
 
-  const { tables, fieldMap } = res[0];
-  const indexMap = res[1];
-  const { inlinePrimaryKeyMap, compositePrimaryKeyMap } = res[2];
+  const { tables, fieldMap } = result[0];
+  const indexMap = result[1];
+  const { inlinePrimaryKeyMap, compositePrimaryKeyMap } = result[2];
 
   return {
     tables,
@@ -386,27 +386,27 @@ async function fetchSchemaJson (keyFilename: string): Promise<DatabaseSchema> {
 
   const querySchemaPromises = datasetIdList.map((dataset) => fetchSchemaJsonByDataset(client, projectId, dataset));
 
-  const databaseSchemaRes = await Promise.all(querySchemaPromises);
+  const databaseSchemaResult = await Promise.all(querySchemaPromises);
 
-  const res = databaseSchemaRes.reduce(
-    (acc, dbSchema) => {
+  const result = databaseSchemaResult.reduce(
+    (accumulator, dbSchema) => {
       const {
         tables, fields, indexes, tableConstraints,
       } = dbSchema;
 
-      acc.tables = mergeTables(acc.tables, tables);
-      acc.fields = mergeFieldDictionary(acc.fields, fields);
-      acc.indexes = mergeIndexDictionary(acc.indexes, indexes);
-      acc.tableConstraints = mergeTableConstraintDictionary(acc.tableConstraints, tableConstraints);
+      accumulator.tables = mergeTables(accumulator.tables, tables);
+      accumulator.fields = mergeFieldDictionary(accumulator.fields, fields);
+      accumulator.indexes = mergeIndexDictionary(accumulator.indexes, indexes);
+      accumulator.tableConstraints = mergeTableConstraintDictionary(accumulator.tableConstraints, tableConstraints);
 
-      return acc;
+      return accumulator;
     },
     {
       tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [], checks: {},
     },
   );
 
-  return res;
+  return result;
 }
 
 export { fetchSchemaJson };

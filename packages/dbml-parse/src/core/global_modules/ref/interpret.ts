@@ -5,19 +5,15 @@ import {
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
-import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
-  InfixExpressionNode,
   IdentifierStreamNode,
   ListExpressionNode,
   AttributeNode,
-  PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type { Ref } from '@/core/types/schemaJson';
 import {
-  ColumnSymbol,
   RefMetadata,
   type Filepath,
 } from '@/core/types';
@@ -105,14 +101,14 @@ export class RefInterpreter {
           {
             schemaName: rightTableName?.schema ?? null,
             tableName: rightTableName?.name ?? '',
-            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            fieldNames: rightColumnSymbols.map((column) => column.name ?? ''),
             relation: multiplicities[1],
             token: rightToken,
           },
           {
             schemaName: leftTableName?.schema ?? null,
             tableName: leftTableName?.name ?? '',
-            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            fieldNames: leftColumnSymbols.map((column) => column.name ?? ''),
             relation: multiplicities[0],
             token: leftToken,
           },
@@ -121,14 +117,14 @@ export class RefInterpreter {
           {
             schemaName: leftTableName?.schema ?? null,
             tableName: leftTableName?.name ?? '',
-            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            fieldNames: leftColumnSymbols.map((column) => column.name ?? ''),
             relation: multiplicities[0],
             token: leftToken,
           },
           {
             schemaName: rightTableName?.schema ?? null,
             tableName: rightTableName?.name ?? '',
-            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            fieldNames: rightColumnSymbols.map((column) => column.name ?? ''),
             relation: multiplicities[1],
             token: rightToken,
           },

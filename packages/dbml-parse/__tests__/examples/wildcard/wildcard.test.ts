@@ -8,7 +8,7 @@ import { isWildcardExpression } from '@/core/utils/validate';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
-  return lex(source).getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+  return lex(source).getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 }
 
 describe('[example] wildcard', () => {
@@ -24,7 +24,7 @@ describe('[example] wildcard', () => {
     test('should lex * as WILDCARD among other tokens', () => {
       const source = 'Tables { * }';
       const tokens = getTokens(source);
-      const wildcardToken = tokens.find((t) => t.value === '*');
+      const wildcardToken = tokens.find((token) => token.value === '*');
 
       expect(wildcardToken).toBeDefined();
       expect(wildcardToken!.kind).toBe(SyntaxTokenKind.WILDCARD);
@@ -32,9 +32,9 @@ describe('[example] wildcard', () => {
 
     test('should not affect other operators', () => {
       const tokens = getTokens('+ - / % < > = .');
-      const kinds = tokens.map((t) => t.kind);
+      const kinds = tokens.map((token) => token.kind);
 
-      expect(kinds.every((k) => k === SyntaxTokenKind.OP)).toBe(true);
+      expect(kinds.every((kind) => kind === SyntaxTokenKind.OP)).toBe(true);
     });
   });
 
@@ -85,7 +85,7 @@ describe('[example] wildcard', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors.length).toBeGreaterThan(0);
-      const wildcardError = errors.find((e) => e.code === CompileErrorCode.INVALID_NAME);
+      const wildcardError = errors.find((error) => error.code === CompileErrorCode.INVALID_NAME);
       expect(wildcardError).toBeDefined();
       expect(wildcardError!.diagnostic).toContain('Wildcard');
     });
@@ -94,7 +94,7 @@ describe('[example] wildcard', () => {
       const source = 'Enum * { value1 }';
       const errors = analyze(source).getErrors();
 
-      const wildcardError = errors.find((e) => e.code === CompileErrorCode.INVALID_NAME);
+      const wildcardError = errors.find((error) => error.code === CompileErrorCode.INVALID_NAME);
       expect(wildcardError).toBeDefined();
       expect(wildcardError!.diagnostic).toContain('Wildcard');
     });
@@ -103,7 +103,7 @@ describe('[example] wildcard', () => {
       const source = 'TableGroup * { users }';
       const errors = analyze(source).getErrors();
 
-      const wildcardError = errors.find((e) => e.code === CompileErrorCode.INVALID_NAME);
+      const wildcardError = errors.find((error) => error.code === CompileErrorCode.INVALID_NAME);
       expect(wildcardError).toBeDefined();
       expect(wildcardError!.diagnostic).toContain('Wildcard');
     });
@@ -112,7 +112,7 @@ describe('[example] wildcard', () => {
       const source = 'Ref *: users.id > posts.user_id';
       const errors = analyze(source).getErrors();
 
-      const wildcardError = errors.find((e) => e.code === CompileErrorCode.INVALID_NAME);
+      const wildcardError = errors.find((error) => error.code === CompileErrorCode.INVALID_NAME);
       expect(wildcardError).toBeDefined();
       expect(wildcardError!.diagnostic).toContain('Wildcard');
     });
@@ -121,7 +121,7 @@ describe('[example] wildcard', () => {
       const source = "Note * { 'some note' }";
       const errors = analyze(source).getErrors();
 
-      const wildcardError = errors.find((e) => e.code === CompileErrorCode.INVALID_NAME);
+      const wildcardError = errors.find((error) => error.code === CompileErrorCode.INVALID_NAME);
       expect(wildcardError).toBeDefined();
       expect(wildcardError!.diagnostic).toContain('Wildcard');
     });
@@ -194,7 +194,7 @@ describe('[example] wildcard', () => {
       const errors = report.getErrors();
 
       // No wildcard-related INVALID_NAME errors
-      const wildcardErrors = errors.filter((e) => e.code === CompileErrorCode.INVALID_NAME && e.diagnostic.includes('Wildcard'));
+      const wildcardErrors = errors.filter((error) => error.code === CompileErrorCode.INVALID_NAME && e.diagnostic.includes('Wildcard'));
       expect(wildcardErrors).toHaveLength(0);
     });
   });

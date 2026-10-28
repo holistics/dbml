@@ -8,7 +8,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     return [];
   }
 
-  const res: {
+  const result: {
     symbol: NodeSymbol;
     kind: SymbolKind;
     name: string;
@@ -41,12 +41,12 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
 
     for (const name of nameStack) {
       matchedSymbols = currentPossibleSymbols
-        .filter((s) =>
-          s.name === name || (
+        .filter((symbol) =>
+          symbol.name === name || (
             (ownerSymbol.isKind(SymbolKind.Program)
               || (ownerSymbol instanceof SchemaSymbol && ownerSymbol.isPublicSchema()))
-            && s.declaration
-            && this.nodeAlias(s.declaration).getFiltered(UNHANDLED) === name),
+            && symbol.declaration
+            && this.nodeAlias(symbol.declaration).getFiltered(UNHANDLED) === name),
         )
         .map((symbol) => ({
           symbol,
@@ -62,8 +62,8 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       });
     }
 
-    res.push(...matchedSymbols);
+    result.push(...matchedSymbols);
   }
 
-  return res;
+  return result;
 }

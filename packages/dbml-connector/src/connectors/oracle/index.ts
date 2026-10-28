@@ -19,7 +19,7 @@ const getValidatedClient = async (username: string, password: string, dbidentifi
   } catch (error) {
     await client.close();
     if (error instanceof Error) {
-      throw new Error(`OracleSQL connection error: ${error.message}`);
+      throw new Error(`OracleSQL connection error: ${error.message}`, { cause: error });
     }
 
     throw error;
@@ -35,22 +35,22 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
 
   const client = await getValidatedClient(username, password, dbidentifier);
 
-  const tablesAndFieldsRes = generateTablesAndFields(client);
-  const constraintsRes = generateConstraints(client);
-  const refsRes = generateRawRefs(client);
-  const indexesRes = generateIndexes(client);
+  const tablesAndFieldsResult = generateTablesAndFields(client);
+  const constraintsResult = generateConstraints(client);
+  const refsResult = generateRawRefs(client);
+  const indexesResult = generateIndexes(client);
 
-  const res = await Promise.all([
-    tablesAndFieldsRes,
-    constraintsRes,
-    refsRes,
-    indexesRes,
+  const result = await Promise.all([
+    tablesAndFieldsResult,
+    constraintsResult,
+    refsResult,
+    indexesResult,
   ]);
 
-  const { tables, fields } = res[0];
-  const { indexes: uniqueIndexes, tableConstraints, checks } = res[1];
-  const refs = res[2];
-  const indexes = res[3];
+  const { tables, fields } = result[0];
+  const { indexes: uniqueIndexes, tableConstraints, checks } = result[1];
+  const refs = result[2];
+  const indexes = result[3];
   Object.keys(uniqueIndexes).forEach((key) => {
     if (!indexes[key]) indexes[key] = uniqueIndexes[key];
     else indexes[key].push(...uniqueIndexes[key]);
@@ -71,6 +71,4 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
   };
 };
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };

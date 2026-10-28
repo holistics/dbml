@@ -18,8 +18,8 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('in the ref'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('NOT NULL'))).toBe(true);
     });
 
     test('NOT NULL column with optional ref suggests changing op', () => {
@@ -29,7 +29,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id >? users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('in the ref'))).toBe(true);
     });
 
     test('no fixes when nullability matches operator', () => {
@@ -51,8 +51,8 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('in the ref'))).toBe(true);
     });
 
     test('-? with non-unique column suggests UNIQUE or op change', () => {
@@ -62,7 +62,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id -? users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('UNIQUE'))).toBe(true);
     });
 
     test('?- with non-unique column suggests UNIQUE or op change', () => {
@@ -72,7 +72,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id ?- users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('UNIQUE'))).toBe(true);
     });
 
     test('?-? with non-unique column suggests UNIQUE or op change', () => {
@@ -82,7 +82,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id ?-? users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('UNIQUE'))).toBe(true);
     });
 
     test('no uniqueness fix when column is pk', () => {
@@ -92,7 +92,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const uniqueFixes = fixes.filter((f) => f.title.includes('UNIQUE'));
+      const uniqueFixes = fixes.filter((field) => field.title.includes('UNIQUE'));
       expect(uniqueFixes).toHaveLength(0);
     });
 
@@ -103,7 +103,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const uniqueFixes = fixes.filter((f) => f.title.includes('UNIQUE'));
+      const uniqueFixes = fixes.filter((field) => field.title.includes('UNIQUE'));
       expect(uniqueFixes).toHaveLength(0);
     });
   });
@@ -123,7 +123,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       // No UNIQUE fix for composite columns (not supported yet)
-      expect(fixes.filter((f) => f.title.includes('UNIQUE'))).toHaveLength(0);
+      expect(fixes.filter((field) => field.title.includes('UNIQUE'))).toHaveLength(0);
     });
 
     test('composite > with nullable column suggests NOT NULL', () => {
@@ -141,7 +141,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       const fixes = getQuickFixes(source);
       // Only one column is nullable so no nullability fix is suggested
       // A composite FK is only nullable when ALL columns are nullable
-      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(false);
+      expect(fixes.some((field) => field.title.includes('NOT NULL'))).toBe(false);
     });
 
     test('composite > with all not-null columns and composite unique index produces no fixes', () => {
@@ -172,7 +172,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('in the ref'));
+      const opFix = fixes.find((field) => field.title.includes('in the ref'));
       expect(opFix?.title).toContain('>?');
     });
 
@@ -183,7 +183,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('in the ref'));
+      const opFix = fixes.find((field) => field.title.includes('in the ref'));
       expect(opFix?.title).toContain('>');
     });
   });
@@ -197,8 +197,8 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         }
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('in the ref'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('NOT NULL'))).toBe(true);
     });
 
     test('inline ref op change suggests correct operator', () => {
@@ -209,7 +209,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         }
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('in the ref'));
+      const opFix = fixes.find((field) => field.title.includes('in the ref'));
       expect(opFix?.title).toContain('>?');
     });
 
@@ -240,9 +240,9 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       // users.code is not unique/pk, so UNIQUE fix should be offered
-      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((field) => field.title.includes('UNIQUE'))).toBe(true);
       // No column fix for user_code since it's from a partial
-      expect(fixes.some((f) => f.title.startsWith('Mark') && f.title.includes('user_code'))).toBe(false);
+      expect(fixes.some((field) => field.title.startsWith('Mark') && f.title.includes('user_code'))).toBe(false);
     });
 
     test('injected column isColumnsUnique checks target table indexes', () => {
@@ -261,7 +261,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       // The UNIQUE fix for users.code should reference users.code (non-partial column)
-      const uniqueFix = fixes.find((f) => f.title.includes('UNIQUE'));
+      const uniqueFix = fixes.find((field) => field.title.includes('UNIQUE'));
       expect(uniqueFix).toBeDefined();
       expect(uniqueFix!.title).toContain('users.code');
     });
@@ -282,7 +282,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       // The composite unique index on posts covers user_id, so no UNIQUE fix
-      const uniqueFixes = fixes.filter((f) => f.title.includes('UNIQUE'));
+      const uniqueFixes = fixes.filter((field) => field.title.includes('UNIQUE'));
       expect(uniqueFixes).toHaveLength(0);
     });
 
@@ -299,7 +299,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       // No column fixes for partial columns, no op token to change
-      expect(fixes.filter((f) => f.title.includes('NOT NULL'))).toHaveLength(0);
+      expect(fixes.filter((field) => field.title.includes('NOT NULL'))).toHaveLength(0);
     });
   });
 });
@@ -308,7 +308,7 @@ describe('[example] addSettingEdit on ElementDeclarationNode', () => {
   test('inserts into existing settings block', () => {
     const source = 'Table users [headercolor: #fff] {}';
     const ast = parse(source).getValue()!.ast;
-    const tableNode = ast.body.find((n): n is ElementDeclarationNode => n instanceof ElementDeclarationNode)!;
+    const tableNode = ast.body.find((node): node is ElementDeclarationNode => node instanceof ElementDeclarationNode)!;
     expect(tableNode.attributeList).toBeDefined();
 
     const edit = addSettingEdit(tableNode, 'note: "test"');
@@ -321,7 +321,7 @@ describe('[example] addSettingEdit on ElementDeclarationNode', () => {
   test('inserts a new settings block before the body when none exists', () => {
     const source = 'Table users {}';
     const ast = parse(source).getValue()!.ast;
-    const tableNode = ast.body.find((n): n is ElementDeclarationNode => n instanceof ElementDeclarationNode)!;
+    const tableNode = ast.body.find((node): node is ElementDeclarationNode => node instanceof ElementDeclarationNode)!;
     expect(tableNode.attributeList).toBeUndefined();
 
     const edit = addSettingEdit(tableNode, 'headercolor: #fff');

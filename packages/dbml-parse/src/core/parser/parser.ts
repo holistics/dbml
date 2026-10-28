@@ -3,7 +3,7 @@ import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/
 import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import NodeFactory from '@/core/parser/factory';
 import {
-  convertFuncAppToElem,
+  convertFunctionAppToElement,
   getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
@@ -113,12 +113,12 @@ export default class Parser {
   }
 
   private match (...kind: SyntaxTokenKind[]): boolean {
-    const res = this.check(...kind);
-    if (res) {
+    const result = this.check(...kind);
+    if (result) {
       this.advance();
     }
 
-    return res;
+    return result;
   }
 
   private check (...kind: SyntaxTokenKind[]): boolean {
@@ -131,8 +131,8 @@ export default class Parser {
     return this.tokens[this.current - 1];
   }
 
-  private canHandle<T extends SyntaxNode> (e: PartialParsingError<T>): boolean {
-    return e.handlerContext === undefined || e.handlerContext === this.contextStack.top();
+  private canHandle<T extends SyntaxNode> (error: PartialParsingError<T>): boolean {
+    return error.handlerContext === undefined || error.handlerContext === this.contextStack.top();
   }
 
   private consume (message: string, ...kind: SyntaxTokenKind[]) {
@@ -167,29 +167,29 @@ export default class Parser {
     const tokens: SyntaxToken[] = [];
 
     const firstInvalidList: SyntaxToken[] = [];
-    let curValid: SyntaxToken | undefined;
-    let i = 0;
-    for (; i < this.tokens.length; i += 1) {
-      if (this.tokens[i].isInvalid) {
-        firstInvalidList.push(this.tokens[i]);
+    let currentValid: SyntaxToken | undefined;
+    let index = 0;
+    for (; index < this.tokens.length; index += 1) {
+      if (this.tokens[index].isInvalid) {
+        firstInvalidList.push(this.tokens[index]);
       } else {
         break;
       }
     }
 
-    curValid = this.tokens[i];
-    curValid.leadingInvalid = [
+    currentValid = this.tokens[index];
+    currentValid.leadingInvalid = [
       ...firstInvalidList,
-      ...curValid.leadingInvalid,
+      ...currentValid.leadingInvalid,
     ];
-    tokens.push(curValid);
-    for (i += 1; i < this.tokens.length; i += 1) {
-      const curToken = this.tokens[i];
-      if (curToken.isInvalid) {
-        curValid.trailingInvalid.push(curToken);
+    tokens.push(currentValid);
+    for (index += 1; index < this.tokens.length; index += 1) {
+      const currentToken = this.tokens[index];
+      if (currentToken.isInvalid) {
+        currentValid.trailingInvalid.push(currentToken);
       } else {
-        curValid = curToken;
-        tokens.push(curValid);
+        currentValid = currentToken;
+        tokens.push(currentValid);
       }
     }
 
@@ -234,9 +234,9 @@ export default class Parser {
       if (isUseKeyword(this.peek()) || isReuseKeyword(this.peek())) {
         try {
           statements.push(this.useDeclaration());
-        } catch (e) {
+        } catch (error) {
           if (!(e instanceof PartialParsingError)) {
-            throw e;
+            throw error;
           }
           if (e.partialNode instanceof UseDeclarationNode) {
             statements.push(e.partialNode);
@@ -246,9 +246,9 @@ export default class Parser {
       } else {
         try {
           statements.push(this.elementDeclaration());
-        } catch (e) {
+        } catch (error) {
           if (!(e instanceof PartialParsingError)) {
-            throw e;
+            throw error;
           }
           statements.push(e.partialNode);
           this.synchronizeProgram();
@@ -283,12 +283,12 @@ export default class Parser {
       // Selective use: use { ... } from './path.dbml'
       try {
         args.specifiers = this.useSpecifierList();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode instanceof UseSpecifierListNode) {
-          args.specifiers = e.partialNode;
+          args.specifiers = error.partialNode;
         }
       }
     }
@@ -324,9 +324,9 @@ export default class Parser {
     try {
       this.consume('Expect an opening brace \'{\'', SyntaxTokenKind.LBRACE);
       args.openBrace = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
@@ -337,9 +337,9 @@ export default class Parser {
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
         args.specifiers.push(this.useSpecifier());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode instanceof UseSpecifierNode) {
           args.specifiers.push(e.partialNode);
@@ -362,9 +362,9 @@ export default class Parser {
     try {
       this.consume('Expect a closing brace \'}\'', SyntaxTokenKind.RBRACE);
       args.closeBrace = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
@@ -412,9 +412,9 @@ export default class Parser {
     try {
       this.consume('Expect an import kind specifier (e.g. table, enum)', SyntaxTokenKind.IDENTIFIER);
       args.importKind = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
     }
@@ -422,12 +422,12 @@ export default class Parser {
     if (this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
       try {
         args.name = this.normalExpression();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode instanceof SyntaxNode) {
-          args.name = e.partialNode;
+          args.name = error.partialNode;
         }
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
       }
@@ -450,9 +450,9 @@ export default class Parser {
           );
         }
         args.alias = this.normalExpression();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (!this.canHandle(e)) {
           throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
@@ -489,9 +489,9 @@ export default class Parser {
     try {
       this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
       args.type = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
@@ -501,9 +501,9 @@ export default class Parser {
       try {
         this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
         args.targetKind = this.previous();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
       }
@@ -512,11 +512,11 @@ export default class Parser {
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
       try {
         args.name = this.normalExpression();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
-        args.name = e.partialNode;
+        args.name = error.partialNode;
         if (!this.canHandle(e)) {
           throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
         }
@@ -529,11 +529,11 @@ export default class Parser {
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
         try {
           args.alias = this.normalExpression();
-        } catch (e) {
+        } catch (error) {
           if (!(e instanceof PartialParsingError)) {
-            throw e;
+            throw error;
           }
-          args.alias = e.partialNode;
+          args.alias = error.partialNode;
           if (!this.canHandle(e)) {
             throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
           }
@@ -546,11 +546,11 @@ export default class Parser {
 
     try {
       args.attributeList = this.check(SyntaxTokenKind.LBRACKET) ? this.listExpression() : undefined;
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.attributeList = e.partialNode;
+      args.attributeList = error.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
@@ -567,21 +567,21 @@ export default class Parser {
     try {
       if (this.match(SyntaxTokenKind.COLON)) {
         args.bodyColon = this.previous();
-        const expr = this.expression();
-        if (expr instanceof ElementDeclarationNode) {
-          markInvalid(expr);
-          this.logError(expr, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
+        const expression = this.expression();
+        if (expression instanceof ElementDeclarationNode) {
+          markInvalid(expression);
+          this.logError(expression, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
         } else {
-          args.body = expr;
+          args.body = expression;
         }
       } else {
         args.body = this.blockExpression();
       }
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.body = e.partialNode;
+      args.body = error.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
@@ -632,37 +632,37 @@ export default class Parser {
     try {
       this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
       args.type = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.type = e.partialNode;
+      args.type = error.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
     try {
       this.consume('Expect a colon \':\'', SyntaxTokenKind.COLON);
       args.bodyColon = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.bodyColon = e.partialNode;
+      args.bodyColon = error.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
     try {
-      const expr = this.expression();
-      if (expr instanceof ElementDeclarationNode) {
-        this.errors.push(new CompileError(CompileErrorCode.INVALID_ELEMENT_IN_SIMPLE_BODY, 'Simple body cannot be an element declaration', expr));
+      const expression = this.expression();
+      if (expression instanceof ElementDeclarationNode) {
+        this.errors.push(new CompileError(CompileErrorCode.INVALID_ELEMENT_IN_SIMPLE_BODY, 'Simple body cannot be an element declaration', expression));
       } else {
-        args.body = expr;
+        args.body = expression;
       }
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.body = e.partialNode;
+      args.body = error.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
@@ -683,16 +683,16 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory)
+    const buildExpression = () => convertFunctionAppToElement(args.callee, args.args, this.nodeFactory)
       ?? this.nodeFactory.create(FunctionApplicationNode, args);
 
     try {
       args.callee = this.commaExpression();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
-      args.callee = e.partialNode;
+      args.callee = error.partialNode;
       throw new PartialParsingError(e.token, buildExpression(), e.handlerContext);
     }
 
@@ -708,21 +708,21 @@ export default class Parser {
       return buildExpression();
     }
 
-    let prevNode: ExpressionNode = args.callee!;
+    let previousNode: ExpressionNode = args.callee!;
     while (!this.shouldStopFunctionApplication()) {
       if (!hasTrailingSpaces(this.previous())) {
-        this.logError(prevNode, CompileErrorCode.MISSING_SPACES, 'Expect a following space');
+        this.logError(previousNode, CompileErrorCode.MISSING_SPACES, 'Expect a following space');
       }
 
       try {
-        prevNode = this.commaExpression();
-        args.args.push(prevNode);
-      } catch (e) {
+        previousNode = this.commaExpression();
+        args.args.push(previousNode);
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
-        prevNode = e.partialNode;
-        args.args.push(prevNode);
+        previousNode = error.partialNode;
+        args.args.push(previousNode);
         throw new PartialParsingError(e.token, buildExpression(), e.handlerContext);
       }
     }
@@ -748,7 +748,7 @@ export default class Parser {
 
   private commaExpression (): NormalExpressionNode | CommaExpressionNode {
     // If we start with a comma, treat the first field as an empty node
-    const firstExpr = this.check(SyntaxTokenKind.COMMA)
+    const firstExpression = this.check(SyntaxTokenKind.COMMA)
       ? this.nodeFactory.create(EmptyNode, {
           prevToken: this.previous(),
         })
@@ -756,7 +756,7 @@ export default class Parser {
 
     // If there's no comma, just return the normal expression
     if (!this.check(SyntaxTokenKind.COMMA)) {
-      return firstExpr;
+      return firstExpression;
     }
 
     const args: {
@@ -764,7 +764,7 @@ export default class Parser {
       commaList: SyntaxToken[];
     } = {
       elementList: [
-        firstExpr,
+        firstExpression,
       ],
       commaList: [],
     };
@@ -789,11 +789,11 @@ export default class Parser {
       }
 
       try {
-        const nextExpr = this.normalExpression();
-        args.elementList.push(nextExpr);
-      } catch (e) {
+        const nextExpression = this.normalExpression();
+        args.elementList.push(nextExpression);
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode) {
           args.elementList.push(e.partialNode);
@@ -865,9 +865,9 @@ export default class Parser {
             callee: leftExpression,
             argumentList: this.tupleExpression(),
           });
-        } catch (e) {
+        } catch (error) {
           if (!(e instanceof PartialParsingError)) {
-            throw e;
+            throw error;
           }
           leftExpression = this.nodeFactory.create(CallExpressionNode, {
             callee: leftExpression,
@@ -890,9 +890,9 @@ export default class Parser {
             expression: leftExpression,
             indexer: this.listExpression(),
           });
-        } catch (e) {
+        } catch (error) {
           if (!(e instanceof PartialParsingError)) {
-            throw e;
+            throw error;
           }
           leftExpression = this.nodeFactory.create(ArrayNode, {
             expression: leftExpression,
@@ -938,9 +938,9 @@ export default class Parser {
               rightExpression:
                 op.value === '.' ? this.extractOperand() : this.expression_bp(opInfixPower.right),
             });
-          } catch (e) {
+          } catch (error) {
             if (!(e instanceof PartialParsingError)) {
-              throw e;
+              throw error;
             }
             leftExpression = this.nodeFactory.create(InfixExpressionNode, {
               leftExpression: leftExpression!,
@@ -987,11 +987,11 @@ export default class Parser {
 
       try {
         args.expression = this.expression_bp(opPrefixPower.right as number);
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
-        args.expression = e.partialNode;
+        args.expression = error.partialNode;
         throw new PartialParsingError(
           e.token,
           this.nodeFactory.create(PrefixExpressionNode, args),
@@ -1086,9 +1086,9 @@ export default class Parser {
     try {
       this.consume('Expect a function expression', SyntaxTokenKind.FUNCTION_EXPRESSION);
       args.value = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       throw new PartialParsingError(
         e.token,
@@ -1122,9 +1122,9 @@ export default class Parser {
     try {
       this.consume('Expect an opening brace \'{\'', SyntaxTokenKind.LBRACE);
       args.blockOpenBrace = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildBlock(), e.handlerContext);
@@ -1135,9 +1135,9 @@ export default class Parser {
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
         args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         args.body.push(e.partialNode);
         if (!this.canHandle(e)) {
@@ -1150,9 +1150,9 @@ export default class Parser {
     try {
       this.consume('Expect a closing brace \'}\'', SyntaxTokenKind.RBRACE);
       args.blockCloseBrace = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildBlock(), e.handlerContext);
@@ -1250,9 +1250,9 @@ export default class Parser {
     try {
       this.consume('Expect an opening parenthesis \'(\'', SyntaxTokenKind.LPAREN);
       args.tupleOpenParen = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildTuple(), e.handlerContext);
@@ -1263,9 +1263,9 @@ export default class Parser {
     if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
       try {
         args.elementList.push(this.normalExpression());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         args.elementList.push(e.partialNode);
         if (!this.canHandle(e)) {
@@ -1280,9 +1280,9 @@ export default class Parser {
         this.consume('Expect a comma \',\'', SyntaxTokenKind.COMMA);
         args.commaList.push(this.previous());
         args.elementList.push(this.normalExpression());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode instanceof SyntaxNode) {
           args.elementList.push(e.partialNode);
@@ -1297,9 +1297,9 @@ export default class Parser {
     try {
       this.consume('Expect a closing parenthesis \')\'', SyntaxTokenKind.RPAREN);
       args.tupleCloseParen = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildTuple(), e.handlerContext);
@@ -1338,9 +1338,9 @@ export default class Parser {
     try {
       this.consume('Expect an opening bracket \'[\'', SyntaxTokenKind.LBRACKET);
       args.listOpenBracket = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildList(), e.handlerContext);
@@ -1351,9 +1351,9 @@ export default class Parser {
     if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
       try {
         args.elementList.push(this.attribute());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         args.elementList.push(e.partialNode);
         if (!this.canHandle(e)) {
@@ -1368,9 +1368,9 @@ export default class Parser {
         this.consume('Expect a comma \',\'', SyntaxTokenKind.COMMA);
         args.commaList.push(this.previous());
         args.elementList.push(this.attribute());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         if (e.partialNode instanceof SyntaxNode) {
           args.elementList.push(e.partialNode);
@@ -1385,9 +1385,9 @@ export default class Parser {
     try {
       this.consume('Expect a closing bracket \']\'', SyntaxTokenKind.RBRACKET);
       args.listCloseBracket = this.previous();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError)) {
-        throw e;
+        throw error;
       }
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildList(), e.handlerContext);
@@ -1429,11 +1429,11 @@ export default class Parser {
     } else {
       try {
         args.name = this.attributeName();
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
-        args.name = e.partialNode;
+        args.name = error.partialNode;
         if (!this.canHandle(e)) {
           throw new PartialParsingError(
             e.token,
@@ -1471,11 +1471,11 @@ export default class Parser {
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
         ? this.attributeName()
         : this.normalExpression();
-    } catch (e) {
+    } catch (error) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
-        throw e;
+        throw error;
       }
-      value = e.partialNode;
+      value = error.partialNode;
       this.synchronizeAttributeValue();
     }
 
@@ -1507,9 +1507,9 @@ export default class Parser {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
         identifiers.push(this.previous());
-      } catch (e) {
+      } catch (error) {
         if (!(e instanceof PartialParsingError)) {
-          throw e;
+          throw error;
         }
         throw new PartialParsingError(
           e.token,

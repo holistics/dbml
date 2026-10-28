@@ -36,7 +36,7 @@ export function validateUnique (compiler: Compiler, tableSymbol: TableSymbol, re
 // - Composite unique via indexes
 function collectUniqueConstraints (compiler: Compiler, tableSymbol: TableSymbol): ColumnSymbol[][] {
   const columns = tableSymbol.mergedColumns(compiler);
-  const columnSymbolMap = keyBy(columns, (c) => c.name ?? '');
+  const columnSymbolMap = keyBy(columns, (column) => column.name ?? '');
 
   return [
     ...columns
@@ -49,10 +49,10 @@ function collectUniqueConstraints (compiler: Compiler, tableSymbol: TableSymbol)
 
       if (!Array.isArray(result)) return [];
       return (result as Index[])
-        .filter((e) => e.unique)
-        .map((e) => compact(
-          e.columns.map(
-            (c) => columnSymbolMap[c.value],
+        .filter((element) => element.unique)
+        .map((element) => compact(
+          element.columns.map(
+            (column) => columnSymbolMap[column.value],
           ),
         ));
     }),
@@ -66,7 +66,7 @@ function checkUniqueDuplicates (
   uniqueColumnSymbols: ColumnSymbol[],
   rows: Record<string, RecordValue>[],
 ): CompileInfo[] {
-  const uniqueColumnNames = uniqueColumnSymbols.map((c) => c.name ?? '');
+  const uniqueColumnNames = uniqueColumnSymbols.map((column) => column.name ?? '');
 
   // Filter out rows with NULL values (SQL standard: NULLs don't conflict in UNIQUE constraints)
   const rowsWithoutNull = rows.filter((row) =>
@@ -83,9 +83,9 @@ function checkUniqueDuplicates (
 
   return flatMap(duplicateGroups, (duplicateRows) =>
     flatMap(duplicateRows, (row) => {
-      const valueStr = formatValues(compiler, row, uniqueColumnSymbols);
+      const valueString = formatValues(compiler, row, uniqueColumnSymbols);
       return getDiagnosticAnchorValues(row, uniqueColumnNames)
-        .map((v) => recordsUniqueDuplicate(compiler, resolveRecordValueNode(compiler, v), { table: tableSymbol, columns: uniqueColumnSymbols, valueStr }));
+        .map((value) => recordsUniqueDuplicate(compiler, resolveRecordValueNode(compiler, value), { table: tableSymbol, columns: uniqueColumnSymbols, valueStr: valueString }));
     }),
   );
 }

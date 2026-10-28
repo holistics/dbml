@@ -34,48 +34,48 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     if (seen.has(node)) return;
     seen.add(node);
     const key = symbol.intern();
-    let arr = references.get(key);
-    if (!arr) {
-      arr = [];
-      references.set(key, arr);
+    let array = references.get(key);
+    if (!array) {
+      array = [];
+      references.set(key, array);
     }
-    arr.push(node);
+    array.push(node);
 
     const original = symbol.originalSymbol;
     if (original !== symbol) {
-      const origKey = original.intern();
-      let origArr = references.get(origKey);
-      if (!origArr) {
-        origArr = [];
-        references.set(origKey, origArr);
+      const originalKey = original.intern();
+      let originalArray = references.get(originalKey);
+      if (!originalArray) {
+        originalArray = [];
+        references.set(originalKey, originalArray);
       }
-      origArr.push(node);
+      originalArray.push(node);
     }
   };
 
-  const pushMetadata = (m: NodeMetadata) => {
-    if (m instanceof MetadataElementMetadata) {
-      const target = m.target(this);
+  const pushMetadata = (nodeMetadata: NodeMetadata) => {
+    if (nodeMetadata instanceof MetadataElementMetadata) {
+      const target = nodeMetadata.target(this);
       if (!target) return;
 
       const key = target.intern();
-      let arr = metadata.get(key);
-      if (!arr) {
-        arr = [];
-        metadata.set(key, arr);
+      let array = metadata.get(key);
+      if (!array) {
+        array = [];
+        metadata.set(key, array);
       }
-      arr.push(m);
+      array.push(nodeMetadata);
       return;
     }
 
-    for (const symbol of m.owners(this)) {
+    for (const symbol of nodeMetadata.owners(this)) {
       const key = symbol.intern();
-      let arr = metadata.get(key);
-      if (!arr) {
-        arr = [];
-        metadata.set(key, arr);
+      let array = metadata.get(key);
+      if (!array) {
+        array = [];
+        metadata.set(key, array);
       }
-      arr.push(m);
+      array.push(nodeMetadata);
     }
   };
 
@@ -93,9 +93,9 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
       if (node instanceof TupleExpressionNode
         && isAccessExpression(node.parentNode)
         && (node.parentNode as InfixExpressionNode).rightExpression === node) {
-        const leftExpr = (node.parentNode as InfixExpressionNode).leftExpression;
-        if (leftExpr) {
-          const tableNode = getRightmostVariable(leftExpr);
+        const leftExpression = (node.parentNode as InfixExpressionNode).leftExpression;
+        if (leftExpression) {
+          const tableNode = getRightmostVariable(leftExpression);
           if (tableNode) {
             const ref = this.nodeReferee(tableNode).getFiltered(UNHANDLED);
             if (ref) pushRef(ref, tableNode);
@@ -127,12 +127,12 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
 
     for (const child of children) {
       const childKey = child.intern();
-      let arr = parents.get(childKey);
-      if (!arr) {
-        arr = [];
-        parents.set(childKey, arr);
+      let array = parents.get(childKey);
+      if (!array) {
+        array = [];
+        parents.set(childKey, array);
       }
-      arr.push(symbol);
+      array.push(symbol);
 
       if (child instanceof SchemaSymbol && child.isKind(SymbolKind.Schema)) {
         buildParents(compiler, child);

@@ -77,7 +77,7 @@ export default class NoteValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -98,7 +98,7 @@ export default class NoteValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0]));
     }
     if (fields[0].args.length > 0) {
-      errors.push(...fields[0].args.map((arg) => new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note can only contain one quoted string', arg)));
+      errors.push(...fields[0].args.map((argument) => new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note can only contain one quoted string', argument)));
     }
     return errors;
   }

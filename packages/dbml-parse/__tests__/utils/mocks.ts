@@ -42,8 +42,8 @@ export class MockTextModel {
     });
 
     let offset = 0;
-    for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
-      offset += lines[i].text.length + lines[i].ending.length;
+    for (let index = 0; index < position.lineNumber - 1 && index < lines.length; index++) {
+      offset += lines[index].text.length + lines[index].ending.length;
     }
 
     const currentLine = lines[position.lineNumber - 1];

@@ -6,20 +6,20 @@ import { isOffsetWithinSpan } from '@/core/utils/span';
 import type Compiler from '../index';
 
 export function nodeAtPosition (this: Compiler, filepath: Filepath, offset: number): SyntaxNode | SyntaxToken | undefined {
-  let curNode: SyntaxNode = this.parse.ast(filepath);
+  let currentNode: SyntaxNode = this.parse.ast(filepath);
 
   while (true) {
-    const members = getMemberChain(curNode);
+    const members = getMemberChain(currentNode);
     const found = members.find((mem) => isOffsetWithinSpan(offset, mem));
 
     if (found === undefined) {
-      return curNode;
+      return currentNode;
     }
 
     if (found instanceof SyntaxToken) {
       return found;
     }
 
-    curNode = found;
+    currentNode = found;
   }
 }

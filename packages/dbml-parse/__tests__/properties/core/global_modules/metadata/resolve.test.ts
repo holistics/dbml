@@ -37,8 +37,8 @@ describe('[property] mapNamePartToSymbolKind', () => {
   it('preserves name order and values', () => {
     fc.assert(
       fc.property(namePartsArbitrary, targetKindArbitrary, (nameParts, targetKind) => {
-        const res = mapNamePartToSymbolKind(nameParts, targetKind);
-        expect(res.map((r) => r.name)).toEqual(nameParts);
+        const result = mapNamePartToSymbolKind(nameParts, targetKind);
+        expect(result.map((result) => result.name)).toEqual(nameParts);
       }),
       PROPERTY_TEST_CONFIG,
     );
@@ -47,8 +47,8 @@ describe('[property] mapNamePartToSymbolKind', () => {
   it('maps the last part to the target-specific terminal kind', () => {
     fc.assert(
       fc.property(namePartsArbitrary, targetKindArbitrary, (nameParts, targetKind) => {
-        const res = mapNamePartToSymbolKind(nameParts, targetKind);
-        expect(res[res.length - 1].symbolKind).toBe(TERMINAL_KIND[targetKind]);
+        const result = mapNamePartToSymbolKind(nameParts, targetKind);
+        expect(result[result.length - 1].symbolKind).toBe(TERMINAL_KIND[targetKind]);
       }),
       PROPERTY_TEST_CONFIG,
     );
@@ -57,13 +57,13 @@ describe('[property] mapNamePartToSymbolKind', () => {
   it('maps every non-terminal part to Schema, except for Column: second last is Table', () => {
     fc.assert(
       fc.property(namePartsArbitrary, targetKindArbitrary, (nameParts, targetKind) => {
-        const res = mapNamePartToSymbolKind(nameParts, targetKind);
-        const lastIdx = res.length - 1;
+        const result = mapNamePartToSymbolKind(nameParts, targetKind);
+        const lastIndex = result.length - 1;
 
-        res.forEach((part, idx) => {
-          if (idx === lastIdx) return; // terminal kind checked elsewhere
+        result.forEach((part, index) => {
+          if (index === lastIndex) return; // terminal kind checked elsewhere
 
-          if (targetKind === MetadataTargetKind.Column && idx === lastIdx - 1) {
+          if (targetKind === MetadataTargetKind.Column && index === lastIndex - 1) {
             expect(part.symbolKind).toBe(SymbolKind.Table);
           } else {
             expect(part.symbolKind).toBe(SymbolKind.Schema);
@@ -78,8 +78,8 @@ describe('[property] mapNamePartToSymbolKind', () => {
     // Guards the positional `kindParts[idx]` indexing against length mismatches
     fc.assert(
       fc.property(namePartsArbitrary, targetKindArbitrary, (nameParts, targetKind) => {
-        const res = mapNamePartToSymbolKind(nameParts, targetKind);
-        res.forEach((part) => expect(part.symbolKind).toBeDefined());
+        const result = mapNamePartToSymbolKind(nameParts, targetKind);
+        result.forEach((part) => expect(part.symbolKind).toBeDefined());
       }),
       PROPERTY_TEST_CONFIG,
     );

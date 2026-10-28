@@ -1,12 +1,6 @@
-import {
-  readFileSync, readdirSync, statSync,
-} from 'node:fs';
-import {
-  type DbmlProjectLayout, type FileSpecifierInfo, Filepath,
-} from '@dbml/parse';
-import {
-  fileLogger,
-} from './helpers/logger';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { type DbmlProjectLayout, type FileSpecifierInfo, Filepath } from '@dbml/parse';
+import { fileLogger } from './helpers/logger';
 
 /**
  * A read-only DbmlProjectLayout backed by the Node.js filesystem.
@@ -54,23 +48,23 @@ export class NodeProjectLayout implements DbmlProjectLayout {
     })?.isDirectory() ?? false;
   }
 
-  listDirectory (dirPath?: Filepath): Filepath[] {
-    const basePath = dirPath ? dirPath.fsPath : '/';
+  listDirectory (directoryPath?: Filepath): Filepath[] {
+    const basePath = directoryPath ? directoryPath.fsPath : '/';
     return safeReaddirSync(basePath)?.map((entry) => basePath + entry).sort().map(Filepath.from) ?? [];
   }
 
   getEntrypoints (): Filepath[] {
-    return this.entryPoints.filter((fp) => this.exists(fp));
+    return this.entryPoints.filter((filepath) => this.exists(filepath));
   }
 }
 
 // Wrap a function so that errors are logged to file and undefined is returned
-function logOnError<Args extends unknown[], R> (fn: (...args: Args) => R): (...args: Args) => R | undefined {
+function logOnError<Arguments extends unknown[], R> (fn: (...args: Arguments) => R): (...args: Arguments) => R | undefined {
   return (...args) => {
     try {
       return fn(...args);
-    } catch (e) {
-      fileLogger.error(e instanceof Error ? e : new Error(String(e)));
+    } catch (error) {
+      fileLogger.error(error instanceof Error ? error : new Error(String(error)));
       return undefined;
     }
   };
@@ -79,5 +73,5 @@ function logOnError<Args extends unknown[], R> (fn: (...args: Args) => R): (...a
 const safeReadFileSync = logOnError(readFileSync as (path: string, encoding: BufferEncoding) => string);
 const safeReaddirSync = logOnError(readdirSync as (path: string) => string[]);
 const safeStatSync = logOnError(
-  (path: string, opts: { throwIfNoEntry: false }) => statSync(path, opts),
+  (path: string, options: { throwIfNoEntry: false }) => statSync(path, options),
 );

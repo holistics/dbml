@@ -102,10 +102,10 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         // Result should be null or have valid structure
         if (result) {
           if (Array.isArray(result)) {
-            result.forEach((def) => {
-              expect(def.range).toBeDefined();
-              expect(def.range.startLineNumber).toBeGreaterThanOrEqual(1);
-              expect(def.range.startColumn).toBeGreaterThanOrEqual(1);
+            result.forEach((definition) => {
+              expect(definition.range).toBeDefined();
+              expect(definition.range.startLineNumber).toBeGreaterThanOrEqual(1);
+              expect(definition.range.startColumn).toBeGreaterThanOrEqual(1);
             });
           } else {
             expect(result.range).toBeDefined();
@@ -454,7 +454,7 @@ describe('[fuzz] services - edge cases', () => {
   it('should handle source with many lines', () => {
     const manyLines = Array.from({
       length: 500,
-    }, (_, i) => `Table t${i} { id int }`).join('\n');
+    }, (_, index) => `Table t${index} { id int }`).join('\n');
     const layout = new MemoryProjectLayout();
     layout.setSource(DEFAULT_ENTRY, manyLines);
     const compiler = new Compiler(layout);

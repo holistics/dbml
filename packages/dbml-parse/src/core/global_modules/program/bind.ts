@@ -34,8 +34,8 @@ function resolveColumnSymbols (compiler: Compiler, node: SyntaxNode): NodeSymbol
   const lastFragment = fragments[fragments.length - 1];
   if (lastFragment instanceof TupleExpressionNode) {
     const symbols: NodeSymbol[] = [];
-    for (const elem of lastFragment.elementList) {
-      const sym = compiler.nodeReferee(elem).getFiltered(UNHANDLED);
+    for (const element of lastFragment.elementList) {
+      const sym = compiler.nodeReferee(element).getFiltered(UNHANDLED);
       if (!sym) return undefined;
       symbols.push(sym.originalSymbol);
     }
@@ -57,8 +57,8 @@ function checkRefEndpoints (
   errorNode: SyntaxNode,
   seenRefIds: Map<string, SyntaxNode>,
 ): CompileError[] {
-  const leftKey = left.map((s) => s.intern()).sort().join(',');
-  const rightKey = right.map((s) => s.intern()).sort().join(',');
+  const leftKey = left.map((symbol) => symbol.intern()).sort().join(',');
+  const rightKey = right.map((symbol) => symbol.intern()).sort().join(',');
 
   if (leftKey === rightKey) {
     return [
@@ -104,7 +104,7 @@ export default class Binder {
       // Global checks
 
       // Check 1: One project block only
-      const projects = ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
+      const projects = ast.body.filter((element): element is ElementDeclarationNode => element instanceof ElementDeclarationNode && element.isKind(ElementKind.Project));
       if (projects.length > 1) {
         projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
       }
@@ -195,11 +195,11 @@ export default class Binder {
 
       const settingsMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED);
       if (!settingsMap) continue;
-      const refAttrs = settingsMap[SettingName.Ref];
-      if (!refAttrs || refAttrs.length === 0) continue;
+      const refAttributes = settingsMap[SettingName.Ref];
+      if (!refAttributes || refAttributes.length === 0) continue;
 
-      for (const attr of refAttrs) {
-        const refValue = attr.value;
+      for (const attribute of refAttributes) {
+        const refValue = attribute.value;
         if (!(refValue instanceof PrefixExpressionNode)) continue;
         if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
         if (!refValue.expression) continue;
@@ -210,7 +210,7 @@ export default class Binder {
           colSym.originalSymbol,
         ];
 
-        errors.push(...checkRefEndpoints(leftSymbols, rightSymbols, attr, seenRefIds));
+        errors.push(...checkRefEndpoints(leftSymbols, rightSymbols, attribute, seenRefIds));
       }
     }
     return errors;
@@ -227,11 +227,11 @@ export default class Binder {
 
       const settingsMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED);
       if (!settingsMap) continue;
-      const refAttrs = settingsMap[SettingName.Ref];
-      if (!refAttrs || refAttrs.length === 0) continue;
+      const refAttributes = settingsMap[SettingName.Ref];
+      if (!refAttributes || refAttributes.length === 0) continue;
 
-      for (const attr of refAttrs) {
-        const refValue = attr.value;
+      for (const attribute of refAttributes) {
+        const refValue = attribute.value;
         if (!(refValue instanceof PrefixExpressionNode)) continue;
         if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
         if (!refValue.expression) continue;
@@ -239,7 +239,7 @@ export default class Binder {
         if (!isExpressionAVariableNode(refValue.expression)) continue;
         const targetName = refValue.expression.expression.variable?.value;
         if (targetName === colName) {
-          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attribute));
         }
       }
     }
@@ -266,13 +266,13 @@ export default class Binder {
       } = parseResult;
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
-        const decl = element as ElementDeclarationNode & { type: SyntaxToken };
-        if (!isElementNode(decl, ElementKind.TableGroup)) continue;
+        const declaration = element as ElementDeclarationNode & { type: SyntaxToken };
+        if (!isElementNode(declaration, ElementKind.TableGroup)) continue;
 
-        const groupNameFragments = decl.name ? destructureComplexVariable(decl.name) : undefined;
+        const groupNameFragments = declaration.name ? destructureComplexVariable(declaration.name) : undefined;
         const groupName = groupNameFragments ? groupNameFragments.join('.') : '<unknown>';
 
-        const fields = getBody(decl);
+        const fields = getBody(declaration);
         for (const field of fields) {
           if (!(field instanceof FunctionApplicationNode)) continue;
           if (!field.callee) continue;

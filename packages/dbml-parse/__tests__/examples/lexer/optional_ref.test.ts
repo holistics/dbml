@@ -3,7 +3,7 @@ import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
 import { lex } from '@tests/utils';
 
 function getTokens (source: string) {
-  return lex(source).getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+  return lex(source).getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 }
 
 describe('[example] optional ref operators', () => {
@@ -37,7 +37,7 @@ describe('[example] optional ref operators', () => {
     const tokens = getTokens(source);
 
     expect(tokens).toHaveLength(16);
-    expect(tokens.map((t) => t.value)).toEqual([
+    expect(tokens.map((token) => token.value)).toEqual([
       '-',
       '-?',
       '?-',

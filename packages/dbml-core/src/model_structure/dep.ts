@@ -74,13 +74,13 @@ class Dep extends Element {
 
   exportChild () {
     return {
-      edges: this.edges.map((e) => e.export()),
+      edges: this.edges.map((edge) => edge.export()),
     };
   }
 
   exportChildIds () {
     return {
-      edgeIds: this.edges.map((e) => e.id),
+      edgeIds: this.edges.map((edge) => edge.id),
     };
   }
 

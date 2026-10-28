@@ -1,12 +1,12 @@
 // You cannot use the "=" inside database's schema name. It will be treated as a delimiter.
 const SCHEMAS_DELIMITER = 'schemas=';
 
-const haveSchemas = (str: string): boolean => {
-  return str.toLowerCase().includes(SCHEMAS_DELIMITER);
+const haveSchemas = (string_: string): boolean => {
+  return string_.toLowerCase().includes(SCHEMAS_DELIMITER);
 };
 
-const getSchemasPart = (str: string | undefined): string => {
-  return str ? str.toLowerCase().split(SCHEMAS_DELIMITER)[1] : '';
+const getSchemasPart = (string_: string | undefined): string => {
+  return string_ ? string_.toLowerCase().split(SCHEMAS_DELIMITER)[1] : '';
 };
 
 const noSchemaResult = (connectionString: string) => ({
@@ -21,8 +21,8 @@ const noSchemaResult = (connectionString: string) => ({
 // schema8 -> ['schema8']
 export const parseSchema = (schemas: string | undefined): string[] => {
   if (!schemas) return [];
-  const schemasWithDoubleQuotes = schemas.split(/,(?=(?:[^"]*(?:"[^"]*")*)*$)/).map((s) => s.trim());
-  return schemasWithDoubleQuotes.map((s) => s.replace(/"/g, ''));
+  const schemasWithDoubleQuotes = schemas.split(/,(?=(?:[^"]*(?:"[^"]*")*)*$)/).map((schemaItem) => schemaItem.trim());
+  return schemasWithDoubleQuotes.map((schemaItem) => schemaItem.replace(/"/g, ''));
 };
 
 const parseOdbcSchema = (connectionString: string) => {
@@ -37,8 +37,8 @@ const parseOdbcSchema = (connectionString: string) => {
 
 export const parseJdbcSchema = (connectionString: string) => {
   const connectionParts = connectionString.split('?');
-  const connectionArgs = connectionParts[1].split('&');
-  const schemasPart = connectionArgs.find((part) => haveSchemas(part));
+  const connectionArguments = connectionParts[1].split('&');
+  const schemasPart = connectionArguments.find((part) => haveSchemas(part));
 
   return {
     connectionString: connectionParts[0],

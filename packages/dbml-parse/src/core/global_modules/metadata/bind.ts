@@ -41,7 +41,7 @@ export default class MetadataBinder {
   private bindBody (body?: BlockExpressionNode | FunctionApplicationNode): CompileError[] {
     if (!(body instanceof BlockExpressionNode)) return [];
 
-    const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
+    const subs = body.body.filter((element) => element instanceof ElementDeclarationNode);
     return (subs).flatMap((sub) => {
       if (!sub.type) return [];
 

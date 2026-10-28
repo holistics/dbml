@@ -69,7 +69,7 @@ class TableGroup extends Element {
   }
 
   checkTable (table: TableType) {
-    if (this.tables.some((t) => t.id === table.id)) {
+    if (this.tables.some((existingTable) => existingTable.id === table.id)) {
       this.error(`Table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}.${table.name} is already in the group`);
     }
 
@@ -91,13 +91,13 @@ class TableGroup extends Element {
 
   exportChild () {
     return {
-      tables: this.tables.map((t) => ({ tableName: t.name, schemaName: t.schema.name })),
+      tables: this.tables.map((table) => ({ tableName: table.name, schemaName: table.schema.name })),
     };
   }
 
   exportChildIds () {
     return {
-      tableIds: this.tables.map((t) => t.id),
+      tableIds: this.tables.map((table) => table.id),
     };
   }
 

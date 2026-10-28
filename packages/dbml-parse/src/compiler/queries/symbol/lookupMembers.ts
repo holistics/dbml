@@ -14,17 +14,17 @@ export function symbolMembersLookupMap (
   const result = new Map<string, NodeSymbol[]>();
 
   if (members) {
-    for (const m of members) {
-      const name = m instanceof UseSymbol
-        ? useUtils.visibleName(this, m)?.at(-1)
-        : m.name;
+    for (const member of members) {
+      const name = member instanceof UseSymbol
+        ? useUtils.visibleName(this, member)?.at(-1)
+        : member.name;
       if (name === undefined) continue;
-      let arr = result.get(name);
-      if (!arr) {
-        arr = [];
-        result.set(name, arr);
+      let array = result.get(name);
+      if (!array) {
+        array = [];
+        result.set(name, array);
       }
-      arr.push(m);
+      array.push(member);
     }
   }
 
@@ -57,9 +57,9 @@ export function lookupMembers (
   const candidates = this.symbolMembersLookupMap(symbol).get(targetName);
   if (!candidates) return undefined;
 
-  return candidates.find((m: NodeSymbol) => {
-    if (kinds.length === 1 && m.kind !== kinds[0]) return false;
-    if (kinds.length > 1 && !kinds.includes(m.kind)) return false;
+  return candidates.find((member: NodeSymbol) => {
+    if (kinds.length === 1 && member.kind !== kinds[0]) return false;
+    if (kinds.length > 1 && !kinds.includes(member.kind)) return false;
     return true;
   });
 }

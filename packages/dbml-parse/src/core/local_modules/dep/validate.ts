@@ -88,7 +88,7 @@ export default class DepValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -129,7 +129,7 @@ export default class DepValidator {
       else if (args[0] instanceof ListExpressionNode) args.shift();
 
       if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field should only have a single binary relationship', arg)));
+        errors.push(...args.map((argument) => new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field should only have a single binary relationship', argument)));
       }
     });
 

@@ -1,18 +1,10 @@
 import path from 'path';
-import {
-  connector,
-} from '@dbml/connector';
-import {
-  importer,
-} from '@dbml/core';
+import { connector } from '@dbml/connector';
+import { importer } from '@dbml/core';
 import chalk from 'chalk';
-import {
-  Command,
-} from 'commander';
+import { Command } from 'commander';
 import figures from 'figures';
-import {
-  consoleLogger, fileLogger,
-} from '../helpers/logger';
+import { consoleLogger, fileLogger } from '../helpers/logger';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import {
@@ -25,18 +17,18 @@ export default async function connectionHandler (program: Command) {
     const {
       connection, databaseType,
     } = getConnectionOpt(program.args);
-    const opts = program.opts();
+    const options = program.opts();
     const schemaJson = await connector.fetchSchemaJson(connection, databaseType);
 
-    if (!opts.outFile && !opts.outDir) {
-      const res = importer.generateDbml(schemaJson);
-      OutputConsolePlugin.write(res);
-    } else if (opts.outFile) {
-      const res = importer.generateDbml(schemaJson);
-      (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
+    if (!options.outFile && !options.outDir) {
+      const result = importer.generateDbml(schemaJson);
+      OutputConsolePlugin.write(result);
+    } else if (options.outFile) {
+      const result = importer.generateDbml(schemaJson);
+      (new OutputFilePlugin(resolvePaths(options.outFile))).write(result);
 
       // bearer:disable javascript_lang_logger
-      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(options.outFile)}`);
     }
   } catch (error) {
     consoleLogger.error(error as Error | string);

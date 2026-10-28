@@ -85,7 +85,7 @@ export default class MetadataValidator {
       ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return [
       ...this.validateFields(fields),

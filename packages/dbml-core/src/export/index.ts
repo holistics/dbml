@@ -13,19 +13,19 @@ export type ExportOptions =
  * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
  */
 function _export (
-  str: string,
+  string_: string,
   format: ExportFormat,
   options: boolean,
 ): string;
 
 function _export (
-  str: string,
+  string_: string,
   format: ExportFormat,
   options?: ExportOptions,
 ): string;
 
 function _export (
-  str: string,
+  string_: string,
   format: ExportFormat,
   options: ExportOptions | boolean = {
     isNormalized: true,
@@ -33,7 +33,7 @@ function _export (
   },
 ): string {
   const resolvedFlags = normalizeExportOptions(options);
-  const database = (new Parser()).parse(str, 'dbmlv2');
+  const database = (new Parser()).parse(string_, 'dbmlv2');
   return ModelExporter.export(database.normalize(), format, resolvedFlags);
 }
 

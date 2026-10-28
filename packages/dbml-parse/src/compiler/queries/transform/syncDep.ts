@@ -66,7 +66,7 @@ export function syncDep (
     allEdits.push(...applyOperation(this, filepath, dbml, op));
   }
 
-  allEdits.sort((a, b) => b.start - a.start);
+  allEdits.sort((left, right) => right.start - left.start);
   const newDbml = applyTextEdits(dbml, allEdits, true);
   return { newDbml, edits: allEdits };
 }

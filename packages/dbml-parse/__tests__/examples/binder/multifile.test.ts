@@ -9,10 +9,10 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 function setupCompiler (files: Record<string, string>): { compiler: Compiler; fps: Record<string, Filepath> } {
   const layout = new MemoryProjectLayout();
   const fps: Record<string, Filepath> = {};
-  for (const [path, src] of Object.entries(files)) {
-    const fp = Filepath.from(path);
-    fps[path] = fp;
-    layout.setSource(fp, src);
+  for (const [path, source] of Object.entries(files)) {
+    const filepath = Filepath.from(path);
+    fps[path] = filepath;
+    layout.setSource(filepath, source);
   }
   const compiler = new Compiler(layout);
   return { compiler, fps };
@@ -62,7 +62,7 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
       // 'users' exists but is not an enum -> BINDING_ERROR
-      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('use from nonexistent file produces NONEXISTENT_MODULE error', () => {
@@ -72,7 +72,7 @@ describe('[example] multifile binder', () => {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.NONEXISTENT_MODULE)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.NONEXISTENT_MODULE)).toBe(true);
     });
   });
 
@@ -158,7 +158,7 @@ describe('[example] multifile binder', () => {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
     });
   });
 
@@ -206,7 +206,7 @@ describe('[example] multifile binder', () => {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
   });
 
@@ -350,7 +350,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('schema-qualified enum import has no binding errors and UseSymbol points to the declaration', () => {
@@ -427,7 +427,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
     });
   });
 
@@ -444,7 +444,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
     });
   });
 
@@ -486,7 +486,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const bindErrors = compiler.bindNode(mainAst).getErrors();
-      expect(bindErrors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(bindErrors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
@@ -596,7 +596,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const validationErrors = compiler.validateNode(mainAst).getErrors();
-      expect(validationErrors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
+      expect(validationErrors.some((error) => error.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
 
       // DiagramView must NOT appear in consumer scope
       const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView');
@@ -618,7 +618,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u')).toBeInstanceOf(UseSymbol);
@@ -729,7 +729,7 @@ Table y_table {
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const errors = compiler.bindNode(consumerAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
@@ -751,7 +751,7 @@ Table y_table {
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const errors = compiler.bindNode(consumerAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local_u')).toBeInstanceOf(UseSymbol);
@@ -822,7 +822,7 @@ Table y_table {
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const errors = compiler.validateNode(consumerAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
     });
   });
 
@@ -881,7 +881,7 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const errors = compiler.bindNode(consumerAst).getErrors();
       // 'users' is a member of both groups - expansion must deduplicate it
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
@@ -932,7 +932,7 @@ Table y_table {
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const errors = compiler.bindNode(consumerAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
     });
   });
 
@@ -1044,7 +1044,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
     });
 
     test('use * twice from files that reuse the same symbol collapses - no DUPLICATE_NAME', () => {
@@ -1060,7 +1060,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
       const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
@@ -1079,7 +1079,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
     });
 
     test('DIFFERENT symbols with same name from different files still produce DUPLICATE_NAME', () => {
@@ -1094,7 +1094,7 @@ Table y_table {
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
     });
   });
 
@@ -1127,13 +1127,13 @@ use { table orders } from './source.dbml'
     test('produces a binding error for the missing symbol', () => {
       const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(ast).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
     test('error message names the missing symbol', () => {
       const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(ast).getErrors();
-      expect(errors.some((e) => e.message.includes('orders'))).toBe(true);
+      expect(errors.some((error) => error.message.includes('orders'))).toBe(true);
     });
   });
 });

@@ -31,7 +31,7 @@ export default class ProjectBinder {
       return [];
     }
 
-    const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
+    const subs = body.body.filter((element) => element instanceof ElementDeclarationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }

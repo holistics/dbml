@@ -11,7 +11,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   } = this.parseFile(filepath).getValue();
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return Report.create(undefined);
-  return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  return this.interpretSymbol(symbol, filepath).map((value) => (value === UNHANDLED || !value) ? undefined : value as Database);
 }
 
 // Interpret all files. Returns raw MasterDatabase

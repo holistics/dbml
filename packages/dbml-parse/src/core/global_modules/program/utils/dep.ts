@@ -26,13 +26,13 @@ export function validateDepBlocks (
   // All edges in a complex dep block must share the same downstream table
   const firstDownstream = makeTableKey(edges[0].downstream.schemaName, edges[0].downstream.tableName);
 
-  for (let i = 1; i < edges.length; i++) {
-    const curDownstream = makeTableKey(edges[i].downstream.schemaName, edges[i].downstream.tableName);
+  for (let index = 1; index < edges.length; index++) {
+    const currentDownstream = makeTableKey(edges[index].downstream.schemaName, edges[index].downstream.tableName);
 
-    if (curDownstream !== firstDownstream) {
+    if (currentDownstream !== firstDownstream) {
       errors.push(new CompileError(
         CompileErrorCode.DEP_MIXED_DOWNSTREAM_TABLES,
-        `All edges in a Dep block must target the same downstream table, but found '${firstDownstream}' and '${curDownstream}'`,
+        `All edges in a Dep block must target the same downstream table, but found '${firstDownstream}' and '${currentDownstream}'`,
         meta.declaration,
       ));
       break;
@@ -40,11 +40,11 @@ export function validateDepBlocks (
   }
 
   // All edges in a block must be at the same level (all table-level or all column-level)
-  const isColumnLevel = (e: typeof edges[0]) => e.upstream.fieldNames.length > 0 || e.downstream.fieldNames.length > 0;
+  const isColumnLevel = (edge: typeof edges[0]) => edge.upstream.fieldNames.length > 0 || edge.downstream.fieldNames.length > 0;
   const firstLevel = isColumnLevel(edges[0]);
 
-  for (let i = 1; i < edges.length; i++) {
-    if (isColumnLevel(edges[i]) !== firstLevel) {
+  for (let index = 1; index < edges.length; index++) {
+    if (isColumnLevel(edges[index]) !== firstLevel) {
       errors.push(new CompileError(
         CompileErrorCode.DEP_MIXED_LEVEL,
         'All edges in a Dep block must be at the same level (all table-level or all column-level)',

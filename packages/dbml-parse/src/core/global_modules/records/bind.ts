@@ -16,7 +16,7 @@ import {
 } from '../../types';
 import {
   destructureCallExpression,
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable as extractVariableNameFromPrimaryVariable,
 } from '../../utils/expression';
 import { scanNonListNodeForBinding } from '../utils';
 import { isTupleOfVariables } from '@/core/utils/validate';
@@ -86,9 +86,9 @@ export default class RecordsBinder {
 
     const tableName = getElementNameString(tableSymbol.declaration) ?? '<invalid name>';
 
-    const errors: CompileError[] = schemaBindees.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
+    const errors: CompileError[] = schemaBindees.flatMap((bindee) => this.compiler.nodeReferee(bindee).getErrors());
     for (const columnBindee of fragments.args) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
+      const columnName = extractVariableNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
       const columnSymbol = this.compiler.nodeReferee(columnBindee).getFiltered(UNHANDLED);
 
       if (!columnSymbol) {
@@ -145,7 +145,7 @@ export default class RecordsBinder {
 
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
+      const columnName = extractVariableNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
       const columnSymbol = this.compiler.nodeReferee(columnBindee).getFiltered(UNHANDLED);
 
       if (!columnSymbol) {
@@ -172,8 +172,8 @@ export default class RecordsBinder {
       return this.bindDataRow(body);
     }
 
-    const functions = body.body.filter((e) => e instanceof FunctionApplicationNode);
-    const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
+    const functions = body.body.filter((element) => element instanceof FunctionApplicationNode);
+    const subs = body.body.filter((element) => element instanceof ElementDeclarationNode);
 
     return [
       ...this.bindDataRows(functions as FunctionApplicationNode[]),
@@ -212,7 +212,7 @@ export default class RecordsBinder {
       const schemaBindees = bindee.variables;
 
       return [
-        ...schemaBindees.flatMap((b) => this.compiler.nodeReferee(b).getErrors()),
+        ...schemaBindees.flatMap((bindee) => this.compiler.nodeReferee(bindee).getErrors()),
         ...(enumBindee ? this.compiler.nodeReferee(enumBindee).getErrors() : []),
         ...this.compiler.nodeReferee(enumFieldBindee).getErrors(),
       ];

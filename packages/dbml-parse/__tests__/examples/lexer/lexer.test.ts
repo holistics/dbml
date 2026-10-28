@@ -5,7 +5,7 @@ import { lex } from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
-  return lex(source).getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+  return lex(source).getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 }
 
 describe('[example] lexer', () => {
@@ -181,9 +181,9 @@ describe('[example] lexer', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(8);
-      expect(tokens.map((t) => ({
-        kind: t.kind,
-        value: t.value,
+      expect(tokens.map((token) => ({
+        kind: token.kind,
+        value: token.value,
       }))).toEqual([
         {
           kind: SyntaxTokenKind.OP,
@@ -363,7 +363,7 @@ describe('[example] lexer', () => {
       const errors = lex(source).getErrors();
 
       expect(errors.length).toBe(1);
-      const errorCodes = errors.map((e) => e.code);
+      const errorCodes = errors.map((error) => error.code);
       expect(
         errorCodes.includes(CompileErrorCode.UNEXPECTED_EOF)
         || errorCodes.includes(CompileErrorCode.UNEXPECTED_NEWLINE),
@@ -381,12 +381,12 @@ describe('[example] lexer', () => {
     test('should continue tokenizing after error', () => {
       const source = 'valid $invalid more';
       const result = lex(source);
-      const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+      const tokens = result.getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(tokens.some((t) => t.value === 'valid')).toBe(true);
-      expect(tokens.some((t) => t.value === 'more')).toBe(true);
+      expect(tokens.some((token) => token.value === 'valid')).toBe(true);
+      expect(tokens.some((token) => token.value === 'more')).toBe(true);
     });
   });
 
@@ -395,7 +395,7 @@ describe('[example] lexer', () => {
       const source = 'Table users { id int [pk] }';
       const tokens = getTokens(source);
 
-      expect(tokens.map((t) => t.value)).toEqual([
+      expect(tokens.map((token) => token.value)).toEqual([
         'Table',
         'users',
         '{',
@@ -406,7 +406,7 @@ describe('[example] lexer', () => {
         ']',
         '}',
       ]);
-      expect(tokens.map((t) => t.kind)).toEqual([
+      expect(tokens.map((token) => token.kind)).toEqual([
         SyntaxTokenKind.IDENTIFIER,
         SyntaxTokenKind.IDENTIFIER,
         SyntaxTokenKind.LBRACE,
@@ -448,7 +448,7 @@ describe('[example] lexer', () => {
       const source = 'Ref: a.id > b.id';
       const tokens = getTokens(source);
 
-      expect(tokens.map((t) => t.value)).toEqual([
+      expect(tokens.map((token) => token.value)).toEqual([
         'Ref',
         ':',
         'a',
@@ -465,7 +465,7 @@ describe('[example] lexer', () => {
       const source = "id int [pk, default: 'active']";
       const tokens = getTokens(source);
 
-      expect(tokens.map((t) => t.value)).toEqual([
+      expect(tokens.map((token) => token.value)).toEqual([
         'id',
         'int',
         '[',
@@ -491,9 +491,9 @@ describe('[example] lexer', () => {
 
     test('should handle whitespace-only input', () => {
       const tokens = lex('   \n\t').getValue();
-      const nonEOF = tokens.filter((t) => t.kind !== SyntaxTokenKind.EOF);
+      const nonEOF = tokens.filter((token) => token.kind !== SyntaxTokenKind.EOF);
 
-      expect(nonEOF.every((t) => isTriviaToken(t))).toBe(true);
+      expect(nonEOF.every((token) => isTriviaToken(token))).toBe(true);
     });
 
     test('should tokenize adjacent tokens without spaces', () => {
@@ -559,7 +559,7 @@ describe('[example] lexer', () => {
       const source = 'Table TABLE table';
       const tokens = getTokens(source);
 
-      expect(tokens.map((t) => t.value)).toEqual(['Table', 'TABLE', 'table']);
+      expect(tokens.map((token) => token.value)).toEqual(['Table', 'TABLE', 'table']);
     });
   });
 
@@ -610,17 +610,17 @@ describe('[example] lexer', () => {
       const longName = 'a'.repeat(1000);
       const source = `Table ${longName} { id int }`;
       const result = lex(source);
-      const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+      const tokens = result.getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 
       expect(result.getErrors()).toHaveLength(0);
-      expect(tokens.some((t) => t.value === longName)).toBe(true);
+      expect(tokens.some((token) => token.value === longName)).toBe(true);
     });
 
     test('should handle very long string literal', () => {
       const longContent = 'x'.repeat(10000);
       const source = `'${longContent}'`;
       const result = lex(source);
-      const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+      const tokens = result.getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 
       expect(result.getErrors()).toHaveLength(0);
       expect(tokens).toHaveLength(1);
@@ -630,9 +630,9 @@ describe('[example] lexer', () => {
     test('should handle source with many lines', () => {
       const lines = Array.from({
         length: 1000,
-      }, (_, i) => `id${i}`).join('\n');
+      }, (_, index) => `id${index}`).join('\n');
       const result = lex(lines);
-      const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+      const tokens = result.getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 
       expect(result.getErrors()).toHaveLength(0);
       expect(tokens).toHaveLength(1000);
@@ -646,7 +646,7 @@ describe('[example] lexer', () => {
       const depth = 100;
       const source = '['.repeat(depth) + ']'.repeat(depth);
       const result = lex(source);
-      const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
+      const tokens = result.getValue().filter((token) => !isTriviaToken(token) && token.kind !== SyntaxTokenKind.EOF);
 
       expect(result.getErrors()).toHaveLength(0);
       expect(tokens).toHaveLength(depth * 2);
@@ -668,9 +668,9 @@ describe('[example] lexer', () => {
 
       expect(tokens.length).toBeGreaterThanOrEqual(3);
       // Verify all tokens are parsed
-      expect(tokens.map((t) => t.value)).toContain('a');
-      expect(tokens.map((t) => t.value)).toContain('b');
-      expect(tokens.map((t) => t.value)).toContain('c');
+      expect(tokens.map((token) => token.value)).toContain('a');
+      expect(tokens.map((token) => token.value)).toContain('b');
+      expect(tokens.map((token) => token.value)).toContain('c');
     });
   });
 

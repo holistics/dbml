@@ -51,7 +51,7 @@ export const numberArbitrary = fc.stringMatching(matchFullRegex(numberRegex));
 export const prefixedNumberArbitrary = fc.tuple(
   fc.constantFrom('+', '-'),
   fc.stringMatching(matchFullRegex(numberRegex)),
-).map(([prefix, num]) => `${prefix}${num}`);
+).map(([prefix, number_]) => `${prefix}${number_}`);
 export const functionExpressionArbitrary = fc.stringMatching(matchFullRegex(functionExpressionRegex));
 export const colorArbitrary = fc.stringMatching(matchFullRegex(colorRegex));
 export const opArbitrary = fc.stringMatching(matchFullRegex(opRegex));

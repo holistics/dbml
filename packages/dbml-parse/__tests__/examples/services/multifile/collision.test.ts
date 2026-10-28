@@ -358,15 +358,15 @@ Table items {
       const model = new MockTextModel(mainSource, 'file:///project/main.dbml') as any;
 
       // Find Color definition - should work
-      const colorDef = definitionProvider.provideDefinition(model, createPosition(5, 10));
-      expect(Array.isArray(colorDef)).toBe(true);
+      const colorDefinition = definitionProvider.provideDefinition(model, createPosition(5, 10));
+      expect(Array.isArray(colorDefinition)).toBe(true);
 
       // Size and Shape are imported but not used - should still be available
-      const sizeDef = definitionProvider.provideDefinition(model, createPosition(1, 15));
-      const shapeDef = definitionProvider.provideDefinition(model, createPosition(1, 22));
+      const sizeDefinition = definitionProvider.provideDefinition(model, createPosition(1, 15));
+      const shapeDefinition = definitionProvider.provideDefinition(model, createPosition(1, 22));
 
-      expect(Array.isArray(sizeDef)).toBe(true);
-      expect(Array.isArray(shapeDef)).toBe(true);
+      expect(Array.isArray(sizeDefinition)).toBe(true);
+      expect(Array.isArray(shapeDefinition)).toBe(true);
     });
 
     it('should handle multiple files each importing all from different sources', () => {
@@ -418,8 +418,8 @@ Table posts { id int status status }`,
         'file:///project/models1.dbml',
       ) as any;
 
-      const statusDef = definitionProvider.provideDefinition(model1, createPosition(2, 30));
-      expect(Array.isArray(statusDef)).toBe(true);
+      const statusDefinition = definitionProvider.provideDefinition(model1, createPosition(2, 30));
+      expect(Array.isArray(statusDefinition)).toBe(true);
 
       // Check models2 can find priority from enums
       const model2 = new MockTextModel(
@@ -428,8 +428,8 @@ Table tasks { id int priority priority }`,
         'file:///project/models2.dbml',
       ) as any;
 
-      const priorityDef = definitionProvider.provideDefinition(model2, createPosition(2, 32));
-      expect(Array.isArray(priorityDef)).toBe(true);
+      const priorityDefinition = definitionProvider.provideDefinition(model2, createPosition(2, 32));
+      expect(Array.isArray(priorityDefinition)).toBe(true);
     });
 
     it('should handle importing overlapping symbol sets from multiple files', () => {
@@ -476,12 +476,12 @@ Ref: logs.audit_id > Audit.id`;
       const model = new MockTextModel(mainSource, 'file:///project/main.dbml') as any;
 
       // Find Audit - should resolve to common via use statement
-      const auditDef = definitionProvider.provideDefinition(model, createPosition(8, 28));
-      expect(Array.isArray(auditDef)).toBe(true);
+      const auditDefinition = definitionProvider.provideDefinition(model, createPosition(8, 28));
+      expect(Array.isArray(auditDefinition)).toBe(true);
 
       // Find User - should resolve to auth via use statement
-      const userDef = definitionProvider.provideDefinition(model, createPosition(1, 15));
-      expect(Array.isArray(userDef)).toBe(true);
+      const userDefinition = definitionProvider.provideDefinition(model, createPosition(1, 15));
+      expect(Array.isArray(userDefinition)).toBe(true);
     });
   });
 

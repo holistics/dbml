@@ -102,7 +102,7 @@ export default class TableValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -141,7 +141,7 @@ export default class TableValidator {
       }
       if (field.args.length) {
         errors.push(
-          ...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection does not have any trailing attributes', arg)),
+          ...field.args.map((argument) => new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection does not have any trailing attributes', argument)),
         );
       }
       return errors;

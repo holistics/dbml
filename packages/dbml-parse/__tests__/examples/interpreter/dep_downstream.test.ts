@@ -26,7 +26,7 @@ Dep {
   a -> b
   a.id -> b.id
 }`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
     });
 
     it('errors when edges target different downstream tables', () => {
@@ -35,7 +35,7 @@ Dep {
   a -> b
   a -> c
 }`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_MIXED_DOWNSTREAM_TABLES)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DEP_MIXED_DOWNSTREAM_TABLES)).toBe(true);
     });
   });
 
@@ -78,7 +78,7 @@ Dep: a -> a
       const errors = interpret(`${PRELUDE}
 Dep: a.id -> a.id
 `).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
     });
 
     it('allows mixed and column edges in one block (both column-level)', () => {
@@ -96,7 +96,7 @@ Dep {
   a -> b
   a -> b.id
 }`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
+      expect(errors.some((error) => error.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
     });
   });
 

@@ -22,7 +22,7 @@ describe('[advanced] multifile edge cases', () => {
         expect(uri).toMatch(/^file:\/\//);
         // Should convert backslashes to forward slashes
         expect(uri).not.toContain('\\');
-      } catch (e) {
+      } catch (error) {
         // Windows paths may not work on Unix or vice versa
         // This is acceptable as long as we don't crash
         expect(true).toBe(true);
@@ -247,19 +247,19 @@ Ref: nodes.parent_id > nodes.id`;
 
       isDirectory (filePath: Filepath): boolean {
         const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
-        for (const f of this.files.keys()) {
-          if (f.startsWith(prefix)) return true;
+        for (const fileKey of this.files.keys()) {
+          if (fileKey.startsWith(prefix)) return true;
         }
         return false;
       }
 
-      listDirectory (dirPath?: Filepath): Filepath[] {
-        const base = dirPath?.absolute ?? '/';
+      listDirectory (directoryPath?: Filepath): Filepath[] {
+        const base = directoryPath?.absolute ?? '/';
         const prefix = base.endsWith('/') ? base : base + '/';
         const entries = new Set<string>();
-        for (const f of this.files.keys()) {
-          if (!f.startsWith(prefix)) continue;
-          const rest = f.slice(prefix.length);
+        for (const fileKey of this.files.keys()) {
+          if (!fileKey.startsWith(prefix)) continue;
+          const rest = fileKey.slice(prefix.length);
           const slash = rest.indexOf('/');
           entries.add(prefix + (slash === -1 ? rest : rest.slice(0, slash)));
         }
@@ -267,7 +267,7 @@ Ref: nodes.parent_id > nodes.id`;
       }
 
       getEntrypoints (): Filepath[] {
-        return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.absolute.localeCompare(b.absolute));
+        return [...this.files.keys()].map(Filepath.from).sort((first, second) => first.absolute.localeCompare(second.absolute));
       }
 
       getSpecifierForFile (_currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
@@ -349,7 +349,7 @@ Table orders {
         const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
         const provider = new DBMLCompletionItemProvider(compiler);
         const result = provider.provideCompletionItems(model, createPosition(1, 12));
-        const labels = result.suggestions.map((s: any) => String(s.label));
+        const labels = result.suggestions.map((suggestion: any) => String(suggestion.label));
         expect(labels).toContain('@shared-users');
       });
 
@@ -364,7 +364,7 @@ Table orders {
         const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
         const provider = new DBMLCompletionItemProvider(compiler);
         const result = provider.provideCompletionItems(model, createPosition(1, 20));
-        const labels = result.suggestions.map((s: any) => String(s.label));
+        const labels = result.suggestions.map((suggestion: any) => String(suggestion.label));
         expect(labels).toContain('@shared-users');
         expect(labels).toContain('@shared-orders');
         expect(labels).not.toContain('@other');
@@ -379,7 +379,7 @@ Table orders {
         const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
         const provider = new DBMLCompletionItemProvider(compiler);
         const result = provider.provideCompletionItems(model, createPosition(1, 22));
-        const item = result.suggestions.find((s: any) => String(s.label) === '/@imports/shared-users.dbml');
+        const item = result.suggestions.find((suggestion: any) => String(suggestion.label) === '/@imports/shared-users.dbml');
         expect(item).toBeDefined();
         expect(item!.insertText).toBe('@shared-users');
       });
@@ -401,8 +401,8 @@ Table orders {
 
       // Both specifiers resolve to the same filepath
       const byId = layout.resolveFileSpecifier(main, '@models');
-      const byRel = layout.resolveFileSpecifier(main, './models');
-      expect(byId!.equals(byRel!)).toBe(true);
+      const byRelative = layout.resolveFileSpecifier(main, './models');
+      expect(byId!.equals(byRelative!)).toBe(true);
 
       const compiler = new Compiler(layout);
       compiler.bindProject();

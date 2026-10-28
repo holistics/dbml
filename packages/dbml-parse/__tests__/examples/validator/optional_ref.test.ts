@@ -9,7 +9,7 @@ describe('[example] nullable column with required operator', () => {
       Ref: posts.user_id > users.id
     `;
     const infos = interpret(source).getInfos();
-    expect(infos.some((i) => i.diagnostic.includes('nullable'))).toBe(true);
+    expect(infos.some((index) => index.diagnostic.includes('nullable'))).toBe(true);
   });
 
   test('composite ref with all columns nullable should emit info', () => {
@@ -26,7 +26,7 @@ describe('[example] nullable column with required operator', () => {
       Ref: b.(a_id, a_code) > a.(id, code)
     `;
     const infos = interpret(source).getInfos();
-    expect(infos.some((i) => i.diagnostic.includes('nullable'))).toBe(true);
+    expect(infos.some((index) => index.diagnostic.includes('nullable'))).toBe(true);
   });
 
   test('composite ref with one NOT NULL column should NOT emit info', () => {
@@ -43,7 +43,7 @@ describe('[example] nullable column with required operator', () => {
       Ref: b.(a_id, a_code) > a.(id, code)
     `;
     const infos = interpret(source).getInfos();
-    expect(infos.filter((i) => i.diagnostic.includes('nullable'))).toHaveLength(0);
+    expect(infos.filter((index) => index.diagnostic.includes('nullable'))).toHaveLength(0);
   });
 
   test('single NOT NULL column should NOT emit info', () => {
@@ -53,7 +53,7 @@ describe('[example] nullable column with required operator', () => {
       Ref: posts.user_id > users.id
     `;
     const infos = interpret(source).getInfos();
-    expect(infos.filter((i) => i.diagnostic.includes('nullable'))).toHaveLength(0);
+    expect(infos.filter((index) => index.diagnostic.includes('nullable'))).toHaveLength(0);
   });
 });
 

@@ -18,7 +18,7 @@ function parse (dbml: string) {
 function findElement (dbml: string, kind: ElementKind, index = 0): { declaration: ElementDeclarationNode; source: string } {
   const { ast } = parse(dbml);
   const declarations = ast.declarations
-    .filter((d): d is ElementDeclarationNode => d instanceof ElementDeclarationNode && d.isKind(kind));
+    .filter((declaration): declaration is ElementDeclarationNode => declaration instanceof ElementDeclarationNode && declaration.isKind(kind));
   return { declaration: declarations[index], source: dbml };
 }
 

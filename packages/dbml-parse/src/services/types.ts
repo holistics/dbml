@@ -7,7 +7,7 @@ import {
 } from 'monaco-editor-core/esm/vs/base/common/uri.js';
 export { Uri };
 
-export type LanguageConfiguration = languages.LanguageConfiguration;
+export type LanguageConfig = languages.LanguageConfiguration;
 export type MonarchLanguage = languages.IMonarchLanguage;
 
 export type Position = IPosition;

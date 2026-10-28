@@ -17,13 +17,13 @@ const TABLE = `Table users {
 function usersTableMetadata (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
-  return excludeMetadataValueToken(db?.tables?.find((t) => t.name === 'users')?.metadata);
+  return excludeMetadataValueToken(db?.tables?.find((token) => token.name === 'users')?.metadata);
 }
 
 function usersTable (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
-  return db?.tables?.find((t) => t.name === 'users');
+  return db?.tables?.find((token) => token.name === 'users');
 }
 
 describe('[example] Metadata element', () => {
@@ -129,7 +129,7 @@ describe('[example] Metadata field value grammar', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
         masking: partial
       }`);
-      const codes = result.getErrors().map((e) => e.code);
+      const codes = result.getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
       expect(usersTableMetadata(`Metadata Table public.users {
         masking: partial
@@ -142,8 +142,8 @@ describe('[example] Metadata field value grammar', () => {
         b: +-1
       }`;
       const result = interpret(TABLE + source);
-      const codes = result.getErrors().map((e) => e.code);
-      expect(codes.filter((c) => c === CompileErrorCode.INVALID_METADATA_FIELD)).toHaveLength(2);
+      const codes = result.getErrors().map((error) => error.code);
+      expect(codes.filter((code) => code === CompileErrorCode.INVALID_METADATA_FIELD)).toHaveLength(2);
       const values = usersTableMetadata(source);
       expect(values).toBeUndefined();
     });
@@ -195,7 +195,7 @@ describe('[example] Metadata field value grammar', () => {
         color: #f00
       }`;
       const result = interpret(`${TABLE}${source}`);
-      const errorCodes = result.getErrors().map((e) => e.code);
+      const errorCodes = result.getErrors().map((error) => error.code);
       expect(errorCodes).toContain(CompileErrorCode.DUPLICATE_METADATA_FIELD);
     });
 
@@ -240,7 +240,7 @@ describe('[example] Metadata field value grammar', () => {
       const result = interpret(`${TABLE}Metadata Schema public {
         zone: 'analytics'
       }`);
-      const codes = result.getErrors().map((e) => e.code);
+      const codes = result.getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_TARGET_KIND);
     });
   });
@@ -250,7 +250,7 @@ describe('[example] Metadata field value grammar', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
         tags: ['a', 'b']
       }`);
-      const codes = result.getErrors().map((e) => e.code);
+      const codes = result.getErrors().map((error) => error.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
       // The invalid value must never be silently dropped
       expect(usersTableMetadata(`Metadata Table public.users {

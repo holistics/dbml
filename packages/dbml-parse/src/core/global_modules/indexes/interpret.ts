@@ -15,7 +15,7 @@ import type { Index, SchemaElement, TokenPosition } from '@/core/types/schemaJso
 import {
   destructureIndexNode,
   extractQuotedStringToken,
-  extractVarNameFromPrimaryVariable,
+  extractVariableNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { getTokenPosition } from '@/core/utils/interpret';
@@ -79,10 +79,10 @@ export default class IndexesInterpreter {
       }
 
       // Flatten call expressions like (id, name)(age, weight) into individual column refs
-      const flatArgs = args.flatMap((arg) => {
-        if (!(arg instanceof CallExpressionNode)) return arg;
+      const flatArguments = args.flatMap((argument) => {
+        if (!(argument instanceof CallExpressionNode)) return argument;
         const fragments: SyntaxNode[] = [];
-        let current: SyntaxNode = arg;
+        let current: SyntaxNode = argument;
         while (current instanceof CallExpressionNode) {
           if (current.argumentList) fragments.push(current.argumentList);
           if (!current.callee) break;
@@ -93,12 +93,12 @@ export default class IndexesInterpreter {
       });
 
       // Parse each arg into index column entries (functional or non-functional)
-      for (const arg of flatArgs) {
-        const result = destructureIndexNode(arg);
+      for (const argument of flatArguments) {
+        const result = destructureIndexNode(argument);
         if (!result) continue;
-        const argColumns: Index['columns'] = [];
+        const argumentColumns: Index['columns'] = [];
         for (const { name, descending } of result.functional) {
-          argColumns.push({
+          argumentColumns.push({
             value: name.value?.value ?? '',
             type: 'expression',
             ...(descending && { sortOrder: 'desc' }),
@@ -106,19 +106,19 @@ export default class IndexesInterpreter {
           });
         }
         for (const { name, descending } of result.nonFunctional) {
-          argColumns.push({
-            value: extractVarNameFromPrimaryVariable(name) ?? '',
+          argumentColumns.push({
+            value: extractVariableNameFromPrimaryVariable(name) ?? '',
             type: 'column',
             ...(descending && { sortOrder: 'desc' }),
             token: getTokenPosition(name),
           });
         }
         // Keep the written order of columns and expressions
-        argColumns.sort((a, b) => a.token.start.offset - b.token.start.offset);
-        columns.push(...argColumns);
+        argumentColumns.sort((left, right) => left.token.start.offset - right.token.start.offset);
+        columns.push(...argumentColumns);
       }
 
-      const idx: Index = {
+      const index: Index = {
         columns,
         pk,
         unique,
@@ -128,7 +128,7 @@ export default class IndexesInterpreter {
         token,
       };
       return [
-        idx,
+        index,
       ];
     });
 

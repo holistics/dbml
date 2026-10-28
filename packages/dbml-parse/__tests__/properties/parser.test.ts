@@ -129,8 +129,8 @@ describe('[property] parser', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        for (let i = 1; i < ast.body.length; i++) {
-          expect(ast.body[i].start).toBeGreaterThanOrEqual(ast.body[i - 1].end);
+        for (let index = 1; index < ast.body.length; index++) {
+          expect(ast.body[index].start).toBeGreaterThanOrEqual(ast.body[index - 1].end);
         }
       }),
       PROPERTY_TEST_CONFIG,
@@ -144,8 +144,8 @@ describe('[property] parser', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        ast.body.forEach((elem) => {
-          expect(elem.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
+        ast.body.forEach((element) => {
+          expect(element.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
         });
       }),
       PROPERTY_TEST_CONFIG,
@@ -267,13 +267,13 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const enumDecl = ast.declarations[0];
+        const enumDeclaration = ast.declarations[0];
 
-        expect(enumDecl.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
-        expect(enumDecl.type?.value?.toLowerCase()).toBe('enum');
-        expect(enumDecl.body?.kind).toBe(SyntaxNodeKind.BLOCK_EXPRESSION);
-        expect((enumDecl.body as BlockExpressionNode)?.body).toBeInstanceOf(Array);
-        expect((enumDecl.body as BlockExpressionNode)?.body.length).toBeGreaterThanOrEqual(1);
+        expect(enumDeclaration.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
+        expect(enumDeclaration.type?.value?.toLowerCase()).toBe('enum');
+        expect(enumDeclaration.body?.kind).toBe(SyntaxNodeKind.BLOCK_EXPRESSION);
+        expect((enumDeclaration.body as BlockExpressionNode)?.body).toBeInstanceOf(Array);
+        expect((enumDeclaration.body as BlockExpressionNode)?.body.length).toBeGreaterThanOrEqual(1);
       }),
       PROPERTY_TEST_CONFIG,
     );
@@ -351,7 +351,7 @@ describe('[property] parser - AST structure semantics', () => {
             Object.entries(node).forEach(([key, child]) => {
               if (triviaProperties.has(key)) return; // Skip trivia properties
               if (Array.isArray(child)) {
-                child.forEach((c) => checkNested(c, node.start, node.end));
+                child.forEach((childNode) => checkNested(childNode, node.start, node.end));
               } else if (child && typeof child === 'object' && 'start' in child) {
                 checkNested(child, node.start, node.end);
               }
@@ -359,7 +359,7 @@ describe('[property] parser - AST structure semantics', () => {
           }
         }
 
-        ast.body.forEach((elem) => checkNested(elem, 0, source.length));
+        ast.body.forEach((element) => checkNested(element, 0, source.length));
       }),
       {
         numRuns: 50,

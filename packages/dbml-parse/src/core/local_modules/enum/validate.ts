@@ -98,7 +98,7 @@ export default class EnumValidator {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -131,7 +131,7 @@ export default class EnumValidator {
       }
 
       if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
+        errors.push(...args.map((argument) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', argument)));
       }
     }
 
@@ -144,21 +144,21 @@ export default class EnumValidator {
     const settingMap = aggReport.getValue();
 
     for (const name in settingMap) {
-      const attrs = settingMap[name];
-      if (!attrs) continue;
+      const attributes = settingMap[name];
+      if (!attributes) continue;
       switch (name) {
         case SettingName.Note:
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, '\'note\' can only appear once', attr)));
+          if (attributes.length > 1) {
+            attributes.forEach((attribute) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, '\'note\' can only appear once', attribute)));
           }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, '\'note\' must be a string', attr));
+          attributes.forEach((attribute) => {
+            if (!isExpressionAQuotedString(attribute.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, '\'note\' must be a string', attribute));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting '${name}'`, attr)));
+          attributes.forEach((attribute) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting '${name}'`, attribute)));
       }
     }
     return errors;

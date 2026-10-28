@@ -17,7 +17,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(1, 1);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('DiagramView');
     });
   });
@@ -33,7 +33,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('Tables');
       expect(labels).toContain('TableGroups');
       expect(labels).toContain('Notes');
@@ -65,7 +65,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(9, 5);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('users');
       expect(labels).toContain('posts');
       expect(labels).toContain('*');
@@ -95,7 +95,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(9, 5);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('auth_tables');
       expect(labels).toContain('*');
     });
@@ -121,7 +121,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(6, 5);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('*');
       expect(labels).toContain('public');
     });
@@ -144,7 +144,7 @@ describe('[DiagramView] CompletionItemProvider', () => {
       const position = createPosition(3, 5);
       const result = provider.provideCompletionItems(model, position);
 
-      const labels = result.suggestions.map((s) => s.label);
+      const labels = result.suggestions.map((suggestion) => suggestion.label);
       expect(labels).toContain('*');
     });
   });

@@ -239,7 +239,7 @@ export function extractVariableFromExpression (node?: SyntaxNode): string | unde
   return node.expression.variable.value;
 }
 
-export function extractVarNameFromPrimaryVariable (
+export function extractVariableNameFromPrimaryVariable (
   node?: PrimaryExpressionNode & { expression: VariableNode },
 ): string | undefined {
   const value = node?.expression.variable?.value;
@@ -248,11 +248,11 @@ export function extractVarNameFromPrimaryVariable (
 }
 
 // Extracts setting name from an attribute node
-export function extractSettingName (attr: AttributeNode): string | undefined {
-  if (attr.name instanceof IdentifierStreamNode) {
-    return extractStringFromIdentifierStream(attr.name)?.toLowerCase();
-  } else if (attr.name instanceof PrimaryExpressionNode) {
-    return extractVariableFromExpression(attr.name);
+export function extractSettingName (attribute: AttributeNode): string | undefined {
+  if (attribute.name instanceof IdentifierStreamNode) {
+    return extractStringFromIdentifierStream(attribute.name)?.toLowerCase();
+  } else if (attribute.name instanceof PrimaryExpressionNode) {
+    return extractVariableFromExpression(attribute.name);
   }
   return undefined;
 }

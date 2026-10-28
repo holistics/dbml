@@ -135,8 +135,8 @@ class Field extends Element {
 
   exportChildIds () {
     return {
-      endpointIds: this.endpoints.map((e) => e.id),
-      depEdgeIds: this.depEdges.map((e) => e.id),
+      endpointIds: this.endpoints.map((endpoint) => endpoint.id),
+      depEdgeIds: this.depEdges.map((depEdge) => depEdge.id),
     };
   }
 

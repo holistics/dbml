@@ -2,11 +2,11 @@ import fc from 'fast-check';
 
 // FIXME: Respect the subregexes' flags
 export function orRegex (...subregexes: RegExp[]): RegExp {
-  return new RegExp(`(${subregexes.map((r) => r.source).join('|')})`);
+  return new RegExp(`(${subregexes.map((result) => result.source).join('|')})`);
 }
 
 export function chainRegex (...subregexes: RegExp[]): RegExp {
-  return new RegExp(subregexes.map((r) => r.source).join(''));
+  return new RegExp(subregexes.map((result) => result.source).join(''));
 }
 
 export function matchFullRegex (regex: RegExp): RegExp {
@@ -26,13 +26,13 @@ export function zeroOrManyRegex (regex: RegExp): RegExp {
  * Examples:
  *   caseVariant('table') => 'Table' | 'tAble' | 'taBle'
  */
-export const caseVariant = (str: string) => fc.oneof(
+export const caseVariant = (string_: string) => fc.oneof(
   fc.nat({
-    max: str.length - 1,
-  }).map((pos) => str.slice(0, pos) + str[pos].toUpperCase() + str.slice(pos + 1)),
-  fc.constant(str),
-  fc.constant(str.toUpperCase()),
-  fc.constant(str.toLowerCase()),
+    max: string_.length - 1,
+  }).map((pos) => string_.slice(0, pos) + string_[pos].toUpperCase() + string_.slice(pos + 1)),
+  fc.constant(string_),
+  fc.constant(string_.toUpperCase()),
+  fc.constant(string_.toLowerCase()),
 );
 
 /**
@@ -42,13 +42,13 @@ export const caseVariant = (str: string) => fc.oneof(
  *   caseVariantOneOf('primary key', 'pk') => 'primary key' | 'PRIMARY KEY' | 'pk' | 'PK' | etc.
  */
 export const caseVariantOneOf = (...strings: string[]) =>
-  fc.oneof(...strings.map((str) => caseVariant(str)));
+  fc.oneof(...strings.map((string_) => caseVariant(string_)));
 
 /**
  * Helper to generate case variations with key:value format for settings
  */
 export const settingKeyValue = (key: string, valueArb: fc.Arbitrary<string>) =>
-  fc.tuple(caseVariant(key), valueArb).map(([k, v]) => `${k}: ${v}`);
+  fc.tuple(caseVariant(key), valueArb).map(([key, value]) => `${key}: ${value}`);
 
 /**
  * Helper to generate random whitespace (spaces, tabs, newlines)
@@ -73,7 +73,7 @@ export const randomSpaceArbitrary = fc.array(
     minLength: 1,
     maxLength: 3,
   },
-).map((arr) => arr.join(''));
+).map((array) => array.join(''));
 
 /**
  * Helper to generate random inline whitespace (spaces and tabs only, NO newlines)
@@ -95,7 +95,7 @@ export const randomInlineSpaceArbitrary = fc.array(
     minLength: 1,
     maxLength: 3,
   },
-).map((arr) => arr.join(''));
+).map((array) => array.join(''));
 
 /**
  * Helper to join string/arbitrary tokens with random spacing between them
@@ -111,11 +111,11 @@ export const randomInlineSpaceArbitrary = fc.array(
  */
 export const joinWithRandomSpaces = (...tokens: (fc.Arbitrary<string> | string)[]) => {
   // Convert string tokens to constant arbitraries
-  const arbitraries = tokens.map((t) => typeof t === 'string' ? fc.constant(t) : t);
+  const arbitraries = tokens.map((token) => typeof token === 'string' ? fc.constant(token) : token);
 
   // Interleave with random space arbitraries
-  const withSpaces = arbitraries.flatMap((token, i) =>
-    i === 0 ? [token] : [randomSpaceArbitrary, token],
+  const withSpaces = arbitraries.flatMap((token, index) =>
+    index === 0 ? [token] : [randomSpaceArbitrary, token],
   );
 
   return fc.tuple(...withSpaces).map((parts) => parts.join(''));
@@ -134,11 +134,11 @@ export const joinWithRandomSpaces = (...tokens: (fc.Arbitrary<string> | string)[
  */
 export const joinWithRandomInlineSpaces = (...tokens: (fc.Arbitrary<string> | string)[]) => {
   // Convert string tokens to constant arbitraries
-  const arbitraries = tokens.map((t) => typeof t === 'string' ? fc.constant(t) : t);
+  const arbitraries = tokens.map((token) => typeof token === 'string' ? fc.constant(token) : token);
 
   // Interleave with random inline space arbitraries
-  const withSpaces = arbitraries.flatMap((token, i) =>
-    i === 0 ? [token] : [randomInlineSpaceArbitrary, token],
+  const withSpaces = arbitraries.flatMap((token, index) =>
+    index === 0 ? [token] : [randomInlineSpaceArbitrary, token],
   );
 
   return fc.tuple(...withSpaces).map((parts) => parts.join(''));

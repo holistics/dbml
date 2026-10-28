@@ -95,7 +95,7 @@ export default class RecordsInterpreter {
     const tableRecord: TableRecord = {
       schemaName: result.schemaName,
       tableName: result.tableName,
-      columns: result.columns.map((c) => c.name ?? ''),
+      columns: result.columns.map((column) => column.name ?? ''),
       values,
       example,
       token,
@@ -129,7 +129,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     };
 
     const columns = (nameNode as TupleExpressionNode).elementList.flatMap(
-      (e) => allColumns.find((c) => c.name === extractVariableFromExpression(e)) || [],
+      (element) => allColumns.find((column) => column.name === extractVariableFromExpression(element)) || [],
     );
     return {
       schemaName,
@@ -142,7 +142,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const fragments = destructureCallExpression(nameNode!);
   if (!fragments) return undefined;
 
-  const tableNameFragments = fragments.variables.map((v) => v.expression.variable?.value ?? '');
+  const tableNameFragments = fragments.variables.map((variable) => variable.expression.variable?.value ?? '');
   const tableName = tableNameFragments.at(-1) ?? '';
   const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
 
@@ -168,7 +168,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   if (!(resolvedSymbol instanceof TableSymbol)) return undefined;
 
   const allColumns = resolvedSymbol.mergedColumns(compiler);
-  const columns = fragments.args.map((e) => allColumns.find((c) => c.name === extractVariableFromExpression(e))!).filter(Boolean);
+  const columns = fragments.args.map((element) => allColumns.find((column) => column.name === extractVariableFromExpression(element))!).filter(Boolean);
   const resolved = resolvedSymbol.interpretedName(compiler, filepath);
   return {
     schemaName: resolved.schema,
@@ -209,18 +209,18 @@ function extractDataFromRow (
   }
 
   const rowValues: RecordValue[] = [];
-  for (let i = 0; i < columns.length; i++) {
-    const arg = args[i];
-    const column = columns[i];
-    columnNodes[column.name ?? ''] = arg;
-    const result = extractValue(arg, column, compiler);
+  for (let index = 0; index < columns.length; index++) {
+    const argument = args[index];
+    const column = columns[index];
+    columnNodes[column.name ?? ''] = argument;
+    const result = extractValue(argument, column, compiler);
     errors.push(...result.getErrors());
     infos.push(...result.getInfos());
     const value = result.getValue();
     rowValues.push(value ?? {
       value: null,
       type: 'expression',
-      token: getTokenPosition(arg),
+      token: getTokenPosition(argument),
     });
   }
 
@@ -287,7 +287,7 @@ function extractValue (
   if (isEnum) {
     const enumSymbol = colSymbol.type(compiler)?.enumSymbol;
     const enumMembers = enumSymbol
-      ? enumSymbol.members(compiler).filter((f) => f.isKind(SymbolKind.EnumField)).map((f) => f.name).filter(Boolean) as string[]
+      ? enumSymbol.members(compiler).filter((field) => field.isKind(SymbolKind.EnumField)).map((field) => field.name).filter(Boolean) as string[]
       : [];
     let enumValue = extractQuotedStringToken(node);
     if (enumValue === undefined) {
@@ -312,8 +312,8 @@ function extractValue (
 
   // Numeric type
   if (isIntegerType(typeName) || isFloatType(typeName) || isSerialType(typeName)) {
-    const numValue = extractSignedNumber(node);
-    if (numValue === null) {
+    const numberValue = extractSignedNumber(node);
+    if (numberValue === null) {
       return new Report(
         {
           value: fallbackValue,
@@ -329,29 +329,29 @@ function extractValue (
     }
 
     // Integer type: validate no decimal point
-    if (isIntegerType(typeName) && !Number.isInteger(numValue)) {
+    if (isIntegerType(typeName) && !Number.isInteger(numberValue)) {
       return new Report({
-        value: Math.floor(numValue),
+        value: Math.floor(numberValue),
         type: valueType,
         token,
       }, [], [], [
-        recordsInvalidInteger(node, { colName, value: numValue }),
+        recordsInvalidInteger(node, { colName, value: numberValue }),
       ]);
     }
 
     // Decimal/numeric type: validate precision and scale
-    const numericParams = isFloatType(typeName) && typeInfo?.args?.length
+    const numericParameters = isFloatType(typeName) && typeInfo?.args?.length
       ? {
           precision: Number(typeInfo.args[0]),
           scale: typeInfo.args.length >= 2 ? Number(typeInfo.args[1]) : 0,
         }
       : undefined;
-    if (isFloatType(typeName) && numericParams) {
+    if (isFloatType(typeName) && numericParameters) {
       const {
         precision, scale,
-      } = numericParams;
-      const numStr = numValue.toString();
-      const parts = numStr.split('.');
+      } = numericParameters;
+      const numberString = numberValue.toString();
+      const parts = numberString.split('.');
       const integerPart = parts[0].replace(/^-/, ''); // Remove sign
       const decimalPart = parts[1] || '';
 
@@ -360,27 +360,27 @@ function extractValue (
 
       if (totalDigits > precision) {
         return new Report({
-          value: numValue,
+          value: numberValue,
           type: valueType,
           token,
         }, [], [], [
-          recordsExceedsPrecision(node, { colName, typeName, value: numValue, precision, scale, totalDigits }),
+          recordsExceedsPrecision(node, { colName, typeName, value: numberValue, precision, scale, totalDigits }),
         ]);
       }
 
       if (decimalDigits > scale) {
         return new Report({
-          value: numValue,
+          value: numberValue,
           type: valueType,
           token,
         }, [], [], [
-          recordsExceedsScale(node, { colName, typeName, value: numValue, precision, scale, decimalDigits }),
+          recordsExceedsScale(node, { colName, typeName, value: numberValue, precision, scale, decimalDigits }),
         ]);
       }
     }
 
     return new Report({
-      value: numValue,
+      value: numberValue,
       type: valueType,
       token,
     }, [], []);
@@ -436,8 +436,8 @@ function extractValue (
 
   // String type
   if (isStringType(typeName)) {
-    const strValue = tryExtractString(node);
-    if (strValue === null) {
+    const stringValue = tryExtractString(node);
+    if (stringValue === null) {
       return new Report(
         {
           value: fallbackValue,
@@ -457,11 +457,11 @@ function extractValue (
     if (maxLength && !Number.isNaN(maxLength)) {
       const length = maxLength;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
-      const actualByteLength = new TextEncoder().encode(strValue).length;
+      const actualByteLength = new TextEncoder().encode(stringValue).length;
 
       if (actualByteLength > length) {
         return new Report({
-          value: strValue,
+          value: stringValue,
           type: valueType,
           token,
         }, [], [], [
@@ -471,7 +471,7 @@ function extractValue (
     }
 
     return new Report({
-      value: strValue,
+      value: stringValue,
       type: 'string',
       token,
     }, [], []);

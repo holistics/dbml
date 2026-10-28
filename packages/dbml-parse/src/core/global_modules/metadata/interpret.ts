@@ -40,20 +40,20 @@ export default class MetadataInterpreter {
     const targetKind = getMetadataTargetKind(this.declarationNode);
     const registry = targetKind ? METADATA_FIELDS_BY_KIND[targetKind] : {};
 
-    for (const stmt of body.body) {
-      if (!(stmt instanceof ElementDeclarationNode)) continue;
-      const key = stmt.type?.value;
+    for (const statement of body.body) {
+      if (!(statement instanceof ElementDeclarationNode)) continue;
+      const key = statement.type?.value;
       if (!key) continue;
 
-      const valueNode = stmt.body instanceof FunctionApplicationNode
-        ? stmt.body.callee
+      const valueNode = statement.body instanceof FunctionApplicationNode
+        ? statement.body.callee
         : undefined;
 
       if (!valueNode) continue;
 
       // An invalid value is dropped so it never overrides a valid one when blocks are merged
       const field = registry[key.toLowerCase()];
-      const token = getTokenPosition(stmt);
+      const token = getTokenPosition(statement);
       if (field) {
         const value = field.parse(valueNode);
         if (value !== undefined) this.values[key] = { value, type: field.type, token };

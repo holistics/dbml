@@ -30,33 +30,33 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
 
   if (rawTypeNode) {
     let typeSuffix = '';
-    let typeArgs: string | null = null;
+    let typeArguments: string | null = null;
 
     // First pass: extract top-level call args (e.g. varchar(255))
     if (rawTypeNode instanceof CallExpressionNode && rawTypeNode.argumentList) {
-      typeArgs = rawTypeNode.argumentList.elementList.map((e) => {
-        if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-        if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e) ?? '';
-        if (isExpressionAVariableNode(e)) return e.expression.variable.value;
+      typeArguments = rawTypeNode.argumentList.elementList.map((element) => {
+        if (isExpressionASignedNumberExpression(element)) return getNumberTextFromExpression(element);
+        if (isExpressionAQuotedString(element)) return extractQuotedStringToken(element) ?? '';
+        if (isExpressionAVariableNode(element)) return element.expression.variable.value;
         return '';
       }).join(',');
-      typeSuffix = `(${typeArgs})`;
+      typeSuffix = `(${typeArguments})`;
       rawTypeNode = rawTypeNode.callee;
     }
 
     // Remaining passes: handle nested calls and array brackets
     while (rawTypeNode instanceof CallExpressionNode || rawTypeNode instanceof ArrayNode) {
       if (rawTypeNode instanceof CallExpressionNode) {
-        const args = rawTypeNode.argumentList?.elementList.map((e) => {
-          if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-          if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e) ?? '';
-          if (isExpressionAVariableNode(e)) return e.expression.variable.value;
+        const args = rawTypeNode.argumentList?.elementList.map((element) => {
+          if (isExpressionASignedNumberExpression(element)) return getNumberTextFromExpression(element);
+          if (isExpressionAQuotedString(element)) return extractQuotedStringToken(element) ?? '';
+          if (isExpressionAVariableNode(element)) return element.expression.variable.value;
           return '';
         }).join(',') ?? '';
         typeSuffix = `(${args})${typeSuffix}`;
         rawTypeNode = rawTypeNode.callee;
       } else {
-        const indexer = `[${rawTypeNode.indexer?.elementList.map((e) => (e?.name as any)?.expression?.literal?.value ?? '').join(',') ?? ''}]`;
+        const indexer = `[${rawTypeNode.indexer?.elementList.map((element) => (element?.name as any)?.expression?.literal?.value ?? '').join(',') ?? ''}]`;
         typeSuffix = `${indexer}${typeSuffix}`;
         rawTypeNode = rawTypeNode.array;
       }
@@ -69,7 +69,7 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
       columnType = {
         schemaName: typeSchema,
         type_name: `${typeName}${typeSuffix}`,
-        args: typeArgs,
+        args: typeArguments,
       };
     } else if (rawTypeNode) {
       // Fallback: use the raw text of the type node when it can't be destructured as a variable
@@ -77,7 +77,7 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
       columnType = {
         schemaName: null,
         type_name: `${rawText}${typeSuffix}`,
-        args: typeArgs,
+        args: typeArguments,
       };
     }
   }
@@ -95,11 +95,11 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
       const op = ref.value.op?.value;
       const rightTuple = destructureComplexVariableTuple(ref.value.rightExpression);
       if (rightTuple && op && isRelationshipOp(op)) {
-        const vars = rightTuple.variables;
-        const tableName = vars.map((v) => v.expression.variable?.value ?? '').at(-1) ?? '';
-        const schemaName = vars.length > 1 ? vars.slice(0, -1).map((v) => v.expression.variable?.value ?? '').join('.') : null;
+        const variables = rightTuple.variables;
+        const tableName = variables.map((variable) => variable.expression.variable?.value ?? '').at(-1) ?? '';
+        const schemaName = variables.length > 1 ? variables.slice(0, -1).map((variable) => variable.expression.variable?.value ?? '').join('.') : null;
         const fieldNames = rightTuple.tupleElements.length > 0
-          ? rightTuple.tupleElements.map((e) => e.expression.variable?.value ?? '')
+          ? rightTuple.tupleElements.map((element) => element.expression.variable?.value ?? '')
           : [];
         inlineRefs.push({
           schemaName,
@@ -114,24 +114,24 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
       const op = ref.value.op.value as '>' | '<' | '-' | '<>';
       const targetTuple = destructureComplexVariableTuple(ref.value.expression);
       if (targetTuple) {
-        const vars = targetTuple.variables.map((v) => v.expression.variable?.value ?? '');
+        const variables = targetTuple.variables.map((variable) => variable.expression.variable?.value ?? '');
         let tableName: string;
         let schemaName: string | null;
         let fieldNames: string[];
 
         if (targetTuple.tupleElements.length > 0) {
-          tableName = vars.at(-1) ?? '';
-          schemaName = vars.length > 1 ? vars.slice(0, -1).join('.') : null;
-          fieldNames = targetTuple.tupleElements.map((e) => e.expression.variable?.value ?? '');
+          tableName = variables.at(-1) ?? '';
+          schemaName = variables.length > 1 ? variables.slice(0, -1).join('.') : null;
+          fieldNames = targetTuple.tupleElements.map((element) => element.expression.variable?.value ?? '');
         } else {
           // table.column or schema.table.column
-          fieldNames = vars.length > 0
+          fieldNames = variables.length > 0
             ? [
-                vars.at(-1)!,
+                variables.at(-1)!,
               ]
             : [];
-          tableName = vars.length > 1 ? vars.at(-2)! : '';
-          schemaName = vars.length > 2 ? vars.slice(0, -2).join('.') : null;
+          tableName = variables.length > 1 ? variables.at(-2)! : '';
+          schemaName = variables.length > 2 ? variables.slice(0, -2).join('.') : null;
         }
         inlineRefs.push({
           schemaName,

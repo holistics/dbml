@@ -15,8 +15,8 @@ export { extractNumericLiteral, extractSignedNumber } from '@/core/utils/express
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
   if (isExpressionAnIdentifierNode(value)) {
-    const varName = value.expression.variable?.value?.toLowerCase();
-    return varName === 'null';
+    const variableName = value.expression.variable?.value?.toLowerCase();
+    return variableName === 'null';
   }
   return value instanceof EmptyNode;
 }
@@ -44,13 +44,13 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
   if (typeof value === 'boolean') return value ? 1 : 0;
 
   // Numeric literal or signed number
-  const num = extractSignedNumber(value);
-  if (num !== null) return num;
+  const number_ = extractSignedNumber(value);
+  if (number_ !== null) return number_;
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value);
-  if (strValue !== undefined) {
-    const parsed = Number(strValue);
+  const stringValue = extractQuotedStringToken(value);
+  if (stringValue !== undefined) {
+    const parsed = Number(stringValue);
     if (!isNaN(parsed)) {
       return parsed;
     }
@@ -82,17 +82,17 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   if (typeof value === 'boolean') return value ? 1 : 0;
 
   // Numeric literal or signed number
-  const num = extractSignedNumber(value);
-  if (num !== null) {
+  const number_ = extractSignedNumber(value);
+  if (number_ !== null) {
     // Reject if it has a decimal part
-    if (!Number.isInteger(num)) return null;
-    return num;
+    if (!Number.isInteger(number_)) return null;
+    return number_;
   }
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value);
-  if (strValue !== undefined) {
-    const parsed = Number(strValue);
+  const stringValue = extractQuotedStringToken(value);
+  if (stringValue !== undefined) {
+    const parsed = Number(stringValue);
     if (!isNaN(parsed) && Number.isInteger(parsed)) {
       return parsed;
     }
@@ -141,15 +141,15 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   if (booleanLiteral !== null) return booleanLiteral;
 
   // Numeric literal: 0, 1
-  const numVal = extractNumericLiteral(value);
-  if (numVal === 0) return false;
-  if (numVal === 1) return true;
+  const numberValue = extractNumericLiteral(value);
+  if (numberValue === 0) return false;
+  if (numberValue === 1) return true;
 
   // Quoted string: 'true', 'false', 'yes', 'no', 'y', 'n', 't', 'f', '0', '1'
-  const strValue = extractQuotedStringToken(value)?.toLowerCase();
-  if (strValue) {
-    if (TRUTHY_VALUES.includes(strValue)) return true;
-    if (FALSY_VALUES.includes(strValue)) return false;
+  const stringValue = extractQuotedStringToken(value)?.toLowerCase();
+  if (stringValue) {
+    if (TRUTHY_VALUES.includes(stringValue)) return true;
+    if (FALSY_VALUES.includes(stringValue)) return false;
   }
 
   return null;
@@ -186,8 +186,8 @@ export function tryExtractString (value: SyntaxNode | string | boolean | number 
   if (typeof value === 'boolean') return value.toString();
 
   // Quoted string: 'hello', "world"
-  const res = (extractQuotedStringToken(value) ?? null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
-  return res === null ? null : res.toString();
+  const result = (extractQuotedStringToken(value) ?? null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
+  return result === null ? null : result.toString();
 }
 
 // Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)

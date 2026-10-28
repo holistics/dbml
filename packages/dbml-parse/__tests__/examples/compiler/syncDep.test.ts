@@ -31,7 +31,7 @@ describe('syncDep - create', () => {
     expect(newDbml).toContain('a -> b');
     // round-trips: color reaches the model
     const db = interpret(newDbml).getValue()!;
-    const dep = db.deps.find((d) => d.edges[0].upstream.tableName === 'a' && d.edges[0].downstream.tableName === 'b');
+    const dep = db.deps.find((depItem) => depItem.edges[0].upstream.tableName === 'a' && d.edges[0].downstream.tableName === 'b');
     expect(dep?.color).toBe('#aabbcc');
   });
 
@@ -153,8 +153,8 @@ Dep {
     expect(newDbml).toContain('a -> b');
     const db = interpret(newDbml).getValue()!;
     expect(db.deps).toHaveLength(2);
-    const direct = db.deps.find((d) => d.edges[0].upstream.fieldNames.length === 0);
-    const columnLevel = db.deps.find((d) => d.edges[0].upstream.fieldNames.length === 1);
+    const direct = db.deps.find((depItem) => depItem.edges[0].upstream.fieldNames.length === 0);
+    const columnLevel = db.deps.find((depItem) => depItem.edges[0].upstream.fieldNames.length === 1);
     expect(direct?.color).toBe('#ff5733');
     expect(columnLevel?.color).toBeUndefined();
   });
@@ -228,8 +228,8 @@ Dep {
     ]);
     const db = interpret(newDbml).getValue()!;
     expect(db.deps).toHaveLength(2);
-    const schemaLevel = db.deps.find((d) => d.edges[0].upstream.fieldNames.length === 0);
-    const columnLevel = db.deps.find((d) => d.edges[0].upstream.fieldNames.length === 1);
+    const schemaLevel = db.deps.find((depItem) => depItem.edges[0].upstream.fieldNames.length === 0);
+    const columnLevel = db.deps.find((depItem) => depItem.edges[0].upstream.fieldNames.length === 1);
     expect(schemaLevel?.color).toBe('#111111');
     expect(columnLevel?.color).toBe('#222222');
   });

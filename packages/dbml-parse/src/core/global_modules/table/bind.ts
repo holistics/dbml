@@ -37,7 +37,7 @@ export default class TableBinder {
 
   private bindHeaderSettings (settings: ListExpressionNode): CompileError[] {
     const settingsMap = aggregateSettingList(settings).getValue();
-    return settingsMap.dep?.flatMap((d) => (d.value ? this.bindInlineDepValue(d.value) : [])) ?? [];
+    return settingsMap.dep?.flatMap((depSetting) => (depSetting.value ? this.bindInlineDepValue(depSetting.value) : [])) ?? [];
   }
 
   private bindInlineDepValue (value: SyntaxNode): CompileError[] {
@@ -47,7 +47,7 @@ export default class TableBinder {
         ...bindee.variables,
         ...bindee.tupleElements,
       ];
-      return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
+      return nodes.flatMap((bindeeNode) => this.compiler.nodeReferee(bindeeNode).getErrors());
     });
   }
 
@@ -64,7 +64,7 @@ export default class TableBinder {
     const [
       fields,
       subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    ] = partition(body.body, (element) => element instanceof FunctionApplicationNode);
 
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
@@ -73,19 +73,19 @@ export default class TableBinder {
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const columns = fields.filter((f) => !isValidPartialInjection(f.callee));
+    const columns = fields.filter((field) => !isValidPartialInjection(field.callee));
 
-    const bindColumns = (cs: FunctionApplicationNode[]): CompileError[] => {
-      return cs.flatMap((c) => {
-        if (!c.callee) {
+    const bindColumns = (columnList: FunctionApplicationNode[]): CompileError[] => {
+      return columnList.flatMap((column) => {
+        if (!column.callee) {
           return [];
         }
 
         const errors: CompileError[] = [];
 
         const args = [
-          c.callee,
-          ...c.args,
+          column.callee,
+          ...column.args,
         ];
         if (last(args) instanceof ListExpressionNode) {
           const listExpression = last(args) as ListExpressionNode;
@@ -93,7 +93,7 @@ export default class TableBinder {
 
           errors.push(...(settingsMap.ref?.flatMap((ref) => (ref.value ? this.bindInlineRef(ref.value) : [])) || []));
           errors.push(...(settingsMap.dep?.flatMap((dep) => (dep.value ? this.bindInlineDepValue(dep.value) : [])) || []));
-          errors.push(...(settingsMap.default?.flatMap((def) => (def.value ? this.tryToBindEnumFieldRef(def.value) : [])) || []));
+          errors.push(...(settingsMap.default?.flatMap((definition) => (definition.value ? this.tryToBindEnumFieldRef(definition.value) : [])) || []));
           args.pop();
         }
 
@@ -132,8 +132,8 @@ export default class TableBinder {
 
     // Skip keywords (null, true, false)
     if (isExpressionAVariableNode(defaultValue)) {
-      const varName = defaultValue.expression.variable?.value?.toLowerCase();
-      if (varName && KEYWORDS_OF_DEFAULT_SETTING.includes(varName)) {
+      const variableName = defaultValue.expression.variable?.value?.toLowerCase();
+      if (variableName && KEYWORDS_OF_DEFAULT_SETTING.includes(variableName)) {
         return [];
       }
     }

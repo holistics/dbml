@@ -35,7 +35,7 @@ import { extractVariableNode } from '../utils/expression';
 import { isExpressionAnIdentifierNode } from '../utils/validate';
 
 // Try to interpret a function application as an element
-export function convertFuncAppToElem (
+export function convertFunctionAppToElement (
   _callee: ExpressionNode | CommaExpressionNode | undefined,
   _args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
@@ -56,46 +56,46 @@ export function convertFuncAppToElem (
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return undefined;
   }
-  const cpArgs = [
+  const cpArguments = [
     ...args,
   ];
 
   const type = extractVariableNode(callee)!;
 
-  const body = cpArgs.pop();
+  const body = cpArguments.pop();
   if (!(body instanceof BlockExpressionNode)) {
     return undefined;
   }
 
-  const attributeList = last(cpArgs) instanceof ListExpressionNode
-    ? (cpArgs.pop() as ListExpressionNode)
+  const attributeList = last(cpArguments) instanceof ListExpressionNode
+    ? (cpArguments.pop() as ListExpressionNode)
     : undefined;
 
-  if (cpArgs.length === 3) {
-    const asKeywordNode = extractVariableNode(cpArgs[1]);
+  if (cpArguments.length === 3) {
+    const asKeywordNode = extractVariableNode(cpArguments[1]);
     // If cpArgs = [sth, 'as', sth] then it's a valid element declaration
     return (!asKeywordNode || !isAsKeyword(asKeywordNode))
       ? undefined
       : factory.create(ElementDeclarationNode, {
           type,
-          name: cpArgs[0],
+          name: cpArguments[0],
           as: asKeywordNode,
-          alias: cpArgs[2],
+          alias: cpArguments[2],
           attributeList,
           body,
         });
   }
 
-  if (cpArgs.length === 1) {
+  if (cpArguments.length === 1) {
     return factory.create(ElementDeclarationNode, {
       type,
-      name: cpArgs[0],
+      name: cpArguments[0],
       attributeList,
       body,
     });
   }
 
-  if (cpArgs.length === 0) {
+  if (cpArguments.length === 0) {
     return factory.create(ElementDeclarationNode, {
       type,
       attributeList,
@@ -217,7 +217,7 @@ function markInvalidNode (node: SyntaxNode) {
 function filterUndefined (
   ...args: (SyntaxNode | SyntaxToken | undefined)[]
 ): (SyntaxNode | SyntaxToken)[] {
-  return args.filter((v) => v !== undefined) as (SyntaxNode | SyntaxToken)[];
+  return args.filter((value) => value !== undefined) as (SyntaxNode | SyntaxToken)[];
 }
 
 export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | SyntaxToken)[]> {
@@ -347,12 +347,12 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 }
 
 function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
-  const res: (T | S)[] = [];
+  const result: (T | S)[] = [];
   const minLength = Math.min(firstList.length, secondList.length);
-  for (let i = 0; i < minLength; i += 1) {
-    res.push(firstList[i], secondList[i]);
+  for (let index = 0; index < minLength; index += 1) {
+    result.push(firstList[index], secondList[index]);
   }
-  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+  result.push(...firstList.slice(minLength), ...secondList.slice(minLength));
 
-  return res;
+  return result;
 }
