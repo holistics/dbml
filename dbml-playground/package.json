@@ -22,8 +22,7 @@
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts|vue)$')",
     "lint:all": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write src/"
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@dbml/core": "^11.0.0",
@@ -46,7 +45,6 @@
     "@types/node": "^24.0.14",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.7.0",
-    "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.3",
     "vite": "^8.3.4",

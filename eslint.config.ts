@@ -25,7 +25,7 @@ const sharedRules = {
 
   // Stylistic
   '@stylistic/space-before-function-paren': ['error', 'always'],
-  '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+  '@stylistic/quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: 'always' }],
   '@stylistic/max-statements-per-line': 'off',
   '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
   '@stylistic/object-curly-newline': ['error', {
@@ -52,15 +52,24 @@ const sharedRules = {
     checkShorthandProperties: false,
     extendDefaultReplacements: true,
     replacements: {
-      res: { response: true, resource: false, result: false },
+      res: { result: true, response: false, resource: false },
       rel: { relative: true, related: false, relationship: false },
       def: { definition: true, defer: false, deferred: false, define: false },
       dst: { destination: true, daylightSavingTime: false, distribution: false },
       docs: { documents: true, documentation: false },
       dir: { directory: true, direction: false },
       db: false,
+      dep: false,
+      deps: false,
+      ref: false,
+      refs: false,
+      ep: { endpoint: true },
     },
     extendDefaultAllowList: true,
+    allowList: {
+      fn: true,
+      args: true,
+    },
     ignore: [
       '^_',
     ],

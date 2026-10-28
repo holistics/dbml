@@ -146,7 +146,7 @@ export function removeSettingEdit (
 // Finds the [...] attribute list on a declaration or its inline body
 function findSettingsList (declaration: SyntaxNode): ListExpressionNode | undefined {
   if (declaration instanceof FunctionApplicationNode) {
-    return declaration.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
+    return declaration.args.find((argument): argument is ListExpressionNode => argument instanceof ListExpressionNode);
   }
   if (declaration instanceof ElementDeclarationNode) {
     // check header attribute list first, then body's inline settings
