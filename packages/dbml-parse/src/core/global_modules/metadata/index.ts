@@ -9,7 +9,7 @@ import { MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metad
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { ElementKind } from '@/core/types';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+import { getMetadataTargetKind } from '@/core/types/symbol';
 
 import MetadataBinder from './bind';
 import MetadataInterpreter from './interpret';
@@ -43,7 +43,8 @@ export const metadataModule: GlobalModule = {
     const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
     if (!(block instanceof MetadataElementMetadata)) return new Report(undefined);
 
-    const targets = compiler.metadataTargets(block);
+    // Index-free (nodeReferee runs while the resolution index is built): a block registers in the index iff it has exactly one declared target
+    const targets = block.targets(compiler);
     // A Target that is not a symbol (a named Ref) is not a symbol reference
     return new Report(targets.length === 1 && !(targets[0] instanceof NodeMetadata) ? targets[0] : undefined);
   },

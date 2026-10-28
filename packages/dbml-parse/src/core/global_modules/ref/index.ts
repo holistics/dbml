@@ -42,13 +42,6 @@ function isInsideRefBody (node: SyntaxNode): boolean {
   return false;
 }
 
-// Public utils that other modules can use
-export const refUtils = {
-  getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Ref '${name}' already exists in schema '${schemaLabel}'`, errorNode);
-  },
-};
-
 export const refModule: GlobalModule = {
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);

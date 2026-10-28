@@ -1,11 +1,6 @@
-import { CompileError, CompileErrorCode, MetadataTargetKind } from '@/core/types';
-import type { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types';
+import type { AttributeNode } from '@/core/types/nodes';
 import { extractMetadataValue } from '@/core/utils/interpret';
-
-export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
-  const value = node.targetKind?.value?.toLowerCase();
-  return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
-}
 
 export function validateCustomInlineMetadata (
   name: string,

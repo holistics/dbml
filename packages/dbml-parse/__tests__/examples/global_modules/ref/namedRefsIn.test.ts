@@ -1,18 +1,18 @@
 import { describe, expect, test } from 'vitest';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramSymbol } from '@/core/types/symbol';
-import { RefMetadata } from '@/core/types/symbol/metadata';
+import { ProgramSymbol, RefMetadata } from '@/core/types/symbol';
+import { namedRefsIn } from '@/core/global_modules/ref/utils';
 import { Filepath } from '@/index';
-import { setupCompiler } from '../interpreter/multifile/utils';
+import { setupCompiler } from '../../interpreter/multifile/utils';
 
 function getVisibleRefs (compiler: Compiler, path: string) {
   const ast = compiler.parseFile(Filepath.from(path)).getValue().ast;
   const program = compiler.nodeSymbol(ast).getFiltered(UNHANDLED) as ProgramSymbol;
-  return compiler.namedRefsIn(program).map((meta) => ({ name: meta.name(compiler), filepath: meta.declaration.filepath, meta }));
+  return namedRefsIn(compiler, program).map((meta) => ({ name: meta.name(compiler), filepath: meta.declaration.filepath, meta }));
 }
 
-describe('[example] compiler - namedRefsIn', () => {
+describe('[example] global_modules/ref - namedRefsIn', () => {
   describe('Ref', () => {
     const ORDERS = `
 Table users { id int [pk] }

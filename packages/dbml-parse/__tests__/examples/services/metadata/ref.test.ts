@@ -137,15 +137,6 @@ Metadata Ref posts.user_id > users.id {
       expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_NAME);
     });
 
-    it('rejects a schema-qualified ref target', () => {
-      const source = `Ref user_posts: posts.user_id > users.id
-
-Metadata Ref public.user_posts {
-  color: #e67e22
-}`;
-      expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_NAME);
-    });
-
     it('accepts a quoted ref name', () => {
       const source = `Ref "user posts": posts.user_id > users.id
 
@@ -154,27 +145,6 @@ Metadata Ref "user posts" {
 }`;
       expect(errorCodes(source)).toEqual([]);
       expect(ref(source, 'user posts')?.color).toBe('#e67e22');
-    });
-  });
-
-  describe('duplicate ref names', () => {
-    it('reports two refs with the same name in one file', () => {
-      const source = `Ref r: posts.user_id > users.id
-Ref r: posts.author_id > users.id`;
-      const errors = interpret(TABLES + source).getErrors();
-      expect(errors.map((e) => e.code)).toContain(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors.map((e) => e.diagnostic)).toContain("Ref 'r' already exists in schema 'public'");
-    });
-
-    it('allows a ref to share its name with a table', () => {
-      const source = 'Ref users: posts.user_id > users.id';
-      expect(errorCodes(source)).toEqual([]);
-    });
-
-    it('allows any number of unnamed refs', () => {
-      const source = `Ref: posts.user_id > users.id
-Ref: posts.author_id > users.id`;
-      expect(errorCodes(source)).toEqual([]);
     });
   });
 });

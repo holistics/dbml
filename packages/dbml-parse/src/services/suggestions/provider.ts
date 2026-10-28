@@ -55,9 +55,9 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
-import { getMetadataTargetKindLabel } from '@/compiler/queries/transform/updateElementMetadata';
+import { getMetadataTargetKind, getMetadataTargetKindLabel } from '@/core/types/symbol';
 import { getProgramSymbol } from '@/core/global_modules/utils';
+import { namedRefsIn } from '@/core/global_modules/ref/utils';
 
 // Display labels for element/keyword suggestions
 const SUGGESTION_LABEL = {
@@ -1155,7 +1155,7 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = compiler.namedRefsIn(programSymbol).flatMap((ref) => {
+  const suggestions = namedRefsIn(compiler, programSymbol).flatMap((ref) => {
     const name = ref.name(compiler);
     const refFilepath = ref.declaration.filepath;
     if (name === undefined || seen.has(name)) return [];

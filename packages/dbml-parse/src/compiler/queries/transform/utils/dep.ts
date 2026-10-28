@@ -84,9 +84,12 @@ export function findDepDefinition (
 
   const source = compiler.getSource(filepath) ?? '';
 
-  for (const meta of compiler.appliedMetadata(programSymbol)) {
-    if (!(meta instanceof DepMetadata)) continue;
+  const depMetas = compiler
+    .symbolMetadata(programSymbol)
+    .filter((m) => m.isVisibleFrom(compiler, programSymbol))
+    .filter((m) => m instanceof DepMetadata);
 
+  for (const meta of depMetas) {
     const upstreamTables = meta.upstreamTables(compiler);
     const upstreamColumns = meta.upstreamColumns(compiler);
     const downstreamTables = meta.downstreamTables(compiler);

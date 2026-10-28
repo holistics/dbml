@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler/index';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { DEFAULT_ENTRY } from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
-import { MetadataKind } from '@/core/types/symbol/metadata';
+import { MetadataKind, SymbolKind } from '@/core/types/symbol';
 import type { ElementIdentifier } from '@/compiler/queries/transform/types';
 
 function update (dbml: string, target: ElementIdentifier, settingName: string, value: string | null | undefined) {

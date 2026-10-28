@@ -13,25 +13,12 @@ import type {
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
-  AliasSymbol,
-  type NodeSymbol,
-  ProgramSymbol,
-  SchemaSymbol,
-  SymbolKind,
+  AliasSymbol, DepMetadata, InjectedColumnSymbol, MetadataKind,
+  PartialRefMetadata, ProgramSymbol, RecordsMetadata, SchemaSymbol,
+  SymbolKind, TablePartialSymbol, TableSymbol, UseSymbol,
 } from '@/core/types/symbol';
-import {
-  MetadataKind, PartialRefMetadata, RecordsMetadata, DepMetadata,
-} from '@/core/types/symbol/metadata';
-import { TableSymbol } from '@/core/types/symbol';
-import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
-import {
-  InjectedColumnSymbol,
-  TablePartialSymbol,
-  UseSymbol,
-} from '@/core/types/symbol/symbols';
+import type { InternedNodeSymbol, NodeMetadata, NodeSymbol } from '@/core/types/symbol';
 import { pushExternal, validateDepBlocks } from './utils';
-import type { OwnedElement } from '../types';
-import { sortByDeclarationOrder } from '@/compiler/queries/metadata/appliedMetadata';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
@@ -48,8 +35,8 @@ export default class ProgramInterpreter {
   private warnings: CompileWarning[] = [];
   private infos: CompileInfo[] = [];
   private db: Database;
-  // Refs, Deps and Records interpreted by their Owners, in declaration order
-  private ownedElements: OwnedElement[] = [];
+  // Refs, Deps and Records of the program with their interpreted value, in declaration order
+  private interpretedMetadata: { metadata: NodeMetadata; value: SchemaElement | SchemaElement[] }[] = [];
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
     this.compiler = compiler;
@@ -81,7 +68,7 @@ export default class ProgramInterpreter {
 
   interpret (): Report<SchemaElement | SchemaElement[] | undefined> {
     this.interpretAllSymbols();
-    this.interpretOwnedElements();
+    this.interpretMetadata();
     this.interpretAllAliases();
     this.validatePartialRefs();
     this.infos.push(...this.validateRecords());
@@ -101,7 +88,6 @@ export default class ProgramInterpreter {
       this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(symbol, value);
-      this.interpretOwnedMetadata(symbol);
     }
 
     // 1b UseSymbols (imports) from schema members
@@ -141,7 +127,6 @@ export default class ProgramInterpreter {
       const value = result.getValue();
       if (value) this.pushElement(use, value);
     }
-    this.interpretOwnedMetadata(original);
 
     const sourceName = original instanceof TableSymbol
       ? original.interpretedName(this.compiler, original.filepath)
@@ -170,24 +155,48 @@ export default class ProgramInterpreter {
     pushExternal(this.db, use, ref);
   }
 
-  // Interpret the Refs, Deps and Records owned by an interpreted symbol, ordered and validated later in interpretOwnedElements
-  private interpretOwnedMetadata (symbol: NodeSymbol) {
-    const result = this.compiler.interpretOwnedMetadata(symbol, this.filepath);
-    if (result.hasValue(UNHANDLED)) return;
-    this.errors.push(...result.getErrors());
-    this.warnings.push(...result.getWarnings());
-    this.infos.push(...result.getInfos());
-    this.ownedElements.push(...result.getValue());
-  }
+  // Interpret the Refs, Deps and Records applying in the program in declaration order, then run the Program-wide checks and push them
+  private interpretMetadata () {
+    const metas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m) => m.isVisibleFrom(this.compiler, this.programSymbol))
+      .filter((m) => m.kind === MetadataKind.Ref || m.kind === MetadataKind.Dep || m.kind === MetadataKind.Records);
 
-  // Order the owned elements by declaration, then run the Program-wide checks and push them
-  private interpretOwnedElements () {
-    this.ownedElements = sortByDeclarationOrder(this.compiler, this.ownedElements, ({ metadata }) => metadata.declaration);
+    // A Table can only have one Records block
+    const recordsByTable = new Map<InternedNodeSymbol, RecordsMetadata[]>();
+    for (const meta of metas) {
+      if (!(meta instanceof RecordsMetadata)) continue;
+      const table = meta.table(this.compiler);
+      if (!table) continue;
+      const key = table.originalSymbol.intern();
+      recordsByTable.set(key, [...(recordsByTable.get(key) ?? []), meta]);
+    }
+
+    for (const meta of metas) {
+      const result = this.compiler.interpretMetadata(meta, this.filepath);
+      if (result.hasValue(UNHANDLED)) continue;
+      this.errors.push(...result.getErrors());
+      this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
+      const value = result.getValue();
+
+      if (meta instanceof RecordsMetadata) {
+        const table = meta.table(this.compiler);
+        if (table && (recordsByTable.get(table.originalSymbol.intern())?.length ?? 0) > 1) {
+          this.errors.push(new CompileError(
+            CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
+            `Duplicate Records blocks for the same Table '${table.name ?? ''}' - A Table can only have one Records block`,
+            meta.declaration,
+          ));
+          continue;
+        }
+      }
+      if (value !== undefined) this.interpretedMetadata.push({ metadata: meta, value });
+    }
 
     const seenRefEndpoints = new Set<string>();
     const seenDepEndpoints = new Set<string>();
 
-    for (const { metadata: meta, value } of this.ownedElements) {
+    for (const { metadata: meta, value } of this.interpretedMetadata) {
       switch (meta.kind) {
         case MetadataKind.Ref: {
           const ref = value as Ref;
@@ -267,7 +276,7 @@ export default class ProgramInterpreter {
     }
 
     // The Program owns its Project
-    for (const meta of this.compiler.appliedMetadata(this.programSymbol)) {
+    for (const meta of this.compiler.symbolMetadata(this.programSymbol)) {
       if (meta.kind !== MetadataKind.Project) continue;
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) continue;
@@ -304,7 +313,10 @@ export default class ProgramInterpreter {
     const fkTableMap = new Map<InternedNodeSymbol, TableInfo>();
 
     // Seed fkTableMap with ALL visible table symbols (record = undefined)
-    for (const original of this.compiler.visibleSymbols(this.programSymbol, SymbolKind.Table)) {
+    const tableSymbols = (this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [])
+      .filter((s) => s.isKind(SymbolKind.Table))
+      .map((s) => s.originalSymbol);
+    for (const original of tableSymbols) {
       const key = original.intern();
       if (!fkTableMap.has(key)) {
         fkTableMap.set(key, {
@@ -316,7 +328,7 @@ export default class ProgramInterpreter {
     }
 
     // Fill in records (already interpreted by their owner tables) and run PK/unique validation
-    for (const { metadata: meta, value } of this.ownedElements) {
+    for (const { metadata: meta, value } of this.interpretedMetadata) {
       if (!(meta instanceof RecordsMetadata)) continue;
       const tableSymbol = meta.table(this.compiler);
       if (!(tableSymbol instanceof TableSymbol)) continue;
@@ -345,7 +357,8 @@ export default class ProgramInterpreter {
   }
 
   private validatePartialRefs () {
-    const partialMetas = this.compiler.appliedMetadata(this.programSymbol)
+    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m) => m.isVisibleFrom(this.compiler, this.programSymbol))
       .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
     for (const meta of partialMetas) {
       this.infos.push(...validatePartialRef(this.compiler, meta));
@@ -353,7 +366,8 @@ export default class ProgramInterpreter {
   }
 
   private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {
-    const partialMetas = this.compiler.appliedMetadata(this.programSymbol)
+    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m) => m.isVisibleFrom(this.compiler, this.programSymbol))
       .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
 
     const refs: Ref[] = [];

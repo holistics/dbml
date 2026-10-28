@@ -9,10 +9,7 @@ import {
 } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementKind } from '@/core/types/keywords';
-import { UNHANDLED } from '@/core/types/module';
-import { isElementNode } from '@/core/utils/validate';
 import { scanNonListNodeForBinding } from '../utils';
-import { refUtils } from './index';
 
 export default class RefBinder {
   private compiler: Compiler;
@@ -28,30 +25,7 @@ export default class RefBinder {
       return [];
     }
 
-    return [
-      ...this.checkDuplicateName(),
-      ...this.bindBody(this.declarationNode.body),
-    ];
-  }
-
-  // A Ref has no symbol, so its name is not a schema member: a named top-level Ref must be unique within its file
-  private checkDuplicateName (): CompileError[] {
-    const program = this.declarationNode.parent;
-    if (!(program instanceof ProgramNode)) return [];
-
-    const name = this.compiler.nodeFullname(this.declarationNode).getFiltered(UNHANDLED)?.at(-1);
-    if (name === undefined) return [];
-
-    for (const sibling of program.body) {
-      if (sibling === this.declarationNode) break;
-      if (!isElementNode(sibling, ElementKind.Ref)) continue;
-      if (this.compiler.nodeFullname(sibling).getFiltered(UNHANDLED)?.at(-1) !== name) continue;
-
-      return [
-        refUtils.getDuplicateError(name, 'public', this.declarationNode.name ?? this.declarationNode),
-      ];
-    }
-    return [];
+    return this.bindBody(this.declarationNode.body);
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

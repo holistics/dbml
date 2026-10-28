@@ -2,11 +2,12 @@ import { Uri } from '@/services/types';
 import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
+import { ElementDeclarationNode, SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition, namedRefAt, namedRefNameNodes } from '@/services/utils';
+import { getOffsetFromMonacoPosition, namedRefAt } from '@/services/utils';
+import { MetadataElementMetadata } from '@/core/types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -45,7 +46,14 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
         } else {
           // A named Ref has no symbol: its references are its declaration name and the Metadata Ref header names
           const ref = namedRefAt(this.compiler, node);
-          references = ref ? namedRefNameNodes(this.compiler, ref) : undefined;
+          references = ref
+            ? [
+                ...(ref.declaration instanceof ElementDeclarationNode && ref.declaration.name ? [ref.declaration.name] : []),
+                ...this.compiler.symbolMetadata(ref)
+                  .filter((m) => m instanceof MetadataElementMetadata)
+                  .flatMap((m) => m.declaration.name ?? []),
+              ]
+            : undefined;
         }
         if (references && references.length > 0) {
           return references.map((refNode: SyntaxNode) => {
