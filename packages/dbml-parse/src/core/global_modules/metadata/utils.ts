@@ -7,7 +7,7 @@ import type {
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import {
-  NodeSymbol, SymbolKind, MetadataTargetKind, MetadataElementMetadata, NodeMetadata,
+  NodeSymbol, SymbolKind, MetadataElementMetadata, NodeMetadata,
 } from '@/core/types/symbol';
 import { getProgramSymbol } from '../utils';
 
@@ -32,41 +32,6 @@ type MetadataField<T, V> = {
 
 // A per-kind registry: exactly the promotable settings for that kind, each carrying its own parse + assign. K is tightened per kind.
 export type MetadataFieldRegistry<T extends MetadataTarget, R extends { [K in SettingName]?: CustomMetadataValue['value'] }> = { [K in keyof R]: MetadataField<T, R[K]> };
-
-export type NameWithSymbolKind = {
-  name: string;
-  symbolKind: SymbolKind;
-};
-
-/** @internal Exported for testing only. */
-export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
-  if (nameParts.length === 0) return [];
-
-  let kindParts: SymbolKind[];
-
-  switch (targetKind) {
-    case MetadataTargetKind.Table:
-      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.Table];
-      break;
-    case MetadataTargetKind.Column:
-      if (nameParts.length === 1) kindParts = [SymbolKind.Column];
-      else kindParts = [...Array(nameParts.length - 2).fill(SymbolKind.Schema), SymbolKind.Table, SymbolKind.Column];
-      break;
-    case MetadataTargetKind.TableGroup:
-      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.TableGroup];
-      break;
-    case MetadataTargetKind.Note:
-      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.StickyNote];
-      break;
-    // Exhaustiveness checking
-    default: {
-      const _: never = targetKind;
-      break;
-    }
-  }
-
-  return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
-}
 
 /** Get precedence score of files in import tree, lower score means lower precedence */
 function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
@@ -104,12 +69,20 @@ export function attachCustomMetadata<T extends MetadataTarget> (
 
   const visible = targetSymbol instanceof NodeMetadata
     ? targetSymbol.isVisibleFrom(compiler, programSymbol)
-    : compiler.isSymbolVisible(programSymbol, targetSymbol);
+    : (() => {
+        if (targetSymbol.isKind(SymbolKind.Column)) {
+          const tableSymbol = compiler.symbolParents(targetSymbol).find((s) => s.isKind(SymbolKind.Table));
+          return !!tableSymbol && programSymbol.inNestedSchema(compiler, tableSymbol);
+        }
+        return programSymbol.inNestedSchema(compiler, targetSymbol);
+      })();
   if (!visible) return;
 
+  // symbolMetadata also returns the blocks aimed at the target's members
   const metas = compiler
     .symbolMetadata(targetSymbol)
     .filter((m): m is MetadataElementMetadata => m instanceof MetadataElementMetadata)
+    .filter((m) => m.targets(compiler).some((node) => node.intern() === targetSymbol.intern()))
     .filter((m) => m.isVisibleFrom(compiler, programSymbol));
 
   if (!metas.length) return;

@@ -27,7 +27,12 @@ export function findRefDefinition (compiler: Compiler, filepath: Filepath, targe
 
   const source = compiler.getSource(filepath) ?? '';
 
-  for (const meta of compiler.appliedMetadata(programSymbol)) {
+  const refMetas = compiler
+    .symbolMetadata(programSymbol)
+    .filter((m) => m.isVisibleFrom(compiler, programSymbol))
+    .filter((m) => m instanceof RefMetadata);
+
+  for (const meta of refMetas) {
     if (!(meta instanceof RefMetadata)) continue;
     if (!refMetadataMatches(compiler, meta, target)) continue;
 

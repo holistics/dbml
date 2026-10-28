@@ -120,6 +120,15 @@ Metadata Ref r {
     const errors = compiler.interpretFile(fp('/main.dbml')).getErrors();
     expect(errors.map((e) => e.code)).toContain(CompileErrorCode.BINDING_ERROR);
     expect(errors.map((e) => e.diagnostic)).toContain("Ref 'r' is ambiguous: it has multiple definitions");
+
+    // Neither Ref receives the color
+    // (main itself does not interpret because of the binding error, so check the Ref's own files)
+    const refs = [
+      ...getDatabase(compiler, '/a.dbml').refs,
+      ...getDatabase(compiler, '/b.dbml').refs,
+    ];
+    expect(refs.length).toBeGreaterThan(0);
+    expect(refs.map((r) => r.color)).not.toContain('#e67e22');
   });
 
   test('a name defined in two files resolves when only one of the refs is visible', () => {

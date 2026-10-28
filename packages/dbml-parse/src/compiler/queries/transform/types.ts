@@ -1,5 +1,4 @@
-import { SymbolKind } from '@/core/types/symbol';
-import { MetadataKind } from '@/core/types/symbol/metadata';
+import { MetadataKind, SymbolKind } from '@/core/types/symbol';
 
 // Identifies any DBML element, `kind` is required to discriminate variants
 // Individual interfaces allow `kind` to be optional for standalone use (e.g. renameTable)

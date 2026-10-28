@@ -1,7 +1,6 @@
 import {
   bindNode,
   interpretMetadata,
-  interpretOwnedMetadata,
   interpretSymbol,
   nodeMetadata,
   nodeReferee,
@@ -41,17 +40,12 @@ import { parseFile, parseProject } from './queries/pipeline/parse';
 import { lookupMembers, symbolMembersLookupMap } from './queries/symbol/lookupMembers';
 import { symbolAliases } from './queries/symbol/symbolAliases';
 import {
-  resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
+  resolutionIndex, symbolMetadata, symbolParents, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
-import { metadataTargets } from './queries/metadata/metadataTargets';
-import { isSymbolVisible } from './queries/metadata/isSymbolVisible';
-import { namedRefsIn } from './queries/metadata/namedRefsIn';
-import { appliedMetadata } from './queries/metadata/appliedMetadata';
-import { visibleSymbols } from './queries/symbol/visibleSymbols';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
-  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata,
+  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString, type TypedValue,
@@ -268,7 +262,6 @@ export default class Compiler {
   bindProject = this.globalQuery(bindProject);
 
   interpretSymbol = this.globalQuery(interpretSymbol);
-  interpretOwnedMetadata = this.globalQuery(interpretOwnedMetadata);
   interpretMetadata = this.globalQuery(interpretMetadata);
   interpretFile = this.globalQuery(interpretFile);
 
@@ -281,32 +274,10 @@ export default class Compiler {
   nodeReferee = this.globalQuery(nodeReferee);
   resolutionIndex = this.globalQuery(resolutionIndex);
   symbolReferences = this.globalQuery(symbolReferences);
-  symbolParent = this.globalQuery(symbolParent);
+  symbolParents = this.globalQuery(symbolParents);
   symbolMetadata = this.globalQuery(symbolMetadata);
   symbolAliases = this.globalQuery(symbolAliases);
   symbolUses = this.globalQuery(symbolUses);
-  visibleSymbols = this.globalQuery(visibleSymbols);
-  /**
-    * A global query
-    * Whether a symbol is visible from a program
-    */
-  isSymbolVisible = this.globalQuery(isSymbolVisible);
-  /**
-    * A global query
-    * Resolve all candidates that a metadata block can target
-    */
-  metadataTargets = this.globalQuery(metadataTargets);
-  /**
-    * A global query
-    * The metadata declarations that apply in a program, in declaration order
-    */
-  appliedMetadata = this.globalQuery(appliedMetadata);
-  /**
-    * A global query
-    * The named standalone refs usable from a program (refs are not imported via `use`, a named ref is usable
-    * wherever it applies). Does not read the resolution index.
-    */
-  namedRefsIn = this.globalQuery(namedRefsIn);
 
   fileDependencies = this.localQuery(fileDependencies);
   reachableFiles = this.globalQuery(reachableFiles);
