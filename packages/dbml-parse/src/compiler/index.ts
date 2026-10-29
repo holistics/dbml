@@ -7,6 +7,24 @@ import {
   nodeSymbol,
   symbolMembers,
 } from '@/core/global_modules';
+import type { GlobalModule } from '@/core/global_modules/types';
+import type { ParserOptions } from '@/core/parser/parser';
+import Lexer, { type LexerOptions } from '@/core/lexer/lexer';
+import type { SyntaxToken } from '@/core/types/tokens';
+import {
+  type FileKind, type FileScan, decideFileKind, scanTokens,
+} from './queries/files/fileKind';
+
+// Front matter is read in every file, so each file can say what it is
+const FILE_KIND_LEXER: LexerOptions = {
+  allowFrontMatter: true,
+};
+
+// Every switch inside is off by default
+export interface DialectOptions {
+  lexer?: LexerOptions;
+  parser?: ParserOptions;
+}
 import {
   nodeFullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
@@ -44,7 +62,7 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
+  renameTable, renameElement, removeElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
@@ -70,11 +88,72 @@ export default class Compiler {
   readonly symbolIdGenerator = new NodeSymbolIdGenerator();
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  // The structure of the DbmlProject
-  constructor (public layout: DbmlProjectLayout) {}
+  readonly explicitModules: GlobalModule[] | undefined;
+  private readonly explicitDialect: DialectOptions | undefined;
+  readonly dialect: DialectOptions;
+
+  // `layout`: the structure of the DbmlProject
+  // `modules` and `dialect`, when given, apply to every file. When omitted, each file uses the ones of its own kind (DBML or architecture).
+  constructor (
+    public layout: DbmlProjectLayout,
+    modules?: GlobalModule[],
+    dialect?: DialectOptions,
+  ) {
+    this.explicitModules = modules;
+    this.explicitDialect = dialect;
+    this.dialect = dialect ?? {};
+  }
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);
+  }
+
+  lexerOptions (): LexerOptions {
+    return this.explicitDialect ? this.explicitDialect.lexer ?? {} : FILE_KIND_LEXER;
+  }
+
+  parserOptions (kind: FileKind): ParserOptions {
+    return this.explicitDialect
+      ? this.explicitDialect.parser ?? {}
+      : {
+          allowBodylessElement: kind === 'arch',
+          allowRoleReference: kind === 'arch',
+        };
+  }
+
+  private fileScans = new Map<FilepathId, { source: string; scan: FileScan }>();
+  // The kind each cached parse used
+  private fileKinds = new Map<FilepathId, FileKind>();
+
+  scanFile (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileScan {
+    const source = this.layout.getSource(filepath) ?? '';
+    const id = filepath.intern();
+    const cached = this.fileScans.get(id);
+    if (cached && cached.source === source) return cached.scan;
+
+    const scan = scanTokens(tokens ?? new Lexer(source, filepath, FILE_KIND_LEXER).lex().getValue());
+    this.fileScans.set(id, {
+      source,
+      scan,
+    });
+    return scan;
+  }
+
+  // Never parses
+  fileKind (filepath: Filepath): FileKind {
+    return decideFileKind(this.scanFile(filepath));
+  }
+
+  // The kind a parse of this file uses, remembered so the parse is dropped when the kind changes
+  fileKindForParse (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileKind {
+    const kind = decideFileKind(this.scanFile(filepath, tokens));
+    this.fileKinds.set(filepath.intern(), kind);
+    return kind;
+  }
+
+  // The kind a file was parsed as, which picks its modules
+  parsedFileKind (filepath: Filepath): FileKind {
+    return this.fileKinds.get(filepath.intern()) ?? this.fileKind(filepath);
   }
 
   private sourceSnapshot = new Map<string, string | undefined>();
@@ -285,6 +364,8 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  renameElement = renameElement.bind(this);
+  removeElement = removeElement.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
   updateElementSettingEdit = updateElementSettingEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);

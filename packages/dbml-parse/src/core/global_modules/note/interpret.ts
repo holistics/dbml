@@ -1,4 +1,4 @@
-import { partition } from 'lodash-es';
+import { omit, partition } from 'lodash-es';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
@@ -22,6 +22,11 @@ import Report from '@/core/types/report';
 import { assignInlineMetadata } from '../../utils/interpret';
 import { attachCustomMetadata } from '../metadata/utils';
 import { NOTE_METADATA_FIELDS } from '../metadata/registries';
+
+const INLINE_LINK_SETTINGS = [
+  'link',
+  'ref',
+];
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -48,7 +53,7 @@ export class StickyNoteInterpreter {
     const errors = [
       ...this.interpretName(),
       ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode | undefined),
     ];
 
     attachCustomMetadata(this.compiler, this.note, this.symbol, NOTE_METADATA_FIELDS, this.filepath);
@@ -69,12 +74,19 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    assignInlineMetadata(this.note, settingMap, NOTE_METADATA_FIELDS);
+    // An architecture file's note may carry inline links, which are links, not metadata
+    const isArch = this.compiler.parsedFileKind(this.declarationNode.filepath) === 'arch';
+    assignInlineMetadata(this.note, isArch ? omit(settingMap, INLINE_LINK_SETTINGS) : settingMap, NOTE_METADATA_FIELDS);
 
     return [];
   }
 
-  private interpretBody (body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body?: BlockExpressionNode): CompileError[] {
+    // An architecture file allows `Note memo` with no body
+    if (!body) {
+      this.note.content = '';
+      return [];
+    }
     const [
       fields,
       subs,

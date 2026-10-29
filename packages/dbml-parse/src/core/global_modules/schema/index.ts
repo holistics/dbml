@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler/index';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { schemaMembership } from '@/compiler/queries/files/usableMembers';
+import { roleOf } from '@/core/arch/read';
+import { isAliasSymbol } from '../arch/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { type Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
@@ -114,21 +116,27 @@ export const schemaModule: GlobalModule = {
     });
 
     // 6. Duplicate checking
+    // In an architecture file elements, groups and notes are checked together: by role and name, and an alias against every name
+    const isArch = compiler.parsedFileKind(symbol.filepath) === 'arch';
+    const isArchMember = (member: NodeSymbol) => isArch && (member.isKind(SymbolKind.Element) || member.isKind(SymbolKind.StickyNote));
+    const keyKind = (member: NodeSymbol) => (isArchMember(member) ? SymbolKind.Element : member.kind);
     const seen = new Map<string, NodeSymbol>();
+    const archSeen = new Map<string, ArchIdentity[]>();
     for (const member of uniqueExpandedMembers) {
-      const key = `${member.kind}:${member.name}`;
-      const existing = seen.get(key);
-      if (existing) {
+      const key = `${keyKind(member)}:${member.name}`;
+      const clashes = isArchMember(member) ? archClash(archSeen, member) : seen.has(key);
+      if (clashes) {
         // Schemas with the same name merge (e.g. two schema aliases to the same name)
         if (member.isKind(SymbolKind.Schema)) continue;
+        const kind = keyKind(member);
         // Error points at the use specifier in the current file, not the original declaration
         const errorNode = member instanceof UseSymbol
           ? (member.useSpecifierDeclaration ?? member.declaration)
-          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name
+          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name && kind !== SymbolKind.Element
               ? member.declaration.name
               : member.declaration);
         if (errorNode && member.name !== undefined) {
-          errors.push(getDuplicateSchemaMemberError(member.kind, member.name, qualifiedName.join('.'), errorNode));
+          errors.push(getDuplicateSchemaMemberError(kind, member.name, qualifiedName.join('.'), errorNode));
         }
       } else {
         seen.set(key, member);
@@ -138,6 +146,27 @@ export const schemaModule: GlobalModule = {
     return new Report(uniqueExpandedMembers, errors);
   },
 };
+
+interface ArchIdentity {
+  role: string | undefined;
+  isAlias: boolean;
+}
+
+// Two architecture identifiers clash on the same name when they have the same role, or when either is an alias.
+// Records the member when it does not clash.
+function archClash (seen: Map<string, ArchIdentity[]>, member: NodeSymbol): boolean {
+  const original = member.originalSymbol.declaration;
+  const declaration = original instanceof ElementDeclarationNode ? original : undefined;
+  const identity: ArchIdentity = {
+    role: declaration && roleOf(declaration),
+    isAlias: isAliasSymbol(member),
+  };
+  const name = member.name ?? '';
+  const others = seen.get(name) ?? [];
+  if (others.some((other) => other.role === identity.role || other.isAlias || identity.isAlias)) return true;
+  seen.set(name, [...others, identity]);
+  return false;
+}
 
 function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
   switch (kind) {
@@ -151,6 +180,8 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
       return tableGroupUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.DiagramView:
       return diagramViewUtils.getDuplicateError(name, schemaLabel, errorNode);
+    case SymbolKind.Element:
+      return new CompileError(CompileErrorCode.DUPLICATE_NAME, `${name} is already declared`, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
   }

@@ -4,6 +4,7 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -12,6 +13,7 @@ import {
 } from './transform';
 export {
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -66,6 +68,9 @@ export {
   isEndpointOptional,
   isEndpointRequired,
   makeRelationshipRequired,
+  BUILTIN_ROLES,
+  NAME_PRECEDENCE,
+  fullName,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';
@@ -93,11 +98,14 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
   CustomMetadata,
   CustomMetadataValue,
   CustomMetadataValueType,
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
+  RoleSpec,
   FileSpecifierInfo,
 } from '@dbml/parse';

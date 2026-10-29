@@ -4,12 +4,20 @@ import { SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import { updateSettingEdit } from '@/core/utils/setting';
-import type { ElementIdentifier, DepIdentifier, RefIdentifier } from './types';
+import type {
+  ElementIdentifier, DepIdentifier, RefIdentifier, ArchElementIdentifier, ArchLinkIdentifier,
+} from './types';
 import {
   lookupElementSymbol,
   formatEndpoint, formatSetting, findRefDefinition, findDepDefinition,
 } from './utils';
-import { FunctionApplicationNode, type SyntaxNode } from '@/core/types/nodes';
+import {
+  findArchElement, findArchLink, fullName, removeAttributeEdit,
+} from './utils/arch';
+import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
+import { LinkMetadata } from '@/core/types/symbol/metadata';
+import { bodyOf, handleOf, linkPartsOf, roleOf } from '@/core/arch/read';
+import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
   this: Compiler,
@@ -24,6 +32,14 @@ export function updateElementSettingEdit (
 
   if (target.kind === 'ref') {
     return updateRefSettingEdit(this, filepath, target, settingName, value);
+  }
+
+  if (target.kind === SymbolKind.Element) {
+    return updateArchElementSettingEdit(this, filepath, target, settingName, value);
+  }
+
+  if (target.kind === 'Link') {
+    return updateArchLinkSettingEdit(this, filepath, target, settingName, value);
   }
 
   const declaration = findNamedElementDeclaration(this, filepath, target);
@@ -137,6 +153,51 @@ function updateRefSettingEdit (compiler: Compiler, filepath: Filepath, target: R
   }
 
   const edit = updateSettingEdit(result.node, settingName, value, source);
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
+}
+
+function updateArchElementSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchElementIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const declaration = findArchElement(compiler, filepath, target.name, target.role);
+  if (!declaration) return [];
+
+  const edit = updateSettingEdit(declaration, settingName, value, compiler.getSource(filepath) ?? '');
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
+}
+
+function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchLinkIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const source = compiler.getSource(filepath) ?? '';
+  const definition = findArchLink(compiler, filepath, target.from, target.to, target.fromRole, target.toRole);
+  if (!definition) return [];
+
+  // An inline link has no list of its own, so it moves out to a `Link:` that can carry the setting, as an inline ref does
+  if (definition.kind === 'inline') {
+    const handle = handleOf(definition.element);
+    const role = roleOf(definition.element);
+    const target = new LinkMetadata(definition.attribute).endpoints(compiler)[1];
+    const targetHandle = target && localHandle(compiler, target, filepath);
+    const targetRole = target && roleOfSymbol(target);
+    if (value === null || !definition.element.attributeList || handle === undefined || !role || targetHandle === undefined || !targetRole) return [];
+    const setting = formatSetting(settingName, value);
+    const line = `Link: ${fullName(handle, role)} ${definition.op} ${fullName(targetHandle, targetRole)}`;
+    return [
+      removeAttributeEdit(definition.element.attributeList, definition.attribute, source),
+      { start: source.length, end: source.length, newText: `\n\n${setting ? `${line} [${setting}]` : line}\n` },
+    ];
+  }
+
+  const { declaration } = definition;
+  // The list after `a > b` is read before the header's, so the header is written only when it is the link's only list
+  const useHeader = !linkPartsOf(declaration)?.row?.settings && !!declaration.attributeList;
+  const node = useHeader ? declaration : bodyOf(declaration)[0];
+  const edit = updateSettingEdit(node, settingName, value, compiler.getSource(filepath) ?? '');
   return edit
     ? [
         edit,

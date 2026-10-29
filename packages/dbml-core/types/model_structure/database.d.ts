@@ -16,6 +16,12 @@ import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
 import { TokenPosition, DiagramView } from '@dbml/parse';
+import type {
+  Group as RawGroup, Link as RawLink, Node as RawNode,
+} from '@dbml/parse';
+import Node, { NormalizedNodeIdMap } from './node';
+import Group, { NormalizedGroupIdMap } from './group';
+import Link, { NormalizedLinkIdMap } from './link';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -66,6 +72,11 @@ export interface RawDatabase {
     records: RawTableRecord[];
     tablePartials: TablePartial[];
     diagramViews: DiagramView[];
+    nodes?: RawNode[];
+    groups?: RawGroup[];
+    links?: RawLink[];
+    frontMatter?: Record<string, string>;
+    diagramType?: 'arch';
 }
 
 declare class Database extends Element {
@@ -79,6 +90,11 @@ declare class Database extends Element {
     name: string;
     records: TableRecord[];
     diagramViews: DiagramView[];
+    nodes: Node[];
+    groups: Group[];
+    links: Link[];
+    frontMatter: Record<string, string> | null;
+    diagramType: 'arch' | null;
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
@@ -307,6 +323,12 @@ export interface NormalizedDatabase {
     name: string;
     schemaIds: number[];
     noteIds: number[];
+    // Present only for a file with architecture content
+    nodeIds?: number[];
+    groupIds?: number[];
+    linkIds?: number[];
+    frontMatter?: Record<string, string>;
+    diagramType?: 'arch';
 }
 
 export interface NormalizedDatabaseIdMap {
@@ -331,5 +353,9 @@ export interface NormalizedModel {
     checks: NormalizedCheckIdMap;
     tablePartials: NormalizedTablePartialIdMap;
     records: NormalizedRecordIdMap;
+    // Present only when non-empty
+    nodes?: NormalizedNodeIdMap;
+    groups?: NormalizedGroupIdMap;
+    links?: NormalizedLinkIdMap;
 }
 export default Database;

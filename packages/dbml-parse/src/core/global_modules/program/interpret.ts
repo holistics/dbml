@@ -1,13 +1,14 @@
 import Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning, CompileInfo } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning, type CompileInfo,
+} from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, ProgramNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
-  Note, Project, Ref,
+  Group, Link, Node, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
@@ -30,6 +31,9 @@ import {
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import { pushExternal, validateDepBlocks } from './utils';
+import {
+  archSort, bodyOf, declarationWord, isTopLevel, nameOf, rowOf,
+} from '@/core/arch/read';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
@@ -81,7 +85,77 @@ export default class ProgramInterpreter {
     this.interpretAllAliases();
     this.validatePartialRefs();
     this.infos.push(...this.validateRecords());
+    this.finishArch();
     return new Report(this.db, this.errors, this.warnings, this.infos);
+  }
+
+  // Architecture entries, filled while interpreting and written to `db` at the end
+  private arch = {
+    nodes: [] as Node[],
+    groups: [] as Group[],
+    links: [] as {
+      link: Link;
+      declaration: SyntaxNode;
+    }[],
+  };
+
+  private finishArch () {
+    const isArch = this.compiler.parsedFileKind(this.filepath) === 'arch';
+
+    // A handle can repeat across roles, so an element is keyed by both
+    const keyOf = (handle: string, role: string) => `${role}\u0000${handle}`;
+    // The first group to list an element owns it
+    const elements = new Set([
+      ...this.arch.nodes.map((node) => keyOf(node.alias ?? node.name, node.role)),
+      ...this.arch.groups.map((group) => keyOf(group.alias ?? group.name, 'Group')),
+      ...this.db.notes.map((note) => keyOf(note.name, 'Note')),
+    ]);
+    const parent = new Map<string, string>();
+    for (const group of this.arch.groups) {
+      const key = keyOf(group.alias ?? group.name, 'Group');
+      for (const child of group.children) {
+        const childKey = keyOf(child.handle, child.role);
+        if (elements.has(childKey) && !parent.has(childKey)) parent.set(childKey, key);
+      }
+    }
+    for (const group of this.arch.groups) {
+      const key = keyOf(group.alias ?? group.name, 'Group');
+      group.children = group.children.filter((child) => parent.get(keyOf(child.handle, child.role)) === key);
+    }
+
+    // A repeated link, or a link into its own container, still draws, with a warning
+    const seen = new Set<string>();
+    for (const { link, declaration } of this.arch.links) {
+      const from = keyOf(link.from, link.fromRole);
+      const to = keyOf(link.to, link.toRole);
+      const key = [
+        from,
+        to,
+      ].sort().join('\u0001');
+      if (seen.has(key)) {
+        this.warnings.push(new CompileWarning(CompileErrorCode.DUPLICATE_LINK, `${link.from} and ${link.to} are already connected`, declaration));
+      }
+      seen.add(key);
+      if (parent.get(from) === to || parent.get(to) === from) {
+        this.warnings.push(new CompileWarning(CompileErrorCode.NESTED_ENDPOINTS, `${link.from} is already inside ${link.to}`, declaration));
+      }
+    }
+
+    const entries = {
+      nodes: this.arch.nodes,
+      groups: this.arch.groups,
+      links: this.arch.links.map(({ link }) => link),
+    };
+    for (const [key, value] of Object.entries(entries) as [keyof typeof entries, never[]][]) {
+      if (isArch || value.length) this.db[key] = value;
+    }
+
+    const frontMatter = {
+      ...this.compiler.scanFile(this.filepath).frontMatter,
+      ...(isArch ? projectRowsOf(this.programNode) : {}),
+    };
+    if (Object.keys(frontMatter).length) this.db.frontMatter = frontMatter;
+    if (isArch) this.db.diagramType = 'arch';
   }
 
   private interpretAllSymbols () {
@@ -134,7 +208,7 @@ export default class ProgramInterpreter {
       this.warnings.push(...result.getWarnings());
       this.infos.push(...result.getInfos());
       const value = result.getValue();
-      if (value) this.pushElement(use, value);
+      if (value) this.pushElement(use, importedUnder(value, use));
     }
 
     const sourceName = original instanceof TableSymbol
@@ -284,6 +358,12 @@ export default class ProgramInterpreter {
         }
         case MetadataKind.Project:
           this.db.project = value as Project;
+          break;
+        case MetadataKind.Link:
+          this.arch.links.push({
+            link: value as Link,
+            declaration: meta.declaration,
+          });
           break;
 
         // Handled inside each element
@@ -449,6 +529,12 @@ export default class ProgramInterpreter {
   private pushElement (symbol: NodeSymbol, value: SchemaElement | SchemaElement[]) {
     if (Array.isArray(value)) return;
     switch (symbol.kind) {
+      case SymbolKind.Element: {
+        const sort = archSort(symbol.originalSymbol.declaration!);
+        if (sort === 'group') this.arch.groups.push(value as Group);
+        else this.arch.nodes.push(value as Node);
+        break;
+      }
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
         break;
@@ -470,4 +556,34 @@ export default class ProgramInterpreter {
       default: break;
     }
   }
+}
+
+// An architecture file's `Project` rows join its front matter keys; `diagram_type` there is an error, not a key
+function projectRowsOf (program: ProgramNode): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const declaration of program.body) {
+    if (!isTopLevel(declaration) || archSort(declaration) !== 'project') continue;
+    for (const row of bodyOf(declaration)) {
+      let key: string | undefined;
+      let value: string | undefined;
+      if (row instanceof ElementDeclarationNode) {
+        key = declarationWord(row)?.toLowerCase();
+        value = nameOf(rowOf(bodyOf(row)[0])?.callee);
+      } else {
+        const parsed = rowOf(row);
+        key = nameOf(parsed?.callee)?.toLowerCase();
+        value = nameOf(parsed?.args[0]);
+      }
+      if (!key || key === 'diagram_type' || value === undefined) continue;
+      out[key] = value;
+    }
+  }
+  return out;
+}
+
+// `use { Server api as api2 }`: in this file the element is `api2`, and it still shows the name its own file gave it
+function importedUnder (value: SchemaElement | SchemaElement[], use: UseSymbol): SchemaElement | SchemaElement[] {
+  if (!use.isKind(SymbolKind.Element) || Array.isArray(value) || use.name === undefined) return value;
+  const element = value as Node | Group;
+  return (element.alias ?? element.name) === use.name ? value : { ...element, alias: use.name };
 }

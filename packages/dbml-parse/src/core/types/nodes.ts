@@ -322,6 +322,9 @@ export class UseSpecifierNode extends SyntaxNode {
     this.alias = alias;
   }
 
+  // Set on specifiers in an architecture file, whose kind words are roles, `Group` and `Note`
+  declare archImport?: boolean;
+
   isKind (...importKinds: ImportKind[]): boolean {
     return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
   }
@@ -329,6 +332,12 @@ export class UseSpecifierNode extends SyntaxNode {
   getSymbolKind (): SymbolKind | undefined {
     const value = this.importKind?.value?.toLowerCase();
     if (value === undefined) return undefined;
+    if (this.archImport) {
+      // `Kind` is reported by validation and imports nothing
+      if (value === 'kind') return undefined;
+      // DBML's own kind words still import DBML elements; `note` imports a sticky note
+      return Object.values(ImportKind).find((k) => k.toLowerCase() === value) ?? SymbolKind.Element;
+    }
     return Object.values(SymbolKind).find((k) => k.toLowerCase() === value);
   }
 }
@@ -498,7 +507,8 @@ export class AttributeNode extends SyntaxNode {
 
   colon?: SyntaxToken;
 
-  value?: NormalExpressionNode | IdentifierStreamNode;
+  // A FunctionApplicationNode only in an architecture file's role reference:  [link: > Server api]
+  value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
 
   constructor (
     {
@@ -508,7 +518,7 @@ export class AttributeNode extends SyntaxNode {
     }: {
       name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentifierStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
     },
     id: SyntaxNodeId,
     filepath: Filepath,

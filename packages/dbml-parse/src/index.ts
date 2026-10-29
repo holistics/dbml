@@ -92,9 +92,25 @@ export {
   type FilterConfig,
   type DiagramView,
   type CustomMetadata,
+  type Node,
+  type Group,
+  type Link,
+  type LinkOp,
+  type ArchRef,
+  type ArchSettings,
+  type ArchSettingValue,
   type CustomMetadataValue,
   type CustomMetadataValueType,
 } from '@/core/types/schemaJson';
+
+// Architecture files
+export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
+export {
+  BUILTIN_ROLES, NAME_PRECEDENCE, suggestRole, suggestIcon, type RoleSpec,
+} from '@/core/arch/vocabulary';
+export {
+  ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,
+} from '@/core/arch/icons';
 
 export {
   type RelationCardinality,
@@ -122,6 +138,7 @@ export type {
 } from '@/compiler/queries/transform';
 
 export { findDiagramViewBlocks } from '@/compiler/queries/transform';
+export { fullName } from '@/compiler/queries/transform/utils/arch';
 
 // Dep transform types
 export type { DepSyncOperation, DepSyncEdge, DepEndpointRef } from '@/compiler/queries/transform';
@@ -138,6 +155,8 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
 } from '@/compiler/queries/transform';
 
 export {
@@ -146,6 +165,12 @@ export {
 } from '@/services/monarch';
 
 export * from '@/compiler/projectLayout/layout';
+
+export { dbmlModules } from '@/core/global_modules';
+export type { GlobalModule } from '@/core/global_modules/types';
+export type { ParserOptions } from '@/core/parser/parser';
+export type { LexerOptions } from '@/core/lexer/lexer';
+export type { DialectOptions } from '@/compiler/index';
 
 export { Compiler };
 
