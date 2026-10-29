@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { CompileErrorCode } from '@/index';
 import { SettingName } from '@/core/types';
-import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
-import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
-import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { NONE_COLOR } from '@/constants';
+import {
+  TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS, TABLEGROUP_METADATA_FIELDS, NOTE_METADATA_FIELDS,
+} from '@/core/global_modules/metadata/registries';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -14,7 +15,7 @@ import {
 import {
   Column, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import { interpret, parse } from '../../../utils';
+import { interpret, parse, excludeMetadataValueToken } from '../../../utils';
 
 function db (source: string) {
   return interpret(source).getValue();
@@ -43,7 +44,7 @@ Metadata Table public.users {
       // The note token points at the metadata key/value pair, not the inline declaration (line 7 is the `note: 'from metadata'` line)
       expect(t.note?.token.start.line).toBe(7);
       // Still remaining in the raw metadata (additive)
-      expect(t.metadata).toMatchObject({});
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
     });
 
     it('writes headercolor onto headerColor, overriding the inline value', () => {
@@ -58,7 +59,7 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#000');
-      expect(t.metadata).toMatchObject({});
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
     });
 
     it('treats headercolor case-insensitively', () => {
@@ -99,7 +100,9 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect((t as any).color).toBeUndefined();
-      expect(t.metadata).toMatchObject({ color: '#aaa' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        color: { value: '#aaa', type: 'color' },
+      });
     });
 
     it('only overrides keys present in metadata, leaving absent inline values intact', () => {
@@ -164,7 +167,7 @@ Metadata TableGroup g1 {
       const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
       expect(g?.note?.value).toBe('group note');
       expect(g?.color).toBe('#123');
-      expect(g?.metadata).toMatchObject({});
+      expect(excludeMetadataValueToken(g?.metadata)).toMatchObject({});
     });
   });
 
@@ -184,7 +187,25 @@ Metadata Note overview {
       expect(n?.color).toBe('#456');
       // content is unchanged, `note` is just custom metadata
       expect(n?.content).toBe('the note body');
-      expect(n?.metadata).toMatchObject({ note: 'should stay custom' });
+      expect(excludeMetadataValueToken(n?.metadata)).toMatchObject({
+        note: { value: 'should stay custom', type: 'string' },
+      });
+    });
+
+    it('keeps a custom `note` value raw, without note normalization', () => {
+      const source = `Note overview {
+  'the note body'
+}
+
+Metadata Note overview {
+  note: '''
+    indented
+  '''
+}`;
+      const result = interpret(source);
+      expect(result.getErrors()).toHaveLength(0);
+      const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
+      expect(n?.metadata?.note?.value).toBe('\n    indented\n  ');
     });
   });
 
@@ -204,7 +225,9 @@ Metadata Column public.users.id {
       expect(col.note?.value).toBe('col note from metadata');
       // color is not a column builtin key: free-form, not written, no error
       expect((col as any).color).toBeUndefined();
-      expect(col.metadata).toMatchObject({ color: '#999' });
+      expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
+        color: { value: '#999', type: 'color' },
+      });
       expect(col.note?.value).toBe('col note from metadata');
     });
 
@@ -216,7 +239,7 @@ Metadata Column public.users.id {
 }
 
 Metadata Column public.users.id {
-  pk: 'true'
+  pk: true
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
@@ -224,7 +247,9 @@ Metadata Column public.users.id {
       // pk is NOT promoted onto the typed field
       expect(col.pk).toBe(false);
       // pk IS stored in the free-form metadata bag
-      expect(col.metadata).toMatchObject({ pk: 'true' });
+      expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
+        pk: { value: true, type: 'bool' },
+      });
     });
 
     it('inline [pk] still populates col.pk = true and is NOT in the bag', () => {
@@ -260,32 +285,36 @@ const colorFieldNode = (value: string) =>
 
 const TOKEN = { start: { offset: 0, line: 1, column: 1 }, end: { offset: 0, line: 1, column: 1 } } as TokenPosition;
 
-describe('[unit] element-owned field validate specs', () => {
-  it('Note accepts a quoted string and rejects a non-string', () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode("'hi'"))).toBe(true);
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode('42'))).toBe(false);
+describe('[unit] element-owned field parse specs', () => {
+  it('Note parses a quoted string and rejects a non-string', () => {
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].parse(noteFieldNode("'hi'"))).toBe('hi');
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].parse(noteFieldNode('42'))).toBeUndefined();
   });
 
-  it("HeaderColor accepts a hex color but NOT 'none' (hex-only, matching inline)", () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(false);
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode("'red'"))).toBe(false);
+  it('Note parse normalizes multi-line note content', () => {
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].parse(noteFieldNode("'''\n    line 1\n      line 2\n  '''"))).toBe('line 1\n  line 2\n');
+  });
+
+  it("HeaderColor parses a hex color but NOT 'none' (hex-only, matching inline)", () => {
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].parse(colorFieldNode('#fff'))).toBe('#fff');
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].parse(colorFieldNode('none'))).toBeUndefined();
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].parse(colorFieldNode("'red'"))).toBeUndefined();
   });
 
   it("TableGroup color is hex-only; Note color allows 'none'", () => {
-    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
-    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(false);
-    expect(NOTE_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
-    expect(NOTE_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(true);
+    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].parse(colorFieldNode('#fff'))).toBe('#fff');
+    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].parse(colorFieldNode('none'))).toBeUndefined();
+    expect(NOTE_METADATA_FIELDS[SettingName.Color].parse(colorFieldNode('#fff'))).toBe('#fff');
+    expect(NOTE_METADATA_FIELDS[SettingName.Color].parse(colorFieldNode('none'))).toBe(NONE_COLOR);
   });
 
-  it('Column note accepts a quoted string and rejects a non-string', () => {
-    expect(COLUMN_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode("'hi'"))).toBe(true);
-    expect(COLUMN_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode('42'))).toBe(false);
+  it('Column note parses a quoted string and rejects a non-string', () => {
+    expect(COLUMN_METADATA_FIELDS[SettingName.Note].parse(noteFieldNode("'hi'"))).toBe('hi');
+    expect(COLUMN_METADATA_FIELDS[SettingName.Note].parse(noteFieldNode('42'))).toBeUndefined();
   });
 
   it('treats an absent value node as invalid', () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(undefined)).toBe(false);
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].parse(undefined)).toBeUndefined();
   });
 
   it('carries the complete, ready-to-emit diagnostic message', () => {
@@ -300,26 +329,26 @@ describe('[unit] element-owned field validate specs', () => {
 describe('[unit] element-owned field assign functions', () => {
   it('Note writes { value, token } onto .note', () => {
     const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.Note].assignBuiltinField(el, '42', TOKEN);
+    TABLE_METADATA_FIELDS[SettingName.Note].assign(el, '42', TOKEN);
     expect((el as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
   });
 
   it('Color writes the raw value onto .color', () => {
     const el = {} as TableGroup;
-    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assignBuiltinField(el, '#fff', TOKEN);
+    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assign(el, '#fff', TOKEN);
     expect((el as { color?: unknown }).color).toBe('#fff');
   });
 
   it('HeaderColor writes the raw value onto .headerColor (not .color)', () => {
     const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assignBuiltinField(el, '#fff', TOKEN);
+    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assign(el, '#fff', TOKEN);
     expect((el as { headerColor?: unknown }).headerColor).toBe('#fff');
     expect((el as { color?: unknown }).color).toBeUndefined();
   });
 
   it('Column note assign writes { value, token } onto .note', () => {
     const el = {} as Column;
-    COLUMN_METADATA_FIELDS[SettingName.Note].assignBuiltinField(el, 'col note', TOKEN);
+    COLUMN_METADATA_FIELDS[SettingName.Note].assign(el, 'col note', TOKEN);
     expect((el as { note?: unknown }).note).toEqual({ value: 'col note', token: TOKEN });
   });
 });

@@ -85,8 +85,22 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('rejects a non-string and non-color custom metadata value on a table', () => {
+    test('accepts a boolean custom metadata value on a table', () => {
       const source = 'Table users [pii: true] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('accepts a signed number custom metadata value on a table', () => {
+      const source = 'Table users [priority: -1, weight: +5] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('rejects a custom metadata number with more than one sign on a table', () => {
+      const source = 'Table users [priority: --1] { id int }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
@@ -205,12 +219,18 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('should reject a custom column setting with a non-string value', () => {
+    test('should accept a custom column setting with a boolean value', () => {
       const source = 'Table users { id int [pii: true] }';
       const errors = analyze(source).getErrors();
 
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept a custom column setting with a signed number value', () => {
+      const source = 'Table users { id int [rank: -1, weight: +2.5] }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
     });
 
     test('should accept column with null setting', () => {
@@ -284,6 +304,29 @@ describe('[example] validator', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(0);
+    });
+
+    test('should accept valid enum alias', () => {
+      const source = 'Enum users.status as S { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept quoted enum alias', () => {
+      const source = 'Enum status as "job status" { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject invalid enum alias', () => {
+      const source = 'Enum status as a.b { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_ALIAS);
+      expect(errors[0].diagnostic).toBe('Enum aliases can only contain alphanumeric and underscore unless surrounded by double quotes');
     });
   });
 

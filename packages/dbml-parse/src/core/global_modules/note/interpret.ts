@@ -1,4 +1,4 @@
-import { partition } from 'lodash-es';
+import { omit, partition } from 'lodash-es';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
@@ -10,31 +10,18 @@ import {
 import type { Note } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
-  extractColor,
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import {
-  SettingName,
   type Filepath,
   type NoteSymbol,
 } from '@/core/types';
-import type { Color } from '@/core/types/schemaJson';
-import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
-import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
-
-export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
-  [SettingName.Color]: {
-    isValidBuiltinFieldValue: isValidColorOrNone,
-    message: "'color' must be a color literal or 'none'",
-    assignBuiltinField (element, value) {
-      element.color = value as Color;
-    },
-  },
-};
+import { assignInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/utils';
+import { NOTE_METADATA_FIELDS } from '../metadata/registries';
 
 const INLINE_LINK_SETTINGS = [
   'link',
@@ -87,17 +74,9 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    if (settingMap.color?.length) {
-      this.note.color = extractColor(settingMap.color.at(0)?.value);
-    }
-
     // An architecture file's note may carry inline links, which are links, not metadata
     const isArch = this.compiler.parsedFileKind(this.declarationNode.filepath) === 'arch';
-    const excluded = [
-      ...Object.keys(NOTE_METADATA_FIELDS),
-      ...(isArch ? INLINE_LINK_SETTINGS : []),
-    ];
-    this.note.metadata = extractCustomInlineMetadata(settingMap, excluded as SettingName[]);
+    assignInlineMetadata(this.note, isArch ? omit(settingMap, INLINE_LINK_SETTINGS) : settingMap, NOTE_METADATA_FIELDS);
 
     return [];
   }

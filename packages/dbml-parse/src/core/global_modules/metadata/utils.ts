@@ -4,7 +4,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, MetadataValues, Note, Table, TableGroup, TokenPosition,
+  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, Note, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
@@ -15,21 +15,24 @@ import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 export type MetadataTarget = Table | TableGroup | Note | Column;
 
 /**
-  * Specs for builtin metadata (table's note, tablegroup's color, .etc) for different element types. Does 2 things:
-  * - `validate`: Validating if the metadata value is syntactically correct
-  * - `assign`: Write the metadata value to the element builtin props (e.g. write `table.note` instead of `table.metadata`)
+  * Spec for one builtin metadata field (table's note, tablegroup's color, .etc) of an element kind.
+  * Used for both the inline settings list and Metadata blocks:
+  * - `parse`: Read the field's own value from a source node, `undefined` means the value is invalid
+  * - `assign`: Write the parsed value to the element builtin props (e.g. write `table.note` instead of `table.metadata`)
   */
-interface MetadataField<T extends MetadataTarget> {
-  /** Check if the metadata value is syntactically correct */
-  isValidBuiltinFieldValue (node?: SyntaxNode): boolean;
+type MetadataField<T, V> = {
+  /** Type of the parsed value, reported when the field is read as a metadata entry */
+  type: CustomMetadataValueType;
+  /** Parse the source node into the field's value, `undefined` if the node is not a valid value for this field */
+  parse (node?: SyntaxNode): V | undefined;
   message: string;
 
-  /** Write the metadata value to the element builtin props (e.g. write to `table.note`) */
-  assignBuiltinField (element: Partial<T>, value: string, token: TokenPosition): void;
-}
+  /** Write the parsed value to the element builtin props (e.g. write to `table.note`) */
+  assign (element: Partial<T>, value: V, token: TokenPosition): void;
+};
 
-// Per-kind registry of promotable settings, each with its own validate + assign
-export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName = SettingName> = Record<K, MetadataField<T>>;
+// A per-kind registry: exactly the promotable settings for that kind, each carrying its own parse + assign. K is tightened per kind.
+export type MetadataFieldRegistry<T extends MetadataTarget, R extends { [K in SettingName]?: CustomMetadataValue['value'] }> = { [K in keyof R]: MetadataField<T, R[K]> };
 
 type NameWithSymbolKind = {
   name: string;
@@ -140,29 +143,29 @@ export function attachCustomMetadata<T extends MetadataTarget> (
     return a.declaration.start - b.declaration.start;
   });
 
-  const valueSets = orderedMetas
+  const blocks = orderedMetas
     .map((m) => compiler.interpretMetadata(m, filepath).getFiltered(UNHANDLED))
-    .filter((v) => !!v) as MetadataValues[];
-  if (!valueSets.length) return;
+    .filter((v) => !!v) as CustomMetadata[];
+  if (!blocks.length) return;
 
-  const lowerKeyMap: Record<string, { originalKey: string; value: string; token: TokenPosition }> = {};
-  for (const values of valueSets) {
-    for (const [originalKey, { value, token }] of Object.entries(values)) {
-      lowerKeyMap[originalKey.toLowerCase()] = { originalKey, value, token };
+  // Blocks are already parsed against their target kind's fields, so a later block's (valid) entry simply overrides an earlier one
+  const lowerKeyMap: Record<string, { originalKey: string; entry: CustomMetadataValue }> = {};
+  for (const block of blocks) {
+    for (const [originalKey, entry] of Object.entries(block)) {
+      lowerKeyMap[originalKey.toLowerCase()] = { originalKey, entry };
     }
   }
 
   // Start value is inline metadata (interpreted at element interpreter), then metadata in custom block override keys with same lowercase value
-  const mergedMetadata = targetElement.metadata
-    ? Object.fromEntries(Object.entries(targetElement.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }]))
+  const mergedMetadata: Record<string, { originalKey: string; entry: CustomMetadataValue }> = targetElement.metadata
+    ? Object.fromEntries(Object.entries(targetElement.metadata).map(([originalKey, entry]) => [originalKey.toLowerCase(), { originalKey, entry }]))
     : {};
 
-  Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
-    const { originalKey, value, token } = metadata;
-
-    if (fieldsRegistry[lowerCaseKey]) fieldsRegistry[lowerCaseKey].assignBuiltinField(targetElement, value, token);
-    else mergedMetadata[lowerCaseKey] = { originalKey, value };
+  Object.entries(lowerKeyMap).forEach(([lowerCaseKey, { originalKey, entry }]) => {
+    const field = fieldsRegistry[lowerCaseKey];
+    if (field) field.assign(targetElement, entry.value, entry.token);
+    else mergedMetadata[lowerCaseKey] = { originalKey, entry };
   });
 
-  targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((v) => [v.originalKey, v.value]));
+  targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((v) => [v.originalKey, v.entry]));
 }

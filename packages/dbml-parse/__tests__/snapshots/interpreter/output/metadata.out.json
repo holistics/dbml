@@ -4,7 +4,23 @@
       {
         "content": "a top-level note",
         "metadata": {
-          "author": "docs"
+          "author": {
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 44,
+                "offset": 522
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 44,
+                "offset": 508
+              }
+            },
+            "type": "string",
+            "value": "docs"
+          }
         },
         "name": "overview",
         "token": {
@@ -25,7 +41,23 @@
     "tableGroups": [
       {
         "metadata": {
-          "team": "data"
+          "team": {
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 40,
+                "offset": 477
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 40,
+                "offset": 465
+              }
+            },
+            "type": "string",
+            "value": "data"
+          }
         },
         "name": "g1",
         "tables": [
@@ -56,8 +88,40 @@
         "fields": [
           {
             "metadata": {
-              "masking": "partial",
-              "pii": "true"
+              "masking": {
+                "token": {
+                  "end": {
+                    "column": 21,
+                    "line": 36,
+                    "offset": 434
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 36,
+                    "offset": 416
+                  }
+                },
+                "type": "string",
+                "value": "partial"
+              },
+              "pii": {
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 35,
+                    "offset": 413
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 3,
+                    "line": 35,
+                    "offset": 402
+                  }
+                },
+                "type": "string",
+                "value": "true"
+              }
             },
             "name": "id",
             "pk": true,
@@ -102,8 +166,40 @@
           }
         ],
         "metadata": {
-          "color": "#aaa",
-          "owner": "scott"
+          "color": {
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 31,
+                "offset": 362
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 31,
+                "offset": 351
+              }
+            },
+            "type": "color",
+            "value": "#aaa"
+          },
+          "owner": {
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 25,
+                "offset": 257
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 25,
+                "offset": 243
+              }
+            },
+            "type": "string",
+            "value": "scott"
+          }
         },
         "name": "users",
         "note": {

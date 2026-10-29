@@ -2,7 +2,7 @@ import { groupBy, isEmpty, reduce } from 'lodash-es';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
 } from '@dbml/parse';
-import type { CustomMetadata } from '@dbml/parse';
+import type { CustomMetadata, CustomMetadataValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -142,19 +142,19 @@ class DbmlExporter {
       let line = '';
       const index = model.indexes[indexId];
 
-      if (index.columnIds.length > 1) {
-        line = `(${index.columnIds.map((columnId) => {
-          const column = model.indexColumns[columnId];
-          if (column.type === 'expression') {
-            return `\`${column.value}\``;
-          }
-          return column.value;
-        }).join(', ')})`;
-      } else if (index.columnIds.length === 1) {
-        const column = model.indexColumns[index.columnIds[0]];
-        line = column.type === 'expression'
+      const columnLines = index.columnIds.map((columnId) => {
+        const column = model.indexColumns[columnId];
+        const name = column.type === 'expression'
           ? `\`${column.value}\``
           : column.value;
+        return column.sortOrder === 'desc' ? `${name} [desc]` : name;
+      });
+      // A single `name [desc]` outside parentheses would be read as the index's own settings
+      const hasSortOrder = index.columnIds.some((columnId) => model.indexColumns[columnId].sortOrder === 'desc');
+      if (columnLines.length > 1 || hasSortOrder) {
+        line = `(${columnLines.join(', ')})`;
+      } else if (columnLines.length === 1) {
+        line = columnLines[0];
       }
 
       const indexSettings: string[] = [];
@@ -474,13 +474,19 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
+  static formatMetadataValue (entry: CustomMetadataValue): string {
+    // A color is a string value too, so switch on the type to write it back unquoted
+    if (entry.type === 'string') return DbmlExporter.escapeNote(String(entry.value));
+    return String(entry.value);
+  }
+
   static exportMetadata (model: NormalizedModel): string {
     const blocks: string[] = [];
     const database = model.database['1'];
 
     const buildMetadataBlock = (header: string, metadata: CustomMetadata) => {
       const bodyLines = Object.entries(metadata)
-        .map(([key, value]) => `  ${key}: ${DbmlExporter.escapeNote(value)}`)
+        .map(([key, value]) => `  ${key}: ${DbmlExporter.formatMetadataValue(value)}`)
         .join('\n');
       return `Metadata ${header} {\n${bodyLines}\n}\n`;
     };

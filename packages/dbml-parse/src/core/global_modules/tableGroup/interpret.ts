@@ -21,38 +21,18 @@ import type { TableGroup } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
   ElementKind,
-  SettingName,
   type Filepath,
   type TableGroupSymbol,
 } from '@/core/types';
-import type { Color } from '@/core/types/schemaJson';
-import { isExpressionAQuotedString, isValidHexColor } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import {
-  extractColor,
   extractElementName,
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
-import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
-
-export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
-  [SettingName.Note]: {
-    isValidBuiltinFieldValue: isExpressionAQuotedString,
-    message: "'note' must be a string literal",
-    assignBuiltinField (element, value, token) {
-      element.note = { value, token };
-    },
-  },
-  [SettingName.Color]: {
-    isValidBuiltinFieldValue: isValidHexColor,
-    message: "'color' must be a color literal",
-    assignBuiltinField (element, value) {
-      element.color = value as Color;
-    },
-  },
-};
+import { assignInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/utils';
+import { TABLEGROUP_METADATA_FIELDS } from '../metadata/registries';
 
 export class TableGroupInterpreter {
   private compiler: Compiler;
@@ -170,19 +150,7 @@ export class TableGroupInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.tableGroup.color = settingMap.color?.length
-      ? extractColor(settingMap.color?.at(0)?.value)
-      : undefined;
-
-    const [
-      noteNode,
-    ] = settingMap.note || [];
-    this.tableGroup.note = noteNode && {
-      value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
-      token: getTokenPosition(noteNode),
-    };
-
-    this.tableGroup.metadata = extractCustomInlineMetadata(settingMap, Object.keys(TABLEGROUP_METADATA_FIELDS) as SettingName[]);
+    assignInlineMetadata(this.tableGroup, settingMap, TABLEGROUP_METADATA_FIELDS);
 
     return [];
   }

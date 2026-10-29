@@ -1,12 +1,16 @@
 import { last } from 'lodash-es';
 import {
   isAccessExpression,
+  getIndexColumnSortOrder,
+  isExpressionAnIdentifierNode,
+  isExpressionASignedNumberExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isTupleOfVariables,
   isValidIndexName,
 } from '@/core/utils/validate';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -15,6 +19,7 @@ import {
   FunctionExpressionNode,
   IdentifierStreamNode,
   LiteralNode,
+  PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
   TupleExpressionNode,
@@ -126,38 +131,25 @@ export function destructureComplexVariableTuple (
 }
 
 export function destructureIndexNode (node?: SyntaxNode): {
-  functional: FunctionExpressionNode[];
-  nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
+  functional: { name: FunctionExpressionNode; descending: boolean }[];
+  nonFunctional: { name: PrimaryExpressionNode & { expression: VariableNode }; descending: boolean }[];
 } | undefined {
-  if (isValidIndexName(node)) {
-    return node instanceof FunctionExpressionNode
-      ? {
-          functional: [
-            node,
-          ],
-          nonFunctional: [],
-        }
-      : {
-          functional: [],
-          nonFunctional: [
-            node,
-          ],
-        };
+  const functional: { name: FunctionExpressionNode; descending: boolean }[] = [];
+  const nonFunctional: { name: PrimaryExpressionNode & { expression: VariableNode }; descending: boolean }[] = [];
+
+  for (const element of node instanceof TupleExpressionNode ? node.elementList : [node]) {
+    const sortOrder = getIndexColumnSortOrder(element);
+    const name = sortOrder ? (element as ArrayNode).array : element;
+    if (!isValidIndexName(name)) return undefined;
+    const descending = sortOrder === 'desc';
+    if (name instanceof FunctionExpressionNode) {
+      functional.push({ name, descending });
+    } else {
+      nonFunctional.push({ name, descending });
+    }
   }
 
-  if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
-    const functionalIndexName = node.elementList.filter(
-      (e) => e instanceof FunctionExpressionNode,
-    ) as FunctionExpressionNode[];
-    const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
-
-    return {
-      functional: functionalIndexName,
-      nonFunctional: nonfunctionalIndexName,
-    };
-  }
-
-  return undefined;
+  return { functional, nonFunctional };
 }
 
 export function extractQuotedStringToken (value?: SyntaxNode): string | undefined {
@@ -179,8 +171,38 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`
-// Returns the callee variables (schema, table) and the args (col1, col2)
+// Extract a signed number from a node (e.g., -42, +3.14)
+// Handles prefix operators on numeric literals
+export function extractSignedNumber (node: SyntaxNode): number | null {
+  // Try plain numeric literal first
+  const literal = extractNumericLiteral(node);
+  if (literal !== null) return literal;
+
+  // Try signed number: -42, +3.14
+  if (isExpressionASignedNumberExpression(node)) {
+    if (node instanceof PrefixExpressionNode && node.expression) {
+      const op = node.op?.value;
+      const inner = extractNumericLiteral(node.expression);
+      if (inner !== null) {
+        return op === '-' ? -inner : inner;
+      }
+    }
+  }
+
+  return null;
+}
+
+export function extractBooleanLiteral (node?: SyntaxNode): boolean | null {
+  if (isExpressionAnIdentifierNode(node)) {
+    const value = node.expression.variable.value.toLowerCase();
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+  }
+  return null;
+}
+
+// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
+// Returns the callee variables (schema, table) and the args (col1, col2).
 //   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
 //   table(col1, col2)        => { variables: [table], args: [col1, col2] }
 //   table()                  => { variables: [table], args: [] }

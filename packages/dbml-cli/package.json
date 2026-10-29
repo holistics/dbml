@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "coverage": "vitest --coverage",
-    "build": "rm -rf ./lib && tsc --noEmit && vite build",
+    "build": "rimraf ./lib && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "prepublish": "npm run build",
     "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts)$')",
@@ -46,7 +46,7 @@
     "strip-ansi": "^5.2.0",
     "winston": "^3.2.1"
   },
-  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
+  "gitHead": "abfb18f9b5797966113259cdcd8a6353de88033e",
   "engines": {
     "node": ">=18"
   }

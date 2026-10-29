@@ -400,15 +400,18 @@ export default class Compiler {
   initMonacoServices (options?: {
     autocompletion?: {
       triggerCharacters?: string[];
+      // Maximum directory depth for specifier-mode import path completions (default: 2)
+      fileListDepth?: number;
     };
   }) {
-    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [];
+    const { triggerCharacters = [], fileListDepth } = options?.autocompletion ?? {};
 
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
       autocompletionProvider: new DBMLCompletionItemProvider(this, {
         triggerCharacters,
+        fileListDepth,
       }),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
       codeActionProvider: new DBMLCodeActionProvider(this),

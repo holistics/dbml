@@ -41,7 +41,7 @@
     "bench": "vitest bench",
     "build:parser": "node src/parse/deprecated/buildParser.cjs",
     "build:lib": "vite build",
-    "build": "rm -rf ./lib && npm run build:parser && npm run build:lib",
+    "build": "rimraf ./lib && npm run build:parser && npm run build:lib",
     "prepublish": "npm run build",
     "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts)$')",
     "lint:all": "eslint .",
@@ -59,7 +59,7 @@
   "devDependencies": {
     "bluebird": "^3.5.5"
   },
-  "gitHead": "22950b397bac439d76aca6934b128cdf0b460521",
+  "gitHead": "abfb18f9b5797966113259cdcd8a6353de88033e",
   "engines": {
     "node": ">=16"
   }

@@ -1,13 +1,14 @@
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type {
-  Color, ColumnType, CustomMetadata, TokenPosition,
+  Color, ColumnType, CustomMetadata, CustomMetadataValue, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import { UNHANDLED } from '@/core/types/module';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression,
+  destructureComplexVariable, destructureMemberAccessExpression, extractBooleanLiteral, extractQuotedStringToken, extractSignedNumber, extractVariableFromExpression,
 } from './expression';
 import {
   isExpressionASignedNumberExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, isValidHexColor,
@@ -16,6 +17,7 @@ import {
 import { extractNumber, getNumberTextFromExpression } from './numbers';
 import { NONE_COLOR } from '@/constants';
 import { SettingName } from '../types';
+import type { MetadataFieldRegistry, MetadataTarget } from '@/core/global_modules/metadata/utils';
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
@@ -58,6 +60,16 @@ export function extractElementName (nameNode: SyntaxNode): {
     name,
     schemaName: fragments.slice(0, -1),
   };
+}
+
+// A quoted string normalized as note content
+export function extractNote (node?: SyntaxNode): string | undefined {
+  const content = extractQuotedStringToken(node);
+  return content === undefined ? undefined : normalizeNote(content);
+}
+
+export function extractHexColor (node?: SyntaxNode): Color | undefined {
+  return isValidHexColor(node) ? node.expression.literal.value as Color : undefined;
 }
 
 export function extractColor (node?: SyntaxNode): Color | undefined {
@@ -149,6 +161,18 @@ export function processColumnType (
     }
   }
 
+  // If the type resolves to an imported/aliased symbol, use its canonical name
+  const refereeNode = destructureMemberAccessExpression(typeNode)?.at(-1) ?? typeNode;
+  const referee = compiler.nodeReferee(refereeNode).getFiltered(UNHANDLED);
+  if (referee && referee !== referee.originalSymbol) {
+    const { name, schema } = referee.originalSymbol.interpretedName(compiler, typeNode.filepath);
+    return new Report({
+      schemaName: schema || null,
+      type_name: `${name}${typeSuffix}`,
+      args: typeArgs,
+    });
+  }
+
   const {
     name: typeName, schemaName: typeSchemaName,
   } = extractElementName(typeNode);
@@ -173,8 +197,8 @@ export function processColumnType (
 }
 
 /**
-  * Extract inline custom metadata from an aggregated setting list,
-  * excluding keys that are natively attached to the element (headercolor and note in `table`, color in `tablegroup`, .etc).
+  * Extract inline custom metadata from an aggregated setting list, excluding the given recognized settings.
+  * Used for columns, whose recognized settings (pk, ref, note, .etc) are interpreted by the column symbol rather than field specs.
   *
   * NOTE: This is used during interpret phase, so no need to validate values, just extract them
   */
@@ -186,21 +210,58 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
     if (builtins.has(name.toLowerCase())) continue;
     const attr = attrs[0];
     const value = extractMetadataValue(attr.value);
-    if (value !== undefined) values[name] = value;
+    if (value !== undefined) values[name] = { ...value, token: getTokenPosition(attr) };
   }
 
   return values;
 }
 
-// Best-effort scalar extraction for a free-form metadata value node, tries quoted string then color
-export function extractMetadataValue (node?: SyntaxNode): string | Color | undefined {
+/**
+  * Interpret an element's aggregated setting list as metadata:
+  * - Builtin fields (headercolor and note in `table`, color in `tablegroup`, .etc) are parsed and assigned onto the element by their field spec
+  * - Every other key becomes free-form custom metadata on `element.metadata`
+  *
+  * Invalid values are skipped (reported at validate phase).
+  */
+export function assignInlineMetadata<T extends MetadataTarget> (
+  element: Partial<T>,
+  settingMap: Settings,
+  registry: MetadataFieldRegistry<T, any>,
+): void {
+  const metadata: CustomMetadata = {};
+
+  for (const [name, attrs] of Object.entries(settingMap)) {
+    const attr = attrs[0];
+    const field = registry[name];
+    if (field) {
+      const value = field.parse(attr.value);
+      if (value !== undefined) field.assign(element, value, getTokenPosition(attr));
+      continue;
+    }
+
+    const value = extractMetadataValue(attr.value);
+    if (value !== undefined) metadata[name] = { ...value, token: getTokenPosition(attr) };
+  }
+
+  element.metadata = metadata;
+}
+
+// Best-effort scalar extraction for a free-form metadata value node.
+// Tries: boolean -> signed number -> quoted string -> color.
+export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataValue, 'token'> | undefined {
   if (!node) return undefined;
 
+  const boolean = extractBooleanLiteral(node);
+  if (boolean !== null) return { value: boolean, type: 'bool' };
+
+  const number = extractSignedNumber(node);
+  if (number !== null) return { value: number, type: 'number' };
+
   const quoted = extractQuotedStringToken(node);
-  if (quoted !== undefined) return quoted;
+  if (quoted !== undefined) return { value: quoted, type: 'string' };
 
   const color = extractColor(node);
-  if (color !== undefined) return color;
+  if (color !== undefined) return { value: color, type: 'color' };
 
   return undefined;
 }
