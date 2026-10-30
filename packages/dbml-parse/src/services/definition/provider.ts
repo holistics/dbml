@@ -101,7 +101,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
           endColumn: endPos.column,
           endLineNumber: endPos.line + 1,
         },
-        range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: 1 },
+        range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: 10 },
         uri: targetUri,
       }];
     }
