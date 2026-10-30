@@ -4,16 +4,15 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
 } from '@/core/types/nodes';
-import { SymbolKind } from '@/core/types/symbol';
-import { MetadataTargetKind } from '@/core/types/symbol/symbols';
+import { MetadataTargetKind, SymbolKind } from '@/core/types/symbol';
 import { ElementKind } from '@/core/types';
 import { isElementNode } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+import { getMetadataTargetKind, getMetadataTargetKindLabel } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import type { ElementIdentifier } from './types';
-import { lookupElementSymbol, normalizeSchema } from './utils';
+import { normalizeSchema } from './utils';
 import { formatTypedValue, type TypedValue } from '../utils';
 
 // Map each Metadata-supported element kind to its MetadataTargetKind
@@ -106,24 +105,6 @@ function buildMetadataBlock (
   value: string,
 ): string {
   return `Metadata ${targetKindStr} ${targetName} {\n  ${key}: ${value}\n}`;
-}
-
-// Get the human-readable target kind keyword (e.g. "Table", "Column")
-export function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
-  switch (targetKind) {
-    case MetadataTargetKind.Table:
-      return 'Table';
-    case MetadataTargetKind.Column:
-      return 'Column';
-    case MetadataTargetKind.TableGroup:
-      return 'TableGroup';
-    case MetadataTargetKind.Note:
-      return 'Note';
-    default: {
-      const _: never = targetKind;
-      return targetKind;
-    }
-  }
 }
 
 // Returns TextEdit[] to add/update/remove a single key in the Metadata block for `target`

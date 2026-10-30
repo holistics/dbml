@@ -6,18 +6,20 @@ import {
   FunctionApplicationNode,
   InfixExpressionNode,
   PrefixExpressionNode,
+  ProgramNode,
   type SyntaxNode,
 } from '../nodes';
 import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '../schemaJson';
 import type { SyntaxToken } from '../tokens';
 import type {
   ColumnSymbol,
+  InternedNodeSymbol,
   NodeSymbol,
   ProgramSymbol,
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
-import { SymbolKind } from '../symbol';
+import { MetadataKind, MetadataTargetKind, SymbolKind } from './kind';
 import type { Internable } from '../internable';
 import type { RelationshipOp, RelationCardinality } from '../relation';
 import { getMultiplicities, parseCardinality } from '../relation';
@@ -25,22 +27,12 @@ import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
   getBody,
+  destructureComplexVariable,
   destructureComplexVariableTuple,
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
-import { getRightmostVariable } from '@/core/utils/validate';
-
-export enum MetadataKind {
-  Ref = 'ref',
-  Dep = 'dep',
-  PartialRef = 'partial ref',
-  TableChecks = 'table checks',
-  Indexes = 'indexes',
-  Records = 'records',
-  Project = 'project',
-  MetadataElement = 'metadata element',
-}
+import { namedRefsIn } from '@/core/global_modules/ref/utils';
 
 declare const __nodeMetadataBrand: unique symbol;
 export type NodeMetadataId = number & { readonly [__nodeMetadataBrand]: true };
@@ -64,21 +56,27 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
     return `metadata@${this.declaration.filepath.intern()}:${this.id}` as InternedNodeMetadata;
   }
 
-  abstract owners (compiler: Compiler): NodeSymbol[];
-
-  /** Get programs (source files) that can both
-    * - reach this metadata's declaration file and
-    * - see all the given target symbols in their nested schema.
+  /**
+    * Whether this declaration applies in `program`: the program reaches the declaration's file, and the elements
+    * the declaration is bound to by syntax are in the program's nested schema.
+    * Cycle rule: never reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents),
+    * because the index is built from declaredTargets().
     */
-  resolveOwnerPrograms (compiler: Compiler, targets: NodeSymbol[]): ProgramSymbol[] {
-    const declarationFilepath = this.declaration.filepath;
-    return compiler.reachableFiles()
-      .flatMap((f) => getProgramSymbol(compiler, f) || [])
-      .filter((s) => {
-        const reachableFromProgram = compiler.reachableFiles(s.filepath);
-        return reachableFromProgram.some((f) => f.equals(declarationFilepath)) && targets.every((t) => s.inNestedSchema(compiler, t));
-      });
-  }
+  isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
+    if (!compiler.reachableFiles(program.filepath).some((f) => f.equals(this.declaration.filepath))) return false;
+
+    const targets = this.targets(compiler);
+    if (targets.length === 0) return false;
+
+    return targets.every((t) => t instanceof NodeMetadata ? t.isVisibleFrom(compiler, program) : program.inNestedSchema(compiler, t));
+  };
+
+  /**
+    * The candidate targets of this declaration (what it is bound to by syntax), always `originalSymbol` for symbols.
+    * Used to build the resolution index.
+    * WARN: Cycle rule: NEVER reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents).
+    */
+  abstract targets (compiler: Compiler): (NodeSymbol | NodeMetadata)[];
 }
 
 // Standalone Ref: `Ref name: a.x > b.y [settings]`
@@ -89,6 +87,13 @@ export class RefMetadata extends NodeMetadata {
 
   constructor (declaration: ElementDeclarationNode | AttributeNode) {
     super(declaration);
+  }
+
+  /** The name of a named standalone top-level Ref (`Ref name: ...`), undefined for unnamed and inline refs */
+  name (compiler: Compiler): string | undefined {
+    if (!(this.declaration instanceof ElementDeclarationNode)) return undefined;
+    if (!(this.declaration.parentNode instanceof ProgramNode)) return undefined;
+    return compiler.nodeFullname(this.declaration).getFiltered(UNHANDLED)?.at(-1);
   }
 
   // This is set for inline refs
@@ -248,13 +253,12 @@ export class RefMetadata extends NodeMetadata {
     return this.declaration;
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  /** The endpoint tables: the left-endpoint table (inline: the container), then the right one */
+  override targets (compiler: Compiler): TableSymbol[] {
     const leftTableSymbol = this.leftTable(compiler);
     const rightTableSymbol = this.rightTable(compiler);
-
     if (!leftTableSymbol || !rightTableSymbol) return [];
-
-    return this.resolveOwnerPrograms(compiler, [leftTableSymbol, rightTableSymbol]);
+    return filterDuplicateSymbols([leftTableSymbol, rightTableSymbol]);
   }
 }
 
@@ -388,25 +392,16 @@ export class DepMetadata extends NodeMetadata {
     return compiler.nodeSymbol(colNode).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    const upstreamTbls = this.upstreamTables(compiler);
-    const downstreamTbls = this.downstreamTables(compiler);
-
-    const tableSymbols = [
-      ...upstreamTbls,
-      ...downstreamTbls,
-    ].filter((t): t is TableSymbol => !!t);
-    if (tableSymbols.length === 0) return [];
-
-    const declarationFilepath = this.declaration.filepath;
-    const reachableFiles = compiler.reachableFiles();
-    return reachableFiles
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
-      .filter((s) => {
-        const reachableFromProgram = compiler.reachableFiles(s.filepath);
-        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
-          && tableSymbols.every((t) => (s as ProgramSymbol).inNestedSchema(compiler, t));
-      });
+  /** The endpoint tables of the Dep */
+  override targets (compiler: Compiler): TableSymbol[] {
+    const first = this.declaration instanceof AttributeNode
+      ? this.container(compiler)
+      : this.downstreamTables(compiler)[0];
+    return filterDuplicateSymbols([
+      first,
+      ...this.upstreamTables(compiler),
+      ...this.downstreamTables(compiler),
+    ]);
   }
 }
 
@@ -487,13 +482,12 @@ export class PartialRefMetadata extends NodeMetadata {
     return this.declaration;
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    const leftTableSymbol = this.leftTablePartial(compiler);
-    const rightTableSymbol = this.rightTable(compiler);
-
-    if (!leftTableSymbol || !rightTableSymbol) return [];
-
-    return this.resolveOwnerPrograms(compiler, [leftTableSymbol, rightTableSymbol]);
+  // The TablePartial the Ref is declared on
+  override targets (compiler: Compiler): TablePartialSymbol[] {
+    const leftTablePartial = this.leftTablePartial(compiler);
+    const rightTable = this.rightTable(compiler);
+    if (!leftTablePartial || !rightTable) return [];
+    return [leftTablePartial, rightTable];
   }
 }
 
@@ -508,13 +502,10 @@ export class TableChecksMetadata extends NodeMetadata {
     this.ownerTable = declaration.parentNode?.parentOfKind(ElementDeclarationNode);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  override targets (compiler: Compiler): NodeSymbol[] {
     if (!this.ownerTable) return [];
     const ownerSymbol = compiler.nodeSymbol(this.ownerTable).getFiltered(UNHANDLED);
-    if (!ownerSymbol) return [];
-    return [
-      ownerSymbol.originalSymbol,
-    ];
+    return [ownerSymbol].filter((s) => !!s);
   }
 }
 
@@ -529,13 +520,10 @@ export class IndexesMetadata extends NodeMetadata {
     this.ownerTable = declaration.parentNode?.parentOfKind(ElementDeclarationNode);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  override targets (compiler: Compiler): NodeSymbol[] {
     if (!this.ownerTable) return [];
     const ownerSymbol = compiler.nodeSymbol(this.ownerTable).getFiltered(UNHANDLED);
-    if (!ownerSymbol) return [];
-    return [
-      ownerSymbol.originalSymbol,
-    ];
+    return [ownerSymbol].filter((s) => !!s);
   }
 }
 
@@ -572,11 +560,8 @@ export class RecordsMetadata extends NodeMetadata {
     return !!s?.[SettingName.Example]?.length;
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    const tableSymbol = this.table(compiler);
-    if (!tableSymbol) return [];
-
-    return this.resolveOwnerPrograms(compiler, [tableSymbol]);
+  override targets (compiler: Compiler): TableSymbol[] {
+    return [this.table(compiler)].filter((t) => !!t);
   }
 }
 
@@ -590,30 +575,33 @@ export class MetadataElementMetadata extends NodeMetadata {
     super(declaration);
   }
 
-  // The element this metadata annotates (Table/Column/Schema, etc)
-  // Resolved via the header-name referee, which metadataModule.nodeReferee maps to the target through resolveMetadataTarget
-  target (compiler: Compiler): NodeSymbol | undefined {
-    const nameNode = this.declaration.name;
-    if (!nameNode) return undefined;
-    const targetNode = getRightmostVariable(nameNode) ?? nameNode;
-    return compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
+  /** Reaches the declaration's file only; the target's applicability is checked when attaching */
+  override isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
+    return compiler.reachableFiles(program.filepath).some((f) => f.equals(this.declaration.filepath));
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    let target = this.target(compiler);
-    if (!target) return [];
+  /**
+    * The symbols/Refs named by the header. 0 = not found, 2+ = ambiguous (the block is then registered nowhere).
+    */
+  override targets (compiler: Compiler): (NodeSymbol | NodeMetadata)[] {
+    const programSymbol = getProgramSymbol(compiler, this.declaration.filepath);
+    if (!programSymbol) return [];
 
-    // A Column lives inside a Table, not as a direct schema member, so normalise to the containing table
-    if (target.kind === SymbolKind.Column) {
-      const tableNode = target.declaration?.parentOfKind(ElementDeclarationNode);
-      const tableSymbol = tableNode
-        ? compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
-        : undefined;
-      if (!tableSymbol) return [];
-      target = tableSymbol;
+    const targetKind = getMetadataTargetKind(this.declaration);
+    const nameParts = destructureComplexVariable(this.declaration.name);
+    if (!nameParts?.length || !targetKind) return [];
+
+    if (targetKind === MetadataTargetKind.Ref) {
+      return namedRefsIn(compiler, programSymbol).filter((r) => r.name(compiler) === nameParts[0]);
     }
 
-    return this.resolveOwnerPrograms(compiler, [target]);
+    let symbol: NodeSymbol | undefined = programSymbol;
+    for (const { name, symbolKind } of mapNamePartToSymbolKind(nameParts, targetKind)) {
+      if (!symbol) break;
+      symbol = compiler.lookupMembers(symbol, symbolKind, name);
+    }
+
+    return symbol && symbol !== programSymbol ? [symbol.originalSymbol] : [];
   }
 }
 
@@ -627,16 +615,29 @@ export class ProjectMetadata extends NodeMetadata {
     super(declaration);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    const filepath = this.declaration.filepath;
-    const programNode = compiler.parseFile(filepath).getValue().ast;
-    const symbol = compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
-    return symbol
-      ? [
-          symbol,
-        ]
-      : [];
+  // A Project applies only in its own file's program
+  override isVisibleFrom (_compiler: Compiler, program: ProgramSymbol): boolean {
+    return program.filepath.equals(this.declaration.filepath);
   }
+
+  override targets (compiler: Compiler): ProgramSymbol[] {
+    const programSymbol = getProgramSymbol(compiler, this.declaration.filepath);
+    return programSymbol ? [programSymbol] : [];
+  }
+}
+
+function filterDuplicateSymbols<S extends NodeSymbol> (symbols: (S | undefined)[]): S[] {
+  const seen = new Set<InternedNodeSymbol>();
+  const result: S[] = [];
+  for (const symbol of symbols) {
+    if (!symbol) continue;
+
+    const key = symbol.intern();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(symbol);
+  }
+  return result;
 }
 
 function extractColumnsFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): ColumnSymbol[] {
@@ -669,7 +670,7 @@ function extractTableFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefi
     ? fragments.variables.at(-1)
     : fragments.variables.at(-2);
   if (!tableNode) return undefined;
-  return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+  return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED)?.originalSymbol as TableSymbol | undefined;
 }
 
 function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): TableSymbol | undefined {
@@ -680,17 +681,57 @@ function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | und
   if (fragments.tupleElements.length > 0) {
     const tableNode = fragments.variables.at(-1);
     if (!tableNode) return undefined;
-    return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+    return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED)?.originalSymbol as TableSymbol | undefined;
   }
 
   const last = fragments.variables.at(-1);
   if (last) {
-    const lastSym = compiler.nodeReferee(last).getFiltered(UNHANDLED);
+    const lastSym = compiler.nodeReferee(last).getFiltered(UNHANDLED)?.originalSymbol;
     if (lastSym?.isKind(SymbolKind.Table)) return lastSym as TableSymbol;
   }
   const secondLast = fragments.variables.at(-2);
   if (secondLast) {
-    return compiler.nodeReferee(secondLast).getFiltered(UNHANDLED) as TableSymbol | undefined;
+    return compiler.nodeReferee(secondLast).getFiltered(UNHANDLED)?.originalSymbol as TableSymbol | undefined;
   }
   return undefined;
+}
+
+export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
+  const value = node.targetKind?.value?.toLowerCase();
+  return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
+}
+
+export type NameWithSymbolKind = {
+  name: string;
+  symbolKind: SymbolKind;
+};
+
+/** @internal Exported for testing only. */
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
+  if (nameParts.length === 0) return [];
+
+  let kindParts: SymbolKind[];
+
+  switch (targetKind) {
+    case MetadataTargetKind.Table:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.Table];
+      break;
+    case MetadataTargetKind.Column:
+      if (nameParts.length === 1) kindParts = [SymbolKind.Column];
+      else kindParts = [...Array(nameParts.length - 2).fill(SymbolKind.Schema), SymbolKind.Table, SymbolKind.Column];
+      break;
+    case MetadataTargetKind.TableGroup:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.TableGroup];
+      break;
+    case MetadataTargetKind.Note:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.StickyNote];
+      break;
+    // Exhaustiveness checking
+    default: {
+      const _: never = targetKind;
+      break;
+    }
+  }
+
+  return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
 }

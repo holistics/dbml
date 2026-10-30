@@ -5,7 +5,6 @@ import type { Internable } from '@/core/types/internable';
 import { UNHANDLED } from '@/core/types/module';
 import type Compiler from '@/compiler';
 import type { CanonicalName } from '@/compiler/queries/canonicalName';
-import { MetadataKind } from '@/core/types/symbol/metadata';
 import type { TableChecksMetadata, NodeMetadata, IndexesMetadata } from '@/core/types/symbol/metadata';
 import type { TokenPosition, Index } from '@/core/types/schemaJson';
 import { SettingName } from '@/core/types/keywords';
@@ -25,54 +24,7 @@ import {
   type WildcardNode,
   ElementDeclarationNode,
 } from '@/core/types/nodes';
-
-export enum SymbolKind {
-  Schema = 'Schema',
-
-  Table = 'Table',
-  Column = 'Column',
-
-  TableGroup = 'TableGroup',
-  TableGroupField = 'TableGroup field',
-
-  Enum = 'Enum',
-  EnumField = 'Enum field',
-
-  StickyNote = 'Note',
-
-  TablePartial = 'TablePartial',
-  PartialInjection = 'PartialInjection',
-
-  DiagramView = 'DiagramView',
-  DiagramViewTopLevelWildcard = 'DiagramView top-level wildcard',
-  DiagramViewTable = 'DiagramView table',
-  DiagramViewTableGroup = 'DiagramView tablegroup',
-  DiagramViewNote = 'DiagramView note',
-  DiagramViewSchema = 'DiagramView schema',
-
-  Metadata = 'Metadata',
-
-  Program = 'Program',
-}
-
-// Allowable import kinds for use declaration
-export const ImportKind = {
-  Table: SymbolKind.Table,
-  Enum: SymbolKind.Enum,
-  TableGroup: SymbolKind.TableGroup,
-  TablePartial: SymbolKind.TablePartial,
-  Note: SymbolKind.StickyNote,
-  Schema: SymbolKind.Schema,
-};
-export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
-
-/** Allowed target element types for a Metadata element header */
-export enum MetadataTargetKind {
-  Table = SymbolKind.Table,
-  Column = SymbolKind.Column,
-  TableGroup = SymbolKind.TableGroup,
-  Note = SymbolKind.StickyNote,
-}
+import { MetadataKind, SymbolKind } from './kind';
 
 declare const __nodeSymbolBrand: unique symbol;
 export type NodeSymbolId = number & { readonly [__nodeSymbolBrand]: true };
@@ -172,7 +124,9 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
   }
 
   metadata (compiler: Compiler): NodeMetadata[] {
-    return compiler.symbolMetadata(this);
+    return compiler
+      .symbolMetadata(this.originalSymbol)
+      .filter((meta) => meta.targets(compiler).some((node) => node.intern() === this.originalSymbol.intern()));
   }
 
   members (compiler: Compiler): NodeSymbol[] {

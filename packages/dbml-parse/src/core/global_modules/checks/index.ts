@@ -1,7 +1,6 @@
 import type Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { TableChecksMetadata, MetadataKind } from '@/core/types/symbol/metadata';
-import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { MetadataKind, TableChecksMetadata, type NodeMetadata } from '@/core/types/symbol';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';

@@ -4,7 +4,7 @@ import Compiler from '@/compiler/index';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import type { TableIdentifier } from '@/compiler/queries/transform/types';
 import { Filepath } from '@/core/types/filepath';
-import { setupCompiler, fp } from '../interpreter/multifile/utils';
+import { setupCompiler } from '../interpreter/multifile/utils';
 
 function renameTable (
   oldName: string | TableIdentifier,
@@ -1912,11 +1912,11 @@ Table users {
 }
 `;
     const layout = new MemoryProjectLayout();
-    const fp = Filepath.from('/base.dbml');
-    layout.setSource(fp, base);
+    const filepath = Filepath.from('/base.dbml');
+    layout.setSource(filepath, base);
     const compiler = new Compiler(layout);
 
-    const result = compiler.renameTable(fp, 'users', 'accounts').get(fp.absolute)!;
+    const result = compiler.renameTable(filepath, 'users', 'accounts').get(filepath.absolute)!;
     expect(result).toContain('Table accounts');
     expect(result).toContain('accounts.id'); // ref updated
     expect(result).not.toContain('users');
@@ -1931,12 +1931,12 @@ Table users {
 Table orders { user_id int [ref: > users.id] }`,
     });
 
-    const changes = compiler.renameTable(fp('/consumer.dbml'), 'users', 'accounts');
+    const changes = compiler.renameTable(Filepath.from('/consumer.dbml'), 'users', 'accounts');
 
     // Declaring file is NOT touched
-    expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+    expect(changes.has(Filepath.from('/base.dbml').absolute)).toBe(false);
 
-    const consumerAfter = changes.get(fp('/consumer.dbml').absolute)!;
+    const consumerAfter = changes.get(Filepath.from('/consumer.dbml').absolute)!;
     expect(consumerAfter).toContain('use { table users as accounts }');
     expect(consumerAfter).toContain('ref: > accounts.id');
     expect(consumerAfter).not.toContain('ref: > users.id');
@@ -1957,9 +1957,9 @@ Table posts {
 Table orders { user_id int [ref: > users.id] }`,
     });
 
-    const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
-    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+    const changes = compiler.renameTable(Filepath.from('/base.dbml'), 'users', 'accounts');
+    const baseAfter = changes.get(Filepath.from('/base.dbml').absolute)!;
+    const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
 
     expect(baseAfter).toContain('Table accounts');
     expect(baseAfter).toContain('accounts.id'); // ref in same file updated
@@ -1974,11 +1974,11 @@ Table orders { user_id int [ref: > users.id] }`,
   test('renaming a table that does not exist returns source unchanged', () => {
     const source = 'Table users { id int [pk] }';
     const layout = new MemoryProjectLayout();
-    const fp = Filepath.from('/main.dbml');
-    layout.setSource(fp, source);
+    const filepath = Filepath.from('/main.dbml');
+    layout.setSource(filepath, source);
     const compiler = new Compiler(layout);
 
-    const changes = compiler.renameTable(fp, 'nonexistent', 'other');
+    const changes = compiler.renameTable(filepath, 'nonexistent', 'other');
     expect(changes.size).toBe(0);
   });
 
@@ -1988,11 +1988,11 @@ Table users { id int [pk] }
 Table accounts { id int [pk] }
 `;
     const layout = new MemoryProjectLayout();
-    const fp = Filepath.from('/main.dbml');
-    layout.setSource(fp, source);
+    const filepath = Filepath.from('/main.dbml');
+    layout.setSource(filepath, source);
     const compiler = new Compiler(layout);
 
-    const changes = compiler.renameTable(fp, 'users', 'accounts');
+    const changes = compiler.renameTable(filepath, 'users', 'accounts');
     expect(changes.size).toBe(0); // unchanged - collision detected
   });
 
@@ -2007,11 +2007,11 @@ Table posts {
 }
 `;
     const layout = new MemoryProjectLayout();
-    const fp = Filepath.from('/main.dbml');
-    layout.setSource(fp, source);
+    const filepath = Filepath.from('/main.dbml');
+    layout.setSource(filepath, source);
     const compiler = new Compiler(layout);
 
-    const result = compiler.renameTable(fp, 'auth.users', 'auth.members').get(fp.absolute)!;
+    const result = compiler.renameTable(filepath, 'auth.users', 'auth.members').get(filepath.absolute)!;
     expect(result).toContain('auth.members');
     expect(result).toContain('auth.members.id');
     expect(result).not.toContain('auth.users');
@@ -2024,11 +2024,11 @@ Table posts {
 Table orders { user_id int [ref: > u.id] }`,
     });
 
-    const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
-    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+    const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'u', 'member');
+    const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
 
     // Original declaration left alone, alias rename never touches the source file
-    expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+    expect(changes.has(Filepath.from('/base.dbml').absolute)).toBe(false);
     expect(mainAfter).toContain('use { table users as member }');
     expect(mainAfter).toContain('ref: > member.id');
     expect(mainAfter).not.toContain(' u.');
@@ -2043,7 +2043,7 @@ Table orders { user_id int [ref: > u.id] }`,
 Table orders { user_id int [ref: > u.id] }`,
     });
 
-    const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+    const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
     // Lookup miss, nothing changed
     expect(changes.size).toBe(0);
   });
@@ -2055,8 +2055,8 @@ Table orders { user_id int [ref: > u.id] }`,
 Table orders { user_id int [ref: > u.id] }`,
     });
 
-    const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+    const changes = compiler.renameTable(Filepath.from('/base.dbml'), 'users', 'accounts');
+    const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
 
     // The source-side token gets the new name, the local alias `u` is preserved
     // alias-side refs do not resolve to the original symbol
@@ -2115,10 +2115,10 @@ Ref: U.id < U.id
 Table orders { user_id int [ref: > users.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
 
-      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
-      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      expect(changes.has(Filepath.from('/base.dbml').absolute)).toBe(false);
+      const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
       expect(mainAfter).toContain('use { table users as accounts }');
       expect(mainAfter).toContain('ref: > accounts.id');
       expect(mainAfter).not.toContain('ref: > users.id');
@@ -2135,12 +2135,12 @@ Table orders { user_id int [ref: > users.id] }`,
 Table carts { user_id int [ref: > users.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-      expect(changes.get(fp('/base.dbml').absolute)!).toContain('Table accounts');
-      expect(changes.get(fp('/a.dbml').absolute)!).toContain('use { table accounts }');
-      expect(changes.get(fp('/a.dbml').absolute)!).toContain('ref: > accounts.id');
-      expect(changes.get(fp('/b.dbml').absolute)!).toContain('use { table accounts }');
-      expect(changes.get(fp('/b.dbml').absolute)!).toContain('ref: > accounts.id');
+      const changes = compiler.renameTable(Filepath.from('/base.dbml'), 'users', 'accounts');
+      expect(changes.get(Filepath.from('/base.dbml').absolute)!).toContain('Table accounts');
+      expect(changes.get(Filepath.from('/a.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(Filepath.from('/a.dbml').absolute)!).toContain('ref: > accounts.id');
+      expect(changes.get(Filepath.from('/b.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(Filepath.from('/b.dbml').absolute)!).toContain('ref: > accounts.id');
     });
   });
 
@@ -2152,12 +2152,12 @@ Table carts { user_id int [ref: > users.id] }`,
 Table orders { user_id int [ref: > users.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
 
       // Declaring file untouched
-      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+      expect(changes.has(Filepath.from('/base.dbml').absolute)).toBe(false);
 
-      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
       // A new named specifier with alias is inserted
       expect(mainAfter).toContain('use { table users as accounts }');
       // In-file refs updated
@@ -2174,8 +2174,8 @@ Table orders { user_id int [ref: > users.id] }`,
 Table orders { user_id int [ref: > users.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
+      const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
       expect(mainAfter).toContain('reuse { table users as accounts }');
     });
 
@@ -2185,8 +2185,8 @@ Table orders { user_id int [ref: > users.id] }`,
         '/main.dbml': 'use * from \'./base.dbml\'',
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
+      const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
       expect(mainAfter).toContain('use { table users as accounts }');
     });
 
@@ -2198,8 +2198,8 @@ Table orders { user_id int [ref: > users.id] }`,
       });
 
       // Renaming FROM the declaring file — renameRealDeclaration path, cascades normally
-      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-      const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+      const changes = compiler.renameTable(Filepath.from('/base.dbml'), 'users', 'accounts');
+      const baseAfter = changes.get(Filepath.from('/base.dbml').absolute)!;
       expect(baseAfter).toContain('Table accounts');
       expect(baseAfter).not.toContain('Table users');
     });
@@ -2213,11 +2213,11 @@ Table orders { user_id int [ref: > users.id] }`,
 Table orders { user_id int [ref: > u.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
-      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'u', 'member');
+      const mainAfter = changes.get(Filepath.from('/main.dbml').absolute)!;
 
       // Base file untouched, alias rename never propagates to the source
-      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+      expect(changes.has(Filepath.from('/base.dbml').absolute)).toBe(false);
       // Only the alias token and its refs change, source-side 'users' stays
       expect(mainAfter).toContain('use { table users as member }');
       expect(mainAfter).toContain('ref: > member.id');
@@ -2232,9 +2232,9 @@ Table orders { user_id int [ref: > u.id] }`,
 Table carts { user_id int [ref: > users.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-      const aliasedAfter = changes.get(fp('/aliased.dbml').absolute)!;
-      const unaliasedAfter = changes.get(fp('/unaliased.dbml').absolute)!;
+      const changes = compiler.renameTable(Filepath.from('/base.dbml'), 'users', 'accounts');
+      const aliasedAfter = changes.get(Filepath.from('/aliased.dbml').absolute)!;
+      const unaliasedAfter = changes.get(Filepath.from('/unaliased.dbml').absolute)!;
 
       // Aliased importer: source-name token in specifier flips, alias + refs preserved
       expect(aliasedAfter).toContain('use { table accounts as u }');
@@ -2252,7 +2252,7 @@ Table carts { user_id int [ref: > users.id] }`,
 Table orders { user_id int [ref: > u.id] }`,
       });
 
-      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const changes = compiler.renameTable(Filepath.from('/main.dbml'), 'users', 'accounts');
       // Lookup miss, nothing changed
       expect(changes.size).toBe(0);
     });

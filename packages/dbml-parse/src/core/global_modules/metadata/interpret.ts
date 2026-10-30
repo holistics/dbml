@@ -10,7 +10,7 @@ import {
 import Report from '@/core/types/report';
 import type { CustomMetadata } from '@/core/types/schemaJson';
 import { extractMetadataValue, getTokenPosition } from '@/core/utils/interpret';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+import { getMetadataTargetKind } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from './registries';
 
 export default class MetadataInterpreter {

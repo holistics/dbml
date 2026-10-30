@@ -2,11 +2,12 @@ import { Uri } from '@/services/types';
 import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
+import { ElementDeclarationNode, SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getOffsetFromMonacoPosition, namedRefAt } from '@/services/utils';
+import { MetadataElementMetadata } from '@/core/types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -39,7 +40,21 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
         ].includes(node?.kind)
       ) {
         const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED) ?? this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
-        const references = symbol ? this.compiler.symbolReferences(symbol) : undefined;
+        let references: SyntaxNode[] | undefined;
+        if (symbol) {
+          references = this.compiler.symbolReferences(symbol);
+        } else {
+          // A named Ref has no symbol: its references are its declaration name and the Metadata Ref header names
+          const ref = namedRefAt(this.compiler, node);
+          references = ref
+            ? [
+                ...(ref.declaration instanceof ElementDeclarationNode && ref.declaration.name ? [ref.declaration.name] : []),
+                ...this.compiler.symbolMetadata(ref)
+                  .filter((m) => m instanceof MetadataElementMetadata)
+                  .flatMap((m) => m.declaration.name ?? []),
+              ]
+            : undefined;
+        }
         if (references && references.length > 0) {
           return references.map((refNode: SyntaxNode) => {
             // Use filepath from reference node if available and in multi-file mode (uri is set)

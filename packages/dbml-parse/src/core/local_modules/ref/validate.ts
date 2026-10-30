@@ -1,4 +1,4 @@
-import { last, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { SettingName } from '@/core/types';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -9,8 +9,10 @@ import Report from '@/core/types/report';
 import { SyntaxTokenKind } from '@/core/types/tokens';
 import { destructureComplexVariableTuple, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+  Settings, aggregateSettingList, isSimpleName, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';
+import { REF_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class RefValidator {
   private declarationNode: ElementDeclarationNode;
@@ -139,28 +141,10 @@ export default class RefValidator {
         errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
       }
 
-      const args = [
-        ...field.args,
-      ];
-      if (last(args) instanceof ListExpressionNode) {
-        const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
-        errors.push(...errs);
-        args.pop();
-      } else if (args[0] instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSettings(args[0]));
-        args.shift();
-      }
-
-      if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
-      }
+      errors.push(...this.compiler.nodeSettings(field).getErrors());
     });
 
     return errors;
-  }
-
-  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
-    return validateFieldSettings(settings).getErrors();
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -211,12 +195,8 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
   const aggReport = aggregateSettingList(settings);
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
-  const clean: Settings = {};
 
-  for (const [
-    name,
-    attrs,
-  ] of Object.entries(settingMap)) {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Delete:
       case SettingName.Update:
@@ -228,33 +208,39 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
             errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
           }
         });
-        clean[name] = attrs;
         break;
       case SettingName.Color:
+      case SettingName.Note: {
         if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
         }
+        const field = REF_METADATA_FIELDS[name];
         attrs.forEach((attr) => {
-          if (!isValidHexColor(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+          if (field.parse(attr.value) === undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, field.message, attr));
           }
         });
-        clean[name] = attrs;
         break;
+      }
       case SettingName.Inactive:
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
           if (attr.value) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attr!));
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attr));
           }
         });
-        clean[name] = attrs;
         break;
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+        // Any non-builtin key is free-form inline custom metadata
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_REF_SETTING,
+            invalidValue: CompileErrorCode.INVALID_REF_SETTING_VALUE,
+          }));
+        break;
     }
   }
-  return new Report(clean, errors);
+  return new Report(settingMap, errors);
 }

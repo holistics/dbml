@@ -1,21 +1,21 @@
 import { describe, expect, test } from 'vitest';
-import { setupCompiler, fp, canonicalName } from '../interpreter/multifile/utils';
+import { setupCompiler, fp, getCanonicalName } from '../interpreter/multifile/utils';
 
-describe('canonicalName - basics', () => {
+describe('getCanonicalName - basics', () => {
   const { compiler } = setupCompiler({
     '/main.dbml': 'Table users { id int [pk] }\nTable auth.posts { id int [pk] }',
   });
 
   test('local table', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 
   test('schema-qualified table', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: 'auth', name: 'posts' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: 'auth', name: 'posts' });
   });
 });
 
-describe('canonicalName - import with and without alias', () => {
+describe('getCanonicalName - import with and without alias', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }\nTable auth.posts { id int [pk] }',
     '/main.dbml': [
@@ -27,54 +27,54 @@ describe('canonicalName - import with and without alias', () => {
   });
 
   test('non-aliased keeps original', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 
   test('`u` resolves to real name when `users` also imported', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'u')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'u')).toEqual({ schema: 'public', name: 'users' });
   });
 
   test('schema-qualified: `p` at program level found first', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: '', name: 'p' });
-    expect(canonicalName(compiler, '/main.dbml', 'p')).toEqual({ schema: '', name: 'p' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: '', name: 'p' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'p')).toEqual({ schema: '', name: 'p' });
   });
 });
 
-describe('canonicalName - multiple aliases, first wins', () => {
+describe('getCanonicalName - multiple aliases, first wins', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/main.dbml': "use { table users as a } from './base.dbml'\nuse { table users as b } from './base.dbml'",
   });
 
   test('both `a` and `b` resolve to first alias `a`', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'a')).toEqual({ schema: '', name: 'a' });
-    expect(canonicalName(compiler, '/main.dbml', 'b')).toEqual({ schema: '', name: 'a' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'a')).toEqual({ schema: '', name: 'a' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'b')).toEqual({ schema: '', name: 'a' });
   });
 });
 
-describe('canonicalName - alias alongside real name', () => {
+describe('getCanonicalName - alias alongside real name', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/main.dbml': "use { table users } from './base.dbml'\nuse { table users as u } from './base.dbml'",
   });
 
   test('real name `users` wins over alias `u`', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 });
 
-describe('canonicalName - alias flattens nested schema', () => {
+describe('getCanonicalName - alias flattens nested schema', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table x.y.items { id int [pk] }',
     '/main.dbml': "use { table x.y.items as flat } from './base.dbml'",
   });
 
   test('`flat` strips nested `x.y` schema', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'flat')).toEqual({ schema: '', name: 'flat' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'flat')).toEqual({ schema: '', name: 'flat' });
   });
 });
 
-describe('canonicalName - same symbol, 2 paths, different aliases', () => {
+describe('getCanonicalName - same symbol, 2 paths, different aliases', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/alt.dbml': "reuse { table users } from './base.dbml'",
@@ -82,12 +82,12 @@ describe('canonicalName - same symbol, 2 paths, different aliases', () => {
   });
 
   test('first alias `a` wins regardless of path', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'a')).toEqual({ schema: '', name: 'a' });
-    expect(canonicalName(compiler, '/main.dbml', 'b')).toEqual({ schema: '', name: 'a' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'a')).toEqual({ schema: '', name: 'a' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'b')).toEqual({ schema: '', name: 'a' });
   });
 });
 
-describe('canonicalName - same real name, 2 paths, deduplicates', () => {
+describe('getCanonicalName - same real name, 2 paths, deduplicates', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/alt.dbml': "reuse { table users } from './base.dbml'",
@@ -101,11 +101,11 @@ describe('canonicalName - same real name, 2 paths, deduplicates', () => {
   });
 
   test('canonical name is `users`', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 });
 
-describe('canonicalName - transitive reuse', () => {
+describe('getCanonicalName - transitive reuse', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/mid.dbml': "reuse { table users } from './base.dbml'",
@@ -113,11 +113,11 @@ describe('canonicalName - transitive reuse', () => {
   });
 
   test('preserves original name', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 });
 
-describe('canonicalName - chained selective use', () => {
+describe('getCanonicalName - chained selective use', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table users { id int [pk] }',
     '/mid.dbml': "use { table users } from './base.dbml'",
@@ -125,18 +125,18 @@ describe('canonicalName - chained selective use', () => {
   });
 
   test('resolves through intermediate', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 });
 
-describe('canonicalName - schema alias', () => {
+describe('getCanonicalName - schema alias', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': 'Table auth.users { id int [pk] }\nTable auth.posts { id int [pk] }',
     '/main.dbml': "use { schema auth as a } from './base'",
   });
 
   test('table under aliased schema uses alias as schema name', () => {
-    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'a', name: 'users' });
-    expect(canonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: 'a', name: 'posts' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'a', name: 'users' });
+    expect(getCanonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: 'a', name: 'posts' });
   });
 });
