@@ -96,9 +96,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       const { startPos, endPos } = node.importPath;
       return [{
         originSelectionRange: {
-          startColumn: startPos.column + 1,
+          startColumn: startPos.column + 2,
           startLineNumber: startPos.line + 1,
-          endColumn: endPos.column + 1,
+          endColumn: endPos.column,
           endLineNumber: endPos.line + 1,
         },
         range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: 1 },
