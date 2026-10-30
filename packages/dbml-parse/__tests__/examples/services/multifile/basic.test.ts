@@ -181,7 +181,7 @@ describe('[inline] multifile language services', () => {
         startColumn: 1,
         startLineNumber: 1,
         endColumn: 1,
-        endLineNumber: 1,
+        endLineNumber: 7,
       });
       expect(defs[0].uri.path).toBe(enumSourceFile.absolute);
     });
