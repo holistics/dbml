@@ -1,5 +1,6 @@
   ERROR: 
     ./in-files/broken.dbml(4,1): Expect an identifier
     ./in-files/broken.dbml(2,11): Custom setting 'pk name varchar' must be a string, a color literal, a number literal, or a boolean literal
+    ./in-files/main.dbml(1,12): Imported file './broken.dbml' contains errors
 
   A complete log can be found in:

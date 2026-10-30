@@ -3,7 +3,11 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
-  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
+  InfixExpressionNode,
+  SyntaxNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -15,19 +19,36 @@ import {
 import { GlobalModule } from '../types';
 import {
   isAccessExpression,
-  isDotDelimitedIdentifier, isExpressionAVariableNode, isUseDeclaration, isUseSpecifier,
+  isDotDelimitedIdentifier,
+  isExpressionAVariableNode,
+  isUseDeclaration,
+  isUseSpecifier,
 } from '@/core/utils/validate';
 
 export const useUtils = {
   // The name that the owning file would see the use specifier as
-  visibleName (compiler: Compiler, nodeOrSymbol: UseSpecifierNode | UseSymbol): string[] | undefined {
+  visibleName (
+    compiler: Compiler,
+    nodeOrSymbol: UseSpecifierNode | UseSymbol,
+  ): string[] | undefined {
+    if (
+      nodeOrSymbol instanceof NodeSymbol
+      && !(nodeOrSymbol.useSpecifierDeclaration instanceof UseSpecifierNode)
+    ) {
+      // For wildcard-imported UseSymbols, the name is already set on the symbol, re-deriving from the declaration would return the alias of the original element, not the intended name
+      return nodeOrSymbol.name !== undefined ? [nodeOrSymbol.name] : undefined;
+    }
+
     let node =
       nodeOrSymbol instanceof SyntaxNode
         ? nodeOrSymbol
         : nodeOrSymbol.useSpecifierDeclaration instanceof UseSpecifierNode
           ? nodeOrSymbol.useSpecifierDeclaration
           : nodeOrSymbol.declaration;
-    if (node instanceof UseSpecifierNode && nodeOrSymbol instanceof NodeSymbol) {
+    if (
+      node instanceof UseSpecifierNode
+      && nodeOrSymbol instanceof NodeSymbol
+    ) {
       // Ignore implicitly pulled via tablegroup or schema
       if (node.getSymbolKind() !== nodeOrSymbol.kind) {
         node = nodeOrSymbol.declaration;
@@ -35,15 +56,16 @@ export const useUtils = {
     }
     if (!node) return undefined;
     const alias = compiler.nodeAlias(node).getFiltered(UNHANDLED);
-    if (alias !== undefined) return [
-      alias,
-    ];
+    if (alias !== undefined) return [alias];
     return compiler.nodeFullname(node).getFiltered(UNHANDLED);
   },
 };
 
 export const useModule: GlobalModule = {
-  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+  nodeSymbol (
+    compiler: Compiler,
+    node: SyntaxNode,
+  ): Report<NodeSymbol> | Report<PassThrough> {
     if (!isUseSpecifier(node) || !node.name) return Report.create(PASS_THROUGH);
 
     const symbolKind = node.getSymbolKind();
@@ -52,29 +74,42 @@ export const useModule: GlobalModule = {
     // Schema imports are not represented as UseSymbols in symbolMembers, they are merged
     if (symbolKind === SymbolKind.Schema) return Report.create(PASS_THROUGH);
 
-    const originalSymbol = compiler.nodeReferee(node.name).getFiltered(UNHANDLED);
+    const originalSymbol = compiler
+      .nodeReferee(node.name)
+      .getFiltered(UNHANDLED);
 
     // Non-importable symbols (e.g. DiagramView) must not produce a UseSymbol
-    if (originalSymbol && !originalSymbol.canBeImported) return Report.create(PASS_THROUGH);
+    if (originalSymbol && !originalSymbol.canBeImported)
+      return Report.create(PASS_THROUGH);
 
-    return Report.create(compiler.symbolFactory.create(
-      UseSymbol,
-      {
-        useSpecifierDeclaration: node,
-        declaration: originalSymbol?.declaration,
-        usedSymbol: originalSymbol,
-        kind: symbolKind,
-        name: useUtils.visibleName(compiler, node)?.at(-1),
-      },
-      node.filepath,
-    ), originalSymbol === undefined
-      ? [
-          new CompileError(CompileErrorCode.BINDING_ERROR, `Failed to resolve the import of ${symbolKind} '${(destructureComplexVariable(node.name) || []).map(addDoubleQuoteIfNeeded).join('.')}'`, node),
-        ]
-      : []);
+    return Report.create(
+      compiler.symbolFactory.create(
+        UseSymbol,
+        {
+          useSpecifierDeclaration: node,
+          declaration: originalSymbol?.declaration,
+          usedSymbol: originalSymbol,
+          kind: symbolKind,
+          name: useUtils.visibleName(compiler, node)?.at(-1),
+        },
+        node.filepath,
+      ),
+      originalSymbol === undefined
+        ? [
+            new CompileError(
+              CompileErrorCode.BINDING_ERROR,
+              `Failed to resolve the import of ${symbolKind} '${(destructureComplexVariable(node.name) || []).map(addDoubleQuoteIfNeeded).join('.')}'`,
+              node,
+            ),
+          ]
+        : [],
+    );
   },
 
-  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
+  symbolMembers (
+    compiler: Compiler,
+    symbol: NodeSymbol,
+  ): Report<NodeSymbol[]> | Report<PassThrough> {
     if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
 
     // `originalSymbol` can be the `symbol` itself if the used element does not exist in the import file,
@@ -82,12 +117,18 @@ export const useModule: GlobalModule = {
     // => early return here to avoid cycled query
     if (symbol.originalSymbol === symbol) return Report.create([]);
 
-    const members = compiler.symbolMembers(symbol.originalSymbol).getFiltered(UNHANDLED);
+    const members = compiler
+      .symbolMembers(symbol.originalSymbol)
+      .getFiltered(UNHANDLED);
     return Report.create(members ?? []);
   },
 
-  nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
-    if (!isExpressionAVariableNode(node) && !isDotDelimitedIdentifier(node)) return Report.create(PASS_THROUGH);
+  nodeReferee (
+    compiler: Compiler,
+    node: SyntaxNode,
+  ): Report<NodeSymbol | undefined> | Report<PassThrough> {
+    if (!isExpressionAVariableNode(node) && !isDotDelimitedIdentifier(node))
+      return Report.create(PASS_THROUGH);
 
     const useSpecifier = node.parentOfKind(UseSpecifierNode);
     if (!useSpecifier) return Report.create(PASS_THROUGH);
@@ -95,38 +136,54 @@ export const useModule: GlobalModule = {
     // `node` is the terminal name fragment when it IS the specifier name,
     // or is the rightmost part of a qualified name (e.g. `table` in `public.table`)
     // Otherwise it's a schema prefix, always resolved as Schema
-    const isTerminalFragment = useSpecifier.name === node
-      || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node);
-    const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
+    const isTerminalFragment =
+      useSpecifier.name === node
+      || (isAccessExpression(useSpecifier.name)
+        && useSpecifier.name.rightExpression === node);
+    const symbolKind = isTerminalFragment
+      ? useSpecifier.getSymbolKind()
+      : SymbolKind.Schema;
     if (symbolKind === undefined) return Report.create(undefined);
 
     // Extract the name of the use specifier
-    const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
+    const fullname = destructureComplexVariable(
+      node.parentOfKind(InfixExpressionNode),
+    );
     const name = extractVariableFromExpression(node) ?? fullname?.at(-1);
     if (name === undefined) return Report.create(undefined);
 
     const useDeclaration = node.parentOfKind(UseDeclarationNode);
-    if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
+    if (useDeclaration?.importPath?.value === undefined)
+      return Report.create(undefined);
 
     // Find the referenced import path
-    const importPath = compiler.layout.resolveFileSpecifier(node.filepath, useDeclaration.importPath.value);
-    if (!importPath) return Report.create(
-      undefined,
-      [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `Import path must be relative, got '${useDeclaration.importPath.value}'`, node),
-      ],
+    const importPath = compiler.layout.resolveFileSpecifier(
+      node.filepath,
+      useDeclaration.importPath.value,
     );
+    if (!importPath)
+      return Report.create(undefined, [
+        new CompileError(
+          CompileErrorCode.BINDING_ERROR,
+          `Import path must be relative, got '${useDeclaration.importPath.value}'`,
+          node,
+        ),
+      ]);
 
-    if (!compiler.layout.exists(importPath)) return Report.create(
-      undefined,
-      [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toKey()}. Does the file exist?`, node),
-      ],
-    );
+    if (!compiler.layout.exists(importPath))
+      return Report.create(undefined, [
+        new CompileError(
+          CompileErrorCode.NONEXISTENT_MODULE,
+          `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toKey()}. Does the file exist?`,
+          node,
+        ),
+      ]);
 
     const leftNode = node.parentOfKind(InfixExpressionNode)?.leftExpression;
     if (leftNode && leftNode !== node) {
-      const parentSymbol = compiler.nodeReferee(leftNode).getFiltered(UNHANDLED);
+      const parentSymbol = compiler
+        .nodeReferee(leftNode)
+        .getFiltered(UNHANDLED);
       if (!parentSymbol) return Report.create(undefined);
 
       const symbol = compiler.lookupMembers(parentSymbol, symbolKind, name);
@@ -135,32 +192,50 @@ export const useModule: GlobalModule = {
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find ${symbolKind} '${name}'`, node),
+        new CompileError(
+          CompileErrorCode.BINDING_ERROR,
+          `Could not find ${symbolKind} '${name}'`,
+          node,
+        ),
       ]);
     }
 
-    const found = lookupMemberInFilepath(compiler, importPath, name, symbolKind);
+    const found = lookupMemberInFilepath(
+      compiler,
+      importPath,
+      name,
+      symbolKind,
+    );
     if (found) return Report.create(found);
 
-    return Report.create(
-      undefined,
-      [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toKey()}`, node),
-      ],
-    );
+    return Report.create(undefined, [
+      new CompileError(
+        CompileErrorCode.BINDING_ERROR,
+        `${symbolKind} '${name}' does not exist in file ${importPath.toKey()}`,
+        node,
+      ),
+    ]);
   },
 
-  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (
+    compiler: Compiler,
+    node: SyntaxNode,
+  ): Report<void> | Report<PassThrough> {
     if (isUseDeclaration(node)) {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
-        const importPath = compiler.layout.resolveFileSpecifier(node.filepath, node.importPath.value);
+        const importPath = compiler.layout.resolveFileSpecifier(
+          node.filepath,
+          node.importPath.value,
+        );
         if (!importPath || !compiler.layout.exists(importPath)) {
-          errors.push(new CompileError(
-            CompileErrorCode.NONEXISTENT_MODULE,
-            `Failed to resolve the non-existent file '${node.importPath.value}'`,
-            node.importPath,
-          ));
+          errors.push(
+            new CompileError(
+              CompileErrorCode.NONEXISTENT_MODULE,
+              `Failed to resolve the non-existent file '${node.importPath.value}'`,
+              node.importPath,
+            ),
+          );
         }
       }
 
@@ -173,7 +248,9 @@ export const useModule: GlobalModule = {
     }
 
     if (node instanceof UseSpecifierListNode) {
-      const errors = node.specifiers.flatMap((s) => compiler.bindNode(s).getErrors());
+      const errors = node.specifiers.flatMap((s) =>
+        compiler.bindNode(s).getErrors(),
+      );
 
       return new Report(undefined, errors);
     }
@@ -190,7 +267,11 @@ export const useModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (
+    compiler: Compiler,
+    symbol: NodeSymbol,
+    filepath: Filepath,
+  ): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
     if (!symbol.usedSymbol) return Report.create(undefined);
 
@@ -215,7 +296,13 @@ export const useModule: GlobalModule = {
 
 // Find a symbol by name and kind in an external file, following reuse chains
 // Uses usableMembers (raw) and `visited` to avoid cycles
-function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | undefined, name: string, symbolKind: SymbolKind, visited = new Set<string>()): NodeSymbol | undefined {
+function lookupMemberInFilepath (
+  compiler: Compiler,
+  importPath: Filepath | undefined,
+  name: string,
+  symbolKind: SymbolKind,
+  visited = new Set<string>(),
+): NodeSymbol | undefined {
   if (!importPath || visited.has(importPath.intern())) return undefined;
   visited.add(importPath.intern());
 
@@ -223,7 +310,9 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   if (!usable) return undefined;
 
   // 1. Direct non-schema members
-  const directMember = usable.nonSchemaMembers.find((m) => m.name === name && m.isKind(symbolKind));
+  const directMember = usable.nonSchemaMembers.find(
+    (m) => m.name === name && m.isKind(symbolKind),
+  );
   if (directMember) {
     return directMember;
   }
@@ -237,22 +326,39 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   // 3. Selective reuses: follow the reuse chain via lookupMemberInFilepath (not nodeSymbol)
   // to avoid nodeReferee -> nodeSymbol -> nodeReferee cycle on circular reuse
   for (const specifier of usable.reuses.selective) {
-    if (destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1) === name) {
+    if (
+      destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1)
+      === name
+    ) {
       const reuseDecl = specifier.parentOfKind(UseDeclarationNode);
       if (reuseDecl?.importPath?.value) {
-        const reusePath = compiler.layout.resolveFileSpecifier(importPath, reuseDecl.importPath.value);
-        const originalName = destructureComplexVariable(specifier.name)?.at(-1) ?? name;
-        const found = lookupMemberInFilepath(compiler, reusePath, originalName, symbolKind, visited);
+        const reusePath = compiler.layout.resolveFileSpecifier(
+          importPath,
+          reuseDecl.importPath.value,
+        );
+        const originalName =
+          destructureComplexVariable(specifier.name)?.at(-1) ?? name;
+        const found = lookupMemberInFilepath(
+          compiler,
+          reusePath,
+          originalName,
+          symbolKind,
+          visited,
+        );
         if (found) return found;
       }
     }
   }
 
   // 4. Wildcard reuses
-  for (const {
-    importPath: wildcardPath,
-  } of usable.reuses.wildcard) {
-    const member = lookupMemberInFilepath(compiler, wildcardPath, name, symbolKind, visited);
+  for (const { importPath: wildcardPath } of usable.reuses.wildcard) {
+    const member = lookupMemberInFilepath(
+      compiler,
+      wildcardPath,
+      name,
+      symbolKind,
+      visited,
+    );
     if (member) return member;
   }
 

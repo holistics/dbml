@@ -182,49 +182,49 @@ export function escapeString (str: string): string {
 }
 
 /**
- * Formats a record value for DBML output.
+ * Formats a typed value for DBML output.
  * Handles different data types and converts them to appropriate DBML syntax.
  *
- * @param recordValue - The record value with type information, or a primitive value
+ * @param typedValue - The record value with type information, or a primitive value
  * @returns The formatted string representation for DBML
  *
  * @example
- * formatRecordValue({ value: 1, type: 'integer' }) => '1'
- * formatRecordValue({ value: 'Alice', type: 'string' }) => "'Alice'"
- * formatRecordValue({ value: true, type: 'bool' }) => 'true'
- * formatRecordValue({ value: null, type: 'string' }) => 'null'
- * formatRecordValue(undefined) => 'null'
- * formatRecordValue(null) => 'null'
- * formatRecordValue('Alice') => "'Alice'"
- * formatRecordValue(42) => '42'
- * formatRecordValue(true) => 'true'
+ * formatTypedValue({ value: 1, type: 'integer' }) => '1'
+ * formatTypedValue({ value: 'Alice', type: 'string' }) => "'Alice'"
+ * formatTypedValue({ value: true, type: 'bool' }) => 'true'
+ * formatTypedValue({ value: null, type: 'string' }) => 'null'
+ * formatTypedValue({ value: '#ff0000', type: 'color' }) => '#ff0000'
+ * formatTypedValue(undefined) => 'null'
+ * formatTypedValue(null) => 'null'
+ * formatTypedValue('Alice') => "'Alice'"
+ * formatTypedValue(42) => '42'
+ * formatTypedValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: {
-  value: any;
-  type: string;
-} | string | number | boolean | null | undefined): string {
+export type TypedValue = { value: any; type: string } | string | number | boolean | null | undefined;
+
+export function formatTypedValue (typedValue: TypedValue): string {
   // Handle undefined and null primitives
-  if (recordValue === undefined || recordValue === null) {
+  if (typedValue === undefined || typedValue === null) {
     return 'null';
   }
 
   // Handle primitive types directly
-  if (typeof recordValue === 'boolean') {
-    return recordValue ? 'true' : 'false';
+  if (typeof typedValue === 'boolean') {
+    return typedValue ? 'true' : 'false';
   }
 
-  if (typeof recordValue === 'number') {
-    return String(recordValue);
+  if (typeof typedValue === 'number') {
+    return String(typedValue);
   }
 
-  if (typeof recordValue === 'string') {
-    return `'${escapeString(recordValue)}'`;
+  if (typeof typedValue === 'string') {
+    return quoteNoteValue(typedValue);
   }
 
   // Handle object format { value, type }
   const {
     value, type,
-  } = recordValue;
+  } = typedValue;
 
   // Handle null/undefined values
   if (value === null || value === undefined || (isBooleanType(type) && typeof value === 'string' && value.toLowerCase() === 'null')) {
@@ -234,6 +234,11 @@ export function formatRecordValue (recordValue: {
   // Handle expressions (backtick strings)
   if (type === 'expression') {
     return typeof value === 'string' && value.toLowerCase().trim() === 'null' ? 'null' : `\`${value}\``;
+  }
+
+  // Handle color literals (e.g. #fff, #aabbcc) - output as-is without quotes
+  if (type === 'color') {
+    return String(value);
   }
 
   // Try to extract typed values using tryExtract functions
@@ -269,7 +274,7 @@ export function formatRecordValue (recordValue: {
   // Default: string types and others
   const extracted = tryExtractString(value);
   if (extracted !== null) {
-    return `'${escapeString(extracted)}'`;
+    return quoteNoteValue(extracted);
   }
 
   // If all extractions failed, wrap in function expression

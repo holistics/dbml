@@ -93,8 +93,18 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
         ? Uri.parse(targetFilepath.toUri({ protocol: uri.scheme }))
         : uri;
 
+      const targetSource = this.compiler.getSource(targetFilepath) ?? '';
+      const targetLineCount = Math.min(10, Math.max(1, targetSource.split('\n').length));
+
+      const { startPos, endPos } = node.importPath;
       return [{
-        range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: 1 },
+        originSelectionRange: {
+          startColumn: startPos.column + 2,
+          startLineNumber: startPos.line + 1,
+          endColumn: endPos.column,
+          endLineNumber: endPos.line + 1,
+        },
+        range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: targetLineCount },
         uri: targetUri,
       }];
     }

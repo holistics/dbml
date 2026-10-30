@@ -1,8 +1,11 @@
 import type Compiler from '@/compiler';
 import type { Database, MasterDatabase } from '@/core/types/schemaJson';
-import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, type CompileWarning, type CompileInfo,
+} from '@/core/types/errors';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
+import { UseDeclarationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
@@ -11,7 +14,61 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   } = this.parseFile(filepath).getValue();
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return Report.create(undefined);
-  return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  const result = this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+
+  // Check if any errors originate from imported files and highlight the import path
+  const errors = result.getErrors();
+  if (errors.length === 0) return result;
+
+  // Build a map from imported file path -> import path token
+  const importTokenByFile = new Map<string, NonNullable<UseDeclarationNode['importPath']>>();
+  for (const node of ast.body) {
+    if (!(node instanceof UseDeclarationNode) || !node.importPath) continue;
+    const resolvedPath = this.layout.resolveFileSpecifier(filepath, node.importPath.value);
+    if (!resolvedPath || importTokenByFile.has(resolvedPath.absolute)) continue;
+    importTokenByFile.set(resolvedPath.absolute, node.importPath);
+  }
+
+  // Build a reverse map: any reachable file -> which direct import it came from
+  const fileToImport = new Map<string, string>();
+  for (const importFile of importTokenByFile.keys()) {
+    fileToImport.set(importFile, importFile);
+    for (const reachable of this.reachableFiles(Filepath.from(importFile))) {
+      if (!fileToImport.has(reachable.absolute)) {
+        fileToImport.set(reachable.absolute, importFile);
+      }
+    }
+  }
+
+  // Find which imports have errors
+  const importsWithErrors = new Set<string>();
+  for (const error of errors) {
+    const errorFile = error.filepath.absolute;
+    if (errorFile === filepath.absolute) continue;
+    const owningImport = fileToImport.get(errorFile);
+    if (owningImport) {
+      importsWithErrors.add(owningImport);
+    }
+  }
+
+  if (importsWithErrors.size === 0) return result;
+
+  const importErrors: CompileError[] = [];
+  for (const file of importsWithErrors) {
+    const token = importTokenByFile.get(file)!;
+    importErrors.push(new CompileError(
+      CompileErrorCode.IMPORTED_FILE_HAS_ERRORS,
+      `Imported file '${token.value}' contains errors`,
+      token,
+    ));
+  }
+
+  return new Report(
+    result.getValue(),
+    [...errors, ...importErrors],
+    result.getWarnings(),
+    result.getInfos(),
+  );
 }
 
 // Interpret all files. Returns raw MasterDatabase
