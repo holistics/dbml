@@ -1,5 +1,5 @@
 import { getMemberChain } from '@/core/parser/utils';
-import { InternedNodeMetadata, MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
+import { InternedNodeMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
 import { UNHANDLED } from '@/core/types/module';
 import {
   SyntaxNode,
@@ -25,7 +25,7 @@ export interface ResolutionIndex {
 // Each list is deduped and ordered by file order of parseProject then declaration start.
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
-  const metadata = new Map<InternedNodeSymbol | InternedNodeMetadata, NodeMetadata[]>();
+  const targetMetadata = new Map<InternedNodeSymbol | InternedNodeMetadata, NodeMetadata[]>();
 
   const astMap = this.parseProject();
   this.bindProject();
@@ -57,23 +57,23 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
   const pushMetadata = (meta: NodeMetadata) => {
     for (const target of meta.targets(this)) {
       const key = target.intern();
-      let arr = metadata.get(key);
+      let arr = targetMetadata.get(key);
       if (!arr) {
         arr = [];
-        metadata.set(key, arr);
+        targetMetadata.set(key, arr);
       }
       arr.push(meta);
     }
   };
 
-  // Build metadata and references
+  // Build target-to-metadata and referee-to-references maps
   for (const astReport of astMap.values()) {
     const ast = astReport.getValue().ast;
     const walk = (node: SyntaxNode): void => {
       // Collect references
       if (isExpressionAVariableNode(node)) {
-        const ref = this.nodeReferee(node).getFiltered(UNHANDLED);
-        if (ref) pushRef(ref, node);
+        const referee = this.nodeReferee(node).getFiltered(UNHANDLED);
+        if (referee) pushRef(referee, node);
         return;
       }
       // Tuple access: table.(col1, col2)
@@ -84,14 +84,14 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
         if (leftExpr) {
           const tableNode = getRightmostVariable(leftExpr);
           if (tableNode) {
-            const ref = this.nodeReferee(tableNode).getFiltered(UNHANDLED);
-            if (ref) pushRef(ref, tableNode);
+            const referee = this.nodeReferee(tableNode).getFiltered(UNHANDLED);
+            if (referee) pushRef(referee, tableNode);
           }
         }
       }
       // Collect metadata from all modules
-      const metadata = this.nodeMetadata(node).getFiltered(UNHANDLED);
-      if (metadata) pushMetadata(metadata);
+      const targetMetadata = this.nodeMetadata(node).getFiltered(UNHANDLED);
+      if (targetMetadata) pushMetadata(targetMetadata);
 
       for (const child of getMemberChain(node)) {
         if (child instanceof SyntaxNode) walk(child);
@@ -136,22 +136,24 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
   [...astMap.keys()].forEach((absolute, i) => fileOrder.set(absolute, i));
   const rank = (meta: NodeMetadata) => fileOrder.get(meta.declaration.filepath.absolute) ?? Number.MAX_SAFE_INTEGER;
 
-  const accumulated = new Map(metadata);
-  const visitedAccumulate = new Set<InternedNodeSymbol>();
+  // Target -> Metadata
+  // Owner -> Child target's metadata
+  const ownerToChildTargetMetadata = new Map(targetMetadata);
+  const visitedSymbol = new Set<InternedNodeSymbol>();
 
   function accumulate (compiler: Compiler, symbol: NodeSymbol): NodeMetadata[] {
     const key = symbol.intern();
-    if (visitedAccumulate.has(key)) return accumulated.get(key) ?? [];
-    visitedAccumulate.add(key);
+    if (visitedSymbol.has(key)) return ownerToChildTargetMetadata.get(key) ?? [];
+    visitedSymbol.add(key);
 
     const result = new Map<InternedNodeMetadata, NodeMetadata>();
-    for (const meta of metadata.get(key) ?? []) result.set(meta.intern(), meta);
+    for (const meta of targetMetadata.get(key) ?? []) result.set(meta.intern(), meta);
     for (const member of compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? []) {
       for (const meta of accumulate(compiler, member.originalSymbol)) result.set(meta.intern(), meta);
     }
 
     const sorted = [...result.values()].sort((a, b) => (rank(a) - rank(b)) || (a.declaration.start - b.declaration.start));
-    accumulated.set(key, sorted);
+    ownerToChildTargetMetadata.set(key, sorted);
     return sorted;
   }
 
@@ -163,7 +165,7 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
 
   return {
     references,
-    metadata: accumulated,
+    metadata: ownerToChildTargetMetadata,
     parents,
   };
 }
