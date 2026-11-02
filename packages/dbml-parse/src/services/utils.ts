@@ -27,7 +27,7 @@ export function getEditorRange (model: TextModel, nodeOrToken: SyntaxNode | Synt
 
 // A Ref has no symbol, so the Ref-name features (definition, references) resolve the Ref through its metadata.
 // Resolve the named Ref that `node` names: either the name of a `Ref name: ...` declaration or the target name of a `Metadata Ref name` header.
-export function namedRefAt (compiler: Compiler, node: SyntaxNode): RefMetadata | undefined {
+export function getNamedRefAt (compiler: Compiler, node: SyntaxNode): RefMetadata | undefined {
   // `Ref name: ...` declaration itself
   if (isElementNode(node, ElementKind.Ref)) {
     const meta = compiler.nodeMetadata(node).getFiltered(UNHANDLED);
