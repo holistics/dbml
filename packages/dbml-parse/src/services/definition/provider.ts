@@ -6,7 +6,7 @@ import { SyntaxNode, SyntaxNodeKind, UseDeclarationNode } from '@/core/types/nod
 import {
   Definition, DefinitionProvider, Position, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition, namedRefAt } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getNamedRefAt } from '@/services/utils';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
@@ -38,7 +38,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       if (!referee) {
         // A named Ref has no symbol: a `Metadata Ref name` header name jumps to the Ref's name
         if ([SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node.kind)) {
-          const refNameNode = namedRefAt(this.compiler, node)?.declaration.name;
+          const refNameNode = getNamedRefAt(this.compiler, node)?.declaration.name;
           if (refNameNode) return this.toDefinition(refNameNode, uri);
         }
         continue;
