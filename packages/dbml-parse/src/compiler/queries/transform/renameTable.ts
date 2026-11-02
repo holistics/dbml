@@ -2,7 +2,9 @@ import { isValidIdentifier } from '@/compiler/queries/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode, SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
+} from '@/core/types/nodes';
 import { AliasSymbol, NodeSymbol, UseSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
@@ -210,6 +212,22 @@ export function renameTable (
     }
   }
 
+  // Remote rename: the symbol is imported (UseSymbol) — rename alias/add alias in the consumer
+  // file rather than touching the declaring file
+  if (tableSymbol instanceof UseSymbol) {
+    if (
+      tableSymbol.useSpecifierDeclaration instanceof UseSpecifierNode
+      && !tableSymbol.useSpecifierDeclaration.alias
+    ) {
+      // Named import without alias: add ` as newName` to the specifier
+      return renameRemoteNamedSpecifier(this, filepath, tableSymbol.useSpecifierDeclaration, tableSymbol, oldTable, newSchema, newTable);
+    }
+    if (tableSymbol.useSpecifierDeclaration instanceof WildcardNode) {
+      // Wildcard import: add a separate named specifier with alias
+      return renameRemoteWildcard(this, filepath, tableSymbol, oldTable, newSchema, newTable);
+    }
+  }
+
   return renameRealDeclaration(this, tableSymbol, oldSchema, oldTable, newSchema, newTable);
 }
 
@@ -252,6 +270,106 @@ function renameAlias (
       applyTextEdits(source, edits),
     ],
   ]);
+}
+
+/**
+ * Renames a remote table imported via a named specifier without an alias,
+ * e.g. `use { table users } from './a'` becomes `use { table users as accounts } from './a'`.
+ * Only rewrites the consumer file; the declaring file is untouched.
+ */
+function renameRemoteNamedSpecifier (
+  compiler: Compiler,
+  filepath: Filepath,
+  spec: UseSpecifierNode,
+  useSymbol: UseSymbol,
+  oldTable: string,
+  newSchema: string,
+  newTable: string,
+): Map<string, string> {
+  const source = compiler.getSource(filepath) ?? '';
+  const usedQuotes = spec.name ? source.substring(spec.name.start, spec.name.end).includes('"') : false;
+  const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
+
+  const edits: TextEdit[] = [];
+
+  // Insert ` as newName` right after the name token
+  if (spec.name) {
+    edits.push({
+      start: spec.name.end,
+      end: spec.name.end,
+      newText: ` as ${newFormatted.formattedTable}`,
+    });
+  }
+
+  // Rename all in-file references from oldTable to newName
+  const refs = compiler.symbolReferences(useSymbol);
+  for (const ref of refs) {
+    if (ref.filepath.absolute !== filepath.absolute) continue;
+    if (spec.name && ref.start === spec.name.start && ref.end === spec.name.end) continue; // skip the specifier name itself
+    const refText = source.substring(ref.start, ref.end);
+    if (stripQuotes(refText) !== oldTable) continue;
+    edits.push({
+      start: ref.start,
+      end: ref.end,
+      newText: newFormatted.formattedTable,
+    });
+  }
+
+  return new Map([[filepath.absolute, applyTextEdits(source, edits)]]);
+}
+
+/**
+ * Renames a remote table imported via a wildcard (`use * from './a'`) by adding
+ * a separate named specifier with an alias, e.g. `use { table users as accounts } from './a'`.
+ * The wildcard is left in place. Only the consumer file is rewritten.
+ */
+function renameRemoteWildcard (
+  compiler: Compiler,
+  filepath: Filepath,
+  useSymbol: UseSymbol,
+  oldTable: string,
+  newSchema: string,
+  newTable: string,
+): Map<string, string> {
+  const wildcard = useSymbol.useSpecifierDeclaration as WildcardNode;
+  const useDecl = wildcard.parentOfKind(UseDeclarationNode);
+  if (!useDecl) return new Map();
+
+  const source = compiler.getSource(filepath) ?? '';
+  const newFormatted = formatTableName(newSchema, newTable, false);
+
+  // Determine the import kind label from the symbol kind
+  const kindLabel = useSymbol.kind.toLowerCase();
+
+  // Get the raw import path string as it appears in source (with quotes)
+  const importPathText = useDecl.importPath ? source.substring(useDecl.importPath.start, useDecl.importPath.end) : "''";
+
+  const reuseKeyword = useDecl.isReuse ? 'reuse' : 'use';
+  const newStatement = `${reuseKeyword} { ${kindLabel} ${oldTable} as ${newFormatted.formattedTable} } from ${importPathText}`;
+
+  const edits: TextEdit[] = [];
+
+  // Insert the new statement after the wildcard use declaration
+  edits.push({
+    start: useDecl.end,
+    end: useDecl.end,
+    newText: `\n${newStatement}`,
+  });
+
+  // Rename all in-file references from oldTable to newName
+  const refs = compiler.symbolReferences(useSymbol);
+  for (const ref of refs) {
+    if (ref.filepath.absolute !== filepath.absolute) continue;
+    const refText = source.substring(ref.start, ref.end);
+    if (stripQuotes(refText) !== oldTable) continue;
+    edits.push({
+      start: ref.start,
+      end: ref.end,
+      newText: newFormatted.formattedTable,
+    });
+  }
+
+  return new Map([[filepath.absolute, applyTextEdits(source, edits)]]);
 }
 
 function renameRealDeclaration (

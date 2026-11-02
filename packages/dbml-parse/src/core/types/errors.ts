@@ -158,6 +158,8 @@ export enum CompileErrorCode {
   INVALID_METADATA_TARGET_KIND,
   INVALID_METADATA_FIELD,
   DUPLICATE_METADATA_FIELD,
+
+  IMPORTED_FILE_HAS_ERRORS,
 }
 
 export interface RelatedLocation {
