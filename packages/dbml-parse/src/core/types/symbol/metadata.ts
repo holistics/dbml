@@ -32,7 +32,7 @@ import {
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
-import { namedRefsIn } from '@/core/global_modules/ref/utils';
+import { getProgramNamedRefs } from '@/core/global_modules/ref/utils';
 
 declare const __nodeMetadataBrand: unique symbol;
 export type NodeMetadataId = number & { readonly [__nodeMetadataBrand]: true };
@@ -592,7 +592,7 @@ export class MetadataElementMetadata extends NodeMetadata {
     if (!nameParts?.length || !targetKind) return [];
 
     if (targetKind === MetadataTargetKind.Ref) {
-      return namedRefsIn(compiler, programSymbol).filter((r) => r.name(compiler) === nameParts[0]);
+      return getProgramNamedRefs(compiler, programSymbol).filter((r) => r.name(compiler) === nameParts[0]);
     }
 
     let symbol: NodeSymbol | undefined = programSymbol;

@@ -12,7 +12,7 @@ import { isElementNode } from '@/core/utils/validate';
   * Cycle rule: this is reachable from NodeMetadata.declaredTargets() (through MetadataElementMetadata.declaredTargets()), so it must not read the resolution index.
   * It scans the top-level declarations of the reachable files directly.
   */
-export function namedRefsIn (compiler: Compiler, program: ProgramSymbol): RefMetadata[] {
+export function getProgramNamedRefs (compiler: Compiler, program: ProgramSymbol): RefMetadata[] {
   return compiler.reachableFiles(program.filepath).flatMap((filepath) => {
     const ast = compiler.parseFile(filepath).getValue().ast;
 
