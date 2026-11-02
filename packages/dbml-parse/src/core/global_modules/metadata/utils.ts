@@ -69,6 +69,8 @@ export function attachCustomMetadata<T extends MetadataTarget> (
 
   const visible = targetSymbol instanceof NodeMetadata
     ? targetSymbol.isVisibleFrom(compiler, programSymbol)
+    // FIXME: This logic is adhoc
+    // Symbol should expose an isVisibleFrom method to check visibility
     : (() => {
         if (targetSymbol.isKind(SymbolKind.Column)) {
           const tableSymbol = compiler.symbolParents(targetSymbol).find((s) => s.isKind(SymbolKind.Table));
