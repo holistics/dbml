@@ -15,12 +15,11 @@ export type FileParseIndex = {
 
 export function parseFile (this: Compiler, filepath: Filepath): Report<FileParseIndex> {
   const source = this.getSource(filepath) ?? '';
-  const lexerOptions = this.lexerOptions();
-  return new Lexer(source, filepath, lexerOptions)
+  return new Lexer(source, filepath)
     .lex()
     .chain((lexedTokens) => {
       // The kind is read from the tokens before the parser attaches invalid tokens to them
-      const kind = this.fileKindForParse(filepath, lexerOptions.allowFrontMatter ? lexedTokens : undefined);
+      const kind = this.fileKindForParse(filepath, lexedTokens);
       return new Parser(source, lexedTokens, this.nodeIdGenerator, filepath, this.parserOptions(kind)).parse()
         .map((parsed) => {
           if (kind === 'arch' && !this.explicitModules) markArchImports(parsed.ast);

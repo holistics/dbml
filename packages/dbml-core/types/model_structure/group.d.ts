@@ -1,4 +1,4 @@
-import type { ArchRef, ArchSettings, Group as RawGroup } from '@dbml/parse';
+import type { ArchRef, ArchSettings, CustomMetadata, Group as RawGroup } from '@dbml/parse';
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
@@ -13,6 +13,7 @@ declare class Group extends Element {
     childIds: number[];
     childTypes: ArchElementType[];
     settings: ArchSettings;
+    metadata: CustomMetadata;
     note: string | null;
     noteToken: Token | null;
     groupId: number | null;
@@ -30,6 +31,7 @@ export interface NormalizedGroup {
     childIds: number[];
     childTypes: ArchElementType[];
     settings: ArchSettings;
+    metadata: CustomMetadata;
     note: string | null;
     groupId: number | null;
 }

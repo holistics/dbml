@@ -3,7 +3,7 @@ import type { Token } from '../../types/model_structure/element';
 import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
-import type { ArchSettings, Node as RawNode } from '@dbml/parse';
+import type { ArchSettings, CustomMetadata, Node as RawNode } from '@dbml/parse';
 
 // An architecture node: `Server "API 1" as api1`
 class Node extends Element {
@@ -13,8 +13,9 @@ class Node extends Element {
   // The built-in role, in its declared spelling
   role: string;
   type: string | null;
-  image: string | null;
+  icon: string | null;
   settings: ArchSettings;
+  metadata: CustomMetadata;
   note: string | null;
   noteToken: Token | null;
   groupId: number | null;
@@ -22,15 +23,16 @@ class Node extends Element {
   dbState: DbStateType;
 
   constructor ({
-    name, alias, role, type, image, settings, note, token, database,
+    name, alias, role, type, icon, settings, metadata = {}, note, token, database,
   }: RawNode & { database: any }) {
     super(token as Token);
     this.name = name;
     this.alias = alias;
     this.role = role;
     this.type = type;
-    this.image = image;
+    this.icon = icon;
     this.settings = settings;
+    this.metadata = metadata;
     this.note = note?.value ?? null;
     this.noteToken = (note?.token as Token) ?? null;
     this.groupId = null;
@@ -49,8 +51,9 @@ class Node extends Element {
       alias: this.alias,
       role: this.role,
       type: this.type,
-      image: this.image,
+      icon: this.icon,
       settings: this.settings,
+      metadata: this.metadata,
       note: this.note,
     };
   }

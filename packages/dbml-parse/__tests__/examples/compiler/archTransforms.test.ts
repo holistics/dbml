@@ -51,7 +51,7 @@ Database db`);
   });
 
   it('updates a setting in an existing list', () => {
-    const source = `Server "API 1" as api1 [color: '#c0453a', icon: server] {
+    const source = `Server "API 1" as api1 [color: #c0453a, icon: server] {
 }`;
     expect(update(source, { kind: SymbolKind.Element, name: 'api1' }, 'color', '#ff0000')).toBe(`Server "API 1" as api1 [color: #ff0000, icon: server] {
 }`);
@@ -122,18 +122,13 @@ Database db
   });
 
   it('updates a setting in an existing list', () => {
-    const source = `${elements}Link: api > db [proto: HTTPS, color: '#000000']`;
+    const source = `${elements}Link: api > db [proto: HTTPS, color: #000000]`;
     expect(update(source, { kind: 'Link', from: 'api', to: 'db' }, 'color', '#ff0000')).toBe(`${elements}Link: api > db [proto: HTTPS, color: #ff0000]`);
   });
 
   it('matches the link in either direction', () => {
     const source = `${elements}Link: api > db [proto: HTTPS]`;
     expect(update(source, { kind: 'Link', from: 'db', to: 'api' }, 'color', '#ff0000')).toBe(`${elements}Link: api > db [proto: HTTPS, color: #ff0000]`);
-  });
-
-  it('matches an endpoint written with a port', () => {
-    const source = `${elements}Ref: api.web > db`;
-    expect(update(source, { kind: 'Link', from: 'api', to: 'db' }, 'color', '#ff0000')).toBe(`${elements}Ref: api.web > db [color: #ff0000]`);
   });
 
   it('writes the first matching link only', () => {
@@ -172,12 +167,12 @@ Metadata api1 {
   it('renames every reference when the name is the handle', () => {
     const source = `Server api
 Database db
-Group prod [color: '#c0453a'] {
+Group prod [color: #c0453a] {
   api
   db
 }
 Link: api > db [proto: HTTPS]
-Ref: db < api.web
+Ref: db < api
 Metadata Server api {
   owner: 'x'
 }
@@ -186,12 +181,12 @@ Metadata api {
 }`;
     expect(rename(source, 'api', 'web')).toBe(`Server web
 Database db
-Group prod [color: '#c0453a'] {
+Group prod [color: #c0453a] {
   Server web
   db
 }
 Link: Server web > db [proto: HTTPS]
-Ref: db < Server web.web
+Ref: db < Server web
 Metadata Server web {
   owner: 'x'
 }

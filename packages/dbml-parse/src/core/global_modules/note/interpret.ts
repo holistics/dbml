@@ -82,7 +82,7 @@ export class StickyNoteInterpreter {
   }
 
   private interpretBody (body?: BlockExpressionNode): CompileError[] {
-    // An architecture file allows `Note memo` with no body
+    // A note without a body is reported by validation in an architecture file
     if (!body) {
       this.note.content = '';
       return [];

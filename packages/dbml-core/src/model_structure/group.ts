@@ -4,7 +4,9 @@ import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchElementType } from '../../types/model_structure/link';
-import type { ArchRef, ArchSettings, Group as RawGroup } from '@dbml/parse';
+import type {
+  ArchRef, ArchSettings, CustomMetadata, Group as RawGroup,
+} from '@dbml/parse';
 
 // Members are resolved once every element exists (`Database.processArch`).
 class Group extends Element {
@@ -16,6 +18,7 @@ class Group extends Element {
   childIds: number[];
   childTypes: ArchElementType[];
   settings: ArchSettings;
+  metadata: CustomMetadata;
   note: string | null;
   noteToken: Token | null;
   groupId: number | null;
@@ -23,7 +26,7 @@ class Group extends Element {
   dbState: DbStateType;
 
   constructor ({
-    name, alias, children, settings, note, token, database,
+    name, alias, children, settings, metadata = {}, note, token, database,
   }: RawGroup & { database: any }) {
     super(token as Token);
     this.name = name;
@@ -32,6 +35,7 @@ class Group extends Element {
     this.childIds = [];
     this.childTypes = [];
     this.settings = settings;
+    this.metadata = metadata;
     this.note = note?.value ?? null;
     this.noteToken = (note?.token as Token) ?? null;
     this.groupId = null;
@@ -49,6 +53,7 @@ class Group extends Element {
       name: this.name,
       alias: this.alias,
       settings: this.settings,
+      metadata: this.metadata,
       note: this.note,
     };
   }

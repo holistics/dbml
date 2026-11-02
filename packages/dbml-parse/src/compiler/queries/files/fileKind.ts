@@ -9,28 +9,10 @@ export const isArchDiagramType = (type: string | null | undefined): boolean => !
 
 // What decides a file's kind, read from its tokens without parsing
 export interface FileScan {
-  frontMatter: Record<string, string>;
+  // The `diagram_type` row of the top-level `Project` block
+  diagramType?: string;
   // Lowercased words that open a top-level declaration
   topWords: string[];
-}
-
-export function readFrontMatter (block: string): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const line of block.split('\n')) {
-    const text = line.trim();
-    if (!text || text === '---') continue;
-    const colon = text.indexOf(':');
-    if (colon <= 0) continue;
-    const key = text.slice(0, colon).trim();
-    const value = text.slice(colon + 1).trim().replace(/^['"]|['"]$/g, '');
-    if (key) out[key] = value;
-  }
-  return out;
-}
-
-// The block is trivia, so it arrives on the first real token (or on EOF in an otherwise empty file)
-export function frontMatterToken (tokens: readonly SyntaxToken[]): SyntaxToken | undefined {
-  return tokens[0]?.leadingTrivia.find((t) => t.kind === SyntaxTokenKind.FRONT_MATTER);
 }
 
 const OPENERS = new Set([
@@ -45,15 +27,14 @@ const CLOSERS = new Set([
 ]);
 
 export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
-  const block = frontMatterToken(tokens);
   const scan: FileScan = {
-    frontMatter: block ? readFrontMatter(block.value) : {},
     topWords: [],
   };
 
   let depth = 0;
   let previousLine = -1;
-  for (const token of tokens) {
+  let inProject = false;
+  for (const [i, token] of tokens.entries()) {
     if (token.kind === SyntaxTokenKind.EOF) break;
 
     const startsLine = token.startPos.line > previousLine;
@@ -61,9 +42,21 @@ export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
 
     if (OPENERS.has(token.kind)) depth += 1;
     else if (CLOSERS.has(token.kind)) depth = Math.max(0, depth - 1);
-    if (depth !== 0 || !startsLine || token.kind !== SyntaxTokenKind.IDENTIFIER) continue;
+    if (depth === 0 && token.kind === SyntaxTokenKind.RBRACE) inProject = false;
+    if (!startsLine || token.kind !== SyntaxTokenKind.IDENTIFIER) continue;
 
-    scan.topWords.push(token.value.toLowerCase());
+    const word = token.value.toLowerCase();
+    if (depth === 0) {
+      scan.topWords.push(word);
+      inProject = word === 'project';
+      continue;
+    }
+    // `diagram_type: 'arch'`, a row directly inside `Project { }`
+    if (inProject && depth === 1 && word === 'diagram_type' && scan.diagramType === undefined) {
+      const colon = tokens[i + 1];
+      const value = tokens[i + 2];
+      if (colon?.kind === SyntaxTokenKind.COLON && value?.kind === SyntaxTokenKind.STRING_LITERAL) scan.diagramType = value.value;
+    }
   }
 
   return scan;
@@ -73,8 +66,8 @@ export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
 const isArchWord = (word: string) => word === 'group' || word === 'kind' || roleName(word) !== undefined;
 
 export function decideFileKind (scan: FileScan): FileKind {
-  if (scan.frontMatter.diagram_type !== undefined) {
-    return isArchDiagramType(scan.frontMatter.diagram_type) ? 'arch' : 'dbml';
+  if (scan.diagramType !== undefined) {
+    return isArchDiagramType(scan.diagramType) ? 'arch' : 'dbml';
   }
   return scan.topWords.some(isArchWord) ? 'arch' : 'dbml';
 }

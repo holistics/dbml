@@ -6,7 +6,7 @@ import { CompileErrorCode } from '@/core/types/errors';
 import { SymbolKind } from '@/core/types/symbol';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function compilerFor (files: Record<string, string>): Compiler {
@@ -47,10 +47,8 @@ describe('[example] a note in an architecture file is a sticky note', () => {
     expect(compile("Server a\nNote memo [link: a] { 'x' }").errors).toEqual([CompileErrorCode.BAD_LINK]);
   });
 
-  test('a note with no body has empty content', () => {
-    const { errors, db } = compile('Note memo');
-    expect(errors).toEqual([]);
-    expect(db?.notes.map((n) => [n.name, n.content])).toEqual([['memo', '']]);
+  test('a note needs a body', () => {
+    expect(compile('Note memo').errors).toEqual([CompileErrorCode.INVALID_NOTE]);
   });
 
   test('a note and a node may share a name, two notes may not', () => {
@@ -59,8 +57,12 @@ describe('[example] a note in an architecture file is a sticky note', () => {
     expect(compile("Note memo { 'x' }\nNote memo { 'y' }").errors).toEqual([CompileErrorCode.DUPLICATE_NAME]);
   });
 
-  test('Metadata does not target a note', () => {
-    expect(compile("Note memo { 'x' }\nMetadata memo { owner: 'me' }").errors).toEqual([CompileErrorCode.UNKNOWN_METADATA_TARGET]);
+  test('Metadata targets a note, with or without the Note role', () => {
+    const { errors, db } = compile("Note memo { 'x' }\nMetadata memo {\n  owner: 'me'\n  color: #ff0000\n}");
+    expect(errors).toEqual([]);
+    expect(db?.notes[0].metadata?.owner?.value).toBe('me');
+    expect(db?.notes[0].color).toBe('#ff0000');
+    expect(compile("Note memo { 'x' }\nMetadata Note memo {\n  owner: 'me'\n}").db?.notes[0].metadata?.owner?.value).toBe('me');
   });
 
   test('an imported note can be a group member and a link end, under the name it has here', () => {

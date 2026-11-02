@@ -25,14 +25,11 @@ Monitoring "Prometheus (monitoring)" as prometheus {
 Firewall "OSSEC" as ossec
 `;
 
-export const MAIN_FILE = `---
-title: DBX network diagram
-owner: platform-team
-updated: 2026-10-12
-diagram_type: arch
----
-
-Project dbx {
+export const MAIN_FILE = `Project dbx {
+  diagram_type: 'arch'
+  title: 'DBX network diagram'
+  owner: 'platform-team'
+  updated: '2026-10-12'
   Note: 'The DBX production estate'
 }
 
@@ -129,7 +126,8 @@ Database "dbx-ai pgvector" as dbx_pgvector {
   type: 'postgres'
 }
 Pipeline "Airbyte ETL" as airbyte {
-  type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
+  type: 'airbyte'
+  icon: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
 }
 
 // ── operations ────────────────────────────────────────────────────────────────
@@ -241,14 +239,11 @@ Link: ossec > loki
  * rather than in the playground so that a test compiles it, because a sample nobody compiles
  * rots the first time the language moves.
  */
-export const INLINE_FILE = `---
-title: DBX network diagram
-owner: platform-team
-updated: 2026-10-12
-diagram_type: arch
----
-
-Project dbx {
+export const INLINE_FILE = `Project dbx {
+  diagram_type: 'arch'
+  title: 'DBX network diagram'
+  owner: 'platform-team'
+  updated: '2026-10-12'
   Note: 'The DBX production estate'
 }
 
@@ -343,7 +338,8 @@ Database "dbx-ai pgvector" as dbx_pgvector {
   type: 'postgres'
 }
 Pipeline "Airbyte ETL" as airbyte {
-  type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
+  type: 'airbyte'
+  icon: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
 }
 
 // ── operations ────────────────────────────────────────────────────────────────

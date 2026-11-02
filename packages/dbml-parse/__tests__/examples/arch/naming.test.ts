@@ -9,7 +9,7 @@ import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function compilerFor (files: Record<string, string>): Compiler {
@@ -67,7 +67,7 @@ describe('[example] a name can repeat across roles', () => {
 });
 
 describe('[example] a role picks the element', () => {
-  const SHARED = "Server client\nServer api\nGroup api { }\n";
+  const SHARED = 'Server client\nServer api\nGroup api { }\n';
 
   test('in a link, an inline link, a group member on its own line and Metadata', () => {
     const { errors, warnings, db } = compile(`${SHARED}Link: client > Group api\nDatabase db [link: > Group api]\nGroup g {\n  Group api\n}\nMetadata Group api {\n  owner: 'x'\n}`);
@@ -75,7 +75,7 @@ describe('[example] a role picks the element', () => {
     expect(warnings).toEqual([]);
     expect(linksOf(db)).toEqual([['Server client', '>', 'Group api'], ['Database db', '>', 'Group api']]);
     expect(childrenOf(db, 'g')).toEqual(['Group api']);
-    expect(db?.groups?.find((g) => g.name === 'api')?.settings).toMatchObject({ owner: 'x' });
+    expect(db?.groups?.find((g) => g.name === 'api')?.metadata.owner?.value).toBe('x');
   });
 
   test('a role on both ends of a link', () => {
@@ -93,7 +93,7 @@ describe('[example] a role picks the element', () => {
     const { errors, db } = compile('Server b\nServer "API 1"\nLink: b > Server "API 1"\nMetadata "API 1" {\n  owner: \'x\'\n}');
     expect(errors).toEqual([]);
     expect(linksOf(db)).toEqual([['Server b', '>', 'Server API 1']]);
-    expect(db?.nodes?.find((n) => n.name === 'API 1')?.settings).toMatchObject({ owner: 'x' });
+    expect(db?.nodes?.find((n) => n.name === 'API 1')?.metadata.owner?.value).toBe('x');
   });
 });
 
@@ -105,12 +105,13 @@ describe('[example] without a role, NAME_PRECEDENCE picks and the editor warns',
 
   test('the syntax doc lists the roles and the precedence in the same order', () => {
     const doc = readFileSync(resolve(__dirname, '../../../../../dbml-homepage/docs/syntax/architecture-diagrams.md'), 'utf8');
-    const section = doc.slice(doc.indexOf('## Built-in Roles'), doc.indexOf('## Group Definition'));
+    const section = doc.slice(doc.indexOf('## Built-in Roles'), doc.indexOf('## Node Settings'));
     const table = section.split('\n').filter((line) => /^\| [a-z]+ \|/.test(line));
     const roles = table.flatMap((line) => [...line.split('|')[2].matchAll(/`(\w+)`/g)].map((m) => m[1]));
     expect(roles).toEqual(Object.keys(BUILTIN_ROLES));
-    const precedence = [...(section.match(/```text\n([\s\S]*?)```/)?.[1] ?? '').matchAll(/\w+/g)].map((m) => m[0]);
-    expect(precedence).toEqual([...NAME_PRECEDENCE]);
+    const precedence = doc.slice(doc.indexOf('## Role Precedence'), doc.indexOf('## Metadata Definition')).replace(/\s+/g, ' ');
+    expect(precedence).toContain('the roles in the order of the [Built-in Roles](#built-in-roles) table, then `Group`, then `Note`.');
+    expect([...NAME_PRECEDENCE]).toEqual([...roles, 'Group', 'Note']);
   });
 
   test('a link goes to the Server before the Group, with a warning', () => {
@@ -128,8 +129,8 @@ describe('[example] without a role, NAME_PRECEDENCE picks and the editor warns',
 
   test('Metadata without a role follows the same order, with a warning', () => {
     const { warnings, db } = compile("Server api\nGroup api { }\nMetadata api {\n  owner: 'x'\n}");
-    expect(db?.nodes?.[0].settings).toMatchObject({ owner: 'x' });
-    expect(db?.groups?.[0].settings).not.toHaveProperty('owner');
+    expect(db?.nodes?.[0].metadata.owner?.value).toBe('x');
+    expect(db?.groups?.[0].metadata).not.toHaveProperty('owner');
     expect(warnings).toEqual(['api matches Server api and Group api; Server api is used. Write Group api for the other.']);
   });
 

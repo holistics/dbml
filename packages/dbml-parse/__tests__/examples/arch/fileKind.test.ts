@@ -16,12 +16,12 @@ const kindOf = (source: string) => setup({ '/main.dbml': source }).compiler.file
 
 describe('[example] file kind', () => {
   test('front matter diagram_type arch or architecture, any case, is architecture', () => {
-    expect(kindOf('---\ndiagram_type: arch\n---\nTable users { id int }')).toBe('arch');
-    expect(kindOf('---\ndiagram_type: Architecture\n---\n')).toBe('arch');
+    expect(kindOf('Project {\n  diagram_type: \'arch\'\n}\nTable users { id int }')).toBe('arch');
+    expect(kindOf('Project {\n  diagram_type: \'Architecture\'\n}\n')).toBe('arch');
   });
 
   test('any other diagram_type is DBML, whatever the content', () => {
-    expect(kindOf('---\ndiagram_type: schema\n---\nServer api')).toBe('dbml');
+    expect(kindOf('Project {\n  diagram_type: \'schema\'\n}\nServer api')).toBe('dbml');
   });
 
   test('without a marker, a built-in role in any case is architecture', () => {
@@ -60,7 +60,7 @@ describe('[example] file kind', () => {
     });
     expect(compiler.parseFile(Filepath.from('/arch.dbml')).getErrors()).toHaveLength(0);
     expect(compiler.parseFile(Filepath.from('/schema.dbml')).getErrors()).toHaveLength(0);
-    expect(setup({ '/main.dbml': '---\ndiagram_type: dbml\n---\nServer api' })
+    expect(setup({ '/main.dbml': 'Project {\n  diagram_type: \'dbml\'\n}\nServer api' })
       .compiler.parseFile(Filepath.from('/main.dbml')).getErrors().length).toBeGreaterThan(0);
   });
 });

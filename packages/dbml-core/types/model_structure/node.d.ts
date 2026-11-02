@@ -1,4 +1,4 @@
-import type { ArchSettings, Node as RawNode } from '@dbml/parse';
+import type { ArchSettings, CustomMetadata, Node as RawNode } from '@dbml/parse';
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
@@ -10,8 +10,9 @@ declare class Node extends Element {
     alias: string | null;
     role: string;
     type: string | null;
-    image: string | null;
+    icon: string | null;
     settings: ArchSettings;
+    metadata: CustomMetadata;
     note: string | null;
     noteToken: Token | null;
     groupId: number | null;
@@ -28,8 +29,9 @@ export interface NormalizedNode {
     alias: string | null;
     role: string;
     type: string | null;
-    image: string | null;
+    icon: string | null;
     settings: ArchSettings;
+    metadata: CustomMetadata;
     note: string | null;
     groupId: number | null;
 }

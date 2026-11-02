@@ -9,20 +9,14 @@ import {
 } from '@/core/global_modules';
 import type { GlobalModule } from '@/core/global_modules/types';
 import type { ParserOptions } from '@/core/parser/parser';
-import Lexer, { type LexerOptions } from '@/core/lexer/lexer';
+import Lexer from '@/core/lexer/lexer';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   type FileKind, type FileScan, decideFileKind, scanTokens,
 } from './queries/files/fileKind';
 
-// Front matter is read in every file, so each file can say what it is
-const FILE_KIND_LEXER: LexerOptions = {
-  allowFrontMatter: true,
-};
-
 // Every switch inside is off by default
 export interface DialectOptions {
-  lexer?: LexerOptions;
   parser?: ParserOptions;
 }
 import {
@@ -108,10 +102,6 @@ export default class Compiler {
     return this.layout.getSource(filepath);
   }
 
-  lexerOptions (): LexerOptions {
-    return this.explicitDialect ? this.explicitDialect.lexer ?? {} : FILE_KIND_LEXER;
-  }
-
   parserOptions (kind: FileKind): ParserOptions {
     return this.explicitDialect
       ? this.explicitDialect.parser ?? {}
@@ -131,7 +121,7 @@ export default class Compiler {
     const cached = this.fileScans.get(id);
     if (cached && cached.source === source) return cached.scan;
 
-    const scan = scanTokens(tokens ?? new Lexer(source, filepath, FILE_KIND_LEXER).lex().getValue());
+    const scan = scanTokens(tokens ?? new Lexer(source, filepath).lex().getValue());
     this.fileScans.set(id, {
       source,
       scan,

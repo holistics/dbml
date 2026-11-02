@@ -98,10 +98,10 @@ export interface Ref {
 
 // One word is a name; two are a role and a name. undefined when the first of two is not a role, or for more words.
 export function refOf (words: SyntaxNode[]): Ref | undefined {
-  if (words.length === 1) return { node: endpointNode(words[0]) };
+  if (words.length === 1) return { node: words[0] };
   if (words.length !== 2) return undefined;
   const role = roleWord(nameOf(words[0]));
-  return role ? { node: endpointNode(words[1]), role, roleNode: words[0] } : undefined;
+  return role ? { node: words[1], role, roleNode: words[0] } : undefined;
 }
 
 // A quoted value stays a string; only a bare number is a number
@@ -193,11 +193,8 @@ export function infixOf (node?: SyntaxNode): Infix | undefined {
   };
 }
 
-// `api.web` names `api`; the part after the dot is not an endpoint
-export function endpointNode (node: SyntaxNode): SyntaxNode {
-  const access = infixOf(node);
-  return access && access.op === '.' ? access.left : node;
-}
+// `api.web`: DBML's member access, which is not a name in an architecture file
+export const isDotted = (node: SyntaxNode | undefined): boolean => infixOf(node)?.op === '.';
 
 export const LINK_OPS = new Set([
   '>',
@@ -362,70 +359,48 @@ function dedent (text: string): string {
 // Only these reach the page as a picture: anything else in an `href` can run script
 export const IMAGE_URL = /^(https:\/\/|data:image\/)/i;
 
-export const IMAGE_REFUSED = 'A picture must be an https: URL or a data:image/ URI.';
-
-export interface BodyRead {
-  settings: ArchSettings;
-  problems: {
-    code: 'bad' | 'duplicate';
-    message: string;
-    node: SyntaxNode;
-  }[];
+// One setting or custom property: `key: value` in `[ ]`, a `key: value` body line, or a bare word
+export interface PropertyEntry {
+  key: string;
+  // undefined for a bare word
+  value: SyntaxNode | undefined;
+  node: SyntaxNode;
+  inBody: boolean;
 }
 
-// The body wins over `[ ]`. A bare word is a flag on an element and a member name in a group.
-export function readBody (declaration: ElementDeclarationNode, settings: ArchSettings, bareWordIsAFlag: boolean): BodyRead {
-  const out: BodyRead = {
-    settings,
-    problems: [],
-  };
-  const seen = new Set<string>();
-  for (const row of bodyOf(declaration)) {
-    if (!(row instanceof ElementDeclarationNode)) {
-      if (!bareWordIsAFlag) continue;
-      const parsed = rowOf(row);
-      if (!parsed) continue;
-      for (const part of [
-        parsed.callee,
-        ...parsed.args,
-      ]) {
-        const flag = nameOf(part);
-        if (!flag) continue;
-        if (seen.has(flag)) {
-          out.problems.push({
-            code: 'duplicate',
-            message: `${flag} is set twice`,
-            node: row,
-          });
-          continue;
-        }
-        seen.add(flag);
-        settings[flag] = true;
-      }
-      continue;
-    }
-    const key = declarationWord(row);
-    if (!key || key.toLowerCase() === 'note') continue;
+export interface PropertyRead {
+  entries: PropertyEntry[];
+  // body lines with a key and no value
+  bad: ElementDeclarationNode[];
+}
 
-    const entry = propertyOf(row);
-    if (!entry || entry.value === undefined) {
-      out.problems.push({
-        code: 'bad',
-        message: `A property reads  ${key}: 'value'`,
-        node: row,
-      });
+// `[ ]` first, then the body, so a later entry wins. Inline links and `Note` lines are not properties.
+// A bare word in the body is a flag on a node, and a member in a group.
+export function propertiesOf (declaration: ElementDeclarationNode, bareWordIsAFlag: boolean): PropertyRead {
+  const out: PropertyRead = { entries: [], bad: [] };
+  for (const attribute of declaration.attributeList?.elementList ?? []) {
+    if (!(attribute instanceof AttributeNode) || isInlineLink(attribute)) continue;
+    const key = nameOf(attribute.name);
+    if (key) out.entries.push({ key, value: attribute.value, node: attribute, inBody: false });
+  }
+  for (const row of bodyOf(declaration)) {
+    if (row instanceof ElementDeclarationNode) {
+      const key = declarationWord(row);
+      if (!key || key.toLowerCase() === 'note') continue;
+      const [first] = bodyOf(row);
+      if (!first) {
+        out.bad.push(row);
+        continue;
+      }
+      out.entries.push({ key, value: rowOf(first)?.callee ?? first, node: row, inBody: true });
       continue;
     }
-    if (seen.has(entry.key)) {
-      out.problems.push({
-        code: 'duplicate',
-        message: `${entry.key} is set twice`,
-        node: row,
-      });
-      continue;
+    if (!bareWordIsAFlag) continue;
+    const parsed = rowOf(row);
+    for (const part of parsed ? [parsed.callee, ...parsed.args] : []) {
+      const key = nameOf(part);
+      if (key) out.entries.push({ key, value: undefined, node: row, inBody: true });
     }
-    seen.add(entry.key);
-    settings[entry.key] = entry.value;
   }
   return out;
 }

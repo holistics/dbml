@@ -682,7 +682,7 @@ export class ArchMetadataElementMetadata extends MetadataElementMetadata {
     if (this.declaration.name) return super.target(compiler);
     const name = this.declaration.targetKind?.value;
     if (!name) return undefined;
-    return resolveName(compiler, this.declaration.filepath, name, undefined, [SymbolKind.Element])?.originalSymbol;
+    return resolveName(compiler, this.declaration.filepath, name)?.originalSymbol;
   }
 }
 

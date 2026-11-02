@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function remove (source: string, handle: string): string | undefined {
@@ -30,8 +30,8 @@ describe('[example] removing an element', () => {
   });
 
   test('takes inline links on other elements that point at it, and keeps their other settings', () => {
-    const result = remove("Server api [color: '#ff0000', link: > db]\nServer web [link: > db]\nDatabase db\n", 'db');
-    expect(result).toBe(`${ARCH}Server api [color: '#ff0000']\nServer web\n`);
+    const result = remove('Server api [color: #ff0000, link: > db]\nServer web [link: > db]\nDatabase db\n', 'db');
+    expect(result).toBe(`${ARCH}Server api [color: #ff0000]\nServer web\n`);
     expect(errorsOf(result!)).toEqual([]);
   });
 

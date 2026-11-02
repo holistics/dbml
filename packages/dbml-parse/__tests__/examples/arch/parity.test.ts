@@ -23,7 +23,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
 
   it('draws the declared name, and takes the alias as the handle', () => {
     const { model, diagnostics } = compileArch(
-      { '/d': '---\ndiagram_type: arch\n---\n\nServer "dbdiagram API1" as api1\nServer api2' },
+      { '/d': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer "dbdiagram API1" as api1\nServer api2' },
       '/d',
     );
     expect(diagnostics).toEqual([]);
@@ -35,9 +35,9 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('lets two boxes share a caption when their handles differ', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        '---',
-        'diagram_type: arch',
-        '---',
+        'Project {',
+        "  diagram_type: 'arch'",
+        '}',
         '',
         'Internet "Internet" as net_dbdiagram',
         'Internet "Internet" as net_dbdocs',
@@ -52,7 +52,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
 
   it('still refuses two handles that are the same', () => {
     const { diagnostics } = compileArch(
-      { '/d': '---\ndiagram_type: arch\n---\n\nServer "A" as x\nServer "B" as x' },
+      { '/d': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer "A" as x\nServer "B" as x' },
       '/d',
     );
     expect(diagnostics.map((d) => d.code)).toEqual(['duplicate-name']);
@@ -61,9 +61,9 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('resolves a link, a member and a metadata target through either spelling', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        '---',
-        'diagram_type: arch',
-        '---',
+        'Project {',
+        "  diagram_type: 'arch'",
+        '}',
         '',
         'Server "dbdiagram API1" as api1',
         'Database "Main" as pg',
@@ -78,7 +78,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(diagnostics).toEqual([]);
     expect(model.elements.get('api1')?.parent).toBe('api');
     expect(model.links[0]).toMatchObject({ from: 'api1', to: 'pg' });
-    expect(model.elements.get('pg')?.settings).toMatchObject({ owner: 'platform-team' });
+    expect(model.elements.get('pg')?.metadata).toMatchObject({ owner: 'platform-team' });
   });
 
   it('puts the protocol and the host on the line, where they describe something', () => {
@@ -113,7 +113,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('closes the vocabulary against any word that is not a role', () => {
     // With no diagram_type and no role word the file is DBML, so DBML's parser reports it
     expect(codes('Microservice x').every((code) => code.startsWith('parse-'))).toBe(true);
-    expect(codes('---\ndiagram_type: arch\n---\nMicroservice x')).toEqual(['unknown-role']);
+    expect(codes('Project {\n  diagram_type: \'arch\'\n}\nMicroservice x')).toEqual(['unknown-role']);
   });
 
   it('refuses a Kind, since there are no custom roles', () => {
@@ -154,7 +154,7 @@ describe('the worked example', () => {
 
   it('attaches metadata declared outside the thing it describes', () => {
     const { model } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
-    expect(model.elements.get('api1')?.settings).toMatchObject({ owner: 'platform-team' });
+    expect(model.elements.get('api1')?.metadata).toMatchObject({ owner: 'platform-team' });
   });
 
   it('produces a model that is complete enough to draw', () => {
@@ -183,8 +183,8 @@ describe('what decides the dialect', () => {
     }
   });
 
-  it('reads diagram_type off front matter, and treats it as advice', () => {
-    const marked = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\n\nServer a' }, '/d.dbml');
+  it('reads diagram_type off Project, and does not need it', () => {
+    const marked = compileArch({ '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer a' }, '/d.dbml');
     expect(marked.diagramType).toBe('arch');
     expect(marked.diagnostics).toEqual([]);
 
@@ -193,31 +193,25 @@ describe('what decides the dialect', () => {
     expect(bare.model.elements.size).toBe(marked.model.elements.size);
   });
 
-  it('refuses to honour it inside Project, because a host cannot reach it there', () => {
-    const misplaced = compileArch(
-      { '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nServer a" },
-      '/d.dbml',
-    );
-    expect(misplaced.diagramType).toBeNull();
-    expect(misplaced.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
-    expect(misplaced.diagnostics[0].severity).toBe('error');
-    expect(misplaced.diagnostics[0].message).toContain('diagram_type: arch');
-    // A file with an error gives no model, as a DBML file does
-    expect(isArchitecture(misplaced)).toBe(false);
+  it('reads it from a named Project too, and the first diagram_type wins', () => {
+    const named = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nTable t {\n  id int\n}" }, '/d.dbml');
+    expect(named.diagramType).toBe('arch');
+    const schema = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'dbml'\n}\nServer a" }, '/d.dbml');
+    expect(schema.diagramType).toBe('dbml');
+    expect(isArchitecture(schema)).toBe(false);
   });
 
-  it('answers from front matter even when a Project block argues with it', () => {
-    const both = compileArch(
-      { '/d.dbml': "---\ndiagram_type: arch\n---\n\nProject x {\n  diagram_type: 'database'\n}\nServer a" },
-      '/d.dbml',
-    );
-    expect(both.diagramType).toBe('arch');
-    expect(both.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
+  it('ignores a diagram_type that is not a row of a top-level Project', () => {
+    const nested = compileArch({ '/d.dbml': "Table t {\n  diagram_type varchar [note: 'arch']\n}\nServer a" }, '/d.dbml');
+    expect(nested.diagramType).toBeNull();
+    const commented = compileArch({ '/d.dbml': "// Project { diagram_type: 'dbml' }\nServer a" }, '/d.dbml');
+    expect(commented.diagramType).toBeNull();
+    expect(isArchitecture(commented)).toBe(true);
   });
 
-  it('accepts the long spelling, so nobody has to remember two words', () => {
+  it('accepts the long spelling, in any case', () => {
     for (const spelling of ['arch', 'architecture', 'Arch', 'ARCHITECTURE']) {
-      const r = compileArch({ '/d.dbml': `---\ndiagram_type: ${spelling}\n---\n\nServer a` }, '/d.dbml');
+      const r = compileArch({ '/d.dbml': `Project {\n  diagram_type: '${spelling}'\n}\n\nServer a` }, '/d.dbml');
       expect(isArchitecture(r), spelling).toBe(true);
       expect(r.diagnostics, spelling).toEqual([]);
     }
@@ -227,7 +221,7 @@ describe('what decides the dialect', () => {
     // with nothing drawn, only diagram_type says "architecture"; it exists so a canvas does not
     // flicker while somebody is still typing
     const { model, diagramType } = compileArch(
-      { '/d.dbml': '---\ndiagram_type: arch\n---\n' },
+      { '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\n' },
       '/d.dbml',
     );
     expect(model.elements.size).toBe(0);
@@ -235,7 +229,7 @@ describe('what decides the dialect', () => {
   });
 
   it('keeps Project out of the drawing', () => {
-    const { model } = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\nServer a' }, '/d.dbml');
+    const { model } = compileArch({ '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\nServer a' }, '/d.dbml');
     expect([...model.elements.keys()]).toEqual(['a']);
   });
 });
@@ -271,9 +265,9 @@ describe('the inline sample', () => {
 
 describe('a note written as markdown', () => {
   const SOURCE = [
-    '---',
-    'diagram_type: arch',
-    '---',
+    'Project {',
+    "  diagram_type: 'arch'",
+    '}',
     'Server "Lexer" as lex {',
     "  Note: '''",
     '  **642 lines, and not one DBML word in them.**',
@@ -331,7 +325,7 @@ describe('deciding whether to show an architecture canvas', () => {
 
   it('says no to a document with nothing drawn on it, unless the author said otherwise', () => {
     expect(asks('Project p { }')).toBe(false);
-    expect(asks('---\ndiagram_type: arch\n---\n')).toBe(true);
+    expect(asks('Project {\n  diagram_type: \'arch\'\n}\n')).toBe(true);
   });
 
   it('says no to notes alone, which a half-written file collects by accident', () => {
@@ -371,49 +365,56 @@ describe('reading one document out of a project', () => {
   });
 });
 
-describe('front matter', () => {
-  const FM = `---
-title: DBX network diagram
-owner: platform-team
-updated: 2026-10-12
----
+describe('Project', () => {
+  const PROJECT = `Project dbx {
+  diagram_type: 'arch'
+  direction: 'down'
+  database_type: 'PostgreSQL'
+  title: 'DBX network diagram'
+  Note: 'The DBX production estate'
+}
 
-Server api1 [name: 'dbdiagram API1']
+Server api1
 Database db1
 Link: api1 > db1
 `;
 
-  it('reads a --- block the way Markdown does', () => {
-    const { model, diagnostics } = compileArch({ '/d.dbml': FM }, '/d.dbml');
+  it('keeps every row, as a schema Project does', () => {
+    const { model, diagnostics } = compileArch({ '/d.dbml': PROJECT }, '/d.dbml');
     expect(diagnostics).toEqual([]);
-    expect(model.frontMatter).toEqual({
+    expect(model.project).toMatchObject({
+      name: 'dbx',
+      diagram_type: 'arch',
+      direction: 'down',
+      database_type: 'PostgreSQL',
       title: 'DBX network diagram',
-      owner: 'platform-team',
-      updated: '2026-10-12',
+      note: { value: 'The DBX production estate' },
     });
   });
 
-  it('does not move the lines after it, which is the only hard part', () => {
-    const { diagnostics } = compileArch({ '/d.dbml': '---\ntitle: x\n---\nMicroservice bad' }, '/d.dbml');
-    // no diagram_type and no known kind word, so DBML's parser reports it; still on line 4, not line 1
-    expect(diagnostics.length).toBeGreaterThan(0);
-    expect(diagnostics.every((d) => d.line === 4)).toBe(true);
-  });
-
-  it('leaves a document alone when the fence is never closed', () => {
-    const { model, diagnostics } = compileArch({ '/d.dbml': '---\ntitle: x\nServer a' }, '/d.dbml');
-    expect(model.frontMatter).toEqual({});
-    expect(diagnostics.length).toBeGreaterThan(0); // it is text, and text is not a declaration
-  });
-});
-
-describe('the example carries both kinds of metadata', () => {
-  it('reads the --- block and the Project block from the same document', () => {
+  it('takes no name, and the INLINE_FILE sample reads its rows', () => {
+    expect(compileArch({ '/d.dbml': "Project {\n  direction: 'right'\n}\nServer a" }, '/d.dbml').diagnostics).toEqual([]);
     const { model, diagramType, diagnostics } = compileArch({ '/d': INLINE_FILE }, '/d');
     expect(diagnostics).toEqual([]);
-    expect(model.frontMatter.title).toBe('DBX network diagram');
-    expect(model.frontMatter.owner).toBe('platform-team');
+    expect(model.project).toMatchObject({ title: 'DBX network diagram', owner: 'platform-team' });
     expect(diagramType).toBe('arch');
+  });
+
+  it('direction is right or down', () => {
+    const { diagnostics } = compileArch({ '/d.dbml': "Project {\n  direction: 'left'\n}\nServer a" }, '/d.dbml');
+    expect(diagnostics.map((d) => d.message)).toEqual(["'direction' must be 'right' or 'down'"]);
+  });
+
+  it('follows the schema rules: no alias, no settings, string values, no tables', () => {
+    const messages = (source: string) => compileArch({ '/d.dbml': `${source}\nServer a` }, '/d.dbml').diagnostics.map((d) => d.message);
+    expect(messages('Project p as q {\n}')).toContain("A Project shouldn't have an alias");
+    expect(messages("Project p [note: 'x'] {\n}")).toContain("A Project shouldn't have a setting list");
+    expect(messages('Project p {\n  owner: 3\n}').length).toBeGreaterThan(0);
+  });
+
+  it('a --- block is not part of the language', () => {
+    const { diagnostics } = compileArch({ '/d.dbml': '---\ntitle: x\n---\nServer a' }, '/d.dbml');
+    expect(diagnostics.length).toBeGreaterThan(0);
   });
 });
 
@@ -476,7 +477,7 @@ Metadata Table users {
 
 describe('a brand is a setting, not a keyword', () => {
   const draw = (line: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n\n${line}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${line}` },
     '/d',
   );
 
@@ -550,16 +551,12 @@ describe('a brand is a setting, not a keyword', () => {
     expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: null });
   });
 
-  it('takes a URL in the same slot, for a brand the pack has never drawn', () => {
-    const { model, diagnostics } = draw("Database d [type: 'https://example.com/acme.svg']");
-    expect(diagnostics).toEqual([]);
-    expect(isNode(model.elements.get('d')) && model.elements.get('d'))
-      .toMatchObject({ type: null, image: 'https://example.com/acme.svg' });
-  });
-
-  it('refuses a scheme that would execute, in that slot too', () => {
-    const { diagnostics } = draw("Database d [type: 'javascript:alert(1)']");
-    expect(diagnostics.map((d) => d.code)).toEqual(['bad-image']);
+  it('takes no URL: a picture goes in icon', () => {
+    for (const value of ['https://example.com/acme.svg', 'javascript:alert(1)']) {
+      const { model, diagnostics } = draw(`Database d [type: '${value}']`);
+      expect(diagnostics.map((d) => d.code), value).toEqual(['unknown-type']);
+      expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: null, icon: null });
+    }
   });
 
   it('has 32 roles and no brands among them', () => {
@@ -570,54 +567,53 @@ describe('a brand is a setting, not a keyword', () => {
   });
 });
 
-describe('a picture, in the slot that already names the mark', () => {
+describe('icon', () => {
   const draw = (body: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n\n${body}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${body}` },
     '/d',
   );
   const pictureOf = (model: NetworkModel, id: string): string | null => {
     const element = model.elements.get(id);
-    return isNode(element) ? element.image : null;
+    return isNode(element) ? element.icon : null;
   };
 
   it('takes a data URI as readily as a URL', () => {
-    const { diagnostics, model } = draw("Database d [type: 'data:image/png;base64,iVBORw0KGgo=']");
+    const { diagnostics, model } = draw("Database d [icon: 'data:image/png;base64,iVBORw0KGgo=']");
     expect(diagnostics).toEqual([]);
     expect(pictureOf(model, 'd')).toContain('data:image/png');
   });
 
-  // The string becomes an `href` inside an SVG in somebody else's page, and a `javascript:` href
-  // there executes. The author of a diagram is not always the person opening it.
-  it('refuses a scheme that would execute, or break on a TLS page', () => {
+  // The string becomes an image source in somebody else's page. The author of a diagram is not
+  // always the person opening it.
+  it('ignores a value that is not an https or data:image URL', () => {
     for (const bad of ['javascript:alert(1)',
       'http://example.com/a.png',
       'file:///etc/passwd',
       'data:text/html,<script>']) {
-      const onType = draw(`Database d [type: '${bad}']`);
-      expect(pictureOf(onType.model, 'd'), bad).toBe(null);
-      expect(onType.diagnostics.map((d) => d.code), bad).toEqual(['bad-image']);
+      const { model, diagnostics } = draw(`Database d [icon: '${bad}']`);
+      expect(pictureOf(model, 'd'), bad).toBe(null);
+      expect(diagnostics, bad).toEqual([]);
     }
   });
 
-  it('has no image setting at all, which is the point', () => {
-    const { model, diagnostics } = draw("Database d [image: 'https://example.com/a.svg']");
+  it('a Metadata block can set it, and it wins over the node', () => {
+    const { model, diagnostics } = draw("Database d [icon: 'https://a.example/a.png']\nMetadata d {\n  icon: 'https://b.example/b.png'\n}");
     expect(diagnostics).toEqual([]);
-    expect(pictureOf(model, 'd')).toBe(null);
-    // it survives as a free-form property, the way any unknown setting does
-    expect(model.elements.get('d')?.settings.image).toBe('https://example.com/a.svg');
+    expect(pictureOf(model, 'd')).toBe('https://b.example/b.png');
   });
 
-  it('keeps icon and glyph as ordinary properties, since a role carries the mark', () => {
-    const { model, diagnostics } = draw("Server s [icon: chip, glyph: 'M12 3v18']\nGroup g [icon: lock] { s }");
+  it('image and glyph are custom properties, and a group has no icon setting', () => {
+    const { model, diagnostics } = draw("Server s [image: 'https://example.com/a.svg', glyph: 'M12 3v18']\nGroup g [icon: 'lock'] { s }");
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('s')?.settings).toMatchObject({ icon: 'chip', glyph: 'M12 3v18' });
-    expect(model.elements.get('g')?.settings).toMatchObject({ icon: 'lock' });
+    expect(pictureOf(model, 's')).toBe(null);
+    expect(model.elements.get('s')?.metadata).toEqual({ image: 'https://example.com/a.svg', glyph: 'M12 3v18' });
+    expect(model.elements.get('g')?.metadata).toEqual({ icon: 'lock' });
   });
 });
 
 describe('a role word is case-insensitive, because Table is', () => {
   const draw = (line: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n${line}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n${line}` },
     '/d',
   );
 
@@ -646,39 +642,41 @@ describe('a role word is case-insensitive, because Table is', () => {
   });
 });
 
-describe('quotes mean what they say', () => {
-  const settingsOf = (line: string): Record<string, unknown> => {
-    const { model, diagnostics } = compileArch(
-      { '/d': `---\ndiagram_type: arch\n---\n\nDatabase d [${line}]` },
-      '/d',
-    );
+describe('custom properties take the values DBML takes', () => {
+  const read = (line: string) => compileArch(
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\nDatabase d [${line}]` },
+    '/d',
+  );
+  const metadataOf = (line: string): Record<string, unknown> => {
+    const { model, diagnostics } = read(line);
     expect(diagnostics).toEqual([]);
-    return model.elements.get('d')?.settings ?? {};
+    return model.elements.get('d')?.metadata ?? {};
   };
 
   it('keeps a quoted value a string, however numeric it looks', () => {
-    expect(settingsOf("engine_version: '16.3'")).toEqual({ engine_version: '16.3' });
-    expect(settingsOf("engine_version: '16.30'")).toEqual({ engine_version: '16.30' });
-    expect(settingsOf("zone: '01'")).toEqual({ zone: '01' });
-    expect(settingsOf("account: '0123456789'")).toEqual({ account: '0123456789' });
+    expect(metadataOf("engine_version: '16.30'")).toEqual({ engine_version: '16.30' });
+    expect(metadataOf("account: '0123456789'")).toEqual({ account: '0123456789' });
   });
 
-  it('still reads a bare number as a number', () => {
-    expect(settingsOf('allocated_storage: 100')).toEqual({ allocated_storage: 100 });
-    expect(settingsOf('ratio: 0.5')).toEqual({ ratio: 0.5 });
+  it('reads a number, a boolean and a color literal', () => {
+    expect(metadataOf('allocated_storage: 100, ratio: 0.5, multi_az: true, brand: #336791'))
+      .toEqual({ allocated_storage: 100, ratio: 0.5, multi_az: true, brand: '#336791' });
   });
 
-  it('keeps a bare word a word, and a bare flag true', () => {
-    expect(settingsOf('provider: aws')).toEqual({ provider: 'aws' });
-    expect(settingsOf('multi_az')).toEqual({ multi_az: true });
+  it('refuses a bare word and a bare flag, in the words DBML uses', () => {
+    for (const line of ['provider: aws', 'multi_az']) {
+      const { diagnostics } = read(line);
+      expect(diagnostics.map((d) => d.message), line)
+        .toEqual([`Custom setting '${line.split(':')[0]}' must be a string, a color literal, a number literal, or a boolean literal`]);
+    }
   });
 
-  it('carries free-form settings through to the model, wherever they are written', () => {
+  it('carries custom properties through to the model, wherever they are written', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        '---',
-        'diagram_type: arch',
-        '---',
+        'Project {',
+        "  diagram_type: 'arch'",
+        '}',
         '',
         "Database pg [type: 'postgres', region: 'ap-southeast-1', instance_class: 'db.t3.medium']",
         "Server api [type: 'docker']",
@@ -691,25 +689,25 @@ describe('quotes mean what they say', () => {
     }, '/d');
 
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('pg')?.settings).toMatchObject({
-      region: 'ap-southeast-1', instance_class: 'db.t3.medium',
+    expect(model.elements.get('pg')?.settings).toEqual({ type: 'postgres' });
+    expect(model.elements.get('pg')?.metadata).toEqual({
+      region: 'ap-southeast-1', instance_class: 'db.t3.medium', tf_module: 'modules/rds',
     });
     expect(model.links[0].settings).toMatchObject({ proto: 'TCP', port: 5432 });
-    expect(model.elements.get('vpc')?.settings).toMatchObject({ cidr: '10.0.0.0/16' });
-    expect(model.elements.get('pg')?.settings).toMatchObject({ tf_module: 'modules/rds' });
+    expect(model.elements.get('vpc')?.metadata).toMatchObject({ name: 'Production', cidr: '10.0.0.0/16' });
   });
 });
 
 describe('metadata follows DBML', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
     '/d',
   );
 
   it("takes `key: 'value'`, which is what the DBML docs show", () => {
     const { model, diagnostics } = draw("Server api\nMetadata api {\n  owner: 'scott'\n}");
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('api')?.settings).toMatchObject({ owner: 'scott' });
+    expect(model.elements.get('api')?.metadata).toMatchObject({ owner: 'scott' });
   });
 
   // The parser only accepts a bare identifier in the slot the short form reads from, so a name
@@ -723,7 +721,7 @@ describe('metadata follows DBML', () => {
     ].join('\n'));
 
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('dbdocs-dev')?.settings).toMatchObject({ owner: 'platform-team' });
+    expect(model.elements.get('dbdocs-dev')?.metadata).toMatchObject({ owner: 'platform-team' });
   });
 
   it('names nothing when the stated role is not what that thing is', () => {
@@ -756,35 +754,42 @@ describe('metadata follows DBML', () => {
     ].join('\n'));
 
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('api')?.settings).toMatchObject({
-      type: 'docker',
-      tier: 'one',
-      owner: 'platform-team',
-    });
+    expect(model.elements.get('api')?.settings).toEqual({ type: 'docker' });
+    expect(model.elements.get('api')?.metadata).toEqual({ tier: 'one', owner: 'platform-team' });
+  });
+
+  it('changes a setting when the key is one, in any case, and checks its value', () => {
+    const { model, diagnostics } = draw("Server api [color: #111111]\nMetadata api {\n  Color: #222222\n  STYLE: dashed\n  Note: 'from metadata'\n}");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('api')?.settings).toEqual({ color: '#222222', style: 'dashed' });
+    expect(model.elements.get('api')?.note).toBe('from metadata');
+    expect(draw("Server api\nMetadata api {\n  color: 'red'\n}").diagnostics.map((d) => d.message)).toEqual(["'color' must be a color literal"]);
+    expect(draw('Server api\nMetadata api {\n  owner: platform\n}').diagnostics.map((d) => d.message))
+      .toEqual(['A Metadata field value must be a string, a color literal, a number literal, or a boolean literal']);
   });
 
   it('lets a later file outrank an earlier one, as DBML documents', () => {
     const { model, diagnostics } = compileArch({
       '/main.arch.dbml': [
-        '---',
-        'diagram_type: arch',
-        '---',
+        'Project {',
+        "  diagram_type: 'arch'",
+        '}',
         '',
         "use * from './ops.arch'",
         'Server api',
       ].join('\n'),
       // a file of only Metadata blocks needs its own diagram_type, and imports what it annotates
-      '/ops.arch.dbml': "---\ndiagram_type: arch\n---\nuse { Server api } from './main.arch'\nMetadata api {\n  owner: 'ops-team'\n}",
+      '/ops.arch.dbml': "Project {\n  diagram_type: 'arch'\n}\nuse { Server api } from './main.arch'\nMetadata api {\n  owner: 'ops-team'\n}",
     }, '/main.arch.dbml');
 
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('api')?.settings).toMatchObject({ owner: 'ops-team' });
+    expect(model.elements.get('api')?.metadata).toMatchObject({ owner: 'ops-team' });
   });
 });
 
 describe('the body carries the properties', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
     '/d',
   );
 
@@ -798,16 +803,15 @@ describe('the body carries the properties', () => {
     ].join('\n'));
 
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('users_db')?.settings).toEqual({
-      type: 'postgres', version: '16.3', port: 5432, owner: 'platform-team',
-    });
+    expect(model.elements.get('users_db')?.settings).toEqual({ type: 'postgres' });
+    expect(model.elements.get('users_db')?.metadata).toEqual({ version: '16.3', port: 5432, owner: 'platform-team' });
   });
 
   it('reads them on a container too, beside its members', () => {
     const { model, diagnostics } = draw([
       'Server a',
       'Server b',
-      "Group g [name: 'G'] {",
+      'Group g [color: #336791] {',
       '  a',
       '  b',
       "  owner: 'platform-team'",
@@ -816,7 +820,8 @@ describe('the body carries the properties', () => {
 
     expect(diagnostics).toEqual([]);
     const group = model.elements.get('g');
-    expect(group?.settings).toMatchObject({ name: 'G', owner: 'platform-team' });
+    expect(group?.settings).toEqual({ color: '#336791' });
+    expect(group?.metadata).toEqual({ owner: 'platform-team' });
     expect(isGroup(group) && group.children).toEqual(['a', 'b']);
   });
 
@@ -824,48 +829,63 @@ describe('the body carries the properties', () => {
     const { model, diagnostics } = draw("Database d {\n  version: '16.3'\n  Note: 'the main one'\n}");
     expect(diagnostics).toEqual([]);
     expect(model.elements.get('d')?.note).toBe('the main one');
-    expect(model.elements.get('d')?.settings).toEqual({ version: '16.3' });
+    expect(model.elements.get('d')?.metadata).toEqual({ version: '16.3' });
+  });
+
+  it('takes the note from [note: ...], and the body Note wins', () => {
+    expect(draw("Database d [note: 'from brackets']").model.elements.get('d')?.note).toBe('from brackets');
+    expect(draw("Database d [note: 'from brackets'] {\n  Note: 'from the body'\n}").model.elements.get('d')?.note).toBe('from the body');
+    expect(draw('Group g [note: 3] { }').diagnostics.map((d) => d.message)).toEqual(["'note' must be a string literal"]);
   });
 
   it('lets the body win a collision, being the more specific place to have said it', () => {
-    const { model } = draw("Database d [type: 'postgres', tier: 'two'] {\n  tier: 'one'\n}");
-    expect(model.elements.get('d')?.settings).toMatchObject({ type: 'postgres', tier: 'one' });
+    const { model } = draw("Database d [type: 'postgres', color: #111111, tier: 'two'] {\n  tier: 'one'\n  color: #222222\n}");
+    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', color: '#222222' });
+    expect(model.elements.get('d')?.metadata).toEqual({ tier: 'one' });
   });
 
-  it('refuses a key set twice in one body', () => {
-    const { diagnostics } = draw("Database d {\n  a: '1'\n  a: '2'\n}");
-    expect(diagnostics.map((x) => x.code)).toEqual(['duplicate-property']);
-  });
-
-  it('leaves a simple box on one line, which is most boxes', () => {
-    const { model, diagnostics } = draw("Cache sessions [name: 'Session cache', type: 'redis']");
+  it('reads setting names in any case, in [ ] and in the body', () => {
+    const { model, diagnostics } = draw("Database d [TYPE: 'postgres'] {\n  Color: #336791\n  Style: dashed\n}");
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('sessions')?.settings).toEqual({
-      name: 'Session cache', type: 'redis',
-    });
+    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', color: '#336791', style: 'dashed' });
+    expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: 'postgres' });
+  });
+
+  it('refuses a key set twice in one body, in any case', () => {
+    expect(draw("Database d {\n  a: '1'\n  A: '2'\n}").diagnostics.map((x) => x.code)).toEqual(['duplicate-property']);
+  });
+
+  it('a color is a color literal, on a node, a group and a link', () => {
+    const messages = (src: string) => draw(src).diagnostics.map((d) => d.message);
+    expect(messages("Server a [color: '#336791']")).toEqual(["'color' must be a color literal"]);
+    expect(messages("Group g {\n  color: 'red'\n}")).toEqual(["'color' must be a color literal"]);
+    expect(messages("Server a\nServer b\nLink: a > b [color: 'red']")).toEqual(["'color' must be a color literal"]);
+  });
+
+  it('style takes only dashed', () => {
+    expect(draw('Server a [style: dotted]').diagnostics.map((d) => d.message)).toEqual(["'style' can only be dashed"]);
   });
 });
 
 describe('flags in a body', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
     '/d',
   );
 
-  it('reads a bare word as true', () => {
-    const { model, diagnostics } = draw("Database d {\n  type: 'postgres'\n  ssl\n}");
+  it('reads inactive as true, alone or with other words on the line', () => {
+    const { model, diagnostics } = draw("Database d {\n  type: 'postgres'\n  inactive\n}");
     expect(diagnostics).toEqual([]);
-    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', ssl: true });
+    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', inactive: true });
   });
 
-  it('reads several on one line, as a group body reads several members', () => {
-    const { model, diagnostics } = draw('Database d { login  superuser }');
-    expect(diagnostics).toEqual([]);
-    expect(model.elements.get('d')?.settings).toEqual({ login: true, superuser: true });
+  it('refuses a bare word that is not a setting, as DBML refuses a custom flag', () => {
+    expect(draw('Database d { ssl }').diagnostics.map((d) => d.message))
+      .toEqual(["Custom setting 'ssl' must be a string, a color literal, a number literal, or a boolean literal"]);
   });
 
   it('refuses the same flag twice', () => {
-    expect(draw('Database d {\n  ssl\n  ssl\n}').diagnostics.map((x) => x.code))
+    expect(draw('Database d {\n  inactive\n  inactive\n}').diagnostics.map((x) => x.code))
       .toEqual(['duplicate-property']);
   });
 
@@ -881,7 +901,12 @@ describe('flags in a body', () => {
     const { model, diagnostics } = draw("Server a\nGroup g {\n  a\n  owner: 'platform-team'\n}");
     const group = model.elements.get('g');
     expect(diagnostics).toEqual([]);
-    expect(group?.settings).toEqual({ owner: 'platform-team' });
+    expect(group?.metadata).toEqual({ owner: 'platform-team' });
     expect(isGroup(group) && group.children).toEqual(['a']);
+  });
+
+  it('a member that is not declared is an error', () => {
+    expect(draw('Server a\nGroup g { a ghost }').diagnostics.map((d) => [d.code, d.message]))
+      .toEqual([['unknown-member', 'ghost is not declared anywhere']]);
   });
 });

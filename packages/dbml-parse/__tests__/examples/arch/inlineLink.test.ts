@@ -5,7 +5,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function compilerFor (files: Record<string, string>): Compiler {
@@ -39,7 +39,7 @@ describe('[example] inline links', () => {
   });
 
   test('the link is not kept as a setting, and other settings on the element stay', () => {
-    const { db } = compile("Server api [color: '#ff0000', link: > db]\nDatabase db");
+    const { db } = compile('Server api [color: #ff0000, link: > db]\nDatabase db');
     expect(db?.nodes?.[0].settings).toEqual({ color: '#ff0000' });
   });
 

@@ -1,4 +1,4 @@
-import { ICON_ALIAS, ICON_NAMES, isIconName } from './icons';
+import { SUPPORTED_TYPES, TYPE_ALIAS, resolveType } from './icons';
 
 export type RoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
 
@@ -51,13 +51,13 @@ export const roleName = (typed: string): string | undefined => ROLE_BY_LOWER.get
 // Which element a name without a role means when several share it: the first here wins
 export const NAME_PRECEDENCE: readonly string[] = [...Object.keys(BUILTIN_ROLES), 'Group', 'Note'];
 
-export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role; `type` sets the mark (a mark name or an image URL) and `color` the colour.';
+export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role, and set `type`, `icon` or `color` to change how the node looks.';
 
 export function suggestRole (typed: string): string {
   const needle = typed.toLowerCase();
 
-  if (isIconName(needle)) {
-    return `${typed} is a brand, and a brand is a setting:  Database name [type: '${needle}']`;
+  if (resolveType(needle)) {
+    return `${typed} is a type, not a role:  Database name [type: '${needle}']`;
   }
 
   const near = Object.keys(BUILTIN_ROLES)
@@ -91,11 +91,10 @@ function within (a: string, b: string, budget: number): boolean {
   return previous[b.length] <= budget;
 }
 
-export function suggestIcon (typed: string): string {
-  const needle = typed.toLowerCase();
-  const near = [...ICON_NAMES, ...Object.keys(ICON_ALIAS)]
-    .filter((n) => n.startsWith(needle) || needle.startsWith(n) || n.includes(needle))
+export function suggestType (typed: string): string {
+  const needle = typed.trim().toLowerCase();
+  const near = [...SUPPORTED_TYPES, ...Object.keys(TYPE_ALIAS)]
+    .filter((n) => n.startsWith(needle) || needle.startsWith(n) || n.includes(needle) || (n.length > 3 && within(n, needle, 2)))
     .slice(0, 6);
-  if (near.length) return `Did you mean: ${near.join(', ')}?`;
-  return `The pack has ${ICON_NAMES.length} marks; any other picture can be given as an image URL.`;
+  return near.length ? `Did you mean: ${near.join(', ')}?` : 'The node shows its role\'s icon.';
 }

@@ -52,6 +52,7 @@ export const dbmlModules: GlobalModule[] = [
 export const archModules: GlobalModule[] = [
   archModule,
   useModule,
+  projectModule,
   // After `useModule`, so a `UseSymbol` that imports a note is not taken for the note itself
   noteModule,
   schemaModule,

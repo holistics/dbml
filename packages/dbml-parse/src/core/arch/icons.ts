@@ -1,67 +1,9 @@
-// Icon names an architecture file may use in `type` and `icon`. The drawings live in the
-// renderer, and this list has to match them: interpret.ts nulls a `type` that is not here, so a
-// name missing from this file can never reach the canvas however well the renderer draws it.
-//
-// Two kinds, and the difference is visible: a drawn mark is line art in the element's own colour,
-// a brand mark is that company's silhouette in that company's colour.
+// The values `type` takes. The renderer draws a logo for each one, and the syntax doc lists them.
 
-export const DRAWN_ICONS: string[] = [
-  'server',
-  'function',
-  'container',
-  'database',
-  'cache',
-  'queue',
-  'disk',
-  'bucket',
-  'balancer',
-  'proxy',
-  'lock',
-  'key',
-  'gateway',
-  'globe',
-  'dns',
-  'cloud',
-  'firewall',
-  'shield',
-  'router',
-  'switch',
-  'pipeline',
-  'chip',
-  'box',
-  'person',
-  'users',
-  'browser',
-  'mobile',
-  'laptop',
-  'desktop',
-  'terminal',
-  'mail',
-  'pulse',
-  'chart',
-  'clock',
-  'bell',
-  'search',
-  'settings',
-  'file',
-  'folder',
-  'tag',
-  'warning',
-  'check',
-  'rocket',
-  'webhook',
-  'stream',
-  'graph',
-  'robot',
-  // products no brand set carries, drawn by hand instead
-  'azure',
-  'windows',
-  'haproxy',
-];
-
-export const BRAND_ICONS: string[] = [
+export const SUPPORTED_TYPES: string[] = [
   'aws',
   'gcp',
+  'azure',
   'digitalocean',
   'hetzner',
   'vultr',
@@ -111,6 +53,7 @@ export const BRAND_ICONS: string[] = [
   'gcs',
   'ceph',
   'nginx',
+  'haproxy',
   'envoy',
   'traefik',
   'caddy',
@@ -135,6 +78,7 @@ export const BRAND_ICONS: string[] = [
   'debian',
   'redhat',
   'alpine',
+  'windows',
   'apple',
   'apache',
   'jfrog',
@@ -197,47 +141,37 @@ export const BRAND_ICONS: string[] = [
   'stripe',
 ];
 
-export const ICON_NAMES: string[] = [...DRAWN_ICONS, ...BRAND_ICONS];
-
-export const ICON_ALIAS: Record<string, string> = {
-  k8s: 'kubernetes',
-  k9s: 'kubernetes',
-  k8sio: 'kubernetes',
-  postgresql: 'postgres',
-  pg: 'postgres',
-  psql: 'postgres',
-  mongo: 'mongodb',
-  node: 'nodejs',
-  go: 'golang',
-  elasticsearch: 'elastic',
-  es: 'elastic',
-  mq: 'rabbitmq',
-  amqp: 'rabbitmq',
-  tf: 'terraform',
-  otel: 'opentelemetry',
-  gha: 'githubactions',
+// Other values accepted for the same type
+export const TYPE_ALIAS: Record<string, string> = {
+  'postgresql': 'postgres',
+  'pg': 'postgres',
+  'psql': 'postgres',
+  'k8s': 'kubernetes',
+  'k9s': 'kubernetes',
+  'k8sio': 'kubernetes',
+  'mongo': 'mongodb',
+  'elasticsearch': 'elastic',
+  'es': 'elastic',
+  'mq': 'rabbitmq',
+  'amqp': 'rabbitmq',
+  'node': 'nodejs',
+  'go': 'golang',
+  'tf': 'terraform',
+  'otel': 'opentelemetry',
+  'gha': 'githubactions',
   '1password': 'onepassword',
-  do: 'digitalocean',
-  google: 'gcp',
-  gcloud: 'gcp',
-  amazon: 'aws',
-  ec2: 'aws',
-  cdn: 'globe',
-  internet: 'cloud',
-  user: 'person',
-  team: 'users',
-  vpn: 'lock',
-  monitor: 'pulse',
-  metrics: 'chart',
-  log: 'file',
-  ci: 'pipeline',
-  cron: 'clock',
-  ai: 'chip',
-  ml: 'chip',
+  'do': 'digitalocean',
+  'google': 'gcp',
+  'gcloud': 'gcp',
+  'amazon': 'aws',
+  'ec2': 'aws',
 };
 
-export const resolveIcon = (name: string): string => ICON_ALIAS[name] ?? name;
+const KNOWN = new Set(SUPPORTED_TYPES);
 
-const KNOWN = new Set(ICON_NAMES);
-
-export const isIconName = (name: string): boolean => KNOWN.has(resolveIcon(name));
+// The supported type a value names, in any case, or undefined
+export function resolveType (value: string): string | undefined {
+  const lower = value.trim().toLowerCase();
+  const type = TYPE_ALIAS[lower] ?? lower;
+  return KNOWN.has(type) ? type : undefined;
+}

@@ -5,7 +5,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
 
 function project (files: Record<string, string>, entry = '/main.dbml') {
   const layout = new MemoryProjectLayout();
@@ -66,33 +66,42 @@ describe('[example] architecture rules', () => {
     ]);
   });
 
-  test('the planned changes C3, C6, C7, C8, front matter in DBML and a.port hold', () => {
-    const base = `${ARCH.replace('---\n', '---\ntitle: base\n')}Server api`;
-
+  test('Metadata precedence follows import order, and imported nodes come after local ones', () => {
+    const base = `${ARCH}Server api`;
     const metadata = (order: string[]) => project({
       '/base.dbml': base,
       '/a.dbml': `${ARCH}use * from './base'\nMetadata api {\n  tier: 'a'\n}`,
       '/b.dbml': `${ARCH}use * from './base'\nMetadata api {\n  tier: 'b'\n}`,
       '/main.dbml': `${ARCH}use * from './base'\n${order.map((f) => `use * from './${f}'`).join('\n')}`,
-    }).db?.nodes?.[0].settings.tier;
+    }).db?.nodes?.[0].metadata.tier?.value;
     expect(metadata(['a', 'b'])).toBe('b');
     expect(metadata(['b', 'a'])).toBe('a');
 
     const own = project({ '/base.dbml': base, '/main.dbml': `${ARCH}use * from './base'\nServer web` });
-    expect(own.db?.frontMatter).toEqual({ diagram_type: 'arch' });
     expect(own.db?.nodes?.map((n) => n.name)).toEqual(['web', 'api']);
 
     const broken = project({ '/main.dbml': `${ARCH}Server a [type: 'postgress']\nLink: a > ghost` });
     expect(broken.interpreted.getErrors().map((e) => e.code)).toContain(CompileErrorCode.UNKNOWN_ENDPOINT);
     expect(broken.interpreted.getWarnings()).toHaveLength(0);
 
-    const dbml = project({ '/main.dbml': '---\ntitle: Schema\n---\nTable users {\n  id int\n}' });
+    const dbml = project({ '/main.dbml': 'Table users {\n  id int\n}' });
     expect(dbml.compiler.fileKind(Filepath.from('/main.dbml'))).toBe('dbml');
     expect(dbml.errors).toHaveLength(0);
-    expect(dbml.db?.frontMatter).toEqual({ title: 'Schema' });
     expect(dbml.db?.diagramType).toBeUndefined();
+  });
 
-    const port = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink: a.web > b` });
-    expect(port.db?.links?.map((l) => [l.from, l.to])).toEqual([['a', 'b']]);
+  test('link settings go before the colon or after the second end, not both', () => {
+    const before = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink [color: #ff0000]: a > b` });
+    expect(before.errors).toEqual([]);
+    expect(before.db?.links?.[0].settings).toEqual({ color: '#ff0000' });
+    const both = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink [color: #ff0000]: a > b [proto: 'https']` });
+    expect(both.errors.map((e) => e.diagnostic)).toEqual(['Write the link settings in one place: before the colon or after the second end']);
+  });
+
+  test('a link end, an inline link end and a group member written a.b is an error', () => {
+    for (const source of ['Server a\nServer b\nLink: a.web > b', 'Server b\nServer a [link: > b.web]', 'Server a\nGroup g {\n  a.web\n}']) {
+      const result = project({ '/main.dbml': `${ARCH}${source}` });
+      expect(result.errors.map((e) => e.diagnostic)[0]).toMatch(/`a\.b` is not a name/);
+    }
   });
 });

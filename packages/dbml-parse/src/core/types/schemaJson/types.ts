@@ -93,8 +93,6 @@ export interface Database {
   nodes?: Node[];
   groups?: Group[];
   links?: Link[];
-  // The `---` block at the top of the file, present only when it has keys
-  frontMatter?: Record<string, string>;
   // 'arch' for a file read as an architecture diagram; absent for a DBML file
   diagramType?: 'arch';
 }
@@ -109,11 +107,13 @@ export interface Node {
   alias: string | null;
   // The role's declared spelling
   role: string;
-  // The brand, resolved to an icon name
+  // The supported type `type` names, in its listed spelling
   type: string | null;
-  // A picture URL given in `type`
-  image: string | null;
+  // The image URL `icon` gives
+  icon: string | null;
+  // The built-in settings as written: type, icon, color, style, inactive
   settings: ArchSettings;
+  metadata: CustomMetadata;
   note: {
     value: string;
     token: TokenPosition;
@@ -126,7 +126,9 @@ export interface Group {
   alias: string | null;
   // The members this group owns, in written order: handle and role (`Group` for a group, `Note` for a sticky note)
   children: ArchRef[];
+  // The built-in settings as written: color, style, inactive, label
   settings: ArchSettings;
+  metadata: CustomMetadata;
   note: {
     value: string;
     token: TokenPosition;

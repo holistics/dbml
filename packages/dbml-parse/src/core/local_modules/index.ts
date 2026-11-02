@@ -45,9 +45,11 @@ export const modules: LocalModule[] = [
 
 export const archModules: LocalModule[] = [
   archModule,
+  projectModule,
   noteModule,
   programModule,
   useModule,
+  customModule,
 ];
 
 // Chain-of-responsibility: iterate the node's file's modules until one handles the node (returns non-PASS_THROUGH)

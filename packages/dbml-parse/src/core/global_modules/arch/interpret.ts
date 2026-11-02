@@ -1,23 +1,24 @@
 import type Compiler from '@/compiler';
-import { isIconName, resolveIcon } from '@/core/arch/icons';
+import { resolveType } from '@/core/arch/icons';
 import {
-  IMAGE_REFUSED, IMAGE_URL, type Ref, archSort, bodyOf, declarationWord, inlineLinkOf, linkPartsOf, membersOf, nameOf, noteDeclarationOf,
-  noteTextOf, propertyOf, readBody, settingsOf,
+  IMAGE_URL, type PropertyEntry, type Ref, archSort, bodyOf, declarationWord, inlineLinkOf, linkPartsOf, membersOf, nameOf,
+  noteDeclarationOf, noteTextOf, propertiesOf, rowOf, settingsOf,
 } from '@/core/arch/read';
-import { roleName, suggestIcon } from '@/core/arch/vocabulary';
+import { roleName, suggestType } from '@/core/arch/vocabulary';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  ArchRef, ArchSettings, Group, Link, LinkOp, Node,
+  ArchRef, CustomMetadata, CustomMetadataValue, Group, Link, LinkOp, Node,
 } from '@/core/types/schemaJson';
 import { type ElementSymbol, type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, type LinkMetadata } from '@/core/types/symbol/metadata';
-import { getTokenPosition } from '@/core/utils/interpret';
+import { extractMetadataValue, getTokenPosition } from '@/core/utils/interpret';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
-import { metadataFilePrecedence } from '../metadata/utils';
+import { type MetadataFieldRegistry, attachCustomMetadata } from '../metadata/utils';
+import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS, NOTE_METADATA_FIELDS } from '../metadata/registries';
 import { getProgramSymbol } from '../utils';
 import { candidatesOf, localHandle, roleOfSymbol } from './utils';
 
@@ -45,25 +46,38 @@ function archRef (compiler: Compiler, symbol: NodeSymbol | undefined, filepath: 
   return handle === undefined || role === undefined ? undefined : { handle, role };
 }
 
-// `Metadata` blocks outrank the element's own settings: imported files first, later imports over earlier, this file last
-function applyMetadata (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath, settings: ArchSettings): CompileWarning[] {
-  const warnings: CompileWarning[] = [];
+// The fields a `Metadata` block or a setting can change on the element a symbol names
+export function fieldsOf (symbol: NodeSymbol | undefined): MetadataFieldRegistry<any, any> {
+  const role = symbol && roleOfSymbol(symbol);
+  if (role === 'Group') return GROUP_METADATA_FIELDS;
+  if (role === 'Note') return NOTE_METADATA_FIELDS;
+  return NODE_METADATA_FIELDS;
+}
+
+// `Metadata api { }` names no role, so the name may match more than one element
+function metadataWarnings (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath): CompileWarning[] {
   const program = getProgramSymbol(compiler, filepath);
-  if (!program) return warnings;
-  const precedence = metadataFilePrecedence(compiler, filepath);
-  const blocks = compiler.symbolMetadata(symbol)
-    .filter((m): m is ArchMetadataElementMetadata => m instanceof ArchMetadataElementMetadata && m.owners(compiler).includes(program))
-    .sort((a, b) => {
-      const rankA = precedence.get(a.declaration.filepath.intern()) ?? -1;
-      const rankB = precedence.get(b.declaration.filepath.intern()) ?? -1;
-      return rankA !== rankB ? rankA - rankB : a.declaration.start - b.declaration.start;
-    });
-  for (const block of blocks) {
-    Object.assign(settings, interpretArchMetadata(block).getValue());
-    // `Metadata api { }` names no role, so the name may match more than one element
-    if (!block.declaration.name) warnings.push(...ambiguity(compiler, block.declaration.targetKind?.value, block.declaration, [SymbolKind.Element]));
+  return compiler.symbolMetadata(symbol)
+    .filter((m): m is ArchMetadataElementMetadata => m instanceof ArchMetadataElementMetadata && !!program && m.owners(compiler).includes(program))
+    .filter((block) => !block.declaration.name)
+    .flatMap((block) => ambiguity(compiler, block.declaration.targetKind?.value, block.declaration));
+}
+
+// Settings go through their field, every other key is a custom property. A later entry wins, so the body wins over `[ ]`.
+function applyProperties (element: Partial<Node | Group>, entries: PropertyEntry[], fields: MetadataFieldRegistry<any, any>): void {
+  const metadata = new Map<string, [string, CustomMetadataValue]>();
+  for (const entry of entries) {
+    const token = getTokenPosition(entry.node);
+    const field = fields[entry.key.toLowerCase()];
+    if (field) {
+      const value = field.parse(entry.value);
+      if (value !== undefined) field.assign(element, value, token);
+      continue;
+    }
+    const value = extractMetadataValue(entry.value);
+    if (value !== undefined) metadata.set(entry.key.toLowerCase(), [entry.key, { ...value, token }]);
   }
-  return warnings;
+  element.metadata = Object.fromEntries(metadata.values());
 }
 
 function noteOf (declaration: ElementDeclarationNode): Node['note'] {
@@ -82,16 +96,22 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
   const declaration = symbol.declaration;
   if (!(declaration instanceof ElementDeclarationNode)) return new Report(undefined);
   const sort = archSort(declaration);
-  const name = nameOf(declaration.name) ?? '';
+  const fields = fieldsOf(symbol);
+  const element: Partial<Node & Group> = {
+    name: nameOf(declaration.name) ?? '',
+    alias: nameOf(declaration.alias) ?? null,
+    settings: {},
+    note: null,
+  };
+  applyProperties(element, propertiesOf(declaration, sort === 'node').entries, fields);
+  // A `Note` line in the body wins over `[note: ...]`
+  element.note = noteOf(declaration) ?? element.note;
+  attachCustomMetadata(compiler, element, symbol, fields, filepath);
+  const warnings = metadataWarnings(compiler, symbol, filepath);
   const token = getTokenPosition(declaration);
-
-  const alias = nameOf(declaration.alias) ?? null;
-  const settings = settingsOf(declaration.attributeList);
-  readBody(declaration, settings, sort === 'node');
 
   if (sort === 'group') {
     const children: ArchRef[] = [];
-    const warnings: CompileWarning[] = [];
     for (const ref of membersOf(declaration).refs) {
       if (!isExpressionAVariableNode(ref.node)) continue;
       const child = archRef(compiler, compiler.nodeReferee(ref.node).getFiltered(UNHANDLED), filepath);
@@ -99,62 +119,36 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
       warnings.push(...refAmbiguity(compiler, ref));
       if (!children.some((other) => other.handle === child.handle && other.role === child.role)) children.push(child);
     }
-    warnings.push(...applyMetadata(compiler, symbol, filepath, settings));
     return new Report({
-      name,
-      alias,
+      name: element.name!,
+      alias: element.alias!,
       children,
-      settings,
-      note: noteOf(declaration),
+      settings: element.settings!,
+      metadata: element.metadata ?? {},
+      note: element.note ?? null,
       token,
     }, [], warnings);
   }
 
-  // The brand is read before `Metadata` applies, so a block cannot change the icon
-  const { type, image } = brandOf(settings.type);
-  const warnings = brandWarnings(settings.type, declaration);
   const word = declarationWord(declaration)!;
-  const role = roleName(word) ?? word;
-  warnings.push(...applyMetadata(compiler, symbol, filepath, settings));
+  const { settings } = element;
+  const type = typeof settings!.type === 'string' ? resolveType(settings!.type) ?? null : null;
+  if (typeof settings!.type === 'string' && !type) {
+    warnings.push(new CompileWarning(CompileErrorCode.UNKNOWN_TYPE, `There is no type called ${settings!.type}. ${suggestType(settings!.type)}`, declaration));
+  }
+  // Only an image URL is used; any other value is ignored
+  const icon = typeof settings!.icon === 'string' && IMAGE_URL.test(settings!.icon.trim()) ? settings!.icon.trim() : null;
   return new Report({
-    name,
-    alias,
-    role,
+    name: element.name!,
+    alias: element.alias!,
+    role: roleName(word) ?? word,
     type,
-    image,
-    settings,
-    note: noteOf(declaration),
+    icon,
+    settings: settings!,
+    metadata: element.metadata ?? {},
+    note: element.note ?? null,
     token,
   }, [], warnings);
-}
-
-function brandOf (raw: unknown): { type: string | null; image: string | null } {
-  const value = typeof raw === 'string' ? raw.trim() : '';
-  if (!value) return {
-    type: null,
-    image: null,
-  };
-  if (IMAGE_URL.test(value)) return {
-    type: null,
-    image: value,
-  };
-  return {
-    type: isIconName(value) ? resolveIcon(value) : null,
-    image: null,
-  };
-}
-
-function brandWarnings (raw: unknown, declaration: ElementDeclarationNode): CompileWarning[] {
-  const value = typeof raw === 'string' ? raw.trim() : '';
-  if (!value || IMAGE_URL.test(value) || isIconName(value)) return [];
-  if (/^[a-z]+:/i.test(value)) {
-    return [
-      new CompileWarning(CompileErrorCode.BAD_IMAGE, `${IMAGE_REFUSED} Got: ${value}`, declaration),
-    ];
-  }
-  return [
-    new CompileWarning(CompileErrorCode.UNKNOWN_TYPE, `There is no type called ${value}. ${suggestIcon(value)}`, declaration),
-  ];
 }
 
 export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filepath: Filepath): Report<Link | undefined> {
@@ -183,15 +177,24 @@ export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filep
   }, [], warnings);
 }
 
-// The `key: 'value'` rows of a `Metadata` block; a bad or repeated row is reported by validation and skipped here
-export function interpretArchMetadata (metadata: ArchMetadataElementMetadata): Report<ArchSettings> {
-  const values: ArchSettings = {};
+// The `key: value` rows of a `Metadata` block, read with the fields of the element it targets.
+// A bad or repeated row is reported by validation and binding, and skipped here.
+export function interpretArchMetadata (compiler: Compiler, metadata: ArchMetadataElementMetadata): Report<CustomMetadata> {
+  const fields = fieldsOf(metadata.target(compiler));
+  const values: CustomMetadata = {};
   const seen = new Set<string>();
   for (const row of bodyOf(metadata.declaration)) {
-    const entry = row instanceof ElementDeclarationNode ? propertyOf(row) : undefined;
-    if (!entry || entry.value === undefined || seen.has(entry.key)) continue;
-    seen.add(entry.key);
-    values[entry.key] = entry.value;
+    if (!(row instanceof ElementDeclarationNode)) continue;
+    const key = declarationWord(row);
+    const [first] = bodyOf(row);
+    if (!key || !first || seen.has(key.toLowerCase())) continue;
+    seen.add(key.toLowerCase());
+    const node = rowOf(first)?.callee ?? first;
+    const token = getTokenPosition(row);
+    const field = fields[key.toLowerCase()];
+    const parsed = field ? field.parse(node) : extractMetadataValue(node)?.value;
+    if (parsed === undefined) continue;
+    values[key] = { value: parsed, type: field ? field.type : extractMetadataValue(node)!.type, token };
   }
   return new Report(values);
 }

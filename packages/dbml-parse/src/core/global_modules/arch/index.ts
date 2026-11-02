@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import {
   type Ref, archSort, bodyOf, declarationWord, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
-  linkPartsOf, membersOf, nameOf, roleWord, topLevelDeclaration,
+  linkPartsOf, membersOf, nameOf, roleWord, rowOf, topLevelDeclaration,
 } from '@/core/arch/read';
 import { roleName, suggestRole } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -15,8 +15,12 @@ import type { SchemaElement } from '@/core/types/schemaJson';
 import { ElementSymbol, type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, LinkMetadata, type NodeMetadata } from '@/core/types/symbol/metadata';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
+import { extractMetadataValue } from '@/core/utils/interpret';
+import type { MetadataFieldRegistry } from '../metadata/utils';
 import type { GlobalModule } from '../types';
-import { interpretArchMetadata, interpretElement, interpretLink } from './interpret';
+import {
+  fieldsOf, interpretArchMetadata, interpretElement, interpretLink,
+} from './interpret';
 import { lookupVisible, resolveName } from './utils';
 
 // Nodes, groups and notes take `[link: > b]`
@@ -52,12 +56,13 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
 
   switch (archSort(declaration)) {
     case 'group': {
-      // A name never declared is left out of the group, not reported; a table is reported
       const ref = membersOf(declaration).refs.find((member) => member.node === node);
       if (!ref) return new Report(undefined);
       const found = resolveName(compiler, node.filepath, name, ref.role);
-      const table = found || ref.role ? undefined : tableError(compiler, node, name, 'a group lists elements and groups');
-      return new Report(found, table ? [table] : []);
+      if (found) return new Report(found);
+      return new Report(undefined, [
+        (ref.role ? undefined : tableError(compiler, node, name, 'a group lists elements and groups')) ?? notDeclared(CompileErrorCode.UNKNOWN_MEMBER, name, node, ref.role),
+      ]);
     }
 
     case 'link': {
@@ -70,7 +75,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
     case 'metadata': {
       if (!declaration.name?.containsEq(node)) return new Report(undefined);
       const role = roleWord(declaration.targetKind?.value);
-      const found = resolveName(compiler, node.filepath, name, role, [SymbolKind.Element]);
+      const found = resolveName(compiler, node.filepath, name, role);
       return found
         ? new Report(found)
         : new Report(undefined, [
@@ -81,6 +86,25 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
     default:
       return new Report(undefined);
   }
+}
+
+// A row whose key is a setting of the target takes that setting's values; any other row is a custom property, as in DBML
+function metadataValueErrors (declaration: ElementDeclarationNode, fields: MetadataFieldRegistry<any, any>): CompileError[] {
+  const errors: CompileError[] = [];
+  for (const row of bodyOf(declaration)) {
+    const key = row instanceof ElementDeclarationNode ? declarationWord(row) : undefined;
+    const [first] = row instanceof ElementDeclarationNode ? bodyOf(row) : [];
+    if (!key || !first) continue;
+    const value = rowOf(first)?.callee ?? first;
+    const field = fields[key.toLowerCase()];
+    if (field ? field.parse(value) !== undefined : extractMetadataValue(value) !== undefined) continue;
+    errors.push(new CompileError(
+      CompileErrorCode.BAD_PROPERTY,
+      field ? field.message : 'A Metadata field value must be a string, a color literal, a number literal, or a boolean literal',
+      value,
+    ));
+  }
+  return errors;
 }
 
 function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNode): Report<void> {
@@ -117,10 +141,12 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
 
     case 'metadata': {
       if (isExpressionAVariableNode(declaration.name)) errors.push(...compiler.nodeReferee(declaration.name).getErrors());
-      if (!new ArchMetadataElementMetadata(declaration).target(compiler) && !errors.length) {
+      const target = new ArchMetadataElementMetadata(declaration).target(compiler);
+      if (!target && !errors.length) {
         const name = nameOf(declaration.name) ?? declaration.targetKind?.value ?? 'that';
         errors.push(notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration));
       }
+      if (target) errors.push(...metadataValueErrors(declaration, fieldsOf(target)));
       break;
     }
 
@@ -214,7 +240,7 @@ export const archModule: GlobalModule = {
 
   interpretMetadata (compiler: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (metadata instanceof LinkMetadata) return interpretLink(compiler, metadata, filepath);
-    if (metadata instanceof ArchMetadataElementMetadata) return interpretArchMetadata(metadata);
+    if (metadata instanceof ArchMetadataElementMetadata) return interpretArchMetadata(compiler, metadata);
     return Report.create(PASS_THROUGH);
   },
 };

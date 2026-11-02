@@ -106,11 +106,9 @@ export {
 // Architecture files
 export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
 export {
-  BUILTIN_ROLES, NAME_PRECEDENCE, suggestRole, suggestIcon, type RoleSpec,
+  BUILTIN_ROLES, NAME_PRECEDENCE, suggestRole, suggestType, type RoleSpec,
 } from '@/core/arch/vocabulary';
-export {
-  ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,
-} from '@/core/arch/icons';
+export { SUPPORTED_TYPES, TYPE_ALIAS, resolveType } from '@/core/arch/icons';
 
 export {
   type RelationCardinality,
@@ -169,7 +167,6 @@ export * from '@/compiler/projectLayout/layout';
 export { dbmlModules } from '@/core/global_modules';
 export type { GlobalModule } from '@/core/global_modules/types';
 export type { ParserOptions } from '@/core/parser/parser';
-export type { LexerOptions } from '@/core/lexer/lexer';
 export type { DialectOptions } from '@/compiler/index';
 
 export { Compiler };

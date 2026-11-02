@@ -4,7 +4,7 @@ import {
 } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode, ProgramNode, type SyntaxNode } from '@/core/types/nodes';
+import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
@@ -31,9 +31,7 @@ import {
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import { pushExternal, validateDepBlocks } from './utils';
-import {
-  archSort, bodyOf, declarationWord, isTopLevel, nameOf, rowOf,
-} from '@/core/arch/read';
+import { archSort } from '@/core/arch/read';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
@@ -150,11 +148,6 @@ export default class ProgramInterpreter {
       if (isArch || value.length) this.db[key] = value;
     }
 
-    const frontMatter = {
-      ...this.compiler.scanFile(this.filepath).frontMatter,
-      ...(isArch ? projectRowsOf(this.programNode) : {}),
-    };
-    if (Object.keys(frontMatter).length) this.db.frontMatter = frontMatter;
     if (isArch) this.db.diagramType = 'arch';
   }
 
@@ -559,28 +552,6 @@ export default class ProgramInterpreter {
 }
 
 // An architecture file's `Project` rows join its front matter keys; `diagram_type` there is an error, not a key
-function projectRowsOf (program: ProgramNode): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const declaration of program.body) {
-    if (!isTopLevel(declaration) || archSort(declaration) !== 'project') continue;
-    for (const row of bodyOf(declaration)) {
-      let key: string | undefined;
-      let value: string | undefined;
-      if (row instanceof ElementDeclarationNode) {
-        key = declarationWord(row)?.toLowerCase();
-        value = nameOf(rowOf(bodyOf(row)[0])?.callee);
-      } else {
-        const parsed = rowOf(row);
-        key = nameOf(parsed?.callee)?.toLowerCase();
-        value = nameOf(parsed?.args[0]);
-      }
-      if (!key || key === 'diagram_type' || value === undefined) continue;
-      out[key] = value;
-    }
-  }
-  return out;
-}
-
 // `use { Server api as api2 }`: in this file the element is `api2`, and it still shows the name its own file gave it
 function importedUnder (value: SchemaElement | SchemaElement[], use: UseSymbol): SchemaElement | SchemaElement[] {
   if (!use.isKind(SymbolKind.Element) || Array.isArray(value) || use.name === undefined) return value;

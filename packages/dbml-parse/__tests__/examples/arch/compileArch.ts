@@ -4,7 +4,9 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { isArchDiagramType } from '@/compiler/queries/files/fileKind';
 import { CompileErrorCode } from '@/core/types/errors';
 import { Filepath } from '@/core/types/filepath';
-import type { ArchSettings, Database, TokenPosition } from '@/core/types/schemaJson';
+import type {
+  ArchSettings, CustomMetadata, Database, Project, TokenPosition,
+} from '@/core/types/schemaJson';
 
 export interface Located {
   file: string;
@@ -19,6 +21,8 @@ interface ElementBase {
   alias: string | null;
   label: string;
   settings: ArchSettings;
+  // custom properties, value only
+  metadata: Record<string, unknown>;
   note: string | null;
   parent: string | null;
   at: Located;
@@ -28,7 +32,7 @@ export interface NodeElement extends ElementBase {
   sort: 'node';
   role: string;
   type: string | null;
-  image: string | null;
+  icon: string | null;
 }
 
 export interface GroupElement extends ElementBase {
@@ -44,7 +48,7 @@ export interface NoteElement extends ElementBase {
 export type Element = NodeElement | GroupElement | NoteElement;
 
 export interface NetworkModel {
-  frontMatter: Record<string, string>;
+  project: Project | undefined;
   elements: Map<string, Element>;
   links: { id: string; from: string; fromRole: string; to: string; toRole: string; op: string; settings: ArchSettings; at: Located }[];
   roots: string[];
@@ -83,15 +87,13 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.UNKNOWN_METADATA_TARGET]: 'unknown-metadata-target',
   [CompileErrorCode.BAD_PROPERTY]: 'bad-property',
   [CompileErrorCode.DUPLICATE_PROPERTY]: 'duplicate-property',
-  [CompileErrorCode.DIAGRAM_TYPE_NOT_HERE]: 'diagram-type-not-here',
   [CompileErrorCode.METADATA_ROLE_MISMATCH]: 'metadata-role-mismatch',
   [CompileErrorCode.UNKNOWN_TYPE]: 'unknown-type',
-  [CompileErrorCode.UNKNOWN_ICON]: 'unknown-icon',
-  [CompileErrorCode.BAD_IMAGE]: 'bad-image',
   [CompileErrorCode.DUPLICATE_LINK]: 'duplicate-link',
   [CompileErrorCode.NESTED_ENDPOINTS]: 'nested-endpoints',
   [CompileErrorCode.BAD_MEMBER]: 'bad-member',
   [CompileErrorCode.AMBIGUOUS_NAME]: 'ambiguous-name',
+  [CompileErrorCode.UNKNOWN_MEMBER]: 'unknown-member',
 };
 
 const locate = (token: TokenPosition): Located => ({
@@ -159,13 +161,15 @@ export function compileArch (files: Record<string, string>, entry = '/main.arch.
   return {
     model: modelOf(interpreted.getValue() as Database | undefined, reachable),
     diagnostics,
-    diagramType: compiler.scanFile(entryPath).frontMatter.diagram_type ?? null,
+    diagramType: compiler.scanFile(entryPath).diagramType ?? null,
   };
 }
 
+const valuesOf = (metadata: CustomMetadata | undefined): Record<string, unknown> => Object.fromEntries(Object.entries(metadata ?? {}).map(([key, entry]) => [key, entry.value]));
+
 function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel {
   const model: NetworkModel = {
-    frontMatter: db?.frontMatter ?? {},
+    project: db?.project,
     elements: new Map(),
     links: [],
     roots: [],
@@ -189,8 +193,9 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       label: node.name,
       role: node.role,
       type: node.type,
-      image: node.image,
+      icon: node.icon,
       settings: node.settings,
+      metadata: valuesOf(node.metadata),
       note: node.note?.value ?? null,
       parent: parent.get(keyOf(handle, node.role)) ?? null,
       at: locate(node.token),
@@ -206,6 +211,7 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       label: group.name,
       children: group.children.map((child) => child.handle),
       settings: group.settings,
+      metadata: valuesOf(group.metadata),
       note: group.note?.value ?? null,
       parent: parent.get(keyOf(handle, 'Group')) ?? null,
       at: locate(group.token),
@@ -220,6 +226,7 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       label: note.name,
       text: note.content,
       settings: {},
+      metadata: valuesOf(note.metadata),
       note: null,
       parent: parent.get(keyOf(note.name, 'Note')) ?? null,
       at: locate(note.token),
