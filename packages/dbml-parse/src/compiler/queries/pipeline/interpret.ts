@@ -29,14 +29,14 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
     importTokenByFile.set(resolvedPath.absolute, node.importPath);
   }
 
-  // Build a reverse map: any reachable file -> which direct import it came from
-  const fileToImport = new Map<string, string>();
+  // Build a reverse map: any reachable file -> which direct imports reach it
+  const fileToImports = new Map<string, Set<string>>();
   for (const importFile of importTokenByFile.keys()) {
-    fileToImport.set(importFile, importFile);
+    if (!fileToImports.has(importFile)) fileToImports.set(importFile, new Set());
+    fileToImports.get(importFile)!.add(importFile);
     for (const reachable of this.reachableFiles(Filepath.from(importFile))) {
-      if (!fileToImport.has(reachable.absolute)) {
-        fileToImport.set(reachable.absolute, importFile);
-      }
+      if (!fileToImports.has(reachable.absolute)) fileToImports.set(reachable.absolute, new Set());
+      fileToImports.get(reachable.absolute)!.add(importFile);
     }
   }
 
@@ -45,9 +45,9 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   for (const error of errors) {
     const errorFile = error.filepath.absolute;
     if (errorFile === filepath.absolute) continue;
-    const owningImport = fileToImport.get(errorFile);
-    if (owningImport) {
-      importsWithErrors.add(owningImport);
+    const owningImports = fileToImports.get(errorFile);
+    if (owningImports) {
+      for (const imp of owningImports) importsWithErrors.add(imp);
     }
   }
 
