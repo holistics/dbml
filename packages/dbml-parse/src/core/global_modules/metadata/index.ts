@@ -43,7 +43,6 @@ export const metadataModule: GlobalModule = {
     const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
     if (!(block instanceof MetadataElementMetadata)) return new Report(undefined);
 
-    // Index-free (nodeReferee runs while the resolution index is built): a block registers in the index iff it has exactly one declared target
     const targets = block.targets(compiler);
     // A Target that is not a symbol (a named Ref) is not a symbol reference
     return new Report(targets.length === 1 && !(targets[0] instanceof NodeMetadata) ? targets[0] : undefined);
