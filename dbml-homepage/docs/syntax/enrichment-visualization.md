@@ -13,8 +13,10 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
 - [Custom Properties](#custom-properties)
+  - [Property Value Types](#property-value-types)
   - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
+    - [Metadata Ref](#metadata-ref)
   - [Property Precedence](#property-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
@@ -117,18 +119,29 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
 Custom Properties let you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
 
-Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
+Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), [Sticky Notes](#sticky-notes), and [Relationships](../docs.md#relationships--foreign-key-definitions) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
 
 There are two ways to declare custom properties: **inline** in the element's settings list, or in a separate **`Metadata` block**.
 
-Currently, a property value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
+### Property Value Types
+
+A property value must be one of the following literals. Its type is kept, so tools reading the parsed output can tell `24` apart from `'24'`.
+
+| Type | Syntax | Examples |
+|---|---|---|
+| String | A quoted string | `owner: 'data-team'`, `owner: "data-team"` |
+| Number | An integer or decimal, optionally signed | `sla_hours: 24`, `weight: 0.75`, `offset: -1` |
+| Boolean | `true` or `false` (case-insensitive) | `pii: true`, `deprecated: false` |
+| Color | A hex color literal | `brand_color: #3498DB` |
+
+Any other value, such as an unquoted word (`owner: scott`) or a missing value (`[owner]`), raises an error.
 
 ### Inline Custom Properties
 
 Add custom key-value pairs directly to an element's `[...]` settings list.
 
 ```text
-Table users [owner: "data-team", sla_hours: "24", pii: "true"] {
+Table users [owner: "data-team", sla_hours: 24, pii: true] {
   id int [pk, masking: "partial"]
   email varchar [classification: "confidential"]
 }
@@ -141,6 +154,8 @@ TableGroup e_commerce [team: "growth"] {
 Note reminder [author: "docs"] {
   'Remember to review this schema'
 }
+
+Ref: posts.user_id > users.id [delete: cascade, owner: "data-team"]
 ```
 
 :::note
@@ -151,7 +166,7 @@ A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) 
 
 You can also declare custom properties separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding properties to elements defined elsewhere (including across files).
 
-The block targets an element by kind and name:
+The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note` or `Ref`:
 
 ```text
 Table users {
@@ -169,10 +184,73 @@ Metadata Table users {
 }
 
 Metadata Column users.id {
-  pii: 'true'
+  pii: true
   masking: 'partial'
 }
+
+Metadata TableGroup g1 {
+  team: 'growth'
+  color: #3498DB
+}
 ```
+
+Each field uses the `key: value` syntax with one of the [property value types](#property-value-types). A key cannot be repeated within the same block.
+
+Some keys are **builtin**: instead of becoming custom properties, they set the element's own setting, the same as writing it inline. A builtin key must use the value type of that setting:
+
+| Kind | Builtin keys |
+|---|---|
+| `Table` | `note` (string), `headercolor` (color) |
+| `Column` | `note` (string) |
+| `TableGroup` | `note` (string), `color` (color) |
+| `Note` | `color` (color) |
+| `Ref` | `note` (string), `color` (color) |
+
+#### Metadata Ref
+
+A `Metadata Ref` block targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name. Unnamed refs cannot be targeted.
+
+```text
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+}
+
+Ref user_posts: posts.user_id > users.id [color: #111111]
+
+Metadata Ref user_posts {
+  color: #e67e22            // builtin: overrides the ref's color
+  owner: 'reporting'        // custom property
+  critical: true
+}
+```
+
+This is useful for restyling or annotating a ref defined in another file:
+
+```text
+// orders.dbml
+Table users { ... }
+Table posts { ... }
+Ref user_posts: posts.user_id > users.id
+
+// reporting.dbml
+use * from './orders.dbml'
+
+Metadata Ref user_posts {
+  color: #e67e22
+}
+```
+
+The block only changes the ref as seen from `reporting.dbml` and files importing it. `orders.dbml` keeps its original color.
+
+:::note
+- A `Metadata Ref` block only applies where both of the ref's endpoint tables are visible.
+- Ref names are not imported, so two visible files may each define a ref with the same name. A `Metadata Ref` block targeting that name raises an ambiguity error.
+:::
 
 ### Property Precedence
 
