@@ -5,30 +5,11 @@ title: Architecture Diagrams
 # Architecture Diagrams
 
 In addition to database schemas, DBML can describe your infrastructure: the services you run, what
-kind of service each one is, and how they connect to each other.
+kind of service each one is, and how they connect to each other. Use an architecture diagram as a
+blueprint for a system you are planning, or as documentation of one that already runs.
 
-```text
-Project dbx {
-  diagram_type: 'arch'
-}
-
-Internet internet
-Server api
-Database "Main database" as db [type: 'postgres']
-
-Group "Production" as production { api db }
-
-Link: internet > api
-Link: api > db
-```
-
-To create an architecture diagram, set `diagram_type: 'arch'` in `Project`, or declare at least one
-node or group, such as `Server api`. See [Project Definition](#project-definition).
-
-Examples on this page show only the lines that matter. The nodes and groups they refer to are
-assumed to be declared.
-
-- [Project Definition](#project-definition)
+- [Your First Diagram](#your-first-diagram)
+- [Front Matter](#front-matter)
 - [Node Definition](#node-definition)
 - [Built-in Roles](#built-in-roles)
 - [Node Settings](#node-settings)
@@ -45,57 +26,104 @@ assumed to be declared.
 - [Modules](#modules)
   - [Tables and Nodes in One Diagram](#tables-and-nodes-in-one-diagram)
 - [Syntax Consistency](#syntax-consistency)
-- [Supported Types](#supported-types)
 
-## Project Definition
-
-`Project` describes the diagram as a whole. In an architecture diagram, it also sets the diagram
-type and the layout direction:
+## Your First Diagram
 
 ```text
-Project dbx {
-  diagram_type: 'arch'
-  direction: 'down'
-  Note: 'The DBX production infrastructure'
-  owner: 'platform-team'
-}
+---
+diagram_type: arch
+---
+
+Internet internet
+Server api
+Database "Main database" as db [type: 'postgres']
+
+Group "Production" as production { api db }
+
+Link: internet > api
+Link: api > db
+```
+
+![The internet links to the api server, which links to the Main database. The api server and the Main database are in the Production group.](/img/arch-first-diagram.png)
+
+To create an architecture diagram, set `diagram_type: arch` in the front matter, or declare at least
+one node or group, such as `Server api`. See [Front Matter](#front-matter).
+
+Examples on this page show only the lines that matter. The nodes and groups they refer to are
+assumed to be declared.
+
+## Front Matter
+
+Front matter is a block of `key: value` lines between two `---` lines. It must be the first thing
+in the file.
+
+```text
+---
+diagram_type: arch
+direction: down
+---
 ```
 
 | Key | Value | Effect |
 |---|---|---|
-| `diagram_type` | `'arch'`, `'architecture'` or `'dbml'` | `'arch'` and `'architecture'` make an architecture diagram, and `'dbml'` or any other value makes a schema |
-| `direction` | `'right'` (default) or `'down'` | Links run left to right, or top to bottom. It applies when the diagram is laid out automatically, such as with Auto Arrange |
-| `Note` | String | A description of the whole diagram. It is not drawn on the diagram |
-| `database_type` | String | Accepted, as in a schema, but has no effect in an architecture diagram |
+| `diagram_type` | `arch` or `architecture`, in any case | Makes the file an architecture diagram. Any other value makes it a schema |
+| `direction` | `right` (default) or `down`, in lowercase | Links run left to right, or top to bottom, when the diagram is laid out automatically, such as with Auto Arrange. Any other value means `right` |
+
+Values can be written with or without quotes. You can add other keys of your own; they do not
+change the diagram.
 
 Importing a file does not change the diagram type of the file that imports it.
 
-The project name is optional: `Project { ... }` is also valid. Values must be quoted strings. Any
-other `key: 'value'` line is accepted and does not change the drawing. A `Project` cannot have an
-alias or a list of settings in square brackets.
+A [`Project`](../docs.md#project-definition) block describes the diagram as a whole, as in a
+schema. It can have a name, a `Note` and keys of your own:
+
+```text
+Project shop {
+  owner: 'platform-team'
+  Note: 'Shop infrastructure'
+}
+```
+
+- Each value is a quoted string.
+- A `Project` has no alias and no settings in square brackets.
+- Its `Note` is not drawn on the diagram.
+- Writing `diagram_type` inside `Project` is an error: it belongs in the front matter.
 
 ## Node Definition
 
-A node is one box on the diagram. Each node starts with a **role**, a keyword that describes what the
-node is, followed by the node's name.
+A node is one box on the diagram, such as a server, a database or a queue.
+
+```text
+Role name
+Role "name" as alias [settings] {
+  body
+}
+```
+
+- `Role`: the node's **role**, a keyword that describes what the node is, such as `Server` or
+  `Database`. See [Built-in Roles](#built-in-roles).
+- `name`: the node's name. If it has spaces or other special characters, write it in double quotes.
+- (Optional) `as alias`: a short name that links, groups and `Metadata` use to refer to the node.
+- (Optional) `[settings]`: settings on one line. See [Node Settings](#node-settings).
+- (Optional) `{ body }`: settings, custom properties and a note, one per line.
+
+For example:
 
 ```text
 Server api
-```
-
-Links, groups and [`Metadata`](#metadata-definition) refer to a node by its name. If the name has
-spaces or other special characters, write it in double quotes. You can also give the node a short
-**alias** with `as`:
-
-```text
 Server "DBDocs API Servers" as dbdocs_api
+Database "Master" as pg_master {
+  type: 'postgres'
+  version: '16.3'
+  Note: 'Primary, takes all writes'
+}
 ```
 
-When a node has an alias, refer to it by the alias. The name is then only a display label.
-Changing it does not affect any links, groups or `Metadata`, and several nodes can have the same
-label.
+Links, groups and [`Metadata`](#metadata-definition) refer to a node by its alias, or by its name
+when it has no alias. When a node has an alias, the name is only a display label. Changing it does
+not affect any links, groups or `Metadata`, and several nodes can have the same label.
 
-When a node has no alias, refer to it by its name. If the name is quoted, include the quotes:
+When a node has a quoted name and no alias, include the quotes:
 
 ```text
 Server "API 1"
@@ -105,22 +133,14 @@ Link: b > "API 1"
 When you rename a node on the diagram and the node has no alias, the editor updates every link,
 group and `Metadata` that refers to it in the same file.
 
-Nodes with different roles can use the same name. For example, `Server api` and `Database api` can
-both exist in one diagram. Two nodes with the same role and no alias cannot use the same name,
-including nodes imported from other files. An alias cannot be the same as another alias, or as the
-name of a node, group or sticky note that has no alias, whatever the role. Names and aliases are
-case-sensitive: `api` and `API` are different.
+Names and aliases are case-sensitive: `api` and `API` are different. They must be unique as
+follows, counting nodes imported from other files:
 
-A node can have a body. Each line of the body holds one [setting](#node-settings),
-[custom property](#node-settings) or [note](#notes):
-
-```text
-Database "Master" as pg_master {
-  type: 'postgres'
-  version: '16.3'
-  Note: 'Primary, takes all writes'
-}
-```
+- Nodes with different roles can use the same name. For example, `Server api` and `Database api`
+  can both exist in one diagram.
+- Two nodes with the same role and no alias cannot use the same name.
+- An alias must be unique. It cannot be the same as another alias, or as the name of any node,
+  group or sticky note that has no alias, whatever its role.
 
 ## Built-in Roles
 
@@ -129,7 +149,8 @@ is an error. The editor suggests the closest roles, or lists all of them when no
 are case-insensitive: `server api` is the same as `Server api`.
 
 Each role belongs to a category, shown in the table below. A node's category sets the default color
-of its icon (see [Node Icon](#node-icon)).
+of its icon (see [Node Icon](#node-icon)). Every role's icon is shown on
+[Roles and Types](./architecture-roles-and-types.mdx#roles).
 
 | Category | Roles |
 |---|---|
@@ -142,8 +163,8 @@ of its icon (see [Node Icon](#node-icon)).
 
 ## Node Settings
 
-Settings change how a node looks. You can write them in square brackets after the name, or in
-the body, one per line. The two forms are equivalent:
+Settings set a node's icon, color, outline and note. You can write them in square brackets after
+the name, or in the body, one per line. The two forms are equivalent:
 
 ```text
 Database users_db [type: 'postgres', color: #336791]
@@ -159,7 +180,7 @@ case-insensitive: `Color` and `color` are the same setting.
 
 | Setting | Value | Effect |
 |---|---|---|
-| `type` | One of the [supported types](#supported-types), such as `'postgres'` | Shows the icon for that type |
+| `type` | One of the [supported types](./architecture-roles-and-types.mdx#types), such as `'postgres'` | Shows the icon for that type |
 | `icon` | Image URL: `'https://...'` or `'data:image/...'` | Shows that image as the node's icon |
 | `color` | Color: `#rgb` or `#rrggbb` | Changes the icon's color |
 | `style: dashed` | | Draws the node with a dashed outline |
@@ -176,7 +197,8 @@ Every node shows an icon above its name. The icon is chosen in this order:
 
 1. The `icon` setting, if it is an image URL starting with `https://` or `data:image/`. Any other
    value is ignored.
-2. The icon for the `type` setting, if its value is one of the [supported types](#supported-types).
+2. The icon for the `type` setting, if its value is one of the
+   [supported types](./architecture-roles-and-types.mdx#types).
 3. The role's default icon. Every role has one.
 
 ```text
@@ -194,26 +216,38 @@ original colors.
 
 ## Group Definition
 
-A group is a box drawn around its members. Like a node, a group has a name and can have an alias
-with `as`. A group can use the same name as a node, as described in
-[Role Precedence](#role-precedence). List the members by name or alias, one per line or separated by
-spaces:
+A group is a boundary around parts of your system, such as an environment, a network or a cluster.
+It is drawn as a box around its members.
+
+```text
+Group name { member member }
+Group "name" as alias [settings] {
+  member
+  Role member
+}
+```
+
+- `name`: the group's name, written as for a node.
+- (Optional) `as alias`: a short name to refer to the group, as for a node.
+- (Optional) `[settings]`: settings on one line. See [Group Settings](#group-settings).
+- `member`: a node, group or sticky note, by name or alias. On the line of `{`, members are
+  separated by spaces and cannot include a role. On a line of its own, a member can start with
+  its role: a node's role, `Group` or `Note`.
+
+For example:
 
 ```text
 Group "dbdiagram API servers" as dbdiagram_api { api1 api2 }
-```
 
-Members written on the same line as `{` cannot include a role. A member on its own line can also
-include its role (`Group` for a group, `Note` for a sticky note). Add the role when several nodes,
-groups or sticky notes share the name:
-
-```text
 Group backend {
   Server api
   Group api
   sessions
 }
 ```
+
+Add the role when several nodes, groups or sticky notes share the name. A group can use the same
+name as a node, as described in [Role Precedence](#role-precedence).
 
 Every member must be declared, either in the same file or in an imported file. Listing a name that
 is not declared anywhere is an error.
@@ -259,9 +293,21 @@ property otherwise.
 
 ## Link Definition
 
-A link draws a line between two nodes, groups or sticky notes. The arrow points from the side that
-opens the connection to the side that answers. Data can flow in both directions over a connection.
-To describe the connection, use the [link settings](#link-settings).
+A link shows that one part of your system talks to another. It is drawn as a
+line between two nodes, groups or sticky notes.
+
+```text
+Link: end operator end [settings]
+```
+
+- `end`: a node, group or sticky note, by name or alias. It can start with its role: a node's
+  role, `Group` or `Note`. Add the role when several nodes, groups or sticky notes share the name.
+  A dotted end such as `api.web` is an error.
+- `operator`: `>`, `<`, `<>` or `-`. See the table below.
+- (Optional) `[settings]`: settings on one line. See [Link Settings](#link-settings).
+
+The arrow points from the side that opens the connection to the side that answers. Data can flow in
+both directions over a connection.
 
 | Operator | Meaning |
 |---|---|
@@ -272,24 +318,17 @@ To describe the connection, use the [link settings](#link-settings).
 
 `>` and `<` draw one arrowhead, `<>` draws one at each end, and `-` draws none.
 
+For example:
+
 ```text
 Link: api > db                                   // the API reads from and writes to the database
 Link: standby > primary [proto: replication]     // the standby connects to the primary and pulls its changes
 Link: browser > ws [proto: WebSocket]            // the browser opens the connection; messages go both ways
 Link: billing <> orders                          // Orders calls Billing to charge; Billing calls Orders back with a webhook
+Link: client > Group api                         // the end is the group api, not a node named api
 ```
 
 As in a schema, you can write `Ref:` instead of `Link:`. `Ref: api > db` draws the same line.
-
-Each end of a link can also include its role (`Group` for a group, `Note` for a sticky note). Add the
-role when several nodes, groups or sticky notes share the name:
-
-```text
-Link: client > Group api
-```
-
-Each end must be a name or an alias, optionally preceded by its role. An end written as `api.web` is
-an error.
 
 ### Link Settings
 
@@ -341,7 +380,19 @@ the duplicate.
 
 A [sticky note](./enrichment-visualization.md#sticky-notes) is a note with its own box on the
 diagram. In an architecture diagram, a sticky note can also belong to a group and be connected by
-links:
+links.
+
+```text
+Note name [settings] {
+  'text'
+}
+```
+
+- `name`: the sticky note's name.
+- (Optional) `[settings]`: `color`, inline links and custom properties.
+- `'text'`: the note's text. A sticky note must have it.
+
+For example:
 
 ```text
 Note do_lbs { 'DigitalOcean Load Balancers' }
@@ -369,8 +420,7 @@ next to its name. Hover over the icon to read the note.
 ## Role Precedence
 
 A [group](#group-definition) or a [sticky note](#notes) can also use the same name as a node. To
-refer to a specific one, you can write its role (`Group` for a group, `Note` for a sticky note)
-before its name, as in `Server api`, `Group api` or `Note api`. If you write only the name and
+refer to a specific one, write its role before its name: a node's role, `Group` or `Note`, as in `Server api`, `Group api` or `Note api`. If you write only the name and
 several of them share it, the first match in the following order is used, and the editor shows a
 warning: the roles in the order of the [Built-in Roles](#built-in-roles) table, then `Group`, then
 `Note`.
@@ -379,24 +429,32 @@ warning: the roles in the order of the [Built-in Roles](#built-in-roles) table, 
 
 A `Metadata` block sets properties on a node, a group or a sticky note that is already declared,
 including one declared in another file. It works the same way as
-[Metadata blocks](./enrichment-visualization.md#metadata-block) in a schema:
+[Metadata blocks](./enrichment-visualization.md#metadata-block) in a schema.
 
 ```text
-Metadata api1 {
+Metadata Role name {
+  key: value
+}
+```
+
+- (Optional) `Role`: the target's role: a node's role, `Group` or `Note`. Without it,
+  DBML follows the [role precedence](#role-precedence) and the editor warns when several nodes,
+  groups or sticky notes share the name.
+- `name`: the target's name or alias. For a quoted name, include the quotes, as in
+  `Metadata "API 1" { ... }`.
+- `key: value`: one per line.
+
+For example:
+
+```text
+Metadata Server api1 {
   owner: 'platform-team'
   runbook: 'wiki/dbdiagram-api'
 }
 ```
 
-You can put the role (`Group` for a group, `Note` for a sticky note) before the name, as in
-`Metadata Server api1 { ... }`, to identify the target. Without a role, DBML follows the
-[role precedence](#role-precedence) and the editor warns when several nodes, groups or sticky notes
-share the name. To target one with a quoted name, include the quotes, as in
-`Metadata "API 1" { ... }`.
-
-Each line must be written as `key: value`. A line whose key is a setting of the target, such as
-`color` or `type` on a node, changes that setting as if it were written on the target itself.
-Any other line adds a custom property.
+A line whose key is a setting of the target, such as `color` or `type` on a node, changes that
+setting as if it were written on the target itself. Any other line adds a custom property.
 
 ```text
 Metadata grafana {
@@ -430,8 +488,7 @@ Group "Monitoring system" as monitoring { grafana prometheus }
 Link: prometheus > grafana
 ```
 
-To import only some of them, list each one with its role (`Group` for a group, `Note` for a sticky
-note):
+To import only some of them, list each one with its role: a node's role, `Group` or `Note`:
 
 ```text
 use {
@@ -465,59 +522,19 @@ Table users {
 }
 ```
 
-An architecture file can also import a schema file. Its links and groups can refer to nodes, but not
-to tables: referring to a table is an error.
+An architecture file can also import a schema file. The architecture file's links and groups can
+refer to nodes, but not to the schema's tables: referring to a table is an error.
 
 ## Syntax Consistency
 
 Architecture diagrams use the same punctuation as the rest of DBML:
 
-- curly brackets `{}`: a body: settings, custom properties, a note, group members, or a sticky
-  note's text
+- three dashes `---` (at the top of the file): the front matter block
+- curly brackets `{}`: a body, which holds settings, custom properties, a note, group members, or a
+  sticky note's text
 - square brackets `[]`: settings on one line
 - forward slashes `//`: comments
 - single quotes (example: `'string'`): a string value
 - double quotes (example: `"Display Name"`): the name shown on the diagram
 - triple quotes (example: `'''multi-line string'''`): a multi-line string value
 - hash `#` (example: `#336791`): a color
-
-## Supported Types
-
-The `type` setting takes one of the values below. The values are case-insensitive: `'postgres'`,
-`'Postgres'` and `'PostgreSQL'` all show the PostgreSQL icon. If the value is not on the list, the
-node shows its role's default icon, and the editor shows a warning, with similar values when there
-are any.
-
-```text
-aws gcp azure digitalocean hetzner vultr alibabacloud oracle heroku railway fly render
-postgres mysql mariadb mongodb sqlite cockroachdb cassandra dynamodb neo4j influxdb clickhouse
-couchbase planetscale supabase firebase duckdb rds spanner redis kafka rabbitmq nats sqs celery
-pubsub elastic opensearch algolia meilisearch solr snowflake bigquery redshift databricks hive s3
-minio gcs ceph nginx haproxy envoy traefik caddy cloudflare kong fastly akamai docker podman
-kubernetes openshift containerd nomad consul istio lambda workers vercel netlify linux ubuntu
-debian redhat alpine windows apple apache jfrog harbor grafana prometheus datadog newrelic sentry
-opentelemetry splunk fluentd logstash pagerduty opsgenie slack discord jenkins githubactions gitlab
-github circleci argo airflow dbt airbyte travisci teamcity buildkite temporal prefect terraform
-vault onepassword hashicorp tailscale wireguard openvpn zerotier pfsense chrome firefox safari brave
-android ios flutter nodejs python golang java rust ruby php dotnet elixir deno bun springboot
-stripe
-```
-
-These alternative values are also accepted:
-
-| Alternative values | Same as |
-|---|---|
-| `postgresql` `pg` `psql` | `postgres` |
-| `k8s` `k9s` `k8sio` | `kubernetes` |
-| `mongo` | `mongodb` |
-| `elasticsearch` `es` | `elastic` |
-| `mq` `amqp` | `rabbitmq` |
-| `node` | `nodejs` |
-| `go` | `golang` |
-| `tf` | `terraform` |
-| `otel` | `opentelemetry` |
-| `gha` | `githubactions` |
-| `1password` | `onepassword` |
-| `do` | `digitalocean` |
-| `google` `gcloud` | `gcp` |
-| `amazon` `ec2` | `aws` |

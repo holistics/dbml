@@ -6,7 +6,7 @@ import { CompileErrorCode } from '@/core/types/errors';
 import { SymbolKind } from '@/core/types/symbol';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
+const ARCH = '---\ndiagram_type: arch\n---\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function compilerFor (files: Record<string, string>): Compiler {

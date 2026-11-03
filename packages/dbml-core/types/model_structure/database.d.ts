@@ -27,8 +27,6 @@ export interface Project {
     database_type: string;
     name: string;
     token: TokenPosition;
-    // Architecture diagrams: 'right' or 'down'
-    direction?: string;
 }
 
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
@@ -77,6 +75,7 @@ export interface RawDatabase {
     nodes?: RawNode[];
     groups?: RawGroup[];
     links?: RawLink[];
+    frontMatter?: Record<string, string>;
     diagramType?: 'arch';
 }
 
@@ -95,8 +94,7 @@ declare class Database extends Element {
     groups: Group[];
     links: Link[];
     diagramType: 'arch' | null;
-    // The layout direction an architecture diagram's `Project` sets
-    direction: 'right' | 'down' | null;
+    frontMatter: Record<string, string> | null;
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
@@ -330,7 +328,7 @@ export interface NormalizedDatabase {
     groupIds?: number[];
     linkIds?: number[];
     diagramType?: 'arch';
-    direction?: 'right' | 'down';
+    frontMatter?: Record<string, string>;
 }
 
 export interface NormalizedDatabaseIdMap {

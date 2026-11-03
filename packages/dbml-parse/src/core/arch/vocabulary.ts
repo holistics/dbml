@@ -13,7 +13,7 @@ export const BUILTIN_ROLES: Record<string, RoleSpec> = {
   Function: { icon: 'function', category: 'compute' },
   Container: { icon: 'container', category: 'compute' },
   Service: { icon: 'chip', category: 'compute' },
-  Registry: { icon: 'container', category: 'compute' },
+  Registry: { icon: 'registry', category: 'compute' },
   Database: { icon: 'database', category: 'data' },
   Cache: { icon: 'cache', category: 'data' },
   Queue: { icon: 'queue', category: 'data' },

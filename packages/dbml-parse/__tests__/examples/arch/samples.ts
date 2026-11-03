@@ -25,8 +25,11 @@ Monitoring "Prometheus (monitoring)" as prometheus {
 Firewall "OSSEC" as ossec
 `;
 
-export const MAIN_FILE = `Project dbx {
-  diagram_type: 'arch'
+export const MAIN_FILE = `---
+diagram_type: arch
+---
+
+Project dbx {
   title: 'DBX network diagram'
   owner: 'platform-team'
   updated: '2026-10-12'
@@ -239,8 +242,11 @@ Link: ossec > loki
  * rather than in the playground so that a test compiles it, because a sample nobody compiles
  * rots the first time the language moves.
  */
-export const INLINE_FILE = `Project dbx {
-  diagram_type: 'arch'
+export const INLINE_FILE = `---
+diagram_type: arch
+---
+
+Project dbx {
   title: 'DBX network diagram'
   owner: 'platform-team'
   updated: '2026-10-12'

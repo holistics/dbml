@@ -1,5 +1,3 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
@@ -9,7 +7,7 @@ import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
+const ARCH = '---\ndiagram_type: arch\n---\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function compilerFor (files: Record<string, string>): Compiler {
@@ -101,17 +99,6 @@ describe('[example] without a role, NAME_PRECEDENCE picks and the editor warns',
   test('NAME_PRECEDENCE is the 32 roles in order, then Group, then Note', () => {
     expect(NAME_PRECEDENCE).toHaveLength(34);
     expect(NAME_PRECEDENCE).toEqual([...Object.keys(BUILTIN_ROLES), 'Group', 'Note']);
-  });
-
-  test('the syntax doc lists the roles and the precedence in the same order', () => {
-    const doc = readFileSync(resolve(__dirname, '../../../../../dbml-homepage/docs/syntax/architecture-diagrams.md'), 'utf8');
-    const section = doc.slice(doc.indexOf('## Built-in Roles'), doc.indexOf('## Node Settings'));
-    const table = section.split('\n').filter((line) => /^\| [a-z]+ \|/.test(line));
-    const roles = table.flatMap((line) => [...line.split('|')[2].matchAll(/`(\w+)`/g)].map((m) => m[1]));
-    expect(roles).toEqual(Object.keys(BUILTIN_ROLES));
-    const precedence = doc.slice(doc.indexOf('## Role Precedence'), doc.indexOf('## Metadata Definition')).replace(/\s+/g, ' ');
-    expect(precedence).toContain('the roles in the order of the [Built-in Roles](#built-in-roles) table, then `Group`, then `Note`.');
-    expect([...NAME_PRECEDENCE]).toEqual([...roles, 'Group', 'Note']);
   });
 
   test('a link goes to the Server before the Group, with a warning', () => {

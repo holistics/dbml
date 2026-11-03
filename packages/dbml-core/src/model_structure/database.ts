@@ -43,7 +43,7 @@ class Database extends Element {
   groups: Group[];
   links: Link[];
   diagramType: 'arch' | null;
-  direction: 'right' | 'down' | null;
+  frontMatter: Record<string, string> | null;
   id!: number;
 
   constructor ({
@@ -62,6 +62,7 @@ class Database extends Element {
     nodes = [],
     groups = [],
     links = [],
+    frontMatter,
     diagramType,
   }: Partial<RawDatabase> & { aliases?: any[] } = {} as any) {
     super();
@@ -108,7 +109,7 @@ class Database extends Element {
     this.groups = [];
     this.links = [];
     this.diagramType = diagramType ?? null;
-    this.direction = diagramType === 'arch' && (project.direction === 'right' || project.direction === 'down') ? project.direction : null;
+    this.frontMatter = frontMatter ?? null;
     this.processArch(nodes, groups, links);
   }
 
@@ -401,7 +402,7 @@ class Database extends Element {
       noteIds: this.notes.map((n) => n.id),
       ...this.archIds(),
       ...(this.diagramType ? { diagramType: this.diagramType } : {}),
-      ...(this.direction ? { direction: this.direction } : {}),
+      ...(this.frontMatter ? { frontMatter: this.frontMatter } : {}),
     };
   }
 

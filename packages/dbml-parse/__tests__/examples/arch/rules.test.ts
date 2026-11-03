@@ -5,7 +5,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
+const ARCH = '---\ndiagram_type: arch\n---\n';
 
 function project (files: Record<string, string>, entry = '/main.dbml') {
   const layout = new MemoryProjectLayout();

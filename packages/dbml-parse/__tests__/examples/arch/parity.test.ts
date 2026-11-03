@@ -23,7 +23,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
 
   it('draws the declared name, and takes the alias as the handle', () => {
     const { model, diagnostics } = compileArch(
-      { '/d': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer "dbdiagram API1" as api1\nServer api2' },
+      { '/d': '---\ndiagram_type: arch\n---\n\nServer "dbdiagram API1" as api1\nServer api2' },
       '/d',
     );
     expect(diagnostics).toEqual([]);
@@ -35,9 +35,9 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('lets two boxes share a caption when their handles differ', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        'Project {',
-        "  diagram_type: 'arch'",
-        '}',
+        '---',
+        'diagram_type: arch',
+        '---',
         '',
         'Internet "Internet" as net_dbdiagram',
         'Internet "Internet" as net_dbdocs',
@@ -52,7 +52,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
 
   it('still refuses two handles that are the same', () => {
     const { diagnostics } = compileArch(
-      { '/d': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer "A" as x\nServer "B" as x' },
+      { '/d': '---\ndiagram_type: arch\n---\n\nServer "A" as x\nServer "B" as x' },
       '/d',
     );
     expect(diagnostics.map((d) => d.code)).toEqual(['duplicate-name']);
@@ -61,9 +61,9 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('resolves a link, a member and a metadata target through either spelling', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        'Project {',
-        "  diagram_type: 'arch'",
-        '}',
+        '---',
+        'diagram_type: arch',
+        '---',
         '',
         'Server "dbdiagram API1" as api1',
         'Database "Main" as pg',
@@ -113,7 +113,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   it('closes the vocabulary against any word that is not a role', () => {
     // With no diagram_type and no role word the file is DBML, so DBML's parser reports it
     expect(codes('Microservice x').every((code) => code.startsWith('parse-'))).toBe(true);
-    expect(codes('Project {\n  diagram_type: \'arch\'\n}\nMicroservice x')).toEqual(['unknown-role']);
+    expect(codes('---\ndiagram_type: arch\n---\nMicroservice x')).toEqual(['unknown-role']);
   });
 
   it('refuses a Kind, since there are no custom roles', () => {
@@ -183,35 +183,37 @@ describe('what decides the dialect', () => {
     }
   });
 
-  it('reads diagram_type off Project, and does not need it', () => {
-    const marked = compileArch({ '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\n\nServer a' }, '/d.dbml');
+  it('reads diagram_type off front matter, and does not need it', () => {
+    const marked = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\n\nServer a' }, '/d.dbml');
     expect(marked.diagramType).toBe('arch');
     expect(marked.diagnostics).toEqual([]);
 
     const bare = compileArch({ '/d.dbml': 'Server a' }, '/d.dbml');
     expect(bare.diagramType).toBeNull();
     expect(bare.model.elements.size).toBe(marked.model.elements.size);
-  });
 
-  it('reads it from a named Project too, and the first diagram_type wins', () => {
-    const named = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nTable t {\n  id int\n}" }, '/d.dbml');
-    expect(named.diagramType).toBe('arch');
-    const schema = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'dbml'\n}\nServer a" }, '/d.dbml');
+    const schema = compileArch({ '/d.dbml': '---\ndiagram_type: dbml\n---\nServer a' }, '/d.dbml');
     expect(schema.diagramType).toBe('dbml');
     expect(isArchitecture(schema)).toBe(false);
   });
 
-  it('ignores a diagram_type that is not a row of a top-level Project', () => {
+  it('refuses diagram_type inside Project, pointing to front matter', () => {
+    const r = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nServer a" }, '/d.dbml');
+    expect(r.diagramType).toBeNull();
+    expect(r.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
+  });
+
+  it('ignores a diagram_type that is not in front matter', () => {
     const nested = compileArch({ '/d.dbml': "Table t {\n  diagram_type varchar [note: 'arch']\n}\nServer a" }, '/d.dbml');
     expect(nested.diagramType).toBeNull();
-    const commented = compileArch({ '/d.dbml': "// Project { diagram_type: 'dbml' }\nServer a" }, '/d.dbml');
+    const commented = compileArch({ '/d.dbml': '// ---\n// diagram_type: dbml\n// ---\nServer a' }, '/d.dbml');
     expect(commented.diagramType).toBeNull();
     expect(isArchitecture(commented)).toBe(true);
   });
 
-  it('accepts the long spelling, in any case', () => {
-    for (const spelling of ['arch', 'architecture', 'Arch', 'ARCHITECTURE']) {
-      const r = compileArch({ '/d.dbml': `Project {\n  diagram_type: '${spelling}'\n}\n\nServer a` }, '/d.dbml');
+  it('accepts the long spelling, in any case, quoted or not', () => {
+    for (const spelling of ['arch', 'architecture', 'Arch', 'ARCHITECTURE', "'arch'"]) {
+      const r = compileArch({ '/d.dbml': `---\ndiagram_type: ${spelling}\n---\n\nServer a` }, '/d.dbml');
       expect(isArchitecture(r), spelling).toBe(true);
       expect(r.diagnostics, spelling).toEqual([]);
     }
@@ -221,7 +223,7 @@ describe('what decides the dialect', () => {
     // with nothing drawn, only diagram_type says "architecture"; it exists so a canvas does not
     // flicker while somebody is still typing
     const { model, diagramType } = compileArch(
-      { '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\n' },
+      { '/d.dbml': '---\ndiagram_type: arch\n---\n' },
       '/d.dbml',
     );
     expect(model.elements.size).toBe(0);
@@ -229,7 +231,7 @@ describe('what decides the dialect', () => {
   });
 
   it('keeps Project out of the drawing', () => {
-    const { model } = compileArch({ '/d.dbml': 'Project {\n  diagram_type: \'arch\'\n}\nServer a' }, '/d.dbml');
+    const { model } = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\nServer a' }, '/d.dbml');
     expect([...model.elements.keys()]).toEqual(['a']);
   });
 });
@@ -265,9 +267,9 @@ describe('the inline sample', () => {
 
 describe('a note written as markdown', () => {
   const SOURCE = [
-    'Project {',
-    "  diagram_type: 'arch'",
-    '}',
+    '---',
+    'diagram_type: arch',
+    '---',
     'Server "Lexer" as lex {',
     "  Note: '''",
     '  **642 lines, and not one DBML word in them.**',
@@ -325,7 +327,7 @@ describe('deciding whether to show an architecture canvas', () => {
 
   it('says no to a document with nothing drawn on it, unless the author said otherwise', () => {
     expect(asks('Project p { }')).toBe(false);
-    expect(asks('Project {\n  diagram_type: \'arch\'\n}\n')).toBe(true);
+    expect(asks('---\ndiagram_type: arch\n---\n')).toBe(true);
   });
 
   it('says no to notes alone, which a half-written file collects by accident', () => {
@@ -366,9 +368,12 @@ describe('reading one document out of a project', () => {
 });
 
 describe('Project', () => {
-  const PROJECT = `Project dbx {
-  diagram_type: 'arch'
-  direction: 'down'
+  const PROJECT = `---
+diagram_type: arch
+direction: down
+---
+
+Project dbx {
   database_type: 'PostgreSQL'
   title: 'DBX network diagram'
   Note: 'The DBX production estate'
@@ -384,8 +389,6 @@ Link: api1 > db1
     expect(diagnostics).toEqual([]);
     expect(model.project).toMatchObject({
       name: 'dbx',
-      diagram_type: 'arch',
-      direction: 'down',
       database_type: 'PostgreSQL',
       title: 'DBX network diagram',
       note: { value: 'The DBX production estate' },
@@ -393,16 +396,11 @@ Link: api1 > db1
   });
 
   it('takes no name, and the INLINE_FILE sample reads its rows', () => {
-    expect(compileArch({ '/d.dbml': "Project {\n  direction: 'right'\n}\nServer a" }, '/d.dbml').diagnostics).toEqual([]);
+    expect(compileArch({ '/d.dbml': "Project {\n  title: 'x'\n}\nServer a" }, '/d.dbml').diagnostics).toEqual([]);
     const { model, diagramType, diagnostics } = compileArch({ '/d': INLINE_FILE }, '/d');
     expect(diagnostics).toEqual([]);
     expect(model.project).toMatchObject({ title: 'DBX network diagram', owner: 'platform-team' });
     expect(diagramType).toBe('arch');
-  });
-
-  it('direction is right or down', () => {
-    const { diagnostics } = compileArch({ '/d.dbml': "Project {\n  direction: 'left'\n}\nServer a" }, '/d.dbml');
-    expect(diagnostics.map((d) => d.message)).toEqual(["'direction' must be 'right' or 'down'"]);
   });
 
   it('follows the schema rules: no alias, no settings, string values, no tables', () => {
@@ -411,9 +409,17 @@ Link: api1 > db1
     expect(messages("Project p [note: 'x'] {\n}")).toContain("A Project shouldn't have a setting list");
     expect(messages('Project p {\n  owner: 3\n}').length).toBeGreaterThan(0);
   });
+});
 
-  it('a --- block is not part of the language', () => {
-    const { diagnostics } = compileArch({ '/d.dbml': '---\ntitle: x\n---\nServer a' }, '/d.dbml');
+describe('front matter', () => {
+  it('keeps its keys, direction included', () => {
+    const { model, diagnostics } = compileArch({ '/d.dbml': '---\ndiagram_type: arch\ndirection: down\ntitle: x\n---\nServer a' }, '/d.dbml');
+    expect(diagnostics).toEqual([]);
+    expect(model.frontMatter).toEqual({ diagram_type: 'arch', direction: 'down', title: 'x' });
+  });
+
+  it('counts only at the very top of the file', () => {
+    const { diagnostics } = compileArch({ '/d.dbml': 'Server a\n---\ndiagram_type: arch\n---\n' }, '/d.dbml');
     expect(diagnostics.length).toBeGreaterThan(0);
   });
 });
@@ -477,7 +483,7 @@ Metadata Table users {
 
 describe('a brand is a setting, not a keyword', () => {
   const draw = (line: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${line}` },
+    { '/d': `---\ndiagram_type: arch\n---\n\n${line}` },
     '/d',
   );
 
@@ -569,7 +575,7 @@ describe('a brand is a setting, not a keyword', () => {
 
 describe('icon', () => {
   const draw = (body: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${body}` },
+    { '/d': `---\ndiagram_type: arch\n---\n\n${body}` },
     '/d',
   );
   const pictureOf = (model: NetworkModel, id: string): string | null => {
@@ -613,7 +619,7 @@ describe('icon', () => {
 
 describe('a role word is case-insensitive, because Table is', () => {
   const draw = (line: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n${line}` },
+    { '/d': `---\ndiagram_type: arch\n---\n${line}` },
     '/d',
   );
 
@@ -644,7 +650,7 @@ describe('a role word is case-insensitive, because Table is', () => {
 
 describe('custom properties take the values DBML takes', () => {
   const read = (line: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\nDatabase d [${line}]` },
+    { '/d': `---\ndiagram_type: arch\n---\n\nDatabase d [${line}]` },
     '/d',
   );
   const metadataOf = (line: string): Record<string, unknown> => {
@@ -674,9 +680,9 @@ describe('custom properties take the values DBML takes', () => {
   it('carries custom properties through to the model, wherever they are written', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
-        'Project {',
-        "  diagram_type: 'arch'",
-        '}',
+        '---',
+        'diagram_type: arch',
+        '---',
         '',
         "Database pg [type: 'postgres', region: 'ap-southeast-1', instance_class: 'db.t3.medium']",
         "Server api [type: 'docker']",
@@ -700,7 +706,7 @@ describe('custom properties take the values DBML takes', () => {
 
 describe('metadata follows DBML', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
     '/d',
   );
 
@@ -771,15 +777,15 @@ describe('metadata follows DBML', () => {
   it('lets a later file outrank an earlier one, as DBML documents', () => {
     const { model, diagnostics } = compileArch({
       '/main.arch.dbml': [
-        'Project {',
-        "  diagram_type: 'arch'",
-        '}',
+        '---',
+        'diagram_type: arch',
+        '---',
         '',
         "use * from './ops.arch'",
         'Server api',
       ].join('\n'),
       // a file of only Metadata blocks needs its own diagram_type, and imports what it annotates
-      '/ops.arch.dbml': "Project {\n  diagram_type: 'arch'\n}\nuse { Server api } from './main.arch'\nMetadata api {\n  owner: 'ops-team'\n}",
+      '/ops.arch.dbml': "---\ndiagram_type: arch\n---\nuse { Server api } from './main.arch'\nMetadata api {\n  owner: 'ops-team'\n}",
     }, '/main.arch.dbml');
 
     expect(diagnostics).toEqual([]);
@@ -789,7 +795,7 @@ describe('metadata follows DBML', () => {
 
 describe('the body carries the properties', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
     '/d',
   );
 
@@ -869,7 +875,7 @@ describe('the body carries the properties', () => {
 
 describe('flags in a body', () => {
   const draw = (src: string) => compileArch(
-    { '/d': `Project {\n  diagram_type: 'arch'\n}\n\n${src}` },
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
     '/d',
   );
 

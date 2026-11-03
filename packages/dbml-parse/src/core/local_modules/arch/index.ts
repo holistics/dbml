@@ -16,16 +16,19 @@ import NoteValidator from '../note/validate';
 import ProjectValidator from '../project/validate';
 import type { LocalModule } from '../types';
 
-const DIRECTIONS = ['right', 'down'];
-
-// The rows DBML accepts, and `direction` limited to the two layouts
+// The rows DBML accepts; `diagram_type` belongs in front matter
 function projectErrors (compiler: Compiler, declaration: ElementDeclarationNode): CompileError[] {
   const errors = new ProjectValidator(compiler, declaration).validate();
   for (const row of bodyOf(declaration)) {
-    if (!(row instanceof ElementDeclarationNode) || declarationWord(row)?.toLowerCase() !== 'direction') continue;
-    const value = nameOf(rowOf(bodyOf(row)[0])?.callee);
-    if (value !== undefined && DIRECTIONS.includes(value)) continue;
-    errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, "'direction' must be 'right' or 'down'", row));
+    const key = row instanceof ElementDeclarationNode ? declarationWord(row) : nameOf(rowOf(row)?.callee);
+    if (key?.toLowerCase() !== 'diagram_type') continue;
+    errors.push(new CompileError(
+      CompileErrorCode.DIAGRAM_TYPE_NOT_HERE,
+      'diagram_type has no effect inside Project. It says what the file is, and it is read before '
+      + 'the file is parsed, so it has to be in front matter:\n\n'
+      + '---\ndiagram_type: arch\n---',
+      row,
+    ));
   }
   return errors;
 }

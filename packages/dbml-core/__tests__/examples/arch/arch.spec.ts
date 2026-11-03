@@ -43,18 +43,18 @@ describe('@dbml/core - architecture files', () => {
     await expect(JSON.stringify(summary, null, 2)).toMatchFileSnapshot(path.resolve(__dirname, `${name}.out.json`));
   });
 
-  test('Project sets the layout direction, and a node keeps its icon URL and custom properties', () => {
+  test('front matter sets the layout direction, and a node keeps its icon URL and custom properties', () => {
     const model = normalizeProject({
       '/d.dbml': [
-        'Project {',
-        "  diagram_type: 'arch'",
-        "  direction: 'down'",
-        '}',
+        '---',
+        'diagram_type: arch',
+        'direction: down',
+        '---',
         "Pipeline etl [type: 'airbyte', icon: 'https://example.com/a.png', owner: 'data', color: #336791]",
         "Group g [style: dashed] {\n  etl\n  team: 'ops'\n}",
       ].join('\n'),
     }, '/d.dbml');
-    expect(model.database[1].direction).toBe('down');
+    expect(model.database[1].frontMatter).toEqual({ diagram_type: 'arch', direction: 'down' });
     const [node] = Object.values(model.nodes!);
     expect(node).toMatchObject({ type: 'airbyte', icon: 'https://example.com/a.png', settings: { type: 'airbyte', icon: 'https://example.com/a.png', color: '#336791' } });
     expect(node.metadata.owner).toMatchObject({ value: 'data', type: 'string' });
@@ -62,10 +62,8 @@ describe('@dbml/core - architecture files', () => {
     expect(group.settings).toEqual({ style: 'dashed' });
     expect(group.metadata.team).toMatchObject({ value: 'ops' });
 
-    const right = normalizeProject({ '/d.dbml': 'Server a' }, '/d.dbml');
-    expect(right.database[1].direction).toBeUndefined();
-    const schema = normalizeProject({ '/d.dbml': "Project {\n  direction: 'down'\n}\nTable t {\n  id int\n}" }, '/d.dbml');
-    expect(schema.database[1].direction).toBeUndefined();
+    const bare = normalizeProject({ '/d.dbml': 'Server a' }, '/d.dbml');
+    expect(bare.database[1].frontMatter).toBeUndefined();
   });
 
   test('a DBML file and an architecture file import each other, each read as its own kind', () => {
@@ -143,7 +141,7 @@ describe('@dbml/core - architecture files', () => {
   });
 
   test('a Server and a Group may share a handle, and links and members find each by its role', () => {
-    const source = 'Project {\n  diagram_type: \'arch\'\n}\nServer c\nServer api\nGroup api { }\nLink: c > api\nLink: c > Group api\nGroup g {\n  Group api\n  c\n}';
+    const source = '---\ndiagram_type: arch\n---\nServer c\nServer api\nGroup api { }\nLink: c > api\nLink: c > Group api\nGroup g {\n  Group api\n  c\n}';
     const model = normalizeProject({ '/d.dbml': source }, '/d.dbml');
     const server = Object.values(model.nodes ?? {}).find((node) => node.name === 'api')!;
     const group = Object.values(model.groups ?? {}).find((g) => g.name === 'api')!;

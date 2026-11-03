@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
-const ARCH = 'Project {\n  diagram_type: \'arch\'\n}\n';
+const ARCH = '---\ndiagram_type: arch\n---\n';
 const MAIN = Filepath.from('/main.dbml');
 
 function remove (source: string, handle: string): string | undefined {

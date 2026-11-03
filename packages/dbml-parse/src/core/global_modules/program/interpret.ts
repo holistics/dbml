@@ -148,6 +148,8 @@ export default class ProgramInterpreter {
       if (isArch || value.length) this.db[key] = value;
     }
 
+    const { frontMatter } = this.compiler.scanFile(this.filepath);
+    if (Object.keys(frontMatter).length) this.db.frontMatter = frontMatter;
     if (isArch) this.db.diagramType = 'arch';
   }
 
@@ -551,7 +553,6 @@ export default class ProgramInterpreter {
   }
 }
 
-// An architecture file's `Project` rows join its front matter keys; `diagram_type` there is an error, not a key
 // `use { Server api as api2 }`: in this file the element is `api2`, and it still shows the name its own file gave it
 function importedUnder (value: SchemaElement | SchemaElement[], use: UseSymbol): SchemaElement | SchemaElement[] {
   if (!use.isKind(SymbolKind.Element) || Array.isArray(value) || use.name === undefined) return value;

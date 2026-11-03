@@ -1,0 +1,42 @@
+.grid {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+// The cards are not links, so they do not react to hover.
+.card {
+  align-items: center;
+  gap: 0.375rem;
+  text-align: center;
+
+  &:hover {
+    border-color: var(--ifm-color-emphasis-200);
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.mark {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.25rem;
+  color: var(--mark-light, var(--ifm-font-color-base));
+}
+
+[data-theme='dark'] .mark {
+  color: var(--mark-dark, var(--ifm-font-color-base));
+}
+
+.name {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  white-space: normal;
+}
+
+.detail {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+  overflow-wrap: anywhere;
+}

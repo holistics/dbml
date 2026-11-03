@@ -49,6 +49,7 @@ export type Element = NodeElement | GroupElement | NoteElement;
 
 export interface NetworkModel {
   project: Project | undefined;
+  frontMatter: Record<string, string>;
   elements: Map<string, Element>;
   links: { id: string; from: string; fromRole: string; to: string; toRole: string; op: string; settings: ArchSettings; at: Located }[];
   roots: string[];
@@ -94,6 +95,7 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.BAD_MEMBER]: 'bad-member',
   [CompileErrorCode.AMBIGUOUS_NAME]: 'ambiguous-name',
   [CompileErrorCode.UNKNOWN_MEMBER]: 'unknown-member',
+  [CompileErrorCode.DIAGRAM_TYPE_NOT_HERE]: 'diagram-type-not-here',
 };
 
 const locate = (token: TokenPosition): Located => ({
@@ -161,7 +163,7 @@ export function compileArch (files: Record<string, string>, entry = '/main.arch.
   return {
     model: modelOf(interpreted.getValue() as Database | undefined, reachable),
     diagnostics,
-    diagramType: compiler.scanFile(entryPath).diagramType ?? null,
+    diagramType: compiler.scanFile(entryPath).frontMatter.diagram_type ?? null,
   };
 }
 
@@ -170,6 +172,7 @@ const valuesOf = (metadata: CustomMetadata | undefined): Record<string, unknown>
 function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel {
   const model: NetworkModel = {
     project: db?.project,
+    frontMatter: db?.frontMatter ?? {},
     elements: new Map(),
     links: [],
     roots: [],

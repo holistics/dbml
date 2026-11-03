@@ -27,6 +27,20 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Core Database Markup',
         },
         {
+          type: 'category',
+          label: 'Architecture Diagrams',
+          collapsed: true,
+          collapsible: true,
+          link: { type: 'doc', id: 'syntax/architecture-diagrams' },
+          items: [
+            {
+              id: 'syntax/architecture-roles-and-types',
+              type: 'doc',
+              label: 'Roles and Types',
+            },
+          ],
+        },
+        {
           id: 'syntax/data-lineage',
           type: 'doc',
           label: 'Data Lineage',

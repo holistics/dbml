@@ -176,6 +176,7 @@ export enum CompileErrorCode {
   BAD_MEMBER,
   AMBIGUOUS_NAME,
   UNKNOWN_MEMBER,
+  DIAGRAM_TYPE_NOT_HERE,
 }
 
 export interface RelatedLocation {

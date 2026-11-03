@@ -1,14 +1,10 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { SUPPORTED_TYPES, TYPE_ALIAS, resolveType } from '@/core/arch/icons';
+import { SUPPORTED_TYPES, resolveType } from '@/core/arch/icons';
 import { compileArch, isNode } from './compileArch';
-
-const DOC = readFileSync(resolve(__dirname, '../../../../../dbml-homepage/docs/syntax/architecture-diagrams.md'), 'utf8');
 
 function compileNode (settings: string) {
   const { model, diagnostics } = compileArch({
-    '/main.arch.dbml': `Project {\n  diagram_type: 'arch'\n}\nDatabase x [${settings}]`,
+    '/main.arch.dbml': `---\ndiagram_type: arch\n---\nDatabase x [${settings}]`,
   });
   return { node: [...model.elements.values()].find(isNode), diagnostics };
 }
@@ -16,25 +12,6 @@ function compileNode (settings: string) {
 const typeOf = (value: string) => compileNode(`type: '${value}'`).node?.type ?? null;
 
 describe('[example] supported types', () => {
-  it('are the values the syntax doc lists, in its order', () => {
-    const section = DOC.slice(DOC.indexOf('## Supported Types'));
-    const listed = (section.match(/```text\n([\s\S]*?)```/)?.[1] ?? '').split(/\s+/).filter(Boolean);
-    expect(listed).toEqual(SUPPORTED_TYPES);
-    expect(SUPPORTED_TYPES).toHaveLength(138);
-  });
-
-  it('take the alternative values the syntax doc lists', () => {
-    const section = DOC.slice(DOC.indexOf('These alternative values'));
-    const rows = section.split('\n').filter((line) => /^\| `/.test(line));
-    const listed = Object.fromEntries(rows.flatMap((line) => {
-      const [, from, to] = line.split('|');
-      const target = to.match(/`(\w+)`/)![1];
-      return [...from.matchAll(/`(\w+)`/g)].map((m) => [m[1], target]);
-    }));
-    expect(listed).toEqual(TYPE_ALIAS);
-    expect(Object.keys(TYPE_ALIAS)).toHaveLength(22);
-  });
-
   it('reach the model as the listed value, in any case and through an alternative', () => {
     expect(SUPPORTED_TYPES.filter((name) => typeOf(name) !== name)).toEqual([]);
     expect(typeOf('Postgres')).toBe('postgres');

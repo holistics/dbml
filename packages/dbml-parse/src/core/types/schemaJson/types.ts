@@ -93,6 +93,8 @@ export interface Database {
   nodes?: Node[];
   groups?: Group[];
   links?: Link[];
+  // The `---` block at the top of the file, present only when it has keys
+  frontMatter?: Record<string, string>;
   // 'arch' for a file read as an architecture diagram; absent for a DBML file
   diagramType?: 'arch';
 }
