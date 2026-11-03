@@ -54,7 +54,8 @@ export {
   splitQualifiedIdentifier,
   unescapeString,
   escapeString,
-  formatRecordValue,
+  formatTypedValue,
+  type TypedValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
   normalizeQualifiedName,
@@ -135,7 +136,7 @@ export type {
   TextEdit,
 } from '@/compiler/queries/transform';
 
-export { findDiagramViewBlocks } from '@/compiler/queries/transform';
+export { findDiagramViewBlocks, syncElementMetadata, applyTextEdits } from '@/compiler/queries/transform';
 export { fullName } from '@/compiler/queries/transform/utils/arch';
 
 // Dep transform types

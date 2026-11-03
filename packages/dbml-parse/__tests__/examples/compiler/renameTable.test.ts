@@ -1922,23 +1922,24 @@ Table users {
     expect(result).not.toContain('users');
   });
 
-  test('renaming the table from the consumer file cascades to both files', () => {
-    // base.dbml defines 'users', consumer.dbml imports it (no alias) and adds a ref
-    // Cross-file rename via consumer's UseSymbol resolves to the original declaration and rewrites every file that touches it
+  test('renaming a remote table from the consumer file adds an alias, leaves the declaring file untouched', () => {
+    // base.dbml defines 'users', consumer.dbml imports it (no alias)
+    // Renaming from the consumer adds `as accounts` to the specifier and rewrites local refs
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
-      '/consumer.dbml': 'use { table users } from \'./base.dbml\'\nTable orders { user_id int [ref: > users.id] }',
+      '/consumer.dbml': `use { table users } from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
     });
 
     const changes = compiler.renameTable(fp('/consumer.dbml'), 'users', 'accounts');
-    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
-    const consumerAfter = changes.get(fp('/consumer.dbml').absolute)!;
 
-    expect(baseAfter).toContain('Table accounts');
-    expect(baseAfter).not.toContain('Table users');
-    expect(consumerAfter).toContain('use { table accounts }');
+    // Declaring file is NOT touched
+    expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+
+    const consumerAfter = changes.get(fp('/consumer.dbml').absolute)!;
+    expect(consumerAfter).toContain('use { table users as accounts }');
     expect(consumerAfter).toContain('ref: > accounts.id');
-    expect(consumerAfter).not.toContain('users');
+    expect(consumerAfter).not.toContain('ref: > users.id');
   });
 
   test('renaming a table in the declaring file updates declaration, inline refs, and importers', () => {
@@ -1952,7 +1953,8 @@ Table posts {
   user_id int [ref: > users.id]
 }
 `,
-      '/main.dbml': 'use { table users } from \'./base.dbml\'\nTable orders { user_id int [ref: > users.id] }',
+      '/main.dbml': `use { table users } from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
     });
 
     const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
@@ -2018,7 +2020,8 @@ Table posts {
   test('renaming an alias only rewrites the alias-introducing file', () => {
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
-      '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
     });
 
     const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
@@ -2036,7 +2039,8 @@ Table posts {
     // Only the alias 'u' is visible in main.dbml, 'users' is not in scope there
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
-      '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
     });
 
     const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
@@ -2047,7 +2051,8 @@ Table posts {
   test('cross-file rename with alias: source-name token in the use specifier flips, alias stays', () => {
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
-      '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
     });
 
     const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
@@ -2102,29 +2107,32 @@ Ref: U.id < U.id
     });
   });
 
-  describe('use without alias - renames the real declaration and cascades', () => {
-    test('rename from the importing file cascades to base + importer', () => {
+  describe('use without alias - adds alias in consumer, leaves declaring file alone', () => {
+    test('rename from the importing file adds alias to specifier, base file untouched', () => {
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/main.dbml': 'use { table users } from \'./base.dbml\'\nTable orders { user_id int [ref: > users.id] }',
+        '/main.dbml': `use { table users } from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-      const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+
+      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
       const mainAfter = changes.get(fp('/main.dbml').absolute)!;
-
-      expect(baseAfter).toContain('Table accounts');
-      expect(baseAfter).not.toContain('Table users');
-      expect(mainAfter).toContain('use { table accounts }');
+      expect(mainAfter).toContain('use { table users as accounts }');
       expect(mainAfter).toContain('ref: > accounts.id');
-      expect(mainAfter).not.toContain('users');
+      expect(mainAfter).not.toContain('ref: > users.id');
     });
+  });
 
-    test('rename from the declaring file cascades to all unaliased importers', () => {
+  describe('use without alias - rename from declaring file cascades to importers', () => {
+    test('rename from declaring file updates specifier name and refs in all importing files', () => {
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/a.dbml': 'use { table users } from \'./base.dbml\'\nTable orders { user_id int [ref: > users.id] }',
-        '/b.dbml': 'use { table users } from \'./base.dbml\'\nTable carts { user_id int [ref: > users.id] }',
+        '/a.dbml': `use { table users } from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
+        '/b.dbml': `use { table users } from './base.dbml'
+Table carts { user_id int [ref: > users.id] }`,
       });
 
       const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
@@ -2136,11 +2144,73 @@ Ref: U.id < U.id
     });
   });
 
+  describe('wildcard import - rename adds a named specifier with alias', () => {
+    test('renaming a wildcard-imported table inserts a named specifier with alias', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `use * from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+
+      // Declaring file untouched
+      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      // A new named specifier with alias is inserted
+      expect(mainAfter).toContain('use { table users as accounts }');
+      // In-file refs updated
+      expect(mainAfter).toContain('ref: > accounts.id');
+      expect(mainAfter).not.toContain('ref: > users.id');
+      // Wildcard is still present
+      expect(mainAfter).toContain('use * from');
+    });
+
+    test('renaming via wildcard preserves reuse keyword', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `reuse * from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      expect(mainAfter).toContain('reuse { table users as accounts }');
+    });
+
+    test('renaming a wildcard-imported table with no in-file refs still inserts the specifier', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': 'use * from \'./base.dbml\'',
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+      expect(mainAfter).toContain('use { table users as accounts }');
+    });
+
+    test('renaming from the declaring file still cascades through wildcard importers (not affected by remote logic)', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `use * from './base.dbml'
+Table orders { user_id int [ref: > users.id] }`,
+      });
+
+      // Renaming FROM the declaring file — renameRealDeclaration path, cascades normally
+      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+      const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+      expect(baseAfter).toContain('Table accounts');
+      expect(baseAfter).not.toContain('Table users');
+    });
+  });
+
   describe('use with alias - rename only affects the alias scope', () => {
     test('renaming by the alias only rewrites the alias-introducing file', () => {
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
+        '/main.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
@@ -2156,8 +2226,10 @@ Ref: U.id < U.id
     test('aliased importer is insulated when renaming the original declaration', () => {
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/aliased.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
-        '/unaliased.dbml': 'use { table users } from \'./base.dbml\'\nTable carts { user_id int [ref: > users.id] }',
+        '/aliased.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
+        '/unaliased.dbml': `use { table users } from './base.dbml'
+Table carts { user_id int [ref: > users.id] }`,
       });
 
       const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
@@ -2176,7 +2248,8 @@ Ref: U.id < U.id
       // Only `u` is visible in main, `users` is not in scope
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
+        '/main.dbml': `use { table users as u } from './base.dbml'
+Table orders { user_id int [ref: > u.id] }`,
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');

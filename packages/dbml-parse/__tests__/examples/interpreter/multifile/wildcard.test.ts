@@ -164,3 +164,97 @@ use { table "my-table" } from './source.dbml'
     expect(db.tables.find((t) => t.name === 'my-table')).toBeDefined();
   });
 });
+
+describe('[bug] wildcard import - aliased table: both alias and original name should resolve', () => {
+  // file a: `Table users as u` exports symbol `users` under name `u` (alias)
+  // file b: `use * from './a'` should make both `u` (alias) and `users` (original) resolvable
+  const { compiler } = setupCompiler({
+    '/a.dbml': `
+Table users as u {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+use * from './a.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}
+`,
+  });
+
+  test('no binding errors when referencing original name `users` via wildcard', () => {
+    const ast = compiler.parseFile(fp('/b.dbml')).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('`users.id` reference resolves without errors in consumer', () => {
+    // Table is interpreted under its alias `u`, but the original name `users` must bind correctly
+    const result = compiler.interpretFile(fp('/b.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('schema-qualified aliased table: original name resolves via schema prefix', () => {
+    // `Table auth.users as u` → wildcard should expose `users` in auth schema, resolvable as `auth.users`
+    const { compiler: c3 } = setupCompiler({
+      '/a.dbml': `
+Table auth.users as u {
+  id int [pk]
+}
+`,
+      '/b.dbml': `
+use * from './a.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > auth.users.id]
+}
+`,
+    });
+    const result = c3.interpretFile(fp('/b.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('schema-qualified original name is NOT visible in the public schema', () => {
+    // `Table auth.users as u` original name `users` belongs to `auth`, not to public
+    const { compiler: c4 } = setupCompiler({
+      '/a.dbml': `
+Table auth.users as u {
+  id int [pk]
+}
+`,
+      '/b.dbml': `
+use * from './a.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}
+`,
+    });
+    // `users` (without schema) would incorrectly resolve if original name leaked into public
+    const ast = c4.parseFile(fp('/b.dbml')).getValue().ast;
+    expect(c4.bindNode(ast).getErrors().length).toBeGreaterThan(0);
+  });
+
+  test('`u` alias is also resolvable in consumer', () => {
+    const { compiler: c2 } = setupCompiler({
+      '/a.dbml': `
+Table users as u {
+  id int [pk]
+}
+`,
+      '/b.dbml': `
+use * from './a.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > u.id]
+}
+`,
+    });
+    const ast = c2.parseFile(fp('/b.dbml')).getValue().ast;
+    expect(c2.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+});

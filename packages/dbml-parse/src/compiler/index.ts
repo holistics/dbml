@@ -63,9 +63,10 @@ import {
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
   renameTable, renameElement, removeElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
+  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata,
 } from './queries/transform';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString, type TypedValue,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 
@@ -74,8 +75,9 @@ export { ScopeKind } from './types';
 export type { TextEdit } from './queries/transform';
 // Re-export utilities
 export {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 };
+export type { TypedValue };
 
 // Sentinel placed in the cache while a query is being computed, indicating a cycle
 const COMPUTING = Symbol('COMPUTING');
@@ -368,6 +370,9 @@ export default class Compiler {
   removeElement = removeElement.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
   updateElementSettingEdit = updateElementSettingEdit.bind(this);
+  findMetadataBlock = findMetadataBlock.bind(this);
+  updateElementMetadata = updateElementMetadata.bind(this);
+  updateElementMetadataEdit = updateElementMetadataEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
   syncDep = syncDep.bind(this);
 

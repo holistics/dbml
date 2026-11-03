@@ -3,6 +3,9 @@ export { renameElement } from './renameElement';
 export { removeElement } from './removeElement';
 export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
 export {
+  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata,
+} from './updateElementMetadata';
+export {
   syncDiagramView,
   findDiagramViewBlocks,
   type DiagramViewSyncOperation,

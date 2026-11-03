@@ -159,6 +159,8 @@ export enum CompileErrorCode {
   INVALID_METADATA_FIELD,
   DUPLICATE_METADATA_FIELD,
 
+  IMPORTED_FILE_HAS_ERRORS,
+
   // Architecture files
   UNKNOWN_ROLE = 6000,
   MISSING_NAME,

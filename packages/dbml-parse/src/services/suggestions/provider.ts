@@ -56,6 +56,7 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+import { getMetadataTargetKindLabel } from '@/compiler/queries/transform/updateElementMetadata';
 
 // Display labels for element/keyword suggestions
 const SUGGESTION_LABEL = {
@@ -1109,18 +1110,10 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   ],
 };
 
-// Canonical display labels for metadata target kinds
-const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, (typeof SUGGESTION_LABEL)[keyof typeof SUGGESTION_LABEL]> = {
-  [MetadataTargetKind.Table]: SUGGESTION_LABEL.Table,
-  [MetadataTargetKind.Column]: SUGGESTION_LABEL.Column,
-  [MetadataTargetKind.TableGroup]: SUGGESTION_LABEL.TableGroup,
-  [MetadataTargetKind.Note]: SUGGESTION_LABEL.Note,
-};
-
 function suggestMetadataTargetKinds (): CompletionList {
   return {
     suggestions: Object.values(MetadataTargetKind).map((name) => {
-      const label = METADATA_TARGET_KIND_LABELS[name];
+      const label = getMetadataTargetKindLabel(name);
       return {
         label,
         insertText: label,
