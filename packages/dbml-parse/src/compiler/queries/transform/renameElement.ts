@@ -1,6 +1,6 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  type Ref, archSort, getArchRefs, roleOf,
+  type ArchNodeRef, archSort, getArchRefs, roleOf,
 } from '@/core/arch/read';
 import {
   candidatesOf, isAliasSymbol, resolveName, roleOfSymbol,

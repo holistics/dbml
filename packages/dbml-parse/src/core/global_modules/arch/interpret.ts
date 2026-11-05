@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import { resolveType } from '@/core/arch/icons';
 import {
-  IMAGE_URL, type PropertyEntry, type Ref, archSort, getArchNodeBody, declarationWord, getArchInlineLink, getArchLinkParts, getArchMembers, getArchNodeName,
+  IMAGE_URL, type ArchPropertyEntry, type ArchNodeRef, archSort, getArchNodeBody, declarationWord, getArchInlineLink, getArchLinkParts, getArchMembers, getArchNodeName,
   getArchNoteDeclaration, getArchNoteText, getArchProperties, getArchNodeField, extractArchNodeSettings,
 } from '@/core/arch/read';
 import { roleName, suggestType } from '@/core/arch/vocabulary';
@@ -25,7 +25,7 @@ import { candidatesOf, localHandle, roleOfSymbol } from './utils';
 // Warnings are raised here because DBML's validator and binder pass on errors only
 
 // A name with no role that more than one element answers to: NAME_PRECEDENCE picks one, and the author is told which
-function ambiguity (compiler: Compiler, name: string | undefined, at: Ref['node'], kinds?: SymbolKind[]): CompileWarning[] {
+function ambiguity (compiler: Compiler, name: string | undefined, at: ArchNodeRef['node'], kinds?: SymbolKind[]): CompileWarning[] {
   if (name === undefined) return [];
   const meant = candidatesOf(compiler, at.filepath, name, kinds).map((symbol) => `${roleOfSymbol(symbol)} ${name}`);
   if (meant.length < 2) return [];
@@ -37,7 +37,7 @@ function ambiguity (compiler: Compiler, name: string | undefined, at: Ref['node'
   ];
 }
 
-const refAmbiguity = (compiler: Compiler, ref: Ref | undefined): CompileWarning[] => (ref && !ref.role ? ambiguity(compiler, getArchNodeName(ref.node), ref.node) : []);
+const refAmbiguity = (compiler: Compiler, ref: ArchNodeRef | undefined): CompileWarning[] => (ref && !ref.role ? ambiguity(compiler, getArchNodeName(ref.node), ref.node) : []);
 
 // How the model names what a link or a group points at
 function archRef (compiler: Compiler, symbol: NodeSymbol | undefined, filepath: Filepath): ArchRef | undefined {
@@ -64,7 +64,7 @@ function metadataWarnings (compiler: Compiler, symbol: ElementSymbol, filepath: 
 }
 
 // Settings go through their field, every other key is a custom property. A later entry wins, so the body wins over `[ ]`.
-function applyProperties (element: Partial<Node | Group>, entries: PropertyEntry[], fields: MetadataFieldRegistry<any, any>): void {
+function applyProperties (element: Partial<Node | Group>, entries: ArchPropertyEntry[], fields: MetadataFieldRegistry<any, any>): void {
   const metadata = new Map<string, [string, CustomMetadataValue]>();
   for (const entry of entries) {
     const token = getTokenPosition(entry.node);

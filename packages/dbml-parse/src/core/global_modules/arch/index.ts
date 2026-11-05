@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import {
-  type Ref, archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isArchInlineLink, isTopLevel, isTopLevelNote,
+  type ArchNodeRef, archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isArchInlineLink, isTopLevel, isTopLevelNote,
   getArchLinkParts, getArchMembers, getArchNodeName, roleWord, getArchNodeField, topLevelDeclaration,
 } from '@/core/arch/read';
 import { roleName, suggestRole } from '@/core/arch/vocabulary';
@@ -37,7 +37,7 @@ function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: s
 }
 
 // A link end, written in `Link: a > b` or after the operator of an inline `[link: > b]`
-function linkEndpointReferee (compiler: Compiler, ref: Ref, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
+function linkEndpointReferee (compiler: Compiler, ref: ArchNodeRef, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
   const found = resolveName(compiler, ref.node.filepath, name, ref.role);
   if (found) return new Report(found);
   return new Report(undefined, [

@@ -454,11 +454,11 @@ export default class ProgramInterpreter {
     }
   }
 
-  private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {
+  private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): ArchNodeRef[] {
     const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
       .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
 
-    const refs: Ref[] = [];
+    const refs: ArchNodeRef[] = [];
     for (const {
       tableSymbol,
     } of fkTableMap.values()) {

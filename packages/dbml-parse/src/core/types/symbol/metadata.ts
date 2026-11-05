@@ -30,7 +30,7 @@ import {
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 import { resolveName } from '@/core/global_modules/arch/utils';
-import { type Ref, getArchInlineLink, getArchLinkParts } from '@/core/arch/read';
+import { type ArchNodeRef, getArchInlineLink, getArchLinkParts } from '@/core/arch/read';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 
@@ -638,7 +638,7 @@ export class LinkMetadata extends NodeMetadata {
   }
 
   endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
-    const resolve = (ref: Ref | undefined) => (ref && isExpressionAVariableNode(ref.node)
+    const resolve = (ref: ArchNodeRef | undefined) => (ref && isExpressionAVariableNode(ref.node)
       ? compiler.nodeReferee(ref.node).getFiltered(UNHANDLED)?.originalSymbol
       : undefined);
 

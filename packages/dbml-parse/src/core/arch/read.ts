@@ -88,7 +88,7 @@ export function roleOf (node: ElementDeclarationNode): string | undefined {
 }
 
 // A name in a link, an inline link or a group, with the role written before it if any:  api,  Server api
-export interface Ref {
+export interface ArchNodeRef {
   node: SyntaxNode;
   role?: string;
   roleNode?: SyntaxNode;
@@ -97,7 +97,7 @@ export interface Ref {
 }
 
 // One word is a name; two are a role and a name. undefined when the first of two is not a role, or for more words.
-export function refOf (words: SyntaxNode[]): Ref | undefined {
+export function getArchNodeRef (words: SyntaxNode[]): ArchNodeRef | undefined {
   if (words.length === 1) return { node: words[0] };
   if (words.length !== 2) return undefined;
   const role = roleWord(getArchNodeName(words[0]));
@@ -193,38 +193,38 @@ export function getArchNodeInfix (node?: SyntaxNode): ArchInfix | undefined {
   };
 }
 
-export const LINK_OPS = new Set([
+export const ARCH_LINK_OPS = new Set([
   '>',
   '<',
   '<>',
   '-',
 ]);
 
-export interface LinkParts {
+export interface ArchLinkParts {
   row: ArchField | undefined;
   op: string;
   // undefined when that side is not a name or a role and a name
-  from: Ref | undefined;
-  to: Ref | undefined;
+  from: ArchNodeRef | undefined;
+  to: ArchNodeRef | undefined;
 }
 
-const isLinkInfix = (node: SyntaxNode | undefined): boolean => !!node && LINK_OPS.has(getArchNodeInfix(node)?.op ?? '');
+const isArchLinkInfix = (node: SyntaxNode | undefined): boolean => !!node && ARCH_LINK_OPS.has(getArchNodeInfix(node)?.op ?? '');
 
 // `Link: a > b [settings]`, `Link: client > Server api`: the row's words split at the one operator.
 // `client > Server api` parses as `client > Server` applied to `api`, so the words are put back in order first.
-export function getArchLinkParts (declaration: ElementDeclarationNode): LinkParts | undefined {
+export function getArchLinkParts (declaration: ElementDeclarationNode): ArchLinkParts | undefined {
   const [statement] = getArchNodeBody(declaration);
   if (!statement) return undefined;
   const row = getArchNodeField(statement);
   const words = row ? [row.callee, ...row.args].filter((word): word is SyntaxNode => !!word) : [statement];
-  const at = words.findIndex(isLinkInfix);
-  if (at < 0 || words.slice(at + 1).some(isLinkInfix)) return undefined;
+  const at = words.findIndex(isArchLinkInfix);
+  if (at < 0 || words.slice(at + 1).some(isArchLinkInfix)) return undefined;
   const infix = getArchNodeInfix(words[at])!;
   return {
     row,
     op: infix.op,
-    from: refOf([...words.slice(0, at), infix.left]),
-    to: refOf([infix.right, ...words.slice(at + 1)]),
+    from: getArchNodeRef([...words.slice(0, at), infix.left]),
+    to: getArchNodeRef([infix.right, ...words.slice(at + 1)]),
   };
 }
 
@@ -237,31 +237,31 @@ export function getArchInlineLinks (declaration: ElementDeclarationNode): Attrib
     .filter((attribute): attribute is AttributeNode => attribute instanceof AttributeNode && isArchInlineLink(attribute));
 }
 
-export interface InlineLink extends Ref {
+export interface ArchInlineLink extends ArchNodeRef {
   op: string;
 }
 
 // undefined when the value is not one of the four operators followed by a name, or a role and a name
-export function getArchInlineLink (attribute: AttributeNode): InlineLink | undefined {
+export function getArchInlineLink (attribute: AttributeNode): ArchInlineLink | undefined {
   const { value } = attribute;
   const applied = value instanceof FunctionApplicationNode ? value : undefined;
   const prefix = applied ? applied.callee : value;
   if (!(prefix instanceof PrefixExpressionNode) || !prefix.expression) return undefined;
   const op = prefix.op?.value;
-  if (!op || !LINK_OPS.has(op)) return undefined;
-  const ref = refOf([prefix.expression, ...(applied?.args ?? [])]);
+  if (!op || !ARCH_LINK_OPS.has(op)) return undefined;
+  const ref = getArchNodeRef([prefix.expression, ...(applied?.args ?? [])]);
   return ref && { op, ...ref };
 }
 
 // The members a group lists. Words on the line of `{` are names only; on a line of its own a member is a name, or a role and a name.
-export interface Members {
-  refs: Ref[];
+export interface ArchMembers {
+  refs: ArchNodeRef[];
   // own-line rows that are neither
   bad: SyntaxNode[];
 }
 
-export function getArchMembers (group: ElementDeclarationNode): Members {
-  const out: Members = { refs: [], bad: [] };
+export function getArchMembers (group: ElementDeclarationNode): ArchMembers {
+  const out: ArchMembers = { refs: [], bad: [] };
   const brace = group.body instanceof BlockExpressionNode ? group.body.blockOpenBrace : undefined;
   for (const row of getArchNodeBody(group)) {
     if (row instanceof ElementDeclarationNode) continue;
@@ -271,7 +271,7 @@ export function getArchMembers (group: ElementDeclarationNode): Members {
       out.refs.push(...words.map((word) => ({ node: word, braceLine: true })));
       continue;
     }
-    const ref = refOf(words);
+    const ref = getArchNodeRef(words);
     if (ref) out.refs.push(ref);
     else out.bad.push(row);
   }
@@ -279,10 +279,10 @@ export function getArchMembers (group: ElementDeclarationNode): Members {
 }
 
 // The names a declaration refers to: its inline links, a group's members, a link's two ends
-export function getArchRefs (declaration: ElementDeclarationNode): Ref[] {
-  const refs: Ref[] = getArchInlineLinks(declaration)
+export function getArchRefs (declaration: ElementDeclarationNode): ArchNodeRef[] {
+  const refs: ArchNodeRef[] = getArchInlineLinks(declaration)
     .map(getArchInlineLink)
-    .filter((link): link is InlineLink => !!link);
+    .filter((link): link is ArchInlineLink => !!link);
   switch (archSort(declaration)) {
     case 'group':
       refs.push(...getArchMembers(declaration).refs);
@@ -300,13 +300,13 @@ export function getArchRefs (declaration: ElementDeclarationNode): Ref[] {
 }
 
 // `owner: 'scott'` on a line of its own is a nested declaration whose type is the key
-export interface Property {
+export interface ArchProperty {
   key: string;
   // undefined when there is a key and no value
   value: ArchSettingValue | undefined;
 }
 
-export function getArchProperty (node: SyntaxNode): Property | undefined {
+export function getArchProperty (node: SyntaxNode): ArchProperty | undefined {
   if (node instanceof ElementDeclarationNode) {
     const key = declarationWord(node);
     if (!key) return undefined;
@@ -357,7 +357,7 @@ function dedent (text: string): string {
 export const IMAGE_URL = /^(https:\/\/|data:image\/)/i;
 
 // One setting or custom property: `key: value` in `[ ]`, a `key: value` body line, or a bare word
-export interface PropertyEntry {
+export interface ArchPropertyEntry {
   key: string;
   // undefined for a bare word
   value: SyntaxNode | undefined;
@@ -365,16 +365,16 @@ export interface PropertyEntry {
   inBody: boolean;
 }
 
-export interface PropertyRead {
-  entries: PropertyEntry[];
+export interface ArchPropertyRead {
+  entries: ArchPropertyEntry[];
   // body lines with a key and no value
   bad: ElementDeclarationNode[];
 }
 
 // `[ ]` first, then the body, so a later entry wins. Inline links and `Note` lines are not properties.
 // A bare word in the body is a flag on a node, and a member in a group.
-export function getArchProperties (declaration: ElementDeclarationNode, bareWordIsAFlag: boolean): PropertyRead {
-  const out: PropertyRead = { entries: [], bad: [] };
+export function getArchProperties (declaration: ElementDeclarationNode, bareWordIsAFlag: boolean): ArchPropertyRead {
+  const out: ArchPropertyRead = { entries: [], bad: [] };
   for (const attribute of declaration.attributeList?.elementList ?? []) {
     if (!(attribute instanceof AttributeNode) || isArchInlineLink(attribute)) continue;
     const key = getArchNodeName(attribute.name);
