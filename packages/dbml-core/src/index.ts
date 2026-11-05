@@ -72,8 +72,8 @@ export {
   isEndpointRequired,
   isEndpointOptional,
   makeRelationshipRequired,
-  BUILTIN_ROLES,
-  NAME_PRECEDENCE,
+  ARCH_BUILTIN_ROLES,
+  ARCH_NAME_PRECEDENCE,
   fullName,
 } from '@dbml/parse';
 
@@ -107,6 +107,6 @@ export type {
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
-  RoleSpec,
+  ArchRoleSpec,
   FileSpecifierInfo,
 } from '@dbml/parse';
