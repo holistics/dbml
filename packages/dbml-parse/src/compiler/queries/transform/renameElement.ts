@@ -74,7 +74,7 @@ export function renameElement (
 }
 
 // A reference as rename sees it: a name in a link, an inline link or a group, or a Metadata target
-type Written = (Ref & { group?: ElementDeclarationNode }) | { token: SyntaxToken };
+type Written = (ArchNodeRef & { group?: ElementDeclarationNode }) | { token: SyntaxToken };
 
 function references (compiler: Compiler, declarations: ElementDeclarationNode[], target: ElementDeclarationNode): Written[] {
   const out: Written[] = [];
