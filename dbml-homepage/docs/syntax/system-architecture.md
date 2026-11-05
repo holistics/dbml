@@ -71,7 +71,7 @@ Database "Primary" as pg_primary {
 }
 ```
 
-Names and aliases are case-sensitive. These rules also count elements imported from other files:
+Names and aliases are case-sensitive. These rules also apply to elements imported from other files:
 
 - Two elements with the same role and no alias cannot share a name.
 - An alias must differ from every other alias, and from every name that has no alias.
@@ -126,7 +126,7 @@ Pipeline etl [type: 'airbyte', icon: 'https://example.com/etl.png']
 
 ### Role Precedence
 
-Elements with different roles can share a name, such as `Server api` and `Database api`, and a group or a [sticky note](./enrichment-visualization.md#sticky-notes) can share a name with an element. When a name is shared, write the role, `Group` or `Note` before it to pick the one you mean.
+Elements with different roles can share a name, such as `Server api` and `Database api`. A group or a [sticky note](./enrichment-visualization.md#sticky-notes) can also share a name with an element. When a name is shared, write the role, `Group` or `Note`, before the name.
 
 With only the name, DBML gives a warning and uses the first match in this order: the roles in the order they appear on [Roles and Types](./architecture-roles-and-types.mdx#roles), then `Group`, then `Note`. For example, `Server` comes before `Database`.
 
@@ -148,10 +148,10 @@ Link: client > api
 A link shows that one element or group talks to another.
 
 ```text
-// short form
+// on its own line
 Link: end operator end [settings]
 
-// inline form: in the settings of the left end
+// inline: in the settings of the left end
 Role name [link: operator end]
 ```
 
@@ -170,17 +170,17 @@ Linking the same two ends more than once gives a warning, whatever the operators
 **Example**
 
 ```text
-// short form
+// on its own line
 Link: internet > cdn
 Link: cdn > api [proto: HTTPS, host: 'api.example.com']
 
-// inline form: same as Link: api > db and Link: api < queue
+// inline: same as Link: api > db and Link: api < queue
 Server api [link: > db, ref: < queue]
 ```
 
 ### Link Settings
 
-Write settings in `[ ]` after the second end. The inline form takes no settings.
+Write settings in `[ ]` after the second end. An inline link takes no settings.
 
 - `proto`: the protocol, a word or a quoted string, such as `HTTPS`.
 - `host`: the hostname the link reaches, a word or a quoted string.
@@ -228,7 +228,8 @@ Link: client > orders_cluster
 Write settings in `[ ]`, or as `key: value` lines in `{ }`. In `{ }`, a single word is always a member: write `inactive` and `stacked` in `[ ]`.
 
 - `color`: the group's color, such as `#2e7d32`.
-- `style: dashed`, `inactive`, `Note` and custom properties: as for an element, with a dashed border instead of an outline.
+- `style: dashed` and `inactive`: as for an element, with a dashed border instead of an outline.
+- `Note` and custom properties: as for an element.
 - `label: bottom`: puts the group's name at the bottom.
 - `stacked`: marks the group as horizontally scalable, such as a service that runs on several servers behind a load balancer.
 
