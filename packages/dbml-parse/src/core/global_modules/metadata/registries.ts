@@ -1,6 +1,6 @@
 import { SettingName } from '@/core/types/keywords';
 import type {
-  ArchSettingValue, Color, Column, Group, Node, Note, Table, TableGroup,
+  ArchSettingValue, Color, Column, ArchGroup, ArchNode, Note, Table, TableGroup,
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import { extractBooleanLiteral, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
@@ -80,7 +80,7 @@ export const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRe
 
 // Architecture nodes and groups keep their settings as written in `settings`. The interpreter resolves `type` and `icon` from there.
 
-const toSettings = (key: string) => (element: Partial<Node | Group>, value: ArchSettingValue) => {
+const toSettings = (key: string) => (element: Partial<ArchNode | ArchGroup>, value: ArchSettingValue) => {
   element.settings = { ...element.settings, [key]: value };
 };
 
@@ -93,7 +93,7 @@ const keyword = (word: string) => (node?: SyntaxNode): string | undefined => {
 // `[inactive]` alone is true
 const flag = (node?: SyntaxNode): boolean | undefined => (node === undefined ? true : extractBooleanLiteral(node) ?? undefined);
 
-const archNote: MetadataField<Node | Group, string> = {
+const archNote: MetadataField<ArchNode | ArchGroup, string> = {
   type: 'string',
   parse: extractNote,
   message: "'note' must be a string literal",
@@ -102,28 +102,28 @@ const archNote: MetadataField<Node | Group, string> = {
   },
 };
 
-const archColor: MetadataField<Node | Group, Color> = {
+const archColor: MetadataField<ArchNode | ArchGroup, Color> = {
   type: 'color',
   parse: extractHexColor,
   message: "'color' must be a color literal",
   assign: toSettings('color'),
 };
 
-const archStyle: MetadataField<Node | Group, string> = {
+const archStyle: MetadataField<ArchNode | ArchGroup, string> = {
   type: 'string',
   parse: keyword('dashed'),
   message: "'style' can only be dashed",
   assign: toSettings('style'),
 };
 
-const archInactive: MetadataField<Node | Group, boolean> = {
+const archInactive: MetadataField<ArchNode | ArchGroup, boolean> = {
   type: 'bool',
   parse: flag,
   message: "'inactive' must be true or false",
   assign: toSettings('inactive'),
 };
 
-export const NODE_METADATA_FIELDS: MetadataFieldRegistry<Node, any> = {
+export const NODE_METADATA_FIELDS: MetadataFieldRegistry<ArchNode, any> = {
   type: {
     type: 'string',
     parse: extractQuotedStringToken,
@@ -142,7 +142,7 @@ export const NODE_METADATA_FIELDS: MetadataFieldRegistry<Node, any> = {
   note: archNote,
 };
 
-export const GROUP_METADATA_FIELDS: MetadataFieldRegistry<Group, any> = {
+export const GROUP_METADATA_FIELDS: MetadataFieldRegistry<ArchGroup, any> = {
   color: archColor,
   style: archStyle,
   inactive: archInactive,

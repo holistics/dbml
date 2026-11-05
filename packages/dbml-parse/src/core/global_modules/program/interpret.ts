@@ -8,7 +8,7 @@ import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
-  Group, Link, Node, Note, Project, Ref,
+  ArchGroup, ArchLink, ArchNode, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
@@ -89,10 +89,10 @@ export default class ProgramInterpreter {
 
   // Architecture entries, filled while interpreting and written to `db` at the end
   private arch = {
-    nodes: [] as Node[],
-    groups: [] as Group[],
+    nodes: [] as ArchNode[],
+    groups: [] as ArchGroup[],
     links: [] as {
-      link: Link;
+      link: ArchLink;
       declaration: SyntaxNode;
     }[],
   };
@@ -356,7 +356,7 @@ export default class ProgramInterpreter {
           break;
         case MetadataKind.Link:
           this.arch.links.push({
-            link: value as Link,
+            link: value as ArchLink,
             declaration: meta.declaration,
           });
           break;
@@ -526,8 +526,8 @@ export default class ProgramInterpreter {
     switch (symbol.kind) {
       case SymbolKind.Element: {
         const sort = archSort(symbol.originalSymbol.declaration!);
-        if (sort === 'group') this.arch.groups.push(value as Group);
-        else this.arch.nodes.push(value as Node);
+        if (sort === 'group') this.arch.groups.push(value as ArchGroup);
+        else this.arch.nodes.push(value as ArchNode);
         break;
       }
       case SymbolKind.Table:
@@ -556,6 +556,6 @@ export default class ProgramInterpreter {
 // `use { Server api as api2 }`: in this file the element is `api2`, and it still shows the name its own file gave it
 function importedUnder (value: SchemaElement | SchemaElement[], use: UseSymbol): SchemaElement | SchemaElement[] {
   if (!use.isKind(SymbolKind.Element) || Array.isArray(value) || use.name === undefined) return value;
-  const element = value as Node | Group;
+  const element = value as ArchNode | ArchGroup;
   return (element.alias ?? element.name) === use.name ? value : { ...element, alias: use.name };
 }

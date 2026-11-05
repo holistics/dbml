@@ -4,7 +4,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, Group, Node, Note, Table, TableGroup, TokenPosition,
+  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Note, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
@@ -12,7 +12,7 @@ import { destructureComplexVariable } from '@/core/utils/expression';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 
-export type MetadataTarget = Table | TableGroup | Note | Column | Node | Group;
+export type MetadataTarget = Table | TableGroup | Note | Column | ArchNode | ArchGroup;
 
 /**
   * Spec for one builtin metadata field (table's note, tablegroup's color, .etc) of an element kind.

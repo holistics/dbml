@@ -27,10 +27,10 @@ import type {
   ArchRef,
   CustomMetadata,
   CustomMetadataValue,
-  Group,
-  Link,
-  LinkOp,
-  Node,
+  ArchGroup,
+  ArchLink,
+  ArchLinkOp,
+  ArchNode,
 } from '@/core/types/schemaJson';
 import {
   type ElementSymbol,
@@ -142,7 +142,7 @@ function getMetadataWarnings (
 
 // Settings go through their field, every other key is a custom property. A later entry wins, so the body wins over `[ ]`.
 function applyProperties (
-  element: Partial<Node | Group>,
+  element: Partial<ArchNode | ArchGroup>,
   entries: ArchPropertyEntry[],
   fields: MetadataFieldRegistry<any, any>,
 ): void {
@@ -162,7 +162,7 @@ function applyProperties (
   element.metadata = Object.fromEntries(metadata.values());
 }
 
-function getNoteOf (declaration: ElementDeclarationNode): Node['note'] {
+function getNodeNote (declaration: ElementDeclarationNode): ArchNode['note'] {
   const note = getArchNoteDeclaration(declaration);
   if (!note) return null;
   const value = getArchNoteText(note);
@@ -178,13 +178,13 @@ export function interpretElement (
   compiler: Compiler,
   symbol: ElementSymbol,
   filepath: Filepath,
-): Report<Node | Group | undefined> {
+): Report<ArchNode | ArchGroup | undefined> {
   const declaration = symbol.declaration;
   if (!(declaration instanceof ElementDeclarationNode))
     return new Report(undefined);
   const sort = archSort(declaration);
   const fields = getFieldsOf(symbol);
-  const element: Partial<Node & Group> = {
+  const element: Partial<ArchNode & ArchGroup> = {
     name: getArchNodeName(declaration.name) ?? '',
     alias: getArchNodeName(declaration.alias) ?? null,
     settings: {},
@@ -196,7 +196,7 @@ export function interpretElement (
     fields,
   );
   // A `Note` line in the body wins over `[note: ...]`
-  element.note = getNoteOf(declaration) ?? element.note;
+  element.note = getNodeNote(declaration) ?? element.note;
   attachCustomMetadata(compiler, element, symbol, fields, filepath);
   const warnings = getMetadataWarnings(compiler, symbol, filepath);
   const token = getTokenPosition(declaration);
@@ -275,7 +275,7 @@ export function interpretLink (
   compiler: Compiler,
   metadata: LinkMetadata,
   filepath: Filepath,
-): Report<Link | undefined> {
+): Report<ArchLink | undefined> {
   const { declaration } = metadata;
   const op = metadata.op();
   const [fromSymbol, toSymbol] = metadata.endpoints(compiler);
@@ -307,7 +307,7 @@ export function interpretLink (
       fromRole: from.role,
       to: to.handle,
       toRole: to.role,
-      op: op as LinkOp,
+      op: op as ArchLinkOp,
       settings,
       token: getTokenPosition(declaration),
     },

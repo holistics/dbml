@@ -138,7 +138,7 @@ export interface ArchGroup {
   token: TokenPosition;
 }
 
-export type LinkOp = '>' | '<' | '<>' | '-';
+export type ArchLinkOp = '>' | '<' | '<>' | '-';
 
 // An element, group or sticky note as a link or a group names it: a handle can repeat across roles
 export interface ArchRef {
@@ -152,7 +152,7 @@ export interface ArchLink {
   fromRole: string;
   to: string;
   toRole: string;
-  op: LinkOp;
+  op: ArchLinkOp;
   settings: ArchSettings;
   token: TokenPosition;
 }
