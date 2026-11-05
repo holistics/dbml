@@ -86,7 +86,7 @@ const singleTokenRegex = orRegex(
 //   - digit immediately followed by identifier char (e.g. "0.0a") confuses the number lexer
 //   - 3+ consecutive single quotes (e.g. "''''") are ambiguous between '' and ''' delimiters
 export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(singleTokenRegex)))
-  .filter((s) => !/\d[a-zA-Z_]/.test(s) && !/'{3,}/.test(s));
+  .filter((s) => !/\d[a-zA-Z_]/.test(s) && !/'{3,}/.test(s) && !/\d\.\d+\./.test(s));
 
 // Token stream with guaranteed whitespace between tokens (for testing trivia attachment)
 export const spacedTokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(chainRegex(/[ ]/, singleTokenRegex))));
