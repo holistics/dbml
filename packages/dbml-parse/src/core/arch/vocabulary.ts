@@ -51,8 +51,6 @@ export const getArchRoleName = (typed: string): string | undefined => ARCH_ROLE_
 // Which element a name without a role means when several share it: the first here wins
 export const ARCH_NAME_PRECEDENCE: readonly string[] = [...Object.keys(ARCH_BUILTIN_ROLES), 'Group', 'Note'];
 
-export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role, and set `type`, `icon` or `color` to change how the node looks.';
-
 export function suggestArchRole (typed: string): string {
   const needle = typed.toLowerCase();
 

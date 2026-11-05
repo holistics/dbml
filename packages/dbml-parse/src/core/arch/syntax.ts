@@ -21,14 +21,12 @@ import type { ArchSettingValue, ArchSettings } from '@/core/types/schemaJson';
 export type ArchSort =
   | 'node'
   | 'group'
-  | 'kind'
   | 'link'
   | 'metadata'
   | 'project';
 
 const SORT_BY_WORD: Record<string, ArchSort> = {
   group: 'group',
-  kind: 'kind',
   link: 'link',
   ref: 'link',
   metadata: 'metadata',

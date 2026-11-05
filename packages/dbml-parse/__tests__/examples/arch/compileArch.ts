@@ -81,7 +81,6 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.ARCH_UNKNOWN_ROLE]: 'unknown-role',
   [CompileErrorCode.ARCH_MISSING_NAME]: 'missing-name',
   [CompileErrorCode.DUPLICATE_NAME]: 'duplicate-name',
-  [CompileErrorCode.ARCH_NO_CUSTOM_ROLE]: 'no-custom-role',
   [CompileErrorCode.ARCH_UNKNOWN_ENDPOINT]: 'unknown-endpoint',
   [CompileErrorCode.ARCH_EMPTY_LINK]: 'empty-link',
   [CompileErrorCode.ARCH_BAD_LINK]: 'bad-link',

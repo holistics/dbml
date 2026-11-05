@@ -7,7 +7,6 @@ import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS } from '@/core/global_modul
 import { extractMetadataValue, extractHexColor } from '@/core/utils/interpret';
 import { isAccessExpression } from '@/core/utils/validate';
 import { AttributeNode } from '@/core/types/nodes';
-import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
@@ -90,11 +89,6 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
         }
       }
       errors.push(...propertyErrors(declaration, sort));
-      break;
-    }
-
-    case 'kind': {
-      errors.push(new CompileError(CompileErrorCode.ARCH_NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, declaration));
       break;
     }
 

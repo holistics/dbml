@@ -51,13 +51,6 @@ describe('[example] architecture rules', () => {
     expect(db?.nodes?.map((n) => n.role)).toEqual(['LoadBalancer']);
   });
 
-  test('a Kind declaration is refused, since there are no custom roles', () => {
-    const { compiler } = project({ '/main.dbml': `${ARCH}Kind Lakehouse [color: '#4a7c59']\nServer api` });
-    expect(compiler.validateFile(Filepath.from('/main.dbml')).getErrors().map((e) => e.code)).toEqual([
-      CompileErrorCode.ARCH_NO_CUSTOM_ROLE,
-    ]);
-  });
-
   test('a word that is not a role is an error that names the nearest roles', () => {
     const { errors } = project({ '/main.dbml': `${ARCH}Sever api\nLakehouse lake` });
     expect(errors.map((e) => [e.code, e.diagnostic])).toEqual([

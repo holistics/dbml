@@ -39,18 +39,6 @@ describe('[example] selective imports in an architecture file', () => {
     expect(db?.groups?.map((g) => g.name)).toEqual(['g']);
   });
 
-  test('Kind imports nothing and is refused, since there are no custom roles', () => {
-    const layout = new MemoryProjectLayout();
-    layout.setSource(Filepath.from('/x.dbml'), `${ARCH}Server api`);
-    layout.setSource(Filepath.from('/main.dbml'), `${ARCH}use { Kind Lakehouse } from './x'`);
-    const compiler = new Compiler(layout);
-    const entry = Filepath.from('/main.dbml');
-    expect(compiler.validateFile(entry).getErrors().map((e) => e.code)).toEqual([
-      CompileErrorCode.ARCH_NO_CUSTOM_ROLE,
-    ]);
-    expect(compiler.bindFile(entry).getErrors().filter((e) => e.code !== CompileErrorCode.ARCH_NO_CUSTOM_ROLE)).toHaveLength(0);
-  });
-
   test('a role word on a group is an error', () => {
     const { errors } = compile('Server api\nGroup g { api }', "use { Server g } from './x'");
     expect(errors.map((e) => e.diagnostic)).toEqual(['g is a Group, not a Server']);

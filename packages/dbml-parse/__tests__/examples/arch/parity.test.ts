@@ -118,12 +118,6 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(codes('Microservice x')).toEqual(['unknown-role']);
   });
 
-  it('refuses a Kind, since there are no custom roles', () => {
-    const { diagnostics } = one("Kind Microservice [color: '#29b5e8']\nServer x");
-    expect(diagnostics.map((d) => d.code)).toEqual(['no-custom-role']);
-    expect(diagnostics[0].message).toContain('built-in role');
-  });
-
   it('warns rather than fails on an opinion', () => {
     expect(codes('Server a\nServer b\nLink: a > b\nLink: b > a')).toEqual(['duplicate-link']);
     expect(codes('Server a\nGroup g { a }\nLink: a > g')).toEqual(['nested-endpoints']);

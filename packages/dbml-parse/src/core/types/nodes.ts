@@ -333,8 +333,6 @@ export class UseSpecifierNode extends SyntaxNode {
     const value = this.importKind?.value?.toLowerCase();
     if (value === undefined) return undefined;
     if (this.archImport) {
-      // `Kind` is reported by validation and imports nothing
-      if (value === 'kind') return undefined;
       // DBML's own kind words still import DBML elements; `note` imports a sticky note
       return Object.values(ImportKind).find((k) => k.toLowerCase() === value) ?? SymbolKind.Element;
     }
