@@ -107,7 +107,7 @@ export {
 // Architecture files
 export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
 export {
-  ARCH_BUILTIN_ROLES as BUILTIN_ROLES, ARCH_NAME_PRECEDENCE as NAME_PRECEDENCE, suggestArchRole as suggestRole, suggestType, type ArchRoleSpec as RoleSpec,
+  ARCH_BUILTIN_ROLES, ARCH_NAME_PRECEDENCE, suggestArchRole, suggestType, type ArchRoleSpec, type ArchRoleCategory,
 } from '@/core/arch';
 export { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from '@/core/arch';
 
