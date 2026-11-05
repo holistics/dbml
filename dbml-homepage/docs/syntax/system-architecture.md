@@ -247,6 +247,8 @@ Write settings in `[ ]`, or as `key: value` lines in `{ }`. Setting names are ca
 - `style: dashed`: a dashed border.
 - `inactive`: marks something not in service, with the same dashed border.
 - `label: bottom`: puts the group's name at the bottom.
+- `stacked`: marks the group as horizontally scalable, such as a service that runs on several servers
+  behind a load balancer.
 - `Note`: text about the group.
 - Any other `key: value` is a [custom property](./enrichment-visualization.md#custom-properties).
 

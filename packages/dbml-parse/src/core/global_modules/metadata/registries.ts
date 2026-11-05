@@ -152,5 +152,11 @@ export const GROUP_METADATA_FIELDS: MetadataFieldRegistry<ArchGroup, any> = {
     message: "'label' can only be bottom",
     assign: toSettings('label'),
   },
+  stacked: {
+    type: 'bool',
+    parse: flag,
+    message: "'stacked' must be true or false",
+    assign: toSettings('stacked'),
+  },
   note: archNote,
 };

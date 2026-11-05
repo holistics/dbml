@@ -68,6 +68,12 @@ describe('@dbml/core - architecture files', () => {
     expect(bare.database[1].frontMatter).toBeUndefined();
   });
 
+  test('a stacked group keeps the flag in its settings', () => {
+    const model = normalizeProject({ '/d.dbml': `${ARCH}Server api1\nServer api2\nGroup api [stacked] { api1 api2 }` }, '/d.dbml');
+    const [group] = Object.values(model.groups!);
+    expect(group.settings).toEqual({ stacked: true });
+  });
+
   test('a DBML file and an architecture file import each other, each read as its own kind', () => {
     const files = {
       '/schema.dbml': 'Table users {\n  id int [pk]\n}',

@@ -98,6 +98,24 @@ describe('[example] architecture rules', () => {
     expect(both.errors.map((e) => e.diagnostic)).toEqual(['Write the link settings in one place: before the colon or after the second end']);
   });
 
+  test('stacked is a group flag, written bare, as true or false, or in a Metadata block', () => {
+    const settingsOf = (source: string) => project({ '/main.dbml': `${ARCH}Server a\n${source}` }).db?.groups?.[0].settings;
+    expect(settingsOf('Group g [stacked] { a }')).toEqual({ stacked: true });
+    expect(settingsOf('Group g [stacked: false] { a }')).toEqual({ stacked: false });
+    expect(settingsOf('Group g {\n  a\n  stacked: true\n}')).toEqual({ stacked: true });
+    expect(settingsOf('Group g { a }\nMetadata Group g { stacked: true }')).toEqual({ stacked: true });
+
+    const wrong = project({ '/main.dbml': `${ARCH}Server a\nGroup g [stacked: 3] { a }` });
+    const messages = [...wrong.errors, ...wrong.interpreted.getErrors()].map((e) => e.diagnostic);
+    expect(messages).toContain("'stacked' must be true or false");
+  });
+
+  test('stacked is not a setting on an element', () => {
+    const { db } = project({ '/main.dbml': `${ARCH}Server a [stacked: true]` });
+    expect(db?.nodes?.[0].settings).toEqual({});
+    expect(db?.nodes?.[0].metadata.stacked?.value).toBe(true);
+  });
+
   test('a link end, an inline link end and a group member written a.b is an error', () => {
     for (const source of ['Server a\nServer b\nLink: a.web > b', 'Server b\nServer a [link: > b.web]', 'Server a\nGroup g {\n  a.web\n}']) {
       const result = project({ '/main.dbml': `${ARCH}${source}` });
