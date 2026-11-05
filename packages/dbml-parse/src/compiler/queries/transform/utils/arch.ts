@@ -5,7 +5,9 @@ import {
 import { resolveName, rolePrecedence } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import type { AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
+import type {
+  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import type Compiler from '../../../index';

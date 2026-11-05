@@ -16,7 +16,9 @@ import {
 } from './utils/arch';
 import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
-import { bodyOf, handleOf, linkPartsOf, roleOf } from '@/core/arch/read';
+import {
+  bodyOf, handleOf, linkPartsOf, roleOf,
+} from '@/core/arch/read';
 import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
