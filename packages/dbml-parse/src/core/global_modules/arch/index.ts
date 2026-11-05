@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import {
-  type Ref, archSort, bodyOf, declarationWord, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
-  linkPartsOf, membersOf, nameOf, roleWord, rowOf, topLevelDeclaration,
+  type Ref, archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isArchInlineLink, isTopLevel, isTopLevelNote,
+  getArchLinkParts, getArchMembers, getArchNodeName, roleWord, getArchNodeField, topLevelDeclaration,
 } from '@/core/arch/read';
 import { roleName, suggestRole } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -46,17 +46,17 @@ function linkEndpointReferee (compiler: Compiler, ref: Ref, name: string, at: Sy
 }
 
 function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declaration: ElementDeclarationNode): Report<NodeSymbol | undefined> {
-  const name = nameOf(node);
+  const name = getArchNodeName(node);
   if (name === undefined) return new Report(undefined);
 
   const inline = takesInlineLinks(declaration)
-    ? inlineLinksOf(declaration).map(inlineLinkOf).find((link) => link?.node === node)
+    ? getArchInlineLinks(declaration).map(getArchInlineLink).find((link) => link?.node === node)
     : undefined;
   if (inline) return linkEndpointReferee(compiler, inline, name, node);
 
   switch (archSort(declaration)) {
     case 'group': {
-      const ref = membersOf(declaration).refs.find((member) => member.node === node);
+      const ref = getArchMembers(declaration).refs.find((member) => member.node === node);
       if (!ref) return new Report(undefined);
       const found = resolveName(compiler, node.filepath, name, ref.role);
       if (found) return new Report(found);
@@ -66,7 +66,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
     }
 
     case 'link': {
-      const parts = linkPartsOf(declaration);
+      const parts = getArchLinkParts(declaration);
       const ref = [parts?.from, parts?.to].find((end) => end?.node === node);
       if (!ref) return new Report(undefined);
       return linkEndpointReferee(compiler, ref, name, declaration);
@@ -91,11 +91,11 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
 // A row whose key is a setting of the target takes that setting's values; any other row is a custom property, as in DBML
 function metadataValueErrors (declaration: ElementDeclarationNode, fields: MetadataFieldRegistry<any, any>): CompileError[] {
   const errors: CompileError[] = [];
-  for (const row of bodyOf(declaration)) {
+  for (const row of getArchNodeBody(declaration)) {
     const key = row instanceof ElementDeclarationNode ? declarationWord(row) : undefined;
-    const [first] = row instanceof ElementDeclarationNode ? bodyOf(row) : [];
+    const [first] = row instanceof ElementDeclarationNode ? getArchNodeBody(row) : [];
     if (!key || !first) continue;
-    const value = rowOf(first)?.callee ?? first;
+    const value = getArchNodeField(first)?.callee ?? first;
     const field = fields[key.toLowerCase()];
     if (field ? field.parse(value) !== undefined : extractMetadataValue(value) !== undefined) continue;
     errors.push(new CompileError(
@@ -112,27 +112,27 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
   const word = declarationWord(declaration)!;
 
   if (takesInlineLinks(declaration)) {
-    for (const attribute of inlineLinksOf(declaration)) {
-      const target = inlineLinkOf(attribute)?.node;
+    for (const attribute of getArchInlineLinks(declaration)) {
+      const target = getArchInlineLink(attribute)?.node;
       if (target && isExpressionAVariableNode(target)) errors.push(...compiler.nodeReferee(target).getErrors());
     }
   }
 
   switch (archSort(declaration)) {
     case 'node':
-      if (nameOf(declaration.name) !== undefined && !roleName(word)) {
+      if (getArchNodeName(declaration.name) !== undefined && !roleName(word)) {
         errors.push(new CompileError(CompileErrorCode.UNKNOWN_ROLE, `${word} is not a role. ${suggestRole(word)}`, declaration));
       }
       break;
 
     case 'group':
-      for (const { node } of membersOf(declaration).refs) {
+      for (const { node } of getArchMembers(declaration).refs) {
         if (isExpressionAVariableNode(node)) errors.push(...compiler.nodeReferee(node).getErrors());
       }
       break;
 
     case 'link': {
-      const parts = linkPartsOf(declaration);
+      const parts = getArchLinkParts(declaration);
       for (const end of [parts?.from, parts?.to]) {
         if (end && isExpressionAVariableNode(end.node)) errors.push(...compiler.nodeReferee(end.node).getErrors());
       }
@@ -143,7 +143,7 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
       if (isExpressionAVariableNode(declaration.name)) errors.push(...compiler.nodeReferee(declaration.name).getErrors());
       const target = new ArchMetadataElementMetadata(declaration).target(compiler);
       if (!target && !errors.length) {
-        const name = nameOf(declaration.name) ?? declaration.targetKind?.value ?? 'that';
+        const name = getArchNodeName(declaration.name) ?? declaration.targetKind?.value ?? 'that';
         errors.push(notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration));
       }
       if (target) errors.push(...metadataValueErrors(declaration, fieldsOf(target)));
@@ -219,7 +219,7 @@ export const archModule: GlobalModule = {
     // An inline `[link: > b]` on an element, the way DBML reads an inline `[ref: > b]` on a column
     if (node instanceof AttributeNode) {
       const element = node.parentOfKind(ElementDeclarationNode);
-      if (!element || !isTopLevel(element) || !takesInlineLinks(element) || !isInlineLink(node)) return Report.create(PASS_THROUGH);
+      if (!element || !isTopLevel(element) || !takesInlineLinks(element) || !isArchInlineLink(node)) return Report.create(PASS_THROUGH);
       return new Report(new LinkMetadata(node));
     }
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);

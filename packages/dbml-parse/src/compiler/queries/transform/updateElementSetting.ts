@@ -17,7 +17,7 @@ import {
 import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
 import {
-  bodyOf, handleOf, linkPartsOf, roleOf,
+  getArchNodeBody, handleOf, getArchLinkParts, roleOf,
 } from '@/core/arch/read';
 import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
@@ -197,8 +197,8 @@ function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, targ
 
   const { declaration } = definition;
   // The list after `a > b` is read before the header's, so the header is written only when it is the link's only list
-  const useHeader = !linkPartsOf(declaration)?.row?.settings && !!declaration.attributeList;
-  const node = useHeader ? declaration : bodyOf(declaration)[0];
+  const useHeader = !getArchLinkParts(declaration)?.row?.settings && !!declaration.attributeList;
+  const node = useHeader ? declaration : getArchNodeBody(declaration)[0];
   const edit = updateSettingEdit(node, settingName, value, compiler.getSource(filepath) ?? '');
   return edit
     ? [

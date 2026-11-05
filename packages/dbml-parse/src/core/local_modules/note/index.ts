@@ -10,7 +10,7 @@ import { type LocalModule, type Settings } from '../types';
 import NoteValidator from './validate';
 import { validateCustomInlineMetadata } from '../metadata/utils';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
-import { isInlineLinkKey } from '@/core/arch/read';
+import { isArchInlineLinkKey } from '@/core/arch/read';
 
 export const noteModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -76,7 +76,7 @@ export const noteModule: LocalModule = {
     const isArch = compiler.parsedFileKind(node.filepath) === 'arch';
 
     for (const [name, attrs] of Object.entries(settingMap)) {
-      if (isArch && isInlineLinkKey(name)) continue;
+      if (isArch && isArchInlineLinkKey(name)) continue;
       switch (name) {
         case SettingName.Color: {
           const field = NOTE_METADATA_FIELDS[SettingName.Color];

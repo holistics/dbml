@@ -1,8 +1,8 @@
 import type Compiler from '@/compiler';
 import { resolveType } from '@/core/arch/icons';
 import {
-  IMAGE_URL, type PropertyEntry, type Ref, archSort, bodyOf, declarationWord, inlineLinkOf, linkPartsOf, membersOf, nameOf,
-  noteDeclarationOf, noteTextOf, propertiesOf, rowOf, settingsOf,
+  IMAGE_URL, type PropertyEntry, type Ref, archSort, getArchNodeBody, declarationWord, getArchInlineLink, getArchLinkParts, getArchMembers, getArchNodeName,
+  getArchNoteDeclaration, getArchNoteText, getArchProperties, getArchNodeField, extractArchNodeSettings,
 } from '@/core/arch/read';
 import { roleName, suggestType } from '@/core/arch/vocabulary';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
@@ -37,7 +37,7 @@ function ambiguity (compiler: Compiler, name: string | undefined, at: Ref['node'
   ];
 }
 
-const refAmbiguity = (compiler: Compiler, ref: Ref | undefined): CompileWarning[] => (ref && !ref.role ? ambiguity(compiler, nameOf(ref.node), ref.node) : []);
+const refAmbiguity = (compiler: Compiler, ref: Ref | undefined): CompileWarning[] => (ref && !ref.role ? ambiguity(compiler, getArchNodeName(ref.node), ref.node) : []);
 
 // How the model names what a link or a group points at
 function archRef (compiler: Compiler, symbol: NodeSymbol | undefined, filepath: Filepath): ArchRef | undefined {
@@ -81,9 +81,9 @@ function applyProperties (element: Partial<Node | Group>, entries: PropertyEntry
 }
 
 function noteOf (declaration: ElementDeclarationNode): Node['note'] {
-  const note = noteDeclarationOf(declaration);
+  const note = getArchNoteDeclaration(declaration);
   if (!note) return null;
-  const value = noteTextOf(note);
+  const value = getArchNoteText(note);
   return value
     ? {
         value,
@@ -98,12 +98,12 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
   const sort = archSort(declaration);
   const fields = fieldsOf(symbol);
   const element: Partial<Node & Group> = {
-    name: nameOf(declaration.name) ?? '',
-    alias: nameOf(declaration.alias) ?? null,
+    name: getArchNodeName(declaration.name) ?? '',
+    alias: getArchNodeName(declaration.alias) ?? null,
     settings: {},
     note: null,
   };
-  applyProperties(element, propertiesOf(declaration, sort === 'node').entries, fields);
+  applyProperties(element, getArchProperties(declaration, sort === 'node').entries, fields);
   // A `Note` line in the body wins over `[note: ...]`
   element.note = noteOf(declaration) ?? element.note;
   attachCustomMetadata(compiler, element, symbol, fields, filepath);
@@ -112,7 +112,7 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
 
   if (sort === 'group') {
     const children: ArchRef[] = [];
-    for (const ref of membersOf(declaration).refs) {
+    for (const ref of getArchMembers(declaration).refs) {
       if (!isExpressionAVariableNode(ref.node)) continue;
       const child = archRef(compiler, compiler.nodeReferee(ref.node).getFiltered(UNHANDLED), filepath);
       if (!child) continue;
@@ -160,11 +160,11 @@ export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filep
   if (!op || !from || !to) return new Report(undefined);
   // an inline link has no settings list of its own: the brackets it sits in are the element's
   const settings = declaration instanceof ElementDeclarationNode
-    ? settingsOf(linkPartsOf(declaration)?.row?.settings ?? declaration.attributeList)
+    ? extractArchNodeSettings(getArchLinkParts(declaration)?.row?.settings ?? declaration.attributeList)
     : {};
-  const parts = declaration instanceof ElementDeclarationNode ? linkPartsOf(declaration) : undefined;
+  const parts = declaration instanceof ElementDeclarationNode ? getArchLinkParts(declaration) : undefined;
   const warnings = declaration instanceof AttributeNode
-    ? refAmbiguity(compiler, inlineLinkOf(declaration))
+    ? refAmbiguity(compiler, getArchInlineLink(declaration))
     : [...refAmbiguity(compiler, parts?.from), ...refAmbiguity(compiler, parts?.to)];
   return new Report({
     from: from.handle,
@@ -183,13 +183,13 @@ export function interpretArchMetadata (compiler: Compiler, metadata: ArchMetadat
   const fields = fieldsOf(metadata.target(compiler));
   const values: CustomMetadata = {};
   const seen = new Set<string>();
-  for (const row of bodyOf(metadata.declaration)) {
+  for (const row of getArchNodeBody(metadata.declaration)) {
     if (!(row instanceof ElementDeclarationNode)) continue;
     const key = declarationWord(row);
-    const [first] = bodyOf(row);
+    const [first] = getArchNodeBody(row);
     if (!key || !first || seen.has(key.toLowerCase())) continue;
     seen.add(key.toLowerCase());
-    const node = rowOf(first)?.callee ?? first;
+    const node = getArchNodeField(first)?.callee ?? first;
     const token = getTokenPosition(row);
     const field = fields[key.toLowerCase()];
     const parsed = field ? field.parse(node) : extractMetadataValue(node)?.value;

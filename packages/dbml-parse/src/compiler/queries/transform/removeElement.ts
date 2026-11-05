@@ -1,5 +1,5 @@
 import {
-  archSort, bodyOf, inlineLinkOf, inlineLinksOf, linkPartsOf, membersOf,
+  archSort, getArchNodeBody, getArchInlineLink, getArchInlineLinks, getArchLinkParts, getArchMembers,
 } from '@/core/arch/read';
 import { resolveName } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
@@ -36,7 +36,7 @@ export function removeElement (
 
     switch (archSort(declaration)) {
       case 'link': {
-        const parts = linkPartsOf(declaration);
+        const parts = getArchLinkParts(declaration);
         if (names(parts?.from?.node) || names(parts?.to?.node)) {
           edits.push(wholeLines(source, declaration.start, declaration.end));
         }
@@ -53,8 +53,8 @@ export function removeElement (
       }
 
       case 'group': {
-        const roleNodes = new Set(membersOf(declaration).refs.map((ref) => ref.roleNode));
-        for (const row of bodyOf(declaration)) {
+        const roleNodes = new Set(getArchMembers(declaration).refs.map((ref) => ref.roleNode));
+        for (const row of getArchNodeBody(declaration)) {
           if (!(row instanceof FunctionApplicationNode)) continue;
           // `Server api` on its own line is one member: its role goes with it
           const members = [
@@ -77,8 +77,8 @@ export function removeElement (
     }
 
     if (declaration.attributeList instanceof ListExpressionNode) {
-      for (const attribute of inlineLinksOf(declaration)) {
-        if (names(inlineLinkOf(attribute)?.node)) edits.push(removeAttributeEdit(declaration.attributeList, attribute, source));
+      for (const attribute of getArchInlineLinks(declaration)) {
+        if (names(getArchInlineLink(attribute)?.node)) edits.push(removeAttributeEdit(declaration.attributeList, attribute, source));
       }
     }
   }

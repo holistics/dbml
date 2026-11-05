@@ -1,10 +1,11 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, handleOf, inlineLinkOf, inlineLinksOf, isDotted, isTopLevel, isTopLevelNote, linkPartsOf, membersOf,
-  nameOf, propertiesOf, propertyOf, rowOf,
+  archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isTopLevel, isTopLevelNote, getArchLinkParts, getArchMembers,
+  getArchNodeName, getArchProperties, getArchProperty, getArchNodeField,
 } from '@/core/arch/read';
 import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import { extractMetadataValue, extractHexColor } from '@/core/utils/interpret';
+import { isAccessExpression } from '@/core/utils/validate';
 import { AttributeNode } from '@/core/types/nodes';
 import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -19,8 +20,8 @@ import type { LocalModule } from '../types';
 // The rows DBML accepts; `diagram_type` belongs in front matter
 function projectErrors (compiler: Compiler, declaration: ElementDeclarationNode): CompileError[] {
   const errors = new ProjectValidator(compiler, declaration).validate();
-  for (const row of bodyOf(declaration)) {
-    const key = row instanceof ElementDeclarationNode ? declarationWord(row) : nameOf(rowOf(row)?.callee);
+  for (const row of getArchNodeBody(declaration)) {
+    const key = row instanceof ElementDeclarationNode ? declarationWord(row) : getArchNodeName(getArchNodeField(row)?.callee);
     if (key?.toLowerCase() !== 'diagram_type') continue;
     errors.push(new CompileError(
       CompileErrorCode.DIAGRAM_TYPE_NOT_HERE,
@@ -39,7 +40,7 @@ const DOTTED_MESSAGE = 'A link end is the name of a node, a group or a sticky no
 function propertyErrors (declaration: ElementDeclarationNode, sort: 'node' | 'group'): CompileError[] {
   const errors: CompileError[] = [];
   const fields = sort === 'node' ? NODE_METADATA_FIELDS : GROUP_METADATA_FIELDS;
-  const { entries, bad } = propertiesOf(declaration, sort === 'node');
+  const { entries, bad } = getArchProperties(declaration, sort === 'node');
   for (const row of bad) {
     errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, `A property reads  ${declarationWord(row)}: 'value'`, row));
   }
@@ -66,17 +67,17 @@ function propertyErrors (declaration: ElementDeclarationNode, sort: 'node' | 'gr
 
 function inlineLinkErrors (declaration: ElementDeclarationNode): CompileError[] {
   const errors: CompileError[] = [];
-  for (const attribute of inlineLinksOf(declaration)) {
+  for (const attribute of getArchInlineLinks(declaration)) {
     if (attribute.value === undefined) {
       errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
       continue;
     }
-    const end = inlineLinkOf(attribute)?.node;
-    if (isDotted(end)) {
+    const end = getArchInlineLink(attribute)?.node;
+    if (isAccessExpression(end)) {
       errors.push(new CompileError(CompileErrorCode.BAD_LINK, DOTTED_MESSAGE, end!));
       continue;
     }
-    if (!nameOf(end)) {
+    if (!getArchNodeName(end)) {
       errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
     }
   }
@@ -92,17 +93,17 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
   switch (sort) {
     case 'node':
     case 'group': {
-      if (!nameOf(declaration.name)) {
+      if (!getArchNodeName(declaration.name)) {
         errors.push(new CompileError(CompileErrorCode.MISSING_NAME, `A ${word} needs a name`, declaration));
         break;
       }
       errors.push(...inlineLinkErrors(declaration));
       if (sort === 'group') {
-        const members = membersOf(declaration);
+        const members = getArchMembers(declaration);
         for (const row of members.bad) {
           errors.push(new CompileError(CompileErrorCode.BAD_MEMBER, 'A member line holds one member: a name, or a role and a name (Server api)', row));
         }
-        for (const ref of members.refs.filter((member) => isDotted(member.node))) {
+        for (const ref of members.refs.filter((member) => isAccessExpression(member.node))) {
           errors.push(new CompileError(CompileErrorCode.BAD_MEMBER, 'A member is the name of a node, a group or a sticky note. `a.b` is not a name', ref.node));
         }
       }
@@ -116,17 +117,17 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
     }
 
     case 'link': {
-      if (!bodyOf(declaration)[0]) {
+      if (!getArchNodeBody(declaration)[0]) {
         errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'A Link needs two endpoints:  Link: a > b', declaration));
         break;
       }
-      const parts = linkPartsOf(declaration);
-      const dotted = [parts?.from?.node, parts?.to?.node].find(isDotted);
+      const parts = getArchLinkParts(declaration);
+      const dotted = [parts?.from?.node, parts?.to?.node].find(isAccessExpression);
       if (dotted) {
         errors.push(new CompileError(CompileErrorCode.BAD_LINK, DOTTED_MESSAGE, dotted));
         break;
       }
-      if (!parts || !nameOf(parts.from?.node) || !nameOf(parts.to?.node)) {
+      if (!parts || !getArchNodeName(parts.from?.node) || !getArchNodeName(parts.to?.node)) {
         errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'A Link reads  a > b,  a < b,  a <> b  or  a - b', declaration));
         break;
       }
@@ -138,7 +139,7 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
         ));
       }
       for (const attribute of (parts.row?.settings ?? declaration.attributeList)?.elementList ?? []) {
-        if (!(attribute instanceof AttributeNode) || nameOf(attribute.name)?.toLowerCase() !== 'color') continue;
+        if (!(attribute instanceof AttributeNode) || getArchNodeName(attribute.name)?.toLowerCase() !== 'color') continue;
         if (extractHexColor(attribute.value) === undefined) {
           errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, "'color' must be a color literal", attribute.value ?? attribute));
         }
@@ -148,8 +149,8 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
 
     case 'metadata': {
       const seen = new Set<string>();
-      for (const row of bodyOf(declaration)) {
-        const entry = row instanceof ElementDeclarationNode ? propertyOf(row) : undefined;
+      for (const row of getArchNodeBody(declaration)) {
+        const entry = row instanceof ElementDeclarationNode ? getArchProperty(row) : undefined;
         if (!entry || entry.value === undefined) {
           errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, "A Metadata field must use the 'key: value' syntax", row));
           continue;
@@ -179,7 +180,7 @@ export const archModule: LocalModule = {
     if (isTopLevelNote(node)) {
       const note = node as ElementDeclarationNode;
       return new Report(undefined, [
-        ...(note.body ? [] : [new CompileError(CompileErrorCode.INVALID_NOTE, `A sticky note needs a body:  Note ${nameOf(note.name) ?? 'name'} { 'text' }`, note)]),
+        ...(note.body ? [] : [new CompileError(CompileErrorCode.INVALID_NOTE, `A sticky note needs a body:  Note ${getArchNodeName(note.name) ?? 'name'} { 'text' }`, note)]),
         ...inlineLinkErrors(note),
         ...new NoteValidator(compiler, note).validate(),
       ]);

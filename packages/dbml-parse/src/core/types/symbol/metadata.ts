@@ -30,7 +30,7 @@ import {
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 import { resolveName } from '@/core/global_modules/arch/utils';
-import { type Ref, inlineLinkOf, linkPartsOf } from '@/core/arch/read';
+import { type Ref, getArchInlineLink, getArchLinkParts } from '@/core/arch/read';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 
@@ -633,8 +633,8 @@ export class LinkMetadata extends NodeMetadata {
 
   op (): string | undefined {
     return this.declaration instanceof AttributeNode
-      ? inlineLinkOf(this.declaration)?.op
-      : linkPartsOf(this.declaration)?.op;
+      ? getArchInlineLink(this.declaration)?.op
+      : getArchLinkParts(this.declaration)?.op;
   }
 
   endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
@@ -643,7 +643,7 @@ export class LinkMetadata extends NodeMetadata {
       : undefined);
 
     if (this.declaration instanceof AttributeNode) {
-      const inline = inlineLinkOf(this.declaration);
+      const inline = getArchInlineLink(this.declaration);
       const element = this.declaration.parentOfKind(ElementDeclarationNode);
       if (!inline || !element) return [
         undefined,
@@ -655,7 +655,7 @@ export class LinkMetadata extends NodeMetadata {
       ];
     }
 
-    const parts = linkPartsOf(this.declaration);
+    const parts = getArchLinkParts(this.declaration);
     if (!parts) return [
       undefined,
       undefined,

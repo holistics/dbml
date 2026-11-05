@@ -1,6 +1,6 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  archSort, handleOf, inlineLinksOf, isTopLevel, isTopLevelNote, roleOf,
+  archSort, handleOf, getArchInlineLinks, isTopLevel, isTopLevelNote, roleOf,
 } from '@/core/arch/read';
 import { resolveName, rolePrecedence } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
@@ -59,7 +59,7 @@ export function findArchLink (compiler: Compiler, filepath: Filepath, from: stri
       continue;
     }
     if (!isElement(declaration)) continue;
-    for (const attribute of inlineLinksOf(declaration)) {
+    for (const attribute of getArchInlineLinks(declaration)) {
       const metadata = new LinkMetadata(attribute);
       const op = metadata.op();
       if (op && joins(metadata.endpoints(compiler))) {

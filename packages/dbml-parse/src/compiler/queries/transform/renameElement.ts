@@ -1,6 +1,6 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  type Ref, archSort, refsOf, roleOf,
+  type Ref, archSort, getArchRefs, roleOf,
 } from '@/core/arch/read';
 import {
   candidatesOf, isAliasSymbol, resolveName, roleOfSymbol,
@@ -79,7 +79,7 @@ type Written = (Ref & { group?: ElementDeclarationNode }) | { token: SyntaxToken
 function references (compiler: Compiler, declarations: ElementDeclarationNode[], target: ElementDeclarationNode): Written[] {
   const out: Written[] = [];
   for (const declaration of declarations) {
-    for (const ref of refsOf(declaration)) {
+    for (const ref of getArchRefs(declaration)) {
       if (refersTo(compiler, ref.node, target)) out.push(archSort(declaration) === 'group' ? { ...ref, group: declaration } : ref);
     }
     if (archSort(declaration) !== 'metadata') continue;
