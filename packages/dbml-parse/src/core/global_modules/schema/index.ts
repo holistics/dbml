@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler/index';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { schemaMembership } from '@/compiler/queries/files/usableMembers';
-import { roleOf } from '@/core/arch/syntax';
+import { roleOf } from '@/core/arch';
 import { isAliasSymbol } from '../arch/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { type Filepath } from '@/core/types/filepath';

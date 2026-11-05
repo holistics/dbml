@@ -1,10 +1,10 @@
 import type Compiler from '@/compiler';
-import { resolveArchType } from '@/core/arch/icons';
+import { resolveArchType } from '@/core/arch';
 import {
   IMAGE_URL, type ArchPropertyEntry, type ArchNodeRef, archSort, getArchNodeBody, declarationWord, getArchInlineLink, getArchLinkParts, getArchMembers, getArchNodeName,
   getArchNoteDeclaration, getArchNoteText, getArchProperties, getArchNodeField, extractArchNodeSettings,
-} from '@/core/arch/syntax';
-import { roleName, suggestType } from '@/core/arch/vocabulary';
+} from '@/core/arch';
+import { roleName, suggestType } from '@/core/arch';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';

@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler';
-import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
+import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch';
 import { ImportKind } from '@/core/types';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {

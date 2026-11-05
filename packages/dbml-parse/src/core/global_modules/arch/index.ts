@@ -2,8 +2,8 @@ import type Compiler from '@/compiler';
 import {
   type ArchNodeRef, archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isArchInlineLink, isTopLevel, isTopLevelNote,
   getArchLinkParts, getArchMembers, getArchNodeName, roleWord, getArchNodeField, topLevelDeclaration,
-} from '@/core/arch/syntax';
-import { roleName, suggestRole } from '@/core/arch/vocabulary';
+} from '@/core/arch';
+import { roleName, suggestRole } from '@/core/arch';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';

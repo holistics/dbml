@@ -1,4 +1,4 @@
-import { archSort } from '@/core/arch/syntax';
+import { archSort } from '@/core/arch';
 import type { Database, ElementRef } from '@/core/types/schemaJson';
 import { type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 

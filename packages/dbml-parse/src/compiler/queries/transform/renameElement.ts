@@ -1,7 +1,7 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
   type ArchNodeRef, archSort, getArchRefs, roleOf,
-} from '@/core/arch/syntax';
+} from '@/core/arch';
 import {
   candidatesOf, isAliasSymbol, resolveName, roleOfSymbol,
 } from '@/core/global_modules/arch/utils';

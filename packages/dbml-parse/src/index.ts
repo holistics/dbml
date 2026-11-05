@@ -108,8 +108,8 @@ export {
 export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
 export {
   BUILTIN_ROLES, NAME_PRECEDENCE, suggestRole, suggestType, type RoleSpec,
-} from '@/core/arch/vocabulary';
-export { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from '@/core/arch/icons';
+} from '@/core/arch';
+export { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from '@/core/arch';
 
 export {
   type RelationCardinality,

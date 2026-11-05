@@ -1,7 +1,7 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
   archSort, handleOf, getArchInlineLinks, isTopLevel, isTopLevelNote, roleOf,
-} from '@/core/arch/syntax';
+} from '@/core/arch';
 import { resolveName, rolePrecedence } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';

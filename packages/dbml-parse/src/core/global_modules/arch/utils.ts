@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
-import { handleOf, roleOf } from '@/core/arch/syntax';
-import { NAME_PRECEDENCE } from '@/core/arch/vocabulary';
+import { handleOf, roleOf } from '@/core/arch';
+import { NAME_PRECEDENCE } from '@/core/arch';
 import type { Filepath } from '@/core/types/filepath';
 import { ElementDeclarationNode } from '@/core/types/nodes';
 import { type NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';

@@ -30,7 +30,7 @@ import {
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 import { resolveName } from '@/core/global_modules/arch/utils';
-import { type ArchNodeRef, getArchInlineLink, getArchLinkParts } from '@/core/arch/syntax';
+import { type ArchNodeRef, getArchInlineLink, getArchLinkParts } from '@/core/arch';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 

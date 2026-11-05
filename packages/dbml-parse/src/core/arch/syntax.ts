@@ -14,7 +14,7 @@ import {
   VariableNode,
 } from '@/core/types/nodes';
 import { SyntaxTokenKind } from '@/core/types/tokens';
-import { roleName } from '@/core/arch/vocabulary';
+import { roleName } from '@/core/arch';
 import type { ArchSettingValue, ArchSettings } from '@/core/types/schemaJson';
 
 // What a top-level declaration in an architecture file is, from its first word

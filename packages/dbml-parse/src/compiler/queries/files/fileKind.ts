@@ -1,4 +1,4 @@
-import { roleName } from '@/core/arch/vocabulary';
+import { roleName } from '@/core/arch';
 import { type SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export type FileKind = 'dbml' | 'arch';

@@ -2,12 +2,12 @@ import type Compiler from '@/compiler';
 import {
   archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isTopLevel, isTopLevelNote, getArchLinkParts, getArchMembers,
   getArchNodeName, getArchProperties, getArchProperty, getArchNodeField,
-} from '@/core/arch/syntax';
+} from '@/core/arch';
 import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import { extractMetadataValue, extractHexColor } from '@/core/utils/interpret';
 import { isAccessExpression } from '@/core/utils/validate';
 import { AttributeNode } from '@/core/types/nodes';
-import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
+import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';

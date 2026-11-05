@@ -10,7 +10,7 @@ import { type LocalModule, type Settings } from '../types';
 import NoteValidator from './validate';
 import { validateCustomInlineMetadata } from '../metadata/utils';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
-import { isArchInlineLinkKey } from '@/core/arch/syntax';
+import { isArchInlineLinkKey } from '@/core/arch';
 
 export const noteModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

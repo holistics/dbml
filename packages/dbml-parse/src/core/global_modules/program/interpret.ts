@@ -31,7 +31,7 @@ import {
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import { pushExternal, validateDepBlocks } from './utils';
-import { archSort } from '@/core/arch/syntax';
+import { archSort } from '@/core/arch';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
