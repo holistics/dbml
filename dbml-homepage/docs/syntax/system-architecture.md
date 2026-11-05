@@ -4,14 +4,14 @@ title: System Architecture
 
 # System Architecture
 
-DBML can also describe how your system is built. **Nodes** are the things in it, such as servers,
-databases, the internet or a team. **Groups** are boundaries around them. **Links** show what talks
-to what.
+**System Architecture** is the part of DBML that defines and documents the elements of a system and
+the connections between them. It allows you to model networks, infrastructure, service dependencies
+and deployment environments.
 
 - [Example](#example)
-- [Nodes](#nodes)
-  - [Node Settings](#node-settings)
-  - [Node Icon](#node-icon)
+- [Elements](#elements)
+  - [Element Settings](#element-settings)
+  - [Element Icon](#element-icon)
   - [Role Precedence](#role-precedence)
 - [Links](#links)
   - [Link Settings](#link-settings)
@@ -45,9 +45,10 @@ it too.
 
 Examples below show only the lines that matter.
 
-## Nodes
+## Elements
 
-A node is one thing in your system, such as a server, a database or a team.
+An **architecture element** is one part of your system or something it connects to, such as a
+server, a database or a client. The rest of this page calls it an element.
 
 ```text
 // syntax
@@ -65,38 +66,38 @@ Database "Primary" as pg_primary {
 }
 ```
 
-- `Role`: what the node is, such as `Server`, `Database` or `Queue`. Roles are case-insensitive.
+- `Role`: what the element is, such as `Server`, `Database` or `Queue`. Roles are case-insensitive.
   You cannot make up your own role. See all 32 in
   [Roles and Types](./architecture-roles-and-types.mdx#roles).
-- `name`: the node's name. As everywhere in DBML, a name with spaces or other special characters
+- `name`: the element's name. As everywhere in DBML, a name with spaces or other special characters
   goes in double quotes.
-- (Optional) `as alias`: the name that links, groups and `Metadata` use for the node. Without an
+- (Optional) `as alias`: the name that links, groups and `Metadata` use for the element. Without an
   alias, they use the name.
-- (Optional) `[settings]` or `{ settings }`: see [Node Settings](#node-settings).
+- (Optional) `[settings]` or `{ settings }`: see [Element Settings](#element-settings).
 
-Names and aliases are case-sensitive. Two nodes with the same role and no alias cannot share a
-name. An alias cannot be the same as another alias, or as the name of a node, group or sticky note
-that has no alias.
+Names and aliases are case-sensitive. Two elements with the same role and no alias cannot share a
+name. An alias cannot be the same as another alias, or as the name of an architecture element,
+group or sticky note that has no alias.
 
-With an alias, the name is for people reading the file. It can be any text, even another node's
+With an alias, the name is for people reading the file. It can be any text, even another element's
 name.
 
 In a selective import, write the role before the name, as in
 `use { Monitoring grafana } from './monitoring'`.
 
-### Node Settings
+### Element Settings
 
 Write settings in `[ ]` on one line, or in `{ }` one per line. If a setting is in both, the one in
 `{ }` is used. Setting names are case-insensitive.
 
-- `type`: which product the node is, such as `'postgres'`. See
+- `type`: which product the element is, such as `'postgres'`. See
   [Roles and Types](./architecture-roles-and-types.mdx#types). An unknown type is a warning: the
   file is still valid.
-- `icon`: an image URL starting with `https://` or `data:image/`. See [Node Icon](#node-icon).
+- `icon`: an image URL starting with `https://` or `data:image/`. See [Element Icon](#element-icon).
 - `color`: the icon's color, such as `#336791`. An `icon` image keeps its own colors.
 - `style: dashed`: a dashed outline.
 - `inactive`: marks something not in service, with the same dashed outline.
-- `Note`: text about the node.
+- `Note`: text about the element.
 - Any other `key: value` is a [custom property](./enrichment-visualization.md#custom-properties),
   such as `version: '16.3'`.
 
@@ -113,9 +114,9 @@ Metadata Server api1 {
 Metadata api2 { owner: 'platform-team' }    // no role
 ```
 
-### Node Icon
+### Element Icon
 
-A node's icon is the first of these that applies:
+An element's icon is the first of these that applies:
 
 1. `icon`, if it starts with `https://` or `data:image/`. Any other value is ignored.
 2. The icon for its `type`. An unknown type has no icon.
@@ -134,9 +135,9 @@ Pipeline etl [type: 'airbyte', icon: 'https://example.com/etl.png']
 
 ### Role Precedence
 
-Nodes with different roles can share a name, such as `Server api` and `Database api`. A group or a
-[sticky note](./enrichment-visualization.md#sticky-notes) can also share a name with a node. To
-refer to one of them, write its role, `Group` or `Note`, before the name.
+Elements with different roles can share a name, such as `Server api` and `Database api`. A group or
+a [sticky note](./enrichment-visualization.md#sticky-notes) can also share a name with an element.
+To refer to one of them, write its role, `Group` or `Note`, before the name.
 
 ```text
 Server api
@@ -165,7 +166,7 @@ Link: standby > primary [proto: replication]
 Link: api - sessions
 ```
 
-- `end`: a node or a [group](#groups), by alias or name. If the name is shared, see
+- `end`: an element or a [group](#groups), by alias or name. If the name is shared, see
   [Role Precedence](#role-precedence).
 - `operator`: which side opens the connection. Data can flow both ways over it.
   - `>`: the left side opens it.
@@ -216,11 +217,11 @@ Group "Production" as production [color: #2e7d32] {
 }
 ```
 
-- `name`: the group's name, as for a node. Two groups with no alias cannot share a name.
-- (Optional) `as alias`: as for a node.
+- `name`: the group's name, as for an element. Two groups with no alias cannot share a name.
+- (Optional) `as alias`: as for an element.
 - (Optional) `[settings]`: see [Group Settings](#group-settings).
-- `member`: a node or another group, by alias or name. Every member must be declared, in this file
-  or in an imported one.
+- `member`: an element or another group, by alias or name. Every member must be declared, in this
+  file or in an imported one.
   - Write members on one line separated by spaces, or one per line.
   - On its own line, a member can start with its role, as in `Database orders`.
   - If several groups in a file list the same member, it belongs to the first one. The others
@@ -249,7 +250,7 @@ Write settings in `[ ]`, or as `key: value` lines in `{ }`. Setting names are ca
 - `Note`: text about the group.
 - Any other `key: value` is a [custom property](./enrichment-visualization.md#custom-properties).
 
-As for a node, a `Metadata` key that is a setting changes that setting:
+As for an element, a `Metadata` key that is a setting changes that setting:
 
 ```text
 Metadata Group production { color: #2e7d32 }
