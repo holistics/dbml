@@ -109,7 +109,7 @@ export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler
 export {
   BUILTIN_ROLES, NAME_PRECEDENCE, suggestRole, suggestType, type RoleSpec,
 } from '@/core/arch/vocabulary';
-export { SUPPORTED_TYPES, TYPE_ALIAS, resolveType } from '@/core/arch/icons';
+export { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from '@/core/arch/icons';
 
 export {
   type RelationCardinality,

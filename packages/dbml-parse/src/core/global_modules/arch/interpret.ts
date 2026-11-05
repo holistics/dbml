@@ -1,9 +1,9 @@
 import type Compiler from '@/compiler';
-import { resolveType } from '@/core/arch/icons';
+import { resolveArchType } from '@/core/arch/icons';
 import {
   IMAGE_URL, type ArchPropertyEntry, type ArchNodeRef, archSort, getArchNodeBody, declarationWord, getArchInlineLink, getArchLinkParts, getArchMembers, getArchNodeName,
   getArchNoteDeclaration, getArchNoteText, getArchProperties, getArchNodeField, extractArchNodeSettings,
-} from '@/core/arch/read';
+} from '@/core/arch/syntax';
 import { roleName, suggestType } from '@/core/arch/vocabulary';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
@@ -132,7 +132,7 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
 
   const word = declarationWord(declaration)!;
   const { settings } = element;
-  const type = typeof settings!.type === 'string' ? resolveType(settings!.type) ?? null : null;
+  const type = typeof settings!.type === 'string' ? resolveArchType(settings!.type) ?? null : null;
   if (typeof settings!.type === 'string' && !type) {
     warnings.push(new CompileWarning(CompileErrorCode.UNKNOWN_TYPE, `There is no type called ${settings!.type}. ${suggestType(settings!.type)}`, declaration));
   }

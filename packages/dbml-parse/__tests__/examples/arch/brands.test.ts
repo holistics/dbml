@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SUPPORTED_TYPES, resolveType } from '@/core/arch/icons';
+import { SUPPORTED_ARCH_TYPES, resolveArchType } from '@/core/arch/icons';
 import { compileArch, isNode } from './compileArch';
 
 function compileNode (settings: string) {
@@ -13,11 +13,11 @@ const typeOf = (value: string) => compileNode(`type: '${value}'`).node?.type ?? 
 
 describe('[example] supported types', () => {
   it('reach the model as the listed value, in any case and through an alternative', () => {
-    expect(SUPPORTED_TYPES.filter((name) => typeOf(name) !== name)).toEqual([]);
+    expect(SUPPORTED_ARCH_TYPES.filter((name) => typeOf(name) !== name)).toEqual([]);
     expect(typeOf('Postgres')).toBe('postgres');
     expect(typeOf('PostgreSQL')).toBe('postgres');
     expect(typeOf('k8s')).toBe('kubernetes');
-    expect(resolveType('MONGO')).toBe('mongodb');
+    expect(resolveArchType('MONGO')).toBe('mongodb');
   });
 
   it('an unknown value, a role icon name or a generic word is not a type, and warns', () => {

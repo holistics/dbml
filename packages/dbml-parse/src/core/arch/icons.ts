@@ -1,6 +1,6 @@
 // The values `type` takes. The renderer draws a logo for each one, and the syntax doc lists them.
 
-export const SUPPORTED_TYPES: string[] = [
+export const SUPPORTED_ARCH_TYPES: string[] = [
   'aws',
   'gcp',
   'azure',
@@ -142,7 +142,7 @@ export const SUPPORTED_TYPES: string[] = [
 ];
 
 // Other values accepted for the same type
-export const TYPE_ALIAS: Record<string, string> = {
+export const ARCH_TYPE_ALIAS: Record<string, string> = {
   'postgresql': 'postgres',
   'pg': 'postgres',
   'psql': 'postgres',
@@ -167,11 +167,11 @@ export const TYPE_ALIAS: Record<string, string> = {
   'ec2': 'aws',
 };
 
-const KNOWN = new Set(SUPPORTED_TYPES);
+const ARCH_KNOWN = new Set(SUPPORTED_ARCH_TYPES);
 
 // The supported type a value names, in any case, or undefined
-export function resolveType (value: string): string | undefined {
+export function resolveArchType (value: string): string | undefined {
   const lower = value.trim().toLowerCase();
-  const type = TYPE_ALIAS[lower] ?? lower;
-  return KNOWN.has(type) ? type : undefined;
+  const type = ARCH_TYPE_ALIAS[lower] ?? lower;
+  return ARCH_KNOWN.has(type) ? type : undefined;
 }

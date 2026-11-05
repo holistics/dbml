@@ -1,4 +1,4 @@
-import { SUPPORTED_TYPES, TYPE_ALIAS, resolveType } from './icons';
+import { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from './icons';
 
 export type RoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
 
@@ -56,7 +56,7 @@ export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a bui
 export function suggestRole (typed: string): string {
   const needle = typed.toLowerCase();
 
-  if (resolveType(needle)) {
+  if (resolveArchType(needle)) {
     return `${typed} is a type, not a role:  Database name [type: '${needle}']`;
   }
 
@@ -93,7 +93,7 @@ function within (a: string, b: string, budget: number): boolean {
 
 export function suggestType (typed: string): string {
   const needle = typed.trim().toLowerCase();
-  const near = [...SUPPORTED_TYPES, ...Object.keys(TYPE_ALIAS)]
+  const near = [...SUPPORTED_ARCH_TYPES, ...Object.keys(ARCH_TYPE_ALIAS)]
     .filter((n) => n.startsWith(needle) || needle.startsWith(n) || n.includes(needle) || (n.length > 3 && within(n, needle, 2)))
     .slice(0, 6);
   return near.length ? `Did you mean: ${near.join(', ')}?` : 'The node shows its role\'s icon.';

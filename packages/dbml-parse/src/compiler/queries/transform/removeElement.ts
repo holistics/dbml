@@ -1,6 +1,6 @@
 import {
   archSort, getArchNodeBody, getArchInlineLink, getArchInlineLinks, getArchLinkParts, getArchMembers,
-} from '@/core/arch/read';
+} from '@/core/arch/syntax';
 import { resolveName } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
 import { FunctionApplicationNode, ListExpressionNode, type SyntaxNode } from '@/core/types/nodes';

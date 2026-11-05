@@ -18,7 +18,7 @@ import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
 import {
   getArchNodeBody, handleOf, getArchLinkParts, roleOf,
-} from '@/core/arch/read';
+} from '@/core/arch/syntax';
 import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
