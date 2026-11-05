@@ -22,7 +22,7 @@ import type {
 import type { Token } from '../../types/model_structure/element';
 import type { ArchElementType } from '../../types/model_structure/link';
 import type {
-  DiagramView, Group as RawGroup, Link as RawLink, Node as RawNode,
+  DiagramView, ArchGroup as RawGroup, ArchLink as RawLink, ArchNode as RawNode,
 } from '@dbml/parse';
 
 class Database extends Element {

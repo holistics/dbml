@@ -4,7 +4,7 @@ import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchElementType } from '../../types/model_structure/link';
-import type { ArchSettings, LinkOp, Link as RawLink } from '@dbml/parse';
+import type { ArchSettings, ArchLinkOp, ArchLink as RawLink } from '@dbml/parse';
 
 class Link extends Element {
   declare id: number;
@@ -12,7 +12,7 @@ class Link extends Element {
   fromType: ArchElementType;
   toId: number;
   toType: ArchElementType;
-  op: LinkOp;
+  op: ArchLinkOp;
   settings: ArchSettings;
   database: DatabaseType;
   dbState: DbStateType;

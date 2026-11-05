@@ -3,7 +3,7 @@ import type { Token } from '../../types/model_structure/element';
 import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
-import type { ArchSettings, CustomMetadata, Node as RawNode } from '@dbml/parse';
+import type { ArchSettings, CustomMetadata, ArchNode as RawNode } from '@dbml/parse';
 
 // An architecture node: `Server "API 1" as api1`
 class Node extends Element {

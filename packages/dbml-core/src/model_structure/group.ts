@@ -5,7 +5,7 @@ import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchElementType } from '../../types/model_structure/link';
 import type {
-  ArchRef, ArchSettings, CustomMetadata, Group as RawGroup,
+  ArchRef, ArchSettings, CustomMetadata, ArchGroup as RawGroup,
 } from '@dbml/parse';
 
 // Members are resolved once every element exists (`Database.processArch`).
