@@ -13,6 +13,8 @@ function normalizeProject (files: Record<string, string>, entry: string): Normal
 
 const handleOf = (e: { alias: string | null; name: string }) => e.alias ?? e.name;
 
+const ARCH = '---\ndiagram_type: arch\n---\n';
+
 describe('@dbml/core - architecture files', () => {
   const samples: Record<string, { files: Record<string, string>; entry: string }> = {
     inline: { files: { '/d.dbml': INLINE_FILE }, entry: '/d.dbml' },
@@ -43,18 +45,18 @@ describe('@dbml/core - architecture files', () => {
     await expect(JSON.stringify(summary, null, 2)).toMatchFileSnapshot(path.resolve(__dirname, `${name}.out.json`));
   });
 
-  test('front matter sets the layout direction, and a node keeps its icon URL and custom properties', () => {
+  test('front matter keeps its keys, and a node keeps its icon URL and custom properties', () => {
     const model = normalizeProject({
       '/d.dbml': [
         '---',
         'diagram_type: arch',
-        'direction: down',
+        'title: x',
         '---',
         "Pipeline etl [type: 'airbyte', icon: 'https://example.com/a.png', owner: 'data', color: #336791]",
         "Group g [style: dashed] {\n  etl\n  team: 'ops'\n}",
       ].join('\n'),
     }, '/d.dbml');
-    expect(model.database[1].frontMatter).toEqual({ diagram_type: 'arch', direction: 'down' });
+    expect(model.database[1].frontMatter).toEqual({ diagram_type: 'arch', title: 'x' });
     const [node] = Object.values(model.nodes!);
     expect(node).toMatchObject({ type: 'airbyte', icon: 'https://example.com/a.png', settings: { type: 'airbyte', icon: 'https://example.com/a.png', color: '#336791' } });
     expect(node.metadata.owner).toMatchObject({ value: 'data', type: 'string' });
@@ -62,14 +64,14 @@ describe('@dbml/core - architecture files', () => {
     expect(group.settings).toEqual({ style: 'dashed' });
     expect(group.metadata.team).toMatchObject({ value: 'ops' });
 
-    const bare = normalizeProject({ '/d.dbml': 'Server a' }, '/d.dbml');
+    const bare = normalizeProject({ '/d.dbml': 'Table t {\n  id int\n}' }, '/d.dbml');
     expect(bare.database[1].frontMatter).toBeUndefined();
   });
 
   test('a DBML file and an architecture file import each other, each read as its own kind', () => {
     const files = {
       '/schema.dbml': 'Table users {\n  id int [pk]\n}',
-      '/infra.dbml': "use * from './schema'\nServer api\nDatabase main { type: 'postgres' }\nLink: api > main",
+      '/infra.dbml': `${ARCH}use * from './schema'\nServer api\nDatabase main { type: 'postgres' }\nLink: api > main`,
       '/report.dbml': "use * from './infra'\nTable reports {\n  id int [pk]\n}",
     };
 
@@ -87,7 +89,7 @@ describe('@dbml/core - architecture files', () => {
 
   test('a group owns a node and a sticky note, by type and id, and export carries all three', () => {
     const parser = new Parser();
-    parser.setDbmlSource('/d.dbml', "Server api\nNote memo { 'hello' }\nGroup g { api memo }");
+    parser.setDbmlSource('/d.dbml', `${ARCH}Server api\nNote memo { 'hello' }\nGroup g { api memo }`);
     const database = parser.parseDbmlProject('/d.dbml');
     const model = database.normalize();
 
@@ -108,7 +110,7 @@ describe('@dbml/core - architecture files', () => {
   });
 
   test('a link to a sticky note names it by type, and ids are counted per type', () => {
-    const model = normalizeProject({ '/d.dbml': "Server api\nGroup g { api }\nNote memo { 'x' }\nLink: api > memo\nLink: g - api" }, '/d.dbml');
+    const model = normalizeProject({ '/d.dbml': `${ARCH}Server api\nGroup g { api }\nNote memo { 'x' }\nLink: api > memo\nLink: g - api` }, '/d.dbml');
     const [node] = Object.values(model.nodes!);
     const [group] = Object.values(model.groups!);
     const [note] = Object.values(model.notes);
@@ -125,7 +127,7 @@ describe('@dbml/core - architecture files', () => {
   });
 
   test('an inline link normalizes like a Link: its ends become the two elements\' ids', () => {
-    const model = normalizeProject({ '/d.dbml': 'Server api [link: > main]\nDatabase main' }, '/d.dbml');
+    const model = normalizeProject({ '/d.dbml': `${ARCH}Server api [link: > main]\nDatabase main` }, '/d.dbml');
     const [api, main] = Object.values(model.nodes!);
     const [link] = Object.values(model.links!);
     expect(link).toMatchObject({ fromId: api.id, toId: main.id, op: '>' });

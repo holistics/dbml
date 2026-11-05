@@ -11,12 +11,20 @@ function compilerFor (source: string): Compiler {
   return new Compiler(layout);
 }
 
+// The architecture sources below leave out their front matter: the helpers add it, and take it off what they return
+const FRONT_MATTER = '---\ndiagram_type: arch\n---\n';
+
+function withoutFrontMatter (text: string): string {
+  expect(text.startsWith(FRONT_MATTER)).toBe(true);
+  return text.slice(FRONT_MATTER.length);
+}
+
 function update (source: string, target: ElementIdentifier, settingName: string, value: string | null | undefined): string {
-  return compilerFor(source).updateElementSetting(DEFAULT_ENTRY, target, settingName, value);
+  return withoutFrontMatter(compilerFor(FRONT_MATTER + source).updateElementSetting(DEFAULT_ENTRY, target, settingName, value));
 }
 
 function errorsOf (source: string): string[] {
-  const compiler = compilerFor(source);
+  const compiler = compilerFor(FRONT_MATTER + source);
   const { ast } = compiler.parseFile(DEFAULT_ENTRY).getValue();
   return [
     ...compiler.parseFile(DEFAULT_ENTRY).getErrors(),
@@ -27,8 +35,8 @@ function errorsOf (source: string): string[] {
 }
 
 function rename (source: string, oldHandle: string, newName: string): string {
-  const changes = compilerFor(source).renameElement(DEFAULT_ENTRY, oldHandle, newName);
-  return changes.get(DEFAULT_ENTRY.absolute) ?? source;
+  const changes = compilerFor(FRONT_MATTER + source).renameElement(DEFAULT_ENTRY, oldHandle, newName);
+  return withoutFrontMatter(changes.get(DEFAULT_ENTRY.absolute) ?? FRONT_MATTER + source);
 }
 
 describe('updateElementSetting - architecture element', () => {
@@ -105,7 +113,7 @@ Note memo [color: #00ff00] {
     const source = `Table users {
   id int
 }`;
-    expect(update(source, { kind: SymbolKind.Element, name: 'users' }, 'color', '#ff0000')).toBe(source);
+    expect(compilerFor(source).updateElementSetting(DEFAULT_ENTRY, { kind: SymbolKind.Element, name: 'users' }, 'color', '#ff0000')).toBe(source);
   });
 });
 
@@ -282,7 +290,7 @@ Server web`;
 
   it('is a no-op when no element has that handle', () => {
     const source = 'Server api';
-    expect(compilerFor(source).renameElement(DEFAULT_ENTRY, 'web', 'other').size).toBe(0);
+    expect(compilerFor(FRONT_MATTER + source).renameElement(DEFAULT_ENTRY, 'web', 'other').size).toBe(0);
   });
 
   it('does not rename a DBML table', () => {

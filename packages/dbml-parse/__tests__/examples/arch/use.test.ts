@@ -9,7 +9,7 @@ const ARCH = '---\ndiagram_type: arch\n---\n';
 
 function compile (x: string, main: string) {
   const layout = new MemoryProjectLayout();
-  layout.setSource(Filepath.from('/x.dbml'), x);
+  layout.setSource(Filepath.from('/x.dbml'), ARCH + x);
   layout.setSource(Filepath.from('/main.dbml'), ARCH + main);
   const compiler = new Compiler(layout);
   const entry = Filepath.from('/main.dbml');
@@ -41,7 +41,7 @@ describe('[example] selective imports in an architecture file', () => {
 
   test('Kind imports nothing and is refused, since there are no custom roles', () => {
     const layout = new MemoryProjectLayout();
-    layout.setSource(Filepath.from('/x.dbml'), 'Server api');
+    layout.setSource(Filepath.from('/x.dbml'), `${ARCH}Server api`);
     layout.setSource(Filepath.from('/main.dbml'), `${ARCH}use { Kind Lakehouse } from './x'`);
     const compiler = new Compiler(layout);
     const entry = Filepath.from('/main.dbml');

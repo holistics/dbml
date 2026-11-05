@@ -1,4 +1,3 @@
-import { getArchRoleName } from '@/core/arch';
 import { type SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export type FileKind = 'dbml' | 'arch';
@@ -10,8 +9,6 @@ export const isArchDiagramType = (type: string | null | undefined): boolean => !
 // What decides a file's kind, read from its tokens without parsing
 export interface FileScan {
   frontMatter: Record<string, string>;
-  // Lowercased words that open a top-level declaration
-  topWords: string[];
 }
 
 export function readFrontMatter (block: string): Record<string, string> {
@@ -33,48 +30,12 @@ export function frontMatterToken (tokens: readonly SyntaxToken[]): SyntaxToken |
   return tokens[0]?.leadingTrivia.find((t) => t.kind === SyntaxTokenKind.FRONT_MATTER);
 }
 
-const OPENERS = new Set([
-  SyntaxTokenKind.LBRACE,
-  SyntaxTokenKind.LBRACKET,
-  SyntaxTokenKind.LPAREN,
-]);
-const CLOSERS = new Set([
-  SyntaxTokenKind.RBRACE,
-  SyntaxTokenKind.RBRACKET,
-  SyntaxTokenKind.RPAREN,
-]);
-
 export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
   const block = frontMatterToken(tokens);
-  const scan: FileScan = {
-    frontMatter: block ? readFrontMatter(block.value) : {},
-    topWords: [],
-  };
-
-  let depth = 0;
-  let previousLine = -1;
-  for (const token of tokens) {
-    if (token.kind === SyntaxTokenKind.EOF) break;
-
-    const startsLine = token.startPos.line > previousLine;
-    previousLine = token.endPos.line;
-
-    if (OPENERS.has(token.kind)) depth += 1;
-    else if (CLOSERS.has(token.kind)) depth = Math.max(0, depth - 1);
-    if (depth !== 0 || !startsLine || token.kind !== SyntaxTokenKind.IDENTIFIER) continue;
-
-    scan.topWords.push(token.value.toLowerCase());
-  }
-
-  return scan;
+  return { frontMatter: block ? readFrontMatter(block.value) : {} };
 }
 
-// A `Kind` line marks an architecture file so that it can be reported
-const isArchWord = (word: string) => word === 'group' || word === 'kind' || getArchRoleName(word) !== undefined;
-
+// Only `diagram_type` in front matter makes a file an architecture file
 export function decideFileKind (scan: FileScan): FileKind {
-  if (scan.frontMatter.diagram_type !== undefined) {
-    return isArchDiagramType(scan.frontMatter.diagram_type) ? 'arch' : 'dbml';
-  }
-  return scan.topWords.some(isArchWord) ? 'arch' : 'dbml';
+  return isArchDiagramType(scan.frontMatter.diagram_type) ? 'arch' : 'dbml';
 }

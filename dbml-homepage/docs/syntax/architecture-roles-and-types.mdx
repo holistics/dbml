@@ -7,15 +7,15 @@ import { archRoleIcons, archTypeIcons } from '@site/src/data/archIcons';
 
 # Roles and Types
 
-This page lists every built-in role and every value of the `type` setting in an
-[architecture diagram](./architecture-diagrams.md), each with the icon it gives a node.
-[Node Icon](./architecture-diagrams.md#node-icon) explains which icon a node uses when it has more
+This page lists every built-in role and every value of the `type` setting in
+[System Architecture](./system-architecture.md), each with the icon it gives a node.
+[Node Icon](./system-architecture.md#node-icon) explains which icon a node uses when it has more
 than one.
 
 ## Roles
 
-Each role has its own icon, drawn in the color of the role's category. A node uses its role's icon
-when it has no `type` and no `icon`.
+Each role has its own icon, in the color of the role's category. A node uses its role's icon when
+it has no `type` and no `icon`.
 
 <RoleIconGrid items={archRoleIcons} />
 
@@ -25,10 +25,10 @@ The `type` setting takes one of these values, such as `type: 'postgres'`. Values
 case-insensitive. Some cards list other values after "also"; they give the same icon. For example,
 `'postgres'`, `'Postgres'` and `'postgresql'` all give the PostgreSQL icon.
 
-If the value is not on this list, the node uses its role's icon, and the editor shows a warning
-that suggests close values when there are any.
+If the value is not on this list, the node uses its role's icon, and it is a warning that suggests
+close values when there are any.
 
-On this page, type icons are drawn in the text color. On the diagram, a type's icon is drawn in the
-color of the node's role category, or in the node's `color` when it has one.
+Type icons are shown here in the text color. A node's type icon takes the color of its role's
+category, or the node's `color` when it has one.
 
 <TypeIconGrid items={archTypeIcons} />

@@ -27,11 +27,16 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Core Database Markup',
         },
         {
+          id: 'syntax/data-lineage',
+          type: 'doc',
+          label: 'Data Lineage',
+        },
+        {
           type: 'category',
-          label: 'Architecture Diagrams',
-          collapsed: true,
+          label: 'System Architecture',
+          collapsed: false,
           collapsible: true,
-          link: { type: 'doc', id: 'syntax/architecture-diagrams' },
+          link: { type: 'doc', id: 'syntax/system-architecture' },
           items: [
             {
               id: 'syntax/architecture-roles-and-types',
@@ -39,11 +44,6 @@ const SidebarConfigs: SidebarsConfig = {
               label: 'Roles and Types',
             },
           ],
-        },
-        {
-          id: 'syntax/data-lineage',
-          type: 'doc',
-          label: 'Data Lineage',
         },
         {
           id: 'syntax/enrichment-visualization',

@@ -11,7 +11,8 @@ import type { NetworkModel } from './compileArch';
 
 // The original architecture compiler's tests, run through @dbml/parse
 
-const one = (src: string) => compileArch({ '/main.arch.dbml': src });
+const ARCH = '---\ndiagram_type: arch\n---\n';
+const one = (src: string) => compileArch({ '/main.arch.dbml': ARCH + src });
 const codes = (src: string) => one(src).diagnostics.map((d) => d.code);
 
 describe('the architecture dialect on DBML\'s grammar', () => {
@@ -111,9 +112,10 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   });
 
   it('closes the vocabulary against any word that is not a role', () => {
-    // With no diagram_type and no role word the file is DBML, so DBML's parser reports it
-    expect(codes('Microservice x').every((code) => code.startsWith('parse-'))).toBe(true);
-    expect(codes('---\ndiagram_type: arch\n---\nMicroservice x')).toEqual(['unknown-role']);
+    // With no diagram_type the file is DBML, so DBML's parser reports it
+    const schema = compileArch({ '/d.dbml': 'Microservice x' }, '/d.dbml');
+    expect(schema.diagnostics.map((d) => d.code).every((code) => code.startsWith('parse-'))).toBe(true);
+    expect(codes('Microservice x')).toEqual(['unknown-role']);
   });
 
   it('refuses a Kind, since there are no custom roles', () => {
@@ -133,7 +135,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
 
   it('gives every diagnostic a real line and column', () => {
     const { diagnostics } = one('Server a\nMicroservice x');
-    expect(diagnostics[0]).toMatchObject({ line: 2, column: 1, file: '/main.arch.dbml' });
+    expect(diagnostics[0]).toMatchObject({ line: 5, column: 1, file: '/main.arch.dbml' });
   });
 });
 
@@ -171,7 +173,7 @@ describe('the worked example', () => {
 
 describe('what decides the dialect', () => {
   it('never reads the file name, which is what makes a cloud document work', () => {
-    const source = "Database m1 [type: 'mongodb']\nServer a\nLink: a > m1";
+    const source = `${ARCH}Database m1 [type: 'mongodb']\nServer a\nLink: a > m1`;
     const named = compileArch({ '/infra.arch.dbml': source }, '/infra.arch.dbml');
     const plain = compileArch({ '/untitled.dbml': source }, '/untitled.dbml');
     // dbdiagram's cloud documents have no path at all, so a name can never be the signal
@@ -183,14 +185,15 @@ describe('what decides the dialect', () => {
     }
   });
 
-  it('reads diagram_type off front matter, and does not need it', () => {
+  it('reads diagram_type off front matter, and needs it', () => {
     const marked = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\n\nServer a' }, '/d.dbml');
     expect(marked.diagramType).toBe('arch');
     expect(marked.diagnostics).toEqual([]);
 
     const bare = compileArch({ '/d.dbml': 'Server a' }, '/d.dbml');
     expect(bare.diagramType).toBeNull();
-    expect(bare.model.elements.size).toBe(marked.model.elements.size);
+    expect(isArchitecture(bare)).toBe(false);
+    expect(bare.diagnostics.length).toBeGreaterThan(0);
 
     const schema = compileArch({ '/d.dbml': '---\ndiagram_type: dbml\n---\nServer a' }, '/d.dbml');
     expect(schema.diagramType).toBe('dbml');
@@ -198,17 +201,17 @@ describe('what decides the dialect', () => {
   });
 
   it('refuses diagram_type inside Project, pointing to front matter', () => {
-    const r = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nServer a" }, '/d.dbml');
-    expect(r.diagramType).toBeNull();
+    const r = compileArch({ '/d.dbml': `${ARCH}Project x {\n  diagram_type: 'arch'\n}\nServer a` }, '/d.dbml');
     expect(r.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
   });
 
   it('ignores a diagram_type that is not in front matter', () => {
     const nested = compileArch({ '/d.dbml': "Table t {\n  diagram_type varchar [note: 'arch']\n}\nServer a" }, '/d.dbml');
     expect(nested.diagramType).toBeNull();
-    const commented = compileArch({ '/d.dbml': '// ---\n// diagram_type: dbml\n// ---\nServer a' }, '/d.dbml');
+    expect(isArchitecture(nested)).toBe(false);
+    const commented = compileArch({ '/d.dbml': '// ---\n// diagram_type: arch\n// ---\nServer a' }, '/d.dbml');
     expect(commented.diagramType).toBeNull();
-    expect(isArchitecture(commented)).toBe(true);
+    expect(isArchitecture(commented)).toBe(false);
   });
 
   it('accepts the long spelling, in any case, quoted or not', () => {
@@ -239,8 +242,8 @@ describe('what decides the dialect', () => {
 describe('the naming convention', () => {
   it('resolves a .arch.dbml file through the stock dbml resolver', () => {
     const { model, diagnostics } = compileArch({
-      '/main.arch.dbml': "use * from './packs/devops.arch'\nGroup g { m1 }",
-      '/packs/devops.arch.dbml': 'Database m1',
+      '/main.arch.dbml': `${ARCH}use * from './packs/devops.arch'\nGroup g { m1 }`,
+      '/packs/devops.arch.dbml': `${ARCH}Database m1`,
     }, '/main.arch.dbml');
     expect(diagnostics).toEqual([]);
     expect(model.elements.get('m1')?.parent).toBe('g');
@@ -334,9 +337,10 @@ describe('deciding whether to show an architecture canvas', () => {
     expect(asks("Note n { 'just thinking' }")).toBe(false);
   });
 
-  it('says yes once something is drawn, with no marker and no filename', () => {
-    expect(asks('Server api1')).toBe(true);
-    expect(asks('loadbalancer lb')).toBe(true);
+  it('says yes only with the marker, whatever is drawn', () => {
+    expect(asks('Server api1')).toBe(false);
+    expect(asks(`${ARCH}Server api1`)).toBe(true);
+    expect(asks(`${ARCH}loadbalancer lb`)).toBe(true);
   });
 
   it('says yes to the sample, which is the one a reader will actually open', () => {
@@ -348,7 +352,7 @@ describe('reading one document out of a project', () => {
   it('leaves a DBML schema sitting beside it alone', () => {
     const { model, diagnostics } = compileArch({
       '/main.dbml': 'Table users {\n  id int [pk]\n}\nEnum status { draft }',
-      '/infra.arch.dbml': 'Server api1\nDatabase db1\nLink: api1 > db1',
+      '/infra.arch.dbml': `${ARCH}Server api1\nDatabase db1\nLink: api1 > db1`,
     }, '/infra.arch.dbml');
     expect(diagnostics).toEqual([]);
     expect(model.files).toEqual(['/infra.arch.dbml']);
@@ -358,8 +362,8 @@ describe('reading one document out of a project', () => {
   it('still follows what the entry point imports', () => {
     const { model, diagnostics } = compileArch({
       '/main.dbml': 'Table users {\n  id int [pk]\n}',
-      '/infra.arch.dbml': "use * from './packs/devops.arch'\nGroup g { m1 }",
-      '/packs/devops.arch.dbml': 'Database m1',
+      '/infra.arch.dbml': `${ARCH}use * from './packs/devops.arch'\nGroup g { m1 }`,
+      '/packs/devops.arch.dbml': `${ARCH}Database m1`,
     }, '/infra.arch.dbml');
     expect(diagnostics).toEqual([]);
     expect(model.files).toContain('/packs/devops.arch.dbml');
@@ -396,7 +400,7 @@ Link: api1 > db1
   });
 
   it('takes no name, and the INLINE_FILE sample reads its rows', () => {
-    expect(compileArch({ '/d.dbml': "Project {\n  title: 'x'\n}\nServer a" }, '/d.dbml').diagnostics).toEqual([]);
+    expect(compileArch({ '/d.dbml': `${ARCH}Project {\n  title: 'x'\n}\nServer a` }, '/d.dbml').diagnostics).toEqual([]);
     const { model, diagramType, diagnostics } = compileArch({ '/d': INLINE_FILE }, '/d');
     expect(diagnostics).toEqual([]);
     expect(model.project).toMatchObject({ title: 'DBX network diagram', owner: 'platform-team' });
@@ -412,7 +416,7 @@ Link: api1 > db1
 });
 
 describe('front matter', () => {
-  it('keeps its keys, direction included', () => {
+  it('keeps every key', () => {
     const { model, diagnostics } = compileArch({ '/d.dbml': '---\ndiagram_type: arch\ndirection: down\ntitle: x\n---\nServer a' }, '/d.dbml');
     expect(diagnostics).toEqual([]);
     expect(model.frontMatter).toEqual({ diagram_type: 'arch', direction: 'down', title: 'x' });

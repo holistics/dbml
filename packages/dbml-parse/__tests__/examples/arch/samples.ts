@@ -11,7 +11,10 @@
  * what they describe: the same server answers on more than one of them, and the conversation is
  * the thing being named.
  */
-export const PACK_FILE = `// Elements shared between diagrams. A file that imports them can group and link them.
+export const PACK_FILE = `---
+diagram_type: arch
+---
+// Elements shared between diagrams. A file that imports them can group and link them.
 
 Monitoring "Grafana" as grafana {
   type: 'grafana'
