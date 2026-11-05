@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { Filepath } from '@/core/types/filepath';
-import { BUILTIN_ROLES } from '@/core/arch/vocabulary';
+import { ARCH_BUILTIN_ROLES } from '@/core/arch/vocabulary';
 import { EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE } from './samples';
 import {
   compileArch, isArchitecture, isGroup, isNode,
@@ -260,7 +260,7 @@ describe('the inline sample', () => {
   it('gives every node a built-in role', () => {
     const { model } = compileArch({ '/d': INLINE_FILE }, '/d');
     for (const node of [...model.elements.values()].filter(isNode)) {
-      expect(BUILTIN_ROLES[node.role], `${node.id} -> ${node.role}`).toBeDefined();
+      expect(ARCH_BUILTIN_ROLES[node.role], `${node.id} -> ${node.role}`).toBeDefined();
     }
   });
 });
@@ -566,9 +566,9 @@ describe('a brand is a setting, not a keyword', () => {
   });
 
   it('has 32 roles and no brands among them', () => {
-    expect(Object.keys(BUILTIN_ROLES)).toHaveLength(32);
+    expect(Object.keys(ARCH_BUILTIN_ROLES)).toHaveLength(32);
     for (const brand of ['Postgres', 'Mongo', 'Redis', 'HAProxy', 'Docker', 'Kubernetes']) {
-      expect(BUILTIN_ROLES[brand], brand).toBeUndefined();
+      expect(ARCH_BUILTIN_ROLES[brand], brand).toBeUndefined();
     }
   });
 });
@@ -643,7 +643,7 @@ describe('a role word is case-insensitive, because Table is', () => {
   });
 
   it('has no two built-in words differing only in case, which would make the table ambiguous', () => {
-    const lowered = Object.keys(BUILTIN_ROLES).map((name) => name.toLowerCase());
+    const lowered = Object.keys(ARCH_BUILTIN_ROLES).map((name) => name.toLowerCase());
     expect(new Set(lowered).size).toBe(lowered.length);
   });
 });

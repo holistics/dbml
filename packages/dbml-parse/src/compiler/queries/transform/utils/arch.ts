@@ -2,7 +2,7 @@ import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
   archSort, handleOf, getArchInlineLinks, isTopLevel, isTopLevelNote, roleOf,
 } from '@/core/arch';
-import { resolveName, rolePrecedence } from '@/core/global_modules/arch/utils';
+import { resolveName, getRolePrecedence } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import type {
@@ -30,7 +30,7 @@ const isElement = (declaration: ElementDeclarationNode): boolean => {
 export function findArchElement (compiler: Compiler, filepath: Filepath, handle: string, role?: string): ElementDeclarationNode | undefined {
   return archDeclarations(compiler, filepath)
     .filter((d) => isElement(d) && handleOf(d) === handle && (!role || roleOf(d) === role))
-    .sort((a, b) => rolePrecedence(roleOf(a)) - rolePrecedence(roleOf(b)))[0];
+    .sort((a, b) => getRolePrecedence(roleOf(a)) - getRolePrecedence(roleOf(b)))[0];
 }
 
 // Whether a name written in a link, a group or Metadata means `target`

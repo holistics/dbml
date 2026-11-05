@@ -1,4 +1,4 @@
-import { roleName } from '@/core/arch';
+import { getArchRoleName } from '@/core/arch';
 import { type SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export type FileKind = 'dbml' | 'arch';
@@ -70,7 +70,7 @@ export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
 }
 
 // A `Kind` line marks an architecture file so that it can be reported
-const isArchWord = (word: string) => word === 'group' || word === 'kind' || roleName(word) !== undefined;
+const isArchWord = (word: string) => word === 'group' || word === 'kind' || getArchRoleName(word) !== undefined;
 
 export function decideFileKind (scan: FileScan): FileKind {
   if (scan.frontMatter.diagram_type !== undefined) {

@@ -3,12 +3,12 @@ import {
   type ArchNodeRef, archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isArchInlineLink, isTopLevel, isTopLevelNote,
   getArchLinkParts, getArchMembers, getArchNodeName, roleWord, getArchNodeField, topLevelDeclaration,
 } from '@/core/arch';
-import { roleName, suggestRole } from '@/core/arch';
+import { getArchRoleName, suggestArchRole } from '@/core/arch';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
-  AttributeNode, BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, type SyntaxNode, UseSpecifierNode,
+  AttributeNode, ElementDeclarationNode, type SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -19,7 +19,7 @@ import { extractMetadataValue } from '@/core/utils/interpret';
 import type { MetadataFieldRegistry } from '../metadata/utils';
 import type { GlobalModule } from '../types';
 import {
-  fieldsOf, interpretArchMetadata, interpretElement, interpretLink,
+  getFieldsOf, interpretArchMetadata, interpretElement, interpretLink,
 } from './interpret';
 import { lookupVisible, resolveName } from './utils';
 
@@ -28,10 +28,10 @@ const takesInlineLinks = (declaration: ElementDeclarationNode): boolean => ['nod
 
 const describe = (name: string, role?: string): string => (role ? `${role} ${name}` : name);
 
-const notDeclared = (code: CompileErrorCode, name: string, at: SyntaxNode, role?: string) => new CompileError(code, `${describe(name, role)} is not declared anywhere`, at);
+const makeUndeclaredError = (code: CompileErrorCode, name: string, at: SyntaxNode, role?: string) => new CompileError(code, `${describe(name, role)} is not declared anywhere`, at);
 
 // A table visible under that name, which a link or a group cannot use
-function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: string): CompileError | undefined {
+function makeTableError (compiler: Compiler, node: SyntaxNode, name: string, rule: string): CompileError | undefined {
   if (!lookupVisible(compiler, node.filepath, SymbolKind.Table, name)) return undefined;
   return new CompileError(CompileErrorCode.BINDING_ERROR, `${name} is a table; ${rule}`, node);
 }
@@ -41,7 +41,7 @@ function linkEndpointReferee (compiler: Compiler, ref: ArchNodeRef, name: string
   const found = resolveName(compiler, ref.node.filepath, name, ref.role);
   if (found) return new Report(found);
   return new Report(undefined, [
-    (ref.role ? undefined : tableError(compiler, ref.node, name, 'a link joins elements')) ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, at, ref.role),
+    (ref.role ? undefined : makeTableError(compiler, ref.node, name, 'a link joins elements')) ?? makeUndeclaredError(CompileErrorCode.UNKNOWN_ENDPOINT, name, at, ref.role),
   ]);
 }
 
@@ -61,7 +61,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
       const found = resolveName(compiler, node.filepath, name, ref.role);
       if (found) return new Report(found);
       return new Report(undefined, [
-        (ref.role ? undefined : tableError(compiler, node, name, 'a group lists elements and groups')) ?? notDeclared(CompileErrorCode.UNKNOWN_MEMBER, name, node, ref.role),
+        (ref.role ? undefined : makeTableError(compiler, node, name, 'a group lists elements and groups')) ?? makeUndeclaredError(CompileErrorCode.UNKNOWN_MEMBER, name, node, ref.role),
       ]);
     }
 
@@ -79,7 +79,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
       return found
         ? new Report(found)
         : new Report(undefined, [
-            notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration, role ?? declaration.targetKind?.value),
+            makeUndeclaredError(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration, role ?? declaration.targetKind?.value),
           ]);
     }
 
@@ -120,8 +120,8 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
 
   switch (archSort(declaration)) {
     case 'node':
-      if (getArchNodeName(declaration.name) !== undefined && !roleName(word)) {
-        errors.push(new CompileError(CompileErrorCode.UNKNOWN_ROLE, `${word} is not a role. ${suggestRole(word)}`, declaration));
+      if (getArchNodeName(declaration.name) !== undefined && !getArchRoleName(word)) {
+        errors.push(new CompileError(CompileErrorCode.UNKNOWN_ROLE, `${word} is not a role. ${suggestArchRole(word)}`, declaration));
       }
       break;
 
@@ -144,9 +144,9 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
       const target = new ArchMetadataElementMetadata(declaration).target(compiler);
       if (!target && !errors.length) {
         const name = getArchNodeName(declaration.name) ?? declaration.targetKind?.value ?? 'that';
-        errors.push(notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration));
+        errors.push(makeUndeclaredError(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration));
       }
-      if (target) errors.push(...metadataValueErrors(declaration, fieldsOf(target)));
+      if (target) errors.push(...metadataValueErrors(declaration, getFieldsOf(target)));
       break;
     }
 
@@ -169,7 +169,7 @@ function bindUseSpecifier (compiler: Compiler, specifier: UseSpecifierNode): Rep
   const declaration = found?.declaration;
   if (word && found?.isKind(SymbolKind.Element) && declaration instanceof ElementDeclarationNode) {
     const declaredWord = declarationWord(declaration)!;
-    const expected = archSort(declaration) === 'node' ? roleName(declaredWord) ?? declaredWord : declaredWord;
+    const expected = archSort(declaration) === 'node' ? getArchRoleName(declaredWord) ?? declaredWord : declaredWord;
     if (expected.toLowerCase() !== word.toLowerCase()) {
       errors.push(new CompileError(
         CompileErrorCode.BINDING_ERROR,

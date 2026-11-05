@@ -90,9 +90,9 @@ export interface Database {
   diagramViews: DiagramView[];
   token?: TokenPosition;
   // Architecture entries, present only for an architecture file or when the file imports some
-  nodes?: Node[];
-  groups?: Group[];
-  links?: Link[];
+  nodes?: ArchNode[];
+  groups?: ArchGroup[];
+  links?: ArchLink[];
   // The `---` block at the top of the file, present only when it has keys
   frontMatter?: Record<string, string>;
   // 'arch' for a file read as an architecture diagram; absent for a DBML file
@@ -104,7 +104,7 @@ export type ArchSettings = Record<string, ArchSettingValue>;
 
 // `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique per role;
 // an alias is unique among every handle.
-export interface Node {
+export interface ArchNode {
   name: string;
   alias: string | null;
   // The role's declared spelling
@@ -123,7 +123,7 @@ export interface Node {
   token: TokenPosition;
 }
 
-export interface Group {
+export interface ArchGroup {
   name: string;
   alias: string | null;
   // The members this group owns, in written order: handle and role (`Group` for a group, `Note` for a sticky note)
@@ -146,7 +146,7 @@ export interface ArchRef {
   role: string;
 }
 
-export interface Link {
+export interface ArchLink {
   // Handles and roles of the two endpoints
   from: string;
   fromRole: string;
@@ -435,7 +435,7 @@ export type SchemaElement =
   | TableRecord
   | RecordValue
   | CustomMetadata
-  | Node
-  | Group
-  | Link
+  | ArchNode
+  | ArchGroup
+  | ArchLink
   | ArchSettings;

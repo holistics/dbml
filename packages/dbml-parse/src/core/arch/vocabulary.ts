@@ -1,14 +1,14 @@
 import { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from './icons';
 
-export type RoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
+export type ArchRoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
 
-export interface RoleSpec {
+export interface ArchRoleSpec {
   icon: string;
-  category: RoleCategory;
+  category: ArchRoleCategory;
 }
 
 // The roles an element can have. There are no others, so diagrams map one to one to infrastructure code.
-export const BUILTIN_ROLES: Record<string, RoleSpec> = {
+export const ARCH_BUILTIN_ROLES: Record<string, ArchRoleSpec> = {
   Server: { icon: 'server', category: 'compute' },
   Function: { icon: 'function', category: 'compute' },
   Container: { icon: 'container', category: 'compute' },
@@ -43,24 +43,24 @@ export const BUILTIN_ROLES: Record<string, RoleSpec> = {
   Pipeline: { icon: 'pipeline', category: 'ops' },
 };
 
-const ROLE_BY_LOWER = new Map(Object.keys(BUILTIN_ROLES).map((name) => [name.toLowerCase(), name]));
+const ARCH_ROLE_BY_LOWER = new Map(Object.keys(ARCH_BUILTIN_ROLES).map((name) => [name.toLowerCase(), name]));
 
 // The role's declared spelling, whatever case was typed
-export const roleName = (typed: string): string | undefined => ROLE_BY_LOWER.get(typed.toLowerCase());
+export const getArchRoleName = (typed: string): string | undefined => ARCH_ROLE_BY_LOWER.get(typed.toLowerCase());
 
 // Which element a name without a role means when several share it: the first here wins
-export const NAME_PRECEDENCE: readonly string[] = [...Object.keys(BUILTIN_ROLES), 'Group', 'Note'];
+export const ARCH_NAME_PRECEDENCE: readonly string[] = [...Object.keys(ARCH_BUILTIN_ROLES), 'Group', 'Note'];
 
 export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role, and set `type`, `icon` or `color` to change how the node looks.';
 
-export function suggestRole (typed: string): string {
+export function suggestArchRole (typed: string): string {
   const needle = typed.toLowerCase();
 
   if (resolveArchType(needle)) {
     return `${typed} is a type, not a role:  Database name [type: '${needle}']`;
   }
 
-  const near = Object.keys(BUILTIN_ROLES)
+  const near = Object.keys(ARCH_BUILTIN_ROLES)
     .filter((name) => {
       const known = name.toLowerCase();
       if (known.startsWith(needle) || needle.startsWith(known) || known.includes(needle)) return true;
@@ -68,7 +68,7 @@ export function suggestRole (typed: string): string {
     })
     .slice(0, 6);
   if (near.length) return `Did you mean: ${near.join(', ')}?`;
-  return `The roles are: ${Object.keys(BUILTIN_ROLES).join(', ')}.`;
+  return `The roles are: ${Object.keys(ARCH_BUILTIN_ROLES).join(', ')}.`;
 }
 
 // Edit distance, stopped as soon as it exceeds the budget

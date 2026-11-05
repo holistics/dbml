@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import { handleOf, roleOf } from '@/core/arch';
-import { NAME_PRECEDENCE } from '@/core/arch';
+import { ARCH_NAME_PRECEDENCE } from '@/core/arch';
 import type { Filepath } from '@/core/types/filepath';
 import { ElementDeclarationNode } from '@/core/types/nodes';
 import { type NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
@@ -15,18 +15,18 @@ export function lookupVisible (compiler: Compiler, filepath: Filepath, kind: Sym
 }
 
 // The role an element, group or sticky note was declared with
-export function roleOfSymbol (symbol: NodeSymbol): string | undefined {
+export function getSymbolRole (symbol: NodeSymbol): string | undefined {
   const declaration = symbol.originalSymbol.declaration;
   return declaration instanceof ElementDeclarationNode ? roleOf(declaration) : undefined;
 }
 
 // Lower comes first; a role outside NAME_PRECEDENCE comes last
-export function rolePrecedence (role: string | undefined): number {
-  const at = NAME_PRECEDENCE.indexOf(role ?? '');
-  return at < 0 ? NAME_PRECEDENCE.length : at;
+export function getRolePrecedence (role: string | undefined): number {
+  const at = ARCH_NAME_PRECEDENCE.indexOf(role ?? '');
+  return at < 0 ? ARCH_NAME_PRECEDENCE.length : at;
 }
 
-const precedenceOf = (symbol: NodeSymbol): number => rolePrecedence(roleOfSymbol(symbol));
+const symbolPrecedence = (symbol: NodeSymbol): number => getRolePrecedence(getSymbolRole(symbol));
 
 // An alias is an identifier no other may share, whatever its role: `as` on the declaration, or on the import
 export function isAliasSymbol (symbol: NodeSymbol): boolean {
@@ -36,7 +36,7 @@ export function isAliasSymbol (symbol: NodeSymbol): boolean {
 }
 
 // Everything a name can mean in a file among `kinds`, declared there or imported, first by NAME_PRECEDENCE
-export function candidatesOf (compiler: Compiler, filepath: Filepath, name: string, kinds: SymbolKind[] = [SymbolKind.Element, SymbolKind.StickyNote]): NodeSymbol[] {
+export function getCandidates (compiler: Compiler, filepath: Filepath, name: string, kinds: SymbolKind[] = [SymbolKind.Element, SymbolKind.StickyNote]): NodeSymbol[] {
   const program = getProgramSymbol(compiler, filepath);
   if (!program) return [];
   const publicSchema = getDefaultSchemaSymbol(compiler, program);
@@ -48,18 +48,18 @@ export function candidatesOf (compiler: Compiler, filepath: Filepath, name: stri
       found.push(symbol);
     }
   }
-  return found.sort((a, b) => precedenceOf(a) - precedenceOf(b));
+  return found.sort((a, b) => symbolPrecedence(a) - symbolPrecedence(b));
 }
 
 // What a name means: the element with that role when one is written, else the first by NAME_PRECEDENCE
 export function resolveName (compiler: Compiler, filepath: Filepath, name: string, role?: string, kinds?: SymbolKind[]): NodeSymbol | undefined {
-  const candidates = candidatesOf(compiler, filepath, name, kinds);
-  return role ? candidates.find((symbol) => roleOfSymbol(symbol) === role) : candidates[0];
+  const candidates = getCandidates(compiler, filepath, name, kinds);
+  return role ? candidates.find((symbol) => getSymbolRole(symbol) === role) : candidates[0];
 }
 
 // The name an element, group or sticky note goes by in a file: its handle there, or the name it was imported under
 // (`use { Server api as api2 }` gives `api2`). Links and groups name their ends this way in the model.
-export function localHandle (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): string | undefined {
+export function getLocalHandle (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): string | undefined {
   const original = symbol.originalSymbol;
   if (original.isKind(SymbolKind.StickyNote)) return original.interpretedName(compiler, filepath).name;
   const declaration = original.declaration;

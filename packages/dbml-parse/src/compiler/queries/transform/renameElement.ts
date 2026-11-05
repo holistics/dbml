@@ -3,7 +3,7 @@ import {
   type ArchNodeRef, archSort, getArchRefs, roleOf,
 } from '@/core/arch';
 import {
-  candidatesOf, isAliasSymbol, resolveName, roleOfSymbol,
+  getCandidates, isAliasSymbol, resolveName, getSymbolRole,
 } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
 import { BlockExpressionNode, ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
@@ -31,8 +31,8 @@ export function renameElement (
   if (!declaration?.name || !targetRole) return new Map();
 
   const renamesHandle = !declaration.alias;
-  const others = candidatesOf(this, filepath, newName).filter((symbol) => symbol.originalSymbol.declaration !== declaration);
-  const taken = others.some((symbol) => roleOfSymbol(symbol) === targetRole || isAliasSymbol(symbol));
+  const others = getCandidates(this, filepath, newName).filter((symbol) => symbol.originalSymbol.declaration !== declaration);
+  const taken = others.some((symbol) => getSymbolRole(symbol) === targetRole || isAliasSymbol(symbol));
   if (renamesHandle && newName !== oldHandle && taken) {
     return new Map();
   }
@@ -56,7 +56,7 @@ export function renameElement (
     }
     // Once the new name is shared, a bare reference to another element with that name gets its full name too
     for (const other of others) {
-      const otherRole = roleOfSymbol(other);
+      const otherRole = getSymbolRole(other);
       const target = other.originalSymbol.declaration;
       if (!otherRole || !(target instanceof ElementDeclarationNode)) continue;
       for (const ref of references(this, declarations, target)) {

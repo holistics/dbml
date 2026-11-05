@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
-import { BUILTIN_ROLES, NAME_PRECEDENCE } from '@/core/arch/vocabulary';
+import { ARCH_BUILTIN_ROLES, ARCH_NAME_PRECEDENCE } from '@/core/arch/vocabulary';
 import { fullName } from '@/compiler/queries/transform/utils/arch';
 import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
@@ -97,8 +97,8 @@ describe('[example] a role picks the element', () => {
 
 describe('[example] without a role, NAME_PRECEDENCE picks and the editor warns', () => {
   test('NAME_PRECEDENCE is the 32 roles in order, then Group, then Note', () => {
-    expect(NAME_PRECEDENCE).toHaveLength(34);
-    expect(NAME_PRECEDENCE).toEqual([...Object.keys(BUILTIN_ROLES), 'Group', 'Note']);
+    expect(ARCH_NAME_PRECEDENCE).toHaveLength(34);
+    expect(ARCH_NAME_PRECEDENCE).toEqual([...Object.keys(ARCH_BUILTIN_ROLES), 'Group', 'Note']);
   });
 
   test('a link goes to the Server before the Group, with a warning', () => {

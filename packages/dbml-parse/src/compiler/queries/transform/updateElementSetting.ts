@@ -14,7 +14,7 @@ import {
 import {
   findArchElement, findArchLink, fullName, removeAttributeEdit,
 } from './utils/arch';
-import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
+import { getLocalHandle, getSymbolRole } from '@/core/global_modules/arch/utils';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
 import {
   getArchNodeBody, handleOf, getArchLinkParts, roleOf,
@@ -184,8 +184,8 @@ function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, targ
     const handle = handleOf(definition.element);
     const role = roleOf(definition.element);
     const target = new LinkMetadata(definition.attribute).endpoints(compiler)[1];
-    const targetHandle = target && localHandle(compiler, target, filepath);
-    const targetRole = target && roleOfSymbol(target);
+    const targetHandle = target && getLocalHandle(compiler, target, filepath);
+    const targetRole = target && getSymbolRole(target);
     if (value === null || !definition.element.attributeList || handle === undefined || !role || targetHandle === undefined || !targetRole) return [];
     const setting = formatSetting(settingName, value);
     const line = `Link: ${fullName(handle, role)} ${definition.op} ${fullName(targetHandle, targetRole)}`;
