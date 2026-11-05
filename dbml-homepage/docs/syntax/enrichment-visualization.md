@@ -401,8 +401,9 @@ Ref {
 
 ## Front Matter
 
-Front matter is a block of `key: value` lines between two `---` lines. It must be the first thing
-in the file.
+Front matter is a block of `key: value` lines between two `---` lines. It must be the first thing in the file.
+
+**Example**
 
 ```text
 ---
@@ -417,7 +418,6 @@ Table orders {
 }
 ```
 
-- `diagram_type: arch` makes the file an [architecture file](./system-architecture.md).
-  `architecture` also works, in any case.
-- Custom keys are preserved in the output.
+- `diagram_type: arch` marks the file as an [architecture file](./system-architecture.md). `diagram_type: architecture` also works.
+- Custom keys have no effect, and are kept for tools that read the file.
 - Values can be written with or without quotes.

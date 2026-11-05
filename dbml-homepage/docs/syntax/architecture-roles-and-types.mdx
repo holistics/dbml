@@ -7,28 +7,20 @@ import { archRoleIcons, archTypeIcons } from '@site/src/data/archIcons';
 
 # Roles and Types
 
-This page lists every built-in role and every value of the `type` setting in
-[System Architecture](./system-architecture.md), each with the icon it gives an element.
-[Element Icon](./system-architecture.md#element-icon) explains which icon an element uses when it
-has more than one.
+This page lists the 32 built-in roles and all values of the `type` setting in [System Architecture](./system-architecture.md). For how an element gets its icon, see [Element Icon](./system-architecture.md#element-icon).
 
 ## Roles
 
-Each role has its own icon, in the color of the role's category. An element uses its role's icon
-when it has no `type` and no `icon`.
+The roles are listed in the order [Role Precedence](./system-architecture.md#role-precedence) uses.
 
 <RoleIconGrid items={archRoleIcons} />
 
 ## Types
 
-The `type` setting takes one of these values, such as `type: 'postgres'`. Values are
-case-insensitive. Some cards list other values after "also"; they give the same icon. For example,
-`'postgres'`, `'Postgres'` and `'postgresql'` all give the PostgreSQL icon.
+The `type` setting takes one of these values, such as `type: 'postgres'`. Values are case-insensitive. Values listed after "also" on a card give the same icon. For example, `'postgresql'` gives the same icon as `'postgres'`.
 
-If the value is not on this list, the element uses its role's icon, and it is a warning that
-suggests close values when there are any.
+A value not on this list gives a warning, which suggests close values when there are any.
 
-Type icons are shown here in the text color. An element's type icon takes the color of its role's
-category, or the element's `color` when it has one.
+Type icons are shown here in the text color. An element's type icon takes the color of its role's category, or the element's `color` when it has one.
 
 <TypeIconGrid items={archTypeIcons} />
