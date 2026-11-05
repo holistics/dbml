@@ -54,15 +54,15 @@ describe('[example] architecture rules', () => {
   test('a Kind declaration is refused, since there are no custom roles', () => {
     const { compiler } = project({ '/main.dbml': `${ARCH}Kind Lakehouse [color: '#4a7c59']\nServer api` });
     expect(compiler.validateFile(Filepath.from('/main.dbml')).getErrors().map((e) => e.code)).toEqual([
-      CompileErrorCode.NO_CUSTOM_ROLE,
+      CompileErrorCode.ARCH_NO_CUSTOM_ROLE,
     ]);
   });
 
   test('a word that is not a role is an error that names the nearest roles', () => {
     const { errors } = project({ '/main.dbml': `${ARCH}Sever api\nLakehouse lake` });
     expect(errors.map((e) => [e.code, e.diagnostic])).toEqual([
-      [CompileErrorCode.UNKNOWN_ROLE, 'Sever is not a role. Did you mean: Server?'],
-      [CompileErrorCode.UNKNOWN_ROLE, expect.stringMatching(/^Lakehouse is not a role\. /)],
+      [CompileErrorCode.ARCH_UNKNOWN_ROLE, 'Sever is not a role. Did you mean: Server?'],
+      [CompileErrorCode.ARCH_UNKNOWN_ROLE, expect.stringMatching(/^Lakehouse is not a role\. /)],
     ]);
   });
 
@@ -81,7 +81,7 @@ describe('[example] architecture rules', () => {
     expect(own.db?.nodes?.map((n) => n.name)).toEqual(['web', 'api']);
 
     const broken = project({ '/main.dbml': `${ARCH}Server a [type: 'postgress']\nLink: a > ghost` });
-    expect(broken.interpreted.getErrors().map((e) => e.code)).toContain(CompileErrorCode.UNKNOWN_ENDPOINT);
+    expect(broken.interpreted.getErrors().map((e) => e.code)).toContain(CompileErrorCode.ARCH_UNKNOWN_ENDPOINT);
     expect(broken.interpreted.getWarnings()).toHaveLength(0);
 
     const dbml = project({ '/main.dbml': 'Table users {\n  id int\n}' });

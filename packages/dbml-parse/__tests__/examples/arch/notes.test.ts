@@ -43,8 +43,8 @@ describe('[example] a note in an architecture file is a sticky note', () => {
   });
 
   test('an empty or a malformed inline link on a note is reported', () => {
-    expect(compile("Server a\nNote memo [link] { 'x' }").errors).toEqual([CompileErrorCode.EMPTY_LINK]);
-    expect(compile("Server a\nNote memo [link: a] { 'x' }").errors).toEqual([CompileErrorCode.BAD_LINK]);
+    expect(compile("Server a\nNote memo [link] { 'x' }").errors).toEqual([CompileErrorCode.ARCH_EMPTY_LINK]);
+    expect(compile("Server a\nNote memo [link: a] { 'x' }").errors).toEqual([CompileErrorCode.ARCH_BAD_LINK]);
   });
 
   test('a note needs a body', () => {

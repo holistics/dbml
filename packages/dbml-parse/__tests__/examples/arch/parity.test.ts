@@ -200,9 +200,10 @@ describe('what decides the dialect', () => {
     expect(isArchitecture(schema)).toBe(false);
   });
 
-  it('refuses diagram_type inside Project, pointing to front matter', () => {
-    const r = compileArch({ '/d.dbml': `${ARCH}Project x {\n  diagram_type: 'arch'\n}\nServer a` }, '/d.dbml');
-    expect(r.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
+  it('validates Project as DBML does', () => {
+    const arch = compileArch({ '/d.dbml': `${ARCH}Project x {\n  diagram_type: 'arch'\n}\nServer a` }, '/d.dbml');
+    const dbml = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nTable t {\n  id int\n}" }, '/d.dbml');
+    expect(arch.diagnostics).toEqual(dbml.diagnostics);
   });
 
   it('ignores a diagram_type that is not in front matter', () => {

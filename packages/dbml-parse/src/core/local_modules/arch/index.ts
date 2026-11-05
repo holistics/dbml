@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import {
   archSort, getArchNodeBody, declarationWord, handleOf, getArchInlineLink, getArchInlineLinks, isTopLevel, isTopLevelNote, getArchLinkParts, getArchMembers,
-  getArchNodeName, getArchProperties, getArchProperty, getArchNodeField,
+  getArchNodeName, getArchProperties, getArchProperty,
 } from '@/core/arch';
 import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import { extractMetadataValue, extractHexColor } from '@/core/utils/interpret';
@@ -14,25 +14,7 @@ import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { Settings } from '@/core/utils/validate';
 import NoteValidator from '../note/validate';
-import ProjectValidator from '../project/validate';
 import type { LocalModule } from '../types';
-
-// The rows DBML accepts; `diagram_type` belongs in front matter
-function projectErrors (compiler: Compiler, declaration: ElementDeclarationNode): CompileError[] {
-  const errors = new ProjectValidator(compiler, declaration).validate();
-  for (const row of getArchNodeBody(declaration)) {
-    const key = row instanceof ElementDeclarationNode ? declarationWord(row) : getArchNodeName(getArchNodeField(row)?.callee);
-    if (key?.toLowerCase() !== 'diagram_type') continue;
-    errors.push(new CompileError(
-      CompileErrorCode.DIAGRAM_TYPE_NOT_HERE,
-      'diagram_type has no effect inside Project. It says what the file is, and it is read before '
-      + 'the file is parsed, so it has to be in front matter:\n\n'
-      + '---\ndiagram_type: arch\n---',
-      row,
-    ));
-  }
-  return errors;
-}
 
 const DOTTED_MESSAGE = 'A link end is the name of a node, a group or a sticky note. `a.b` is not a name';
 
@@ -42,14 +24,14 @@ function propertyErrors (declaration: ElementDeclarationNode, sort: 'node' | 'gr
   const fields = sort === 'node' ? NODE_METADATA_FIELDS : GROUP_METADATA_FIELDS;
   const { entries, bad } = getArchProperties(declaration, sort === 'node');
   for (const row of bad) {
-    errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, `A property reads  ${declarationWord(row)}: 'value'`, row));
+    errors.push(new CompileError(CompileErrorCode.ARCH_BAD_PROPERTY, `A property reads  ${declarationWord(row)}: 'value'`, row));
   }
   const seen = new Set<string>();
   for (const entry of entries) {
     const key = entry.key.toLowerCase();
     if (entry.inBody) {
       if (seen.has(key)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_PROPERTY, `${entry.key} is set twice`, entry.node));
+        errors.push(new CompileError(CompileErrorCode.ARCH_DUPLICATE_PROPERTY, `${entry.key} is set twice`, entry.node));
         continue;
       }
       seen.add(key);
@@ -57,7 +39,7 @@ function propertyErrors (declaration: ElementDeclarationNode, sort: 'node' | 'gr
     const field = fields[key];
     if (field ? field.parse(entry.value) !== undefined : extractMetadataValue(entry.value) !== undefined) continue;
     errors.push(new CompileError(
-      CompileErrorCode.BAD_PROPERTY,
+      CompileErrorCode.ARCH_BAD_PROPERTY,
       field ? field.message : `Custom setting '${entry.key}' must be a string, a color literal, a number literal, or a boolean literal`,
       entry.value ?? entry.node,
     ));
@@ -69,16 +51,16 @@ function inlineLinkErrors (declaration: ElementDeclarationNode): CompileError[] 
   const errors: CompileError[] = [];
   for (const attribute of getArchInlineLinks(declaration)) {
     if (attribute.value === undefined) {
-      errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
+      errors.push(new CompileError(CompileErrorCode.ARCH_EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
       continue;
     }
     const end = getArchInlineLink(attribute)?.node;
     if (isAccessExpression(end)) {
-      errors.push(new CompileError(CompileErrorCode.BAD_LINK, DOTTED_MESSAGE, end!));
+      errors.push(new CompileError(CompileErrorCode.ARCH_BAD_LINK, DOTTED_MESSAGE, end!));
       continue;
     }
     if (!getArchNodeName(end)) {
-      errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
+      errors.push(new CompileError(CompileErrorCode.ARCH_BAD_LINK, 'An inline link needs an operator (>, <, <> or -) and then an element name, such as  [link: > api]', attribute));
     }
   }
   return errors;
@@ -94,17 +76,17 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
     case 'node':
     case 'group': {
       if (!getArchNodeName(declaration.name)) {
-        errors.push(new CompileError(CompileErrorCode.MISSING_NAME, `A ${word} needs a name`, declaration));
+        errors.push(new CompileError(CompileErrorCode.ARCH_MISSING_NAME, `A ${word} needs a name`, declaration));
         break;
       }
       errors.push(...inlineLinkErrors(declaration));
       if (sort === 'group') {
         const members = getArchMembers(declaration);
         for (const row of members.bad) {
-          errors.push(new CompileError(CompileErrorCode.BAD_MEMBER, 'A member line holds one member: a name, or a role and a name (Server api)', row));
+          errors.push(new CompileError(CompileErrorCode.ARCH_BAD_MEMBER, 'A member line holds one member: a name, or a role and a name (Server api)', row));
         }
         for (const ref of members.refs.filter((member) => isAccessExpression(member.node))) {
-          errors.push(new CompileError(CompileErrorCode.BAD_MEMBER, 'A member is the name of a node, a group or a sticky note. `a.b` is not a name', ref.node));
+          errors.push(new CompileError(CompileErrorCode.ARCH_BAD_MEMBER, 'A member is the name of a node, a group or a sticky note. `a.b` is not a name', ref.node));
         }
       }
       errors.push(...propertyErrors(declaration, sort));
@@ -112,28 +94,28 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
     }
 
     case 'kind': {
-      errors.push(new CompileError(CompileErrorCode.NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, declaration));
+      errors.push(new CompileError(CompileErrorCode.ARCH_NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, declaration));
       break;
     }
 
     case 'link': {
       if (!getArchNodeBody(declaration)[0]) {
-        errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'A Link needs two endpoints:  Link: a > b', declaration));
+        errors.push(new CompileError(CompileErrorCode.ARCH_EMPTY_LINK, 'A Link needs two endpoints:  Link: a > b', declaration));
         break;
       }
       const parts = getArchLinkParts(declaration);
       const dotted = [parts?.from?.node, parts?.to?.node].find(isAccessExpression);
       if (dotted) {
-        errors.push(new CompileError(CompileErrorCode.BAD_LINK, DOTTED_MESSAGE, dotted));
+        errors.push(new CompileError(CompileErrorCode.ARCH_BAD_LINK, DOTTED_MESSAGE, dotted));
         break;
       }
       if (!parts || !getArchNodeName(parts.from?.node) || !getArchNodeName(parts.to?.node)) {
-        errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'A Link reads  a > b,  a < b,  a <> b  or  a - b', declaration));
+        errors.push(new CompileError(CompileErrorCode.ARCH_BAD_LINK, 'A Link reads  a > b,  a < b,  a <> b  or  a - b', declaration));
         break;
       }
       if (declaration.attributeList && parts.row?.settings) {
         errors.push(new CompileError(
-          CompileErrorCode.BAD_LINK,
+          CompileErrorCode.ARCH_BAD_LINK,
           'Write the link settings in one place: before the colon or after the second end',
           parts.row.settings,
         ));
@@ -141,7 +123,7 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
       for (const attribute of (parts.row?.settings ?? declaration.attributeList)?.elementList ?? []) {
         if (!(attribute instanceof AttributeNode) || getArchNodeName(attribute.name)?.toLowerCase() !== 'color') continue;
         if (extractHexColor(attribute.value) === undefined) {
-          errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, "'color' must be a color literal", attribute.value ?? attribute));
+          errors.push(new CompileError(CompileErrorCode.ARCH_BAD_PROPERTY, "'color' must be a color literal", attribute.value ?? attribute));
         }
       }
       break;
@@ -152,11 +134,11 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
       for (const row of getArchNodeBody(declaration)) {
         const entry = row instanceof ElementDeclarationNode ? getArchProperty(row) : undefined;
         if (!entry || entry.value === undefined) {
-          errors.push(new CompileError(CompileErrorCode.BAD_PROPERTY, "A Metadata field must use the 'key: value' syntax", row));
+          errors.push(new CompileError(CompileErrorCode.ARCH_BAD_PROPERTY, "A Metadata field must use the 'key: value' syntax", row));
           continue;
         }
         if (seen.has(entry.key.toLowerCase())) {
-          errors.push(new CompileError(CompileErrorCode.DUPLICATE_PROPERTY, 'Duplicate Metadata fields are defined', row));
+          errors.push(new CompileError(CompileErrorCode.ARCH_DUPLICATE_PROPERTY, 'Duplicate Metadata fields are defined', row));
           continue;
         }
         seen.add(entry.key.toLowerCase());
@@ -185,8 +167,7 @@ export const archModule: LocalModule = {
         ...new NoteValidator(compiler, note).validate(),
       ]);
     }
-    if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
-    if (archSort(node) === 'project') return new Report(undefined, projectErrors(compiler, node));
+    if (!isArchDeclaration(node)) return Report.create(PASS_THROUGH);
     return validate(node);
   },
 

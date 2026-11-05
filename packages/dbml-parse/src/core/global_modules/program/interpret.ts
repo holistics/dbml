@@ -131,11 +131,11 @@ export default class ProgramInterpreter {
         to,
       ].sort().join('\u0001');
       if (seen.has(key)) {
-        this.warnings.push(new CompileWarning(CompileErrorCode.DUPLICATE_LINK, `${link.from} and ${link.to} are already connected`, declaration));
+        this.warnings.push(new CompileWarning(CompileErrorCode.ARCH_DUPLICATE_LINK, `${link.from} and ${link.to} are already connected`, declaration));
       }
       seen.add(key);
       if (parent.get(from) === to || parent.get(to) === from) {
-        this.warnings.push(new CompileWarning(CompileErrorCode.NESTED_ENDPOINTS, `${link.from} is already inside ${link.to}`, declaration));
+        this.warnings.push(new CompileWarning(CompileErrorCode.ARCH_NESTED_ENDPOINTS, `${link.from} is already inside ${link.to}`, declaration));
       }
     }
 

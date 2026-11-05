@@ -14,17 +14,6 @@ import type { SyntaxToken } from '@/core/types/tokens';
 import {
   type FileKind, type FileScan, decideFileKind, scanTokens,
 } from './queries/files/fileKind';
-
-// Front matter is read in every file, so each file can say what it is
-const FILE_KIND_LEXER: LexerOptions = {
-  allowFrontMatter: true,
-};
-
-// Every switch inside is off by default
-export interface DialectOptions {
-  lexer?: LexerOptions;
-  parser?: ParserOptions;
-}
 import {
   nodeFullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
@@ -69,6 +58,17 @@ import {
   addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString, type TypedValue,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
+
+// Front matter is read in every file, so each file can say what it is
+const FILE_KIND_LEXER: LexerOptions = {
+  allowFrontMatter: true,
+};
+
+// Every switch inside is off by default
+export interface DialectOptions {
+  lexer?: LexerOptions;
+  parser?: ParserOptions;
+}
 
 // Re-export types
 export { ScopeKind } from './types';

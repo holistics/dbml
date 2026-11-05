@@ -77,7 +77,7 @@ function getAmbiguityWarnings (
       : `${others.slice(0, -1).join(', ')} or ${others[others.length - 1]} for the others`;
   return [
     new CompileWarning(
-      CompileErrorCode.AMBIGUOUS_NAME,
+      CompileErrorCode.ARCH_AMBIGUOUS_NAME,
       `${name} matches ${listed}; ${used} is used. Write ${rest}.`,
       at,
     ),
@@ -243,7 +243,7 @@ export function interpretElement (
   if (typeof settings!.type === 'string' && !type) {
     warnings.push(
       new CompileWarning(
-        CompileErrorCode.UNKNOWN_TYPE,
+        CompileErrorCode.ARCH_UNKNOWN_TYPE,
         `There is no type called ${settings!.type}. ${suggestType(settings!.type)}`,
         declaration,
       ),

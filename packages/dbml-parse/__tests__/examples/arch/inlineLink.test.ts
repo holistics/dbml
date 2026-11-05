@@ -54,13 +54,13 @@ describe('[example] inline links', () => {
 
   test('a link with no target, with no operator, to nothing, or to a table is an error', () => {
     expect(compile('Server api [link]').errors).toEqual([
-      [CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]'],
+      [CompileErrorCode.ARCH_EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]'],
     ]);
     expect(compile('Server api [link: db]\nDatabase db').errors).toEqual([
-      [CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]'],
+      [CompileErrorCode.ARCH_BAD_LINK, 'An inline link needs an operator (>, <, <> or -) and then an element name, such as  [link: > api]'],
     ]);
     expect(compile('Server api [link: > ghost]').errors).toEqual([
-      [CompileErrorCode.UNKNOWN_ENDPOINT, 'ghost is not declared anywhere'],
+      [CompileErrorCode.ARCH_UNKNOWN_ENDPOINT, 'ghost is not declared anywhere'],
     ]);
     expect(compile("use * from './schema'\nServer api [link: > users]", { '/schema.dbml': 'Table users {\n  id int\n}' }).errors).toEqual([
       [CompileErrorCode.BINDING_ERROR, 'users is a table; a link joins elements'],
@@ -69,7 +69,7 @@ describe('[example] inline links', () => {
 
   test('an inline link and a top-level Link between the same two elements warn as a duplicate', () => {
     const { warnings, db } = compile('Server api [link: > db]\nDatabase db\nLink: db < api');
-    expect(warnings).toEqual([CompileErrorCode.DUPLICATE_LINK]);
+    expect(warnings).toEqual([CompileErrorCode.ARCH_DUPLICATE_LINK]);
     expect(db?.links).toHaveLength(2);
   });
 

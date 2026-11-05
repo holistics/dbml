@@ -41,7 +41,7 @@ function linkEndpointReferee (compiler: Compiler, ref: ArchNodeRef, name: string
   const found = resolveName(compiler, ref.node.filepath, name, ref.role);
   if (found) return new Report(found);
   return new Report(undefined, [
-    (ref.role ? undefined : makeTableError(compiler, ref.node, name, 'a link joins elements')) ?? makeUndeclaredError(CompileErrorCode.UNKNOWN_ENDPOINT, name, at, ref.role),
+    (ref.role ? undefined : makeTableError(compiler, ref.node, name, 'a link joins elements')) ?? makeUndeclaredError(CompileErrorCode.ARCH_UNKNOWN_ENDPOINT, name, at, ref.role),
   ]);
 }
 
@@ -61,7 +61,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
       const found = resolveName(compiler, node.filepath, name, ref.role);
       if (found) return new Report(found);
       return new Report(undefined, [
-        (ref.role ? undefined : makeTableError(compiler, node, name, 'a group lists elements and groups')) ?? makeUndeclaredError(CompileErrorCode.UNKNOWN_MEMBER, name, node, ref.role),
+        (ref.role ? undefined : makeTableError(compiler, node, name, 'a group lists elements and groups')) ?? makeUndeclaredError(CompileErrorCode.ARCH_UNKNOWN_MEMBER, name, node, ref.role),
       ]);
     }
 
@@ -79,7 +79,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
       return found
         ? new Report(found)
         : new Report(undefined, [
-            makeUndeclaredError(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration, role ?? declaration.targetKind?.value),
+            makeUndeclaredError(CompileErrorCode.ARCH_UNKNOWN_METADATA_TARGET, name, declaration, role ?? declaration.targetKind?.value),
           ]);
     }
 
@@ -99,7 +99,7 @@ function metadataValueErrors (declaration: ElementDeclarationNode, fields: Metad
     const field = fields[key.toLowerCase()];
     if (field ? field.parse(value) !== undefined : extractMetadataValue(value) !== undefined) continue;
     errors.push(new CompileError(
-      CompileErrorCode.BAD_PROPERTY,
+      CompileErrorCode.ARCH_BAD_PROPERTY,
       field ? field.message : 'A Metadata field value must be a string, a color literal, a number literal, or a boolean literal',
       value,
     ));
@@ -121,7 +121,7 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
   switch (archSort(declaration)) {
     case 'node':
       if (getArchNodeName(declaration.name) !== undefined && !getArchRoleName(word)) {
-        errors.push(new CompileError(CompileErrorCode.UNKNOWN_ROLE, `${word} is not a role. ${suggestArchRole(word)}`, declaration));
+        errors.push(new CompileError(CompileErrorCode.ARCH_UNKNOWN_ROLE, `${word} is not a role. ${suggestArchRole(word)}`, declaration));
       }
       break;
 
@@ -144,7 +144,7 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
       const target = new ArchMetadataElementMetadata(declaration).target(compiler);
       if (!target && !errors.length) {
         const name = getArchNodeName(declaration.name) ?? declaration.targetKind?.value ?? 'that';
-        errors.push(makeUndeclaredError(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration));
+        errors.push(makeUndeclaredError(CompileErrorCode.ARCH_UNKNOWN_METADATA_TARGET, name, declaration));
       }
       if (target) errors.push(...metadataValueErrors(declaration, getFieldsOf(target)));
       break;

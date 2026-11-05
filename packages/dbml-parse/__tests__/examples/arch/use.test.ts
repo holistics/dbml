@@ -46,9 +46,9 @@ describe('[example] selective imports in an architecture file', () => {
     const compiler = new Compiler(layout);
     const entry = Filepath.from('/main.dbml');
     expect(compiler.validateFile(entry).getErrors().map((e) => e.code)).toEqual([
-      CompileErrorCode.NO_CUSTOM_ROLE,
+      CompileErrorCode.ARCH_NO_CUSTOM_ROLE,
     ]);
-    expect(compiler.bindFile(entry).getErrors().filter((e) => e.code !== CompileErrorCode.NO_CUSTOM_ROLE)).toHaveLength(0);
+    expect(compiler.bindFile(entry).getErrors().filter((e) => e.code !== CompileErrorCode.ARCH_NO_CUSTOM_ROLE)).toHaveLength(0);
   });
 
   test('a role word on a group is an error', () => {

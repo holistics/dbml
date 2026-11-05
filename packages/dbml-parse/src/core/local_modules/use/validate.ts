@@ -56,7 +56,7 @@ export default class UseDeclarationValidator {
     } else if (!specifier.archImport && !specifier.isKind(...Object.values(ImportKind))) {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.importKind.value}' is not a valid specifier type`, specifier.importKind));
     } else if (specifier.archImport && specifier.importKind.value.toLowerCase() === 'kind') {
-      errors.push(new CompileError(CompileErrorCode.NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, specifier.importKind));
+      errors.push(new CompileError(CompileErrorCode.ARCH_NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, specifier.importKind));
     }
 
     return [
