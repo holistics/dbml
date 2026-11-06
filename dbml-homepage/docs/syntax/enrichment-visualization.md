@@ -118,7 +118,7 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
 Custom Properties let you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
 
-Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), [Sticky Notes](#sticky-notes), and [Relationships](../docs.md#relationships--foreign-key-definitions) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax). [Dependencies](./data-lineage.md) support custom properties too, but only [inline](#inline-custom-properties) for now.
+Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), [Sticky Notes](#sticky-notes), [Dependencies](./data-lineage.md) and [Relationships](../docs.md#relationships--foreign-key-definitions) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
 
 There are two ways to declare custom properties: **inline** in the element's settings list, or in a separate **`Metadata` block**.
 
@@ -134,10 +134,6 @@ A property value must be one of the following types:
 | Color | A hex color literal | `brand_color: #3498DB` |
 
 Any other value, such as an unquoted word (`owner: scott`) or a missing value (`[owner]`), raises an error.
-
-:::note
-A [Dep](./data-lineage.md) also accepts an unquoted word, read as a string: `materialized: table` is the same as `materialized: 'table'`.
-:::
 
 ### Inline Custom Properties
 
@@ -163,17 +159,6 @@ Ref: posts.user_id > users.id [delete: cascade, owner: "data-team"]
 Dep: raw_orders -> stg_orders [owner: "data-team"]
 ```
 
-A [Dep block](./data-lineage.md#dependency-block) can also declare custom properties as `key: value` fields in its body:
-
-```text
-Dep order_staging [owner: "data-team"] {
-  raw_orders -> stg_orders
-
-  materialized: table
-  sla_hours: 24
-}
-```
-
 :::note
 A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) will raise an error.
 :::
@@ -182,7 +167,7 @@ A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) 
 
 You can also declare custom properties separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding properties to elements defined elsewhere (including across files).
 
-The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note` or `Ref`. `Dep` is not supported yet, so a Dep's custom properties must be declared [inline](#inline-custom-properties).
+The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note` or `Ref`. `Dep` is not supported yet.
 
 Each field uses the `key: value` syntax with one of the [property value types](#property-value-types). A key cannot be repeated within the same block.
 
@@ -228,8 +213,7 @@ Metadata Ref user_posts {
 
 :::note
 - `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name. Unnamed refs cannot be targeted.
-- A `Metadata Ref` block only applies where both of the ref's endpoint tables are visible.
-- Ref names are not imported, so two visible files may each define a ref with the same name. A `Metadata Ref` block targeting that name raises an ambiguity error.
+- A `Metadata Ref` block is only valid when the ref exists.
 :::
 
 ### Property Precedence

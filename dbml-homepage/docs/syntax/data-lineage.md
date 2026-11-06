@@ -71,7 +71,7 @@ Block settings:
 
 - `note`: description of the transformation. Supports [multi-line strings](./language-basics.md#multi-line-string).
 - `color`: lineage line color. See [Colors](./enrichment-visualization.md#colors).
-- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties). Dep custom properties can only be declared inline, either in the settings list (`Dep order_staging [owner: 'data-team'] { ... }`, `Dep: a -> b [owner: 'data-team']`) or as `key: value` fields in the block body. [`Metadata` blocks](./enrichment-visualization.md#metadata-block) cannot target a Dep yet.
+- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties).
 
 :::note
 - All edges in a block must target the **same downstream table**, or columns of that table.
