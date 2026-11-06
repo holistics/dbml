@@ -1,0 +1,22 @@
+---
+title: Roles and Types
+---
+
+import { RoleIconGrid, TypeIconGrid } from '@site/src/components/ArchIconGrid';
+import { archRoleIcons, archTypeIcons } from '@site/src/data/archIcons';
+
+# Roles and Types
+
+This page lists the 32 built-in roles and all values of the `type` setting in [System Architecture](./system-architecture.md). For how an element gets its icon, see [Element Icon](./system-architecture.md#element-icon).
+
+## Roles
+
+The roles are listed in the order [Role Precedence](./system-architecture.md#role-precedence) uses.
+
+<RoleIconGrid items={archRoleIcons} />
+
+## Types
+
+The `type` setting takes one of these values, such as `type: 'postgres'`. Values are case-insensitive. A value listed after "also" on a card gives the same icon. For example, `'postgresql'` works like `'postgres'`.
+
+<TypeIconGrid items={archTypeIcons} />

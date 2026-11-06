@@ -52,6 +52,9 @@ export enum SymbolKind {
 
   Metadata = 'Metadata',
 
+  // Architecture nodes and groups share one kind, so their handles share one namespace
+  Element = 'Element',
+
   Program = 'Program',
 }
 
@@ -749,6 +752,35 @@ export class TableGroupFieldSymbol extends NodeSymbol {
 
   override get canBeImported (): boolean {
     return false;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
+// An architecture node or group
+export class ElementSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Element,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return true;
   }
 
   override get originalSymbol (): NodeSymbol {

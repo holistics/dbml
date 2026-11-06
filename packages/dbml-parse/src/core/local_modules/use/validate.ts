@@ -52,7 +52,7 @@ export default class UseDeclarationValidator {
 
     if (specifier.importKind === undefined) {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, 'A use specifier must have a type (e.g. table, enum)', specifier));
-    } else if (!specifier.isKind(...Object.values(ImportKind))) {
+    } else if (!specifier.archImport && !specifier.isKind(...Object.values(ImportKind))) {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.importKind.value}' is not a valid specifier type`, specifier.importKind));
     }
 

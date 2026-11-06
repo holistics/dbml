@@ -23,6 +23,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
 - [DiagramView](#diagramview)
 - [Colors](#colors)
 - [Inactive Ref](#inactive-ref)
+- [Front Matter](#front-matter)
 
 ## Note Definition
 
@@ -397,3 +398,26 @@ Ref {
   posts.user_id > users.id [inactive]
 }
 ```
+
+## Front Matter
+
+Front matter is a block of `key: value` lines between two `---` lines. It must be the first thing in the file.
+
+**Example**
+
+```text
+---
+title: E-commerce database
+owner: data-team
+updated: 2026-10-12
+---
+
+Table orders {
+  id int [pk]
+  status varchar
+}
+```
+
+- `diagram_type: arch` marks the file as an [architecture file](./system-architecture.md). `diagram_type: architecture` also works.
+- Custom keys have no effect, and are kept for tools that read the file.
+- Values can be written with or without quotes.

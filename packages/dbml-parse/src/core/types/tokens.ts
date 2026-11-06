@@ -31,6 +31,8 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
+  // A `---` fenced block at the very top of a file, only lexed when `allowFrontMatter` is on
+  FRONT_MATTER = '<front-matter>',
   WILDCARD = '<wildcard>',
 }
 
@@ -41,6 +43,7 @@ export function isTriviaToken (token: SyntaxToken): boolean {
     case SyntaxTokenKind.TAB:
     case SyntaxTokenKind.SINGLE_LINE_COMMENT:
     case SyntaxTokenKind.MULTILINE_COMMENT:
+    case SyntaxTokenKind.FRONT_MATTER:
       return true;
     default:
       return false;

@@ -4,7 +4,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, Note, Table, TableGroup, TokenPosition,
+  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Note, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
@@ -12,7 +12,7 @@ import { destructureComplexVariable } from '@/core/utils/expression';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 
-export type MetadataTarget = Table | TableGroup | Note | Column;
+export type MetadataTarget = Table | TableGroup | Note | Column | ArchNode | ArchGroup;
 
 /**
   * Spec for one builtin metadata field (table's note, tablegroup's color, .etc) of an element kind.
@@ -20,7 +20,7 @@ export type MetadataTarget = Table | TableGroup | Note | Column;
   * - `parse`: Read the field's own value from a source node, `undefined` means the value is invalid
   * - `assign`: Write the parsed value to the element builtin props (e.g. write `table.note` instead of `table.metadata`)
   */
-type MetadataField<T, V> = {
+export type MetadataField<T, V> = {
   /** Type of the parsed value, reported when the field is read as a metadata entry */
   type: CustomMetadataValueType;
   /** Parse the source node into the field's value, `undefined` if the node is not a valid value for this field */
@@ -102,7 +102,7 @@ export function resolveMetadataTarget (compiler: Compiler, metadataNode: Element
 }
 
 /** Get precedence score of files in import tree, lower score means lower precedence */
-function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
+export function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
   const sequence: Filepath[] = [];
   const visited = new Set<FilepathId>();
 
