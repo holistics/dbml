@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/core/types/errors';
-import { setupCompiler, fp } from './utils';
+import { Filepath } from '@/index';
+import { setupCompiler } from './utils';
 
 describe('[example] imported file error highlighting', () => {
   describe('file A imports file B with syntax errors', () => {
@@ -13,11 +14,11 @@ Table orders { id int [pk] }`,
 }`,
       });
 
-      const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
+      const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
       const importErrors = errorsA.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
       expect(importErrors).toHaveLength(1);
       expect(importErrors[0].diagnostic).toBe("Imported file './b.dbml' contains errors");
-      expect(importErrors[0].filepath.absolute).toBe(fp('/a.dbml').absolute);
+      expect(importErrors[0].filepath.absolute).toBe(Filepath.from('/a.dbml').absolute);
     });
 
     test('file B errors are also present in file A errors', () => {
@@ -29,8 +30,8 @@ Table orders { id int [pk] }`,
 }`,
       });
 
-      const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
-      const errorsFromB = errorsA.filter((e) => e.filepath.absolute === fp('/b.dbml').absolute);
+      const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
+      const errorsFromB = errorsA.filter((e) => e.filepath.absolute === Filepath.from('/b.dbml').absolute);
       expect(errorsFromB.length).toBeGreaterThanOrEqual(1);
     });
   });
@@ -44,9 +45,9 @@ Table orders { user_id int [ref: > users.id] }`,
 Table users { id int [pk] }`,
       });
 
-      const errorsB = compiler.interpretFile(fp('/b.dbml')).getErrors();
+      const errorsB = compiler.interpretFile(Filepath.from('/b.dbml')).getErrors();
       if (errorsB.length > 0) {
-        const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
+        const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
         const importErrors = errorsA.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
         expect(importErrors).toHaveLength(1);
         expect(importErrors[0].diagnostic).toBe("Imported file './b.dbml' contains errors");
@@ -66,17 +67,17 @@ Table orders { user_id int [ref: > users.id] }`,
       });
 
       // File C has syntax errors
-      const errorsC = compiler.interpretFile(fp('/c.dbml')).getErrors();
+      const errorsC = compiler.interpretFile(Filepath.from('/c.dbml')).getErrors();
       expect(errorsC.length).toBeGreaterThanOrEqual(1);
 
       // File B highlights file C
-      const errorsB = compiler.interpretFile(fp('/b.dbml')).getErrors();
+      const errorsB = compiler.interpretFile(Filepath.from('/b.dbml')).getErrors();
       const importErrorsB = errorsB.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
       expect(importErrorsB).toHaveLength(1);
       expect(importErrorsB[0].diagnostic).toBe("Imported file './c.dbml' contains errors");
 
       // File A highlights file B (because B has errors, including the import error for C)
-      const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
+      const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
       const importErrorsA = errorsA.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
       expect(importErrorsA).toHaveLength(1);
       expect(importErrorsA[0].diagnostic).toBe("Imported file './b.dbml' contains errors");
@@ -91,7 +92,7 @@ Table orders { user_id int [ref: > users.id] }`,
         '/b.dbml': 'Table users { id int [pk] }',
       });
 
-      const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
+      const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
       const importErrors = errorsA.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
       expect(importErrors).toHaveLength(0);
     });
@@ -109,7 +110,7 @@ Table orders { user_id int [ref: > users.id] }`,
 }`,
       });
 
-      const errorsA = compiler.interpretFile(fp('/a.dbml')).getErrors();
+      const errorsA = compiler.interpretFile(Filepath.from('/a.dbml')).getErrors();
       const importErrors = errorsA.filter((e) => e.code === CompileErrorCode.IMPORTED_FILE_HAS_ERRORS);
       expect(importErrors).toHaveLength(1);
       expect(importErrors[0].diagnostic).toBe("Imported file './c.dbml' contains errors");

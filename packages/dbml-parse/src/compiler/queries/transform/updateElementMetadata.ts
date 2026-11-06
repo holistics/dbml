@@ -4,16 +4,16 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
 } from '@/core/types/nodes';
-import { SymbolKind } from '@/core/types/symbol';
-import { MetadataTargetKind } from '@/core/types/symbol/symbols';
+import {
+  MetadataTargetKind, MetadataTargetLabel, SymbolKind, getMetadataTargetKind,
+} from '@/core/types/symbol';
 import { ElementKind } from '@/core/types';
 import { isElementNode } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import type { ElementIdentifier } from './types';
-import { lookupElementSymbol, normalizeSchema } from './utils';
+import { normalizeSchema } from './utils';
 import { formatTypedValue, type TypedValue } from '../utils';
 
 // Map each Metadata-supported element kind to its MetadataTargetKind
@@ -108,24 +108,6 @@ function buildMetadataBlock (
   return `Metadata ${targetKindStr} ${targetName} {\n  ${key}: ${value}\n}`;
 }
 
-// Get the human-readable target kind keyword (e.g. "Table", "Column")
-export function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
-  switch (targetKind) {
-    case MetadataTargetKind.Table:
-      return 'Table';
-    case MetadataTargetKind.Column:
-      return 'Column';
-    case MetadataTargetKind.TableGroup:
-      return 'TableGroup';
-    case MetadataTargetKind.Note:
-      return 'Note';
-    default: {
-      const _: never = targetKind;
-      return targetKind;
-    }
-  }
-}
-
 // Returns TextEdit[] to add/update/remove a single key in the Metadata block for `target`
 // - value is non-null: upsert the key (creates the Metadata block if missing), formatted via formatTypedValue
 // - value is null: remove the key, removes the entire block if it was the last key
@@ -149,7 +131,7 @@ export function updateElementMetadataEdit (
   // No existing block
   if (!block) {
     if (value === null) return [];
-    const kindLabel = getMetadataTargetKindLabel(targetKind);
+    const kindLabel = MetadataTargetLabel[targetKind];
     const newBlock = buildMetadataBlock(
       kindLabel,
       targetName,

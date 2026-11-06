@@ -62,7 +62,7 @@ function getSchemaChain (compiler: Compiler, symbol: NodeSymbol): string[] {
   const chain: string[] = [];
   let cur: NodeSymbol | undefined = symbol;
   while (cur) {
-    const parents = compiler.symbolParent(cur);
+    const parents = compiler.symbolParents(cur);
     const schemaParent = parents.find(
       (p): p is SchemaSymbol => p instanceof SchemaSymbol && p.isKind(SymbolKind.Schema),
     );

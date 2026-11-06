@@ -10,6 +10,6 @@
     "types": ["vitest/globals", "node"]
   },
   "files": ["package.json"],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/**/*"],
   "exclude": ["__tests__/**/*", "**/*.spec.ts", "**/*.test.ts"]
 }

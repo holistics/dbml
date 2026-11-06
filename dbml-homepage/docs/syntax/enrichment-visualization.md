@@ -15,6 +15,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
 - [Custom Properties](#custom-properties)
   - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
+  - [Property Value Types](#property-value-types)
   - [Property Precedence](#property-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
@@ -117,18 +118,16 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
 Custom Properties let you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
 
-Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
+Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), [Sticky Notes](#sticky-notes), [Dependencies](./data-lineage.md) and [Relationships](../docs.md#relationships--foreign-key-definitions) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
 
 There are two ways to declare custom properties: **inline** in the element's settings list, or in a separate **`Metadata` block**.
-
-Currently, a property value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
 
 ### Inline Custom Properties
 
 Add custom key-value pairs directly to an element's `[...]` settings list.
 
 ```text
-Table users [owner: "data-team", sla_hours: "24", pii: "true"] {
+Table users [owner: "data-team", sla_hours: 24, pii: true] {
   id int [pk, masking: "partial"]
   email varchar [classification: "confidential"]
 }
@@ -141,6 +140,10 @@ TableGroup e_commerce [team: "growth"] {
 Note reminder [author: "docs"] {
   'Remember to review this schema'
 }
+
+Ref: posts.user_id > users.id [delete: cascade, owner: "data-team"]
+
+Dep: raw_orders -> stg_orders [owner: "data-team"]
 ```
 
 :::note
@@ -151,12 +154,21 @@ A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) 
 
 You can also declare custom properties separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding properties to elements defined elsewhere (including across files).
 
-The block targets an element by kind and name:
+The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note` or `Ref`. `Dep` is not supported yet.
+
+Each field uses the `key: value` syntax with one of the [property value types](#property-value-types). A key cannot be repeated within the same block.
+
+For example:
 
 ```text
 Table users {
   id int [pk]
   name varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int
 }
 
 TableGroup g1 {
@@ -169,10 +181,40 @@ Metadata Table users {
 }
 
 Metadata Column users.id {
-  pii: 'true'
+  pii: true
   masking: 'partial'
 }
+
+Metadata TableGroup g1 {
+  team: 'growth'
+  color: #3498DB
+}
+
+Ref user_posts: posts.user_id > users.id
+
+Metadata Ref user_posts {
+  owner: 'reporting'
+  critical: true
+}
 ```
+
+:::note
+- `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name. Unnamed refs cannot be targeted.
+- A `Metadata Ref` block is only valid when the ref exists (it is defined in the same file, or both of the endpoint tables are imported).
+:::
+
+### Property Value Types
+
+A property value must be one of the following types:
+
+| Type | Syntax | Examples |
+|---|---|---|
+| String | A quoted string | `owner: 'data-team'`, `owner: "data-team"` |
+| Number | An integer or decimal, optionally signed | `sla_hours: 24`, `weight: 0.75`, `offset: -1` |
+| Boolean | `true` or `false` (case-insensitive) | `pii: true`, `deprecated: false` |
+| Color | A hex color literal | `brand_color: #3498DB` |
+
+Any other value, such as an unquoted word (`owner: scott`) or a missing value (`[owner]`), raises an error.
 
 ### Property Precedence
 

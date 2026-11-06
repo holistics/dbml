@@ -229,21 +229,36 @@
           <div
             v-for="(ref_, ri) in database.refs"
             :key="ri"
-            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
           >
-            <VTooltip
-              placement="right"
-              :distance="6"
+            <div
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
             >
-              <PhArrowsLeftRight class="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
-              <template #popper>
-                <span class="text-xs">Ref</span>
-              </template>
-            </VTooltip>
-            <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[0]) }}</span>
-            <span class="text-gray-400">{{ ref_.endpoints[0].relation }}-{{ ref_.endpoints[1].relation }}</span>
-            <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhArrowsLeftRight class="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">Ref</span>
+                </template>
+              </VTooltip>
+              <span
+                v-if="ref_.name"
+                class="text-purple-700"
+              >{{ ref_.name }}:</span>
+              <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[0]) }}</span>
+              <span class="text-gray-400">{{ ref_.endpoints[0].relation }}-{{ ref_.endpoints[1].relation }}</span>
+              <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
+              <span
+                v-if="ref_.color"
+                class="text-gray-400 text-xs ml-auto"
+              >{{ ref_.color }}</span>
+            </div>
+            <DbMetadata
+              :metadata="ref_.metadata"
+              :indent="36"
+            />
           </div>
         </DbSection>
 

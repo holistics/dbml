@@ -71,13 +71,18 @@ export const refModule: LocalModule = {
       let settingsList: ListExpressionNode | undefined;
       if (last(args) instanceof ListExpressionNode) {
         settingsList = last(args) as ListExpressionNode;
+        args.pop();
       } else if (args[0] instanceof ListExpressionNode) {
         settingsList = args[0];
+        args.shift();
       }
 
-      if (!settingsList) return new Report({});
+      const errors = args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg));
 
-      return validateFieldSettings(settingsList);
+      if (!settingsList) return new Report({}, errors);
+
+      const report = validateFieldSettings(settingsList);
+      return Report.create(report.getValue(), [...errors, ...report.getErrors()]);
     }
     return Report.create(PASS_THROUGH);
   },

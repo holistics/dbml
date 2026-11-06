@@ -245,11 +245,15 @@ export class TableInterpreter {
     const symbolMembers = tableSymbol
       ? this.compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) ?? []
       : [];
-    const columnEntries = symbolMembers.filter((symbol) => {
-      return symbol.isKind(SymbolKind.Column);
-    });
+    const ownColumnCount = symbolMembers.filter((symbol) => symbol.isKind(SymbolKind.Column)).length;
+    const partialColumnCount = this.symbol
+      ? this.symbol.resolvedPartials(this.compiler).reduce((sum: number, partial) => {
+          const members = this.compiler.symbolMembers(partial).getFiltered(UNHANDLED) ?? [];
+          return sum + members.filter((m) => m.isKind(SymbolKind.Column)).length;
+        }, 0)
+      : 0;
 
-    const columnCountErrors = columnEntries.length
+    const columnCountErrors = ownColumnCount + partialColumnCount > 0
       ? []
       : [
           new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode),
@@ -297,8 +301,7 @@ export class TableInterpreter {
       const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
       if (!meta) return [];
 
-      const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && !meta.isVisibleFrom(this.compiler, programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];
@@ -326,8 +329,7 @@ export class TableInterpreter {
       const meta = this.compiler.nodeMetadata(depAttr).getFiltered(UNHANDLED);
       if (!meta) return [];
 
-      const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && !meta.isVisibleFrom(this.compiler, programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];

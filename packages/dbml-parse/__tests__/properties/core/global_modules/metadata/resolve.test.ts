@@ -1,21 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
-import { mapNamePartToSymbolKind } from '@/core/global_modules/metadata/utils';
+import { SymbolKind, MetadataTargetKind, mapNamePartToSymbolKind } from '@/core/types/symbol';
 
 const PROPERTY_TEST_CONFIG = {
   numRuns: 200,
 };
 
-const TERMINAL_KIND: Record<MetadataTargetKind, SymbolKind> = {
+const TERMINAL_KIND: Record<Exclude<MetadataTargetKind, MetadataTargetKind.Ref>, SymbolKind> = {
   [MetadataTargetKind.Table]: SymbolKind.Table,
   [MetadataTargetKind.Column]: SymbolKind.Column,
   [MetadataTargetKind.TableGroup]: SymbolKind.TableGroup,
   [MetadataTargetKind.Note]: SymbolKind.StickyNote,
 };
 
-const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind));
+const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind).filter((k): k is Exclude<MetadataTargetKind, MetadataTargetKind.Ref> => k !== MetadataTargetKind.Ref));
 
 // Bias generation toward the schema name and short arrays to exercise the Column single-part branch and the `public` handling downstream
 const namePartArbitrary = fc.oneof(

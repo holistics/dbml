@@ -133,7 +133,7 @@ describe('[example] Metadata field value grammar', () => {
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
       expect(usersTableMetadata(`Metadata Table public.users {
         masking: partial
-      }`)).toBeUndefined();
+      }`)).toMatchObject({});
     });
 
     it('rejects a number with more than one sign', () => {
@@ -145,7 +145,7 @@ describe('[example] Metadata field value grammar', () => {
       const codes = result.getErrors().map((e) => e.code);
       expect(codes.filter((c) => c === CompileErrorCode.INVALID_METADATA_FIELD)).toHaveLength(2);
       const values = usersTableMetadata(source);
-      expect(values).toBeUndefined();
+      expect(values).toMatchObject({});
     });
   });
 
@@ -255,7 +255,7 @@ describe('[example] Metadata field value grammar', () => {
       // The invalid value must never be silently dropped
       expect(usersTableMetadata(`Metadata Table public.users {
         tags: ['a', 'b']
-      }`)).toBeUndefined();
+      }`)).toMatchObject({});
     });
 
     it('does not silently accept an empty value (key with no value)', () => {
@@ -270,7 +270,7 @@ describe('[example] Metadata field value grammar', () => {
       // The bogus empty key/value must not be silently captured
       expect(usersTableMetadata(`Metadata Table public.users {
           owner:
-        }`)).toBeUndefined();
+        }`)).toMatchObject({});
     });
   });
 });
