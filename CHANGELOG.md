@@ -2,17 +2,18 @@
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#989](https://github.com/holistics/dbml/pull/989) [DBX-7194] [DBX-7399] Feat: Support Metadata for Ref ([@xuantho573](https://github.com/xuantho573))
+  * [#989](https://github.com/holistics/dbml/pull/989) Feat: Support Metadata for Ref ([@xuantho573](https://github.com/xuantho573))
 
 #### :bug: Bug Fix
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#989](https://github.com/holistics/dbml/pull/989) [DBX-7194] [DBX-7399] Feat: Support Metadata for Ref ([@xuantho573](https://github.com/xuantho573))
+  * [#989](https://github.com/holistics/dbml/pull/989) Fix: Table must have at least one field ([@huydo862003](https://github.com/huydo862003))
 
 #### :robot: Dependencies Update
 * [#1028](https://github.com/holistics/dbml/pull/1028) chore(deps): bump snowflake-sdk from 3.3.0 to 3.4.1 and @azure/identity from 4.13.0 to 4.14.1 ([@xuantho573](https://github.com/xuantho573))
 * [#1027](https://github.com/holistics/dbml/pull/1027) chore(deps): bump joi from 17.13.8 to 17.13.9 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
 
-#### Committers: 1
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
 - Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
 
 ## v11.0.1 (2026-10-26)
