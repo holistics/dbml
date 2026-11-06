@@ -13,9 +13,9 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
 - [Custom Properties](#custom-properties)
-  - [Property Value Types](#property-value-types)
   - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
+  - [Property Value Types](#property-value-types)
   - [Property Precedence](#property-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
@@ -122,19 +122,6 @@ Custom Properties are currently supported on [Table](../docs.md#table-definition
 
 There are two ways to declare custom properties: **inline** in the element's settings list, or in a separate **`Metadata` block**.
 
-### Property Value Types
-
-A property value must be one of the following types:
-
-| Type | Syntax | Examples |
-|---|---|---|
-| String | A quoted string | `owner: 'data-team'`, `owner: "data-team"` |
-| Number | An integer or decimal, optionally signed | `sla_hours: 24`, `weight: 0.75`, `offset: -1` |
-| Boolean | `true` or `false` (case-insensitive) | `pii: true`, `deprecated: false` |
-| Color | A hex color literal | `brand_color: #3498DB` |
-
-Any other value, such as an unquoted word (`owner: scott`) or a missing value (`[owner]`), raises an error.
-
 ### Inline Custom Properties
 
 Add custom key-value pairs directly to an element's `[...]` settings list.
@@ -213,8 +200,21 @@ Metadata Ref user_posts {
 
 :::note
 - `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name. Unnamed refs cannot be targeted.
-- A `Metadata Ref` block is only valid when the ref exists.
+- A `Metadata Ref` block is only valid when the ref exists (it is defined in the same file, or both of the endpoint tables are imported).
 :::
+
+### Property Value Types
+
+A property value must be one of the following types:
+
+| Type | Syntax | Examples |
+|---|---|---|
+| String | A quoted string | `owner: 'data-team'`, `owner: "data-team"` |
+| Number | An integer or decimal, optionally signed | `sla_hours: 24`, `weight: 0.75`, `offset: -1` |
+| Boolean | `true` or `false` (case-insensitive) | `pii: true`, `deprecated: false` |
+| Color | A hex color literal | `brand_color: #3498DB` |
+
+Any other value, such as an unquoted word (`owner: scott`) or a missing value (`[owner]`), raises an error.
 
 ### Property Precedence
 
