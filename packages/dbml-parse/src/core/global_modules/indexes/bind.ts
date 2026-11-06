@@ -109,6 +109,7 @@ export default class IndexesBinder {
           return bindee.tupleElements;
         });
 
+      const seenColumnNames = new Set<string>();
       return bindees.flatMap((bindee) => {
         const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
@@ -116,7 +117,10 @@ export default class IndexesBinder {
         if (!column.getValue() || column.hasValue(UNHANDLED)) {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside ${this.ownerContainerKind} '${ownerTableName}'`, bindee);
         }
-
+        if (seenColumnNames.has(columnName)) {
+          return new CompileError(CompileErrorCode.DUPLICATE_INDEX_COLUMN, `Duplicate column '${columnName}' in index`, bindee);
+        }
+        seenColumnNames.add(columnName);
         return [];
       });
     });

@@ -35,7 +35,7 @@ Table posts {
   user_id int
 }
 Ref r: posts.user_id > users.id`,
-      '/main.dbml': `use { table posts } from './orders.dbml'`,
+      '/main.dbml': 'use { table posts } from \'./orders.dbml\'',
     });
 
     const result = compiler.interpretFile(Filepath.from('/main.dbml'));
