@@ -4,7 +4,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind, getMetadataTargetKindLabel } from '@/core/types/symbol';
+import { getMetadataTargetKind, MetadataTargetLabel } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import { MetadataElementMetadata } from '@/core/types/symbol/metadata';
 
@@ -34,7 +34,7 @@ export default class MetadataBinder {
       return [
         new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          `${getMetadataTargetKindLabel(targetKind)} '${nameParts.join('.')}' is ambiguous: it has multiple definitions`,
+          `${MetadataTargetLabel[targetKind]} '${nameParts.join('.')}' is ambiguous: it has multiple definitions`,
           nameNode ?? this.declarationNode,
         ),
       ];
@@ -42,7 +42,7 @@ export default class MetadataBinder {
       return [
         new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          `Cannot find metadata target element: \`${getMetadataTargetKindLabel(targetKind)} ${nameParts.join('.')}\``,
+          `Cannot find metadata target element: \`${MetadataTargetLabel[targetKind]} ${nameParts.join('.')}\``,
           nameNode ?? this.declarationNode,
         ),
       ];

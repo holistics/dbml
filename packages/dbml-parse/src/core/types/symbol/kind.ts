@@ -59,22 +59,11 @@ export enum MetadataTargetKind {
   Ref = MetadataKind.Ref,
 }
 
-// Get the human-readable target kind keyword (e.g. "Table", "Column")
-export function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
-  switch (targetKind) {
-    case MetadataTargetKind.Table:
-      return 'Table';
-    case MetadataTargetKind.Column:
-      return 'Column';
-    case MetadataTargetKind.TableGroup:
-      return 'TableGroup';
-    case MetadataTargetKind.Note:
-      return 'Note';
-    case MetadataTargetKind.Ref:
-      return 'Ref';
-    default: {
-      const _: never = targetKind;
-      return targetKind;
-    }
-  }
-}
+// Human-readable target kind keyword
+export const MetadataTargetLabel: Record<MetadataTargetKind, string> = {
+  [MetadataTargetKind.Table]: 'Table',
+  [MetadataTargetKind.Column]: 'Column',
+  [MetadataTargetKind.TableGroup]: 'TableGroup',
+  [MetadataTargetKind.Note]: 'Note',
+  [MetadataTargetKind.Ref]: 'Ref',
+};

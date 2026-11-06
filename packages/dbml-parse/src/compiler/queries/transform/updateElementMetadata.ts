@@ -4,11 +4,12 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
 } from '@/core/types/nodes';
-import { MetadataTargetKind, SymbolKind } from '@/core/types/symbol';
+import {
+  MetadataTargetKind, MetadataTargetLabel, SymbolKind, getMetadataTargetKind,
+} from '@/core/types/symbol';
 import { ElementKind } from '@/core/types';
 import { isElementNode } from '@/core/utils/validate';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind, getMetadataTargetKindLabel } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import type { ElementIdentifier } from './types';
@@ -130,7 +131,7 @@ export function updateElementMetadataEdit (
   // No existing block
   if (!block) {
     if (value === null) return [];
-    const kindLabel = getMetadataTargetKindLabel(targetKind);
+    const kindLabel = MetadataTargetLabel[targetKind];
     const newBlock = buildMetadataBlock(
       kindLabel,
       targetName,

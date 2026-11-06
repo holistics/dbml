@@ -1,3 +1,4 @@
+import { MetadataTargetLabel } from '@/core/types';
 import type {
   LanguageConfiguration,
   MonarchLanguage,
@@ -121,13 +122,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'metadata',
   ],
 
-  metadataTarget: [
-    'table',
-    'tablegroup',
-    'schema',
-    'column',
-    'note',
-  ],
+  metadataTarget: Object.values(MetadataTargetLabel).map((label) => label.toLowerCase()),
 
   dataTypes: [
     'TINYINT',

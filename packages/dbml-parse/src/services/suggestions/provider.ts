@@ -25,6 +25,8 @@ import {
   SchemaSymbol,
   SymbolKind,
   MetadataTargetKind,
+  MetadataTargetLabel,
+  getMetadataTargetKind,
 } from '@/core/types/symbol';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
@@ -55,7 +57,6 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { getMetadataTargetKind, getMetadataTargetKindLabel } from '@/core/types/symbol';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 import { getProgramNamedRefs } from '@/core/global_modules/ref/utils';
 
@@ -1115,8 +1116,7 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
 
 function suggestMetadataTargetKinds (): CompletionList {
   return {
-    suggestions: Object.values(MetadataTargetKind).map((name) => {
-      const label = getMetadataTargetKindLabel(name);
+    suggestions: Object.values(MetadataTargetLabel).map((label) => {
       return {
         label,
         insertText: label,

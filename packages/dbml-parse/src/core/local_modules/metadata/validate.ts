@@ -10,7 +10,7 @@ import {
 } from '@/core/types/nodes';
 import { isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
-import { getMetadataTargetKind, getMetadataTargetKindLabel, MetadataTargetKind } from '@/core/types/symbol';
+import { getMetadataTargetKind, MetadataTargetLabel } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/registries';
 import { extractMetadataValue } from '@/core/utils/interpret';
 
@@ -30,7 +30,7 @@ export default class MetadataValidator {
       return [
         new CompileError(
           CompileErrorCode.INVALID_METADATA_TARGET_KIND,
-          `A Metadata target kind must be one of: ${Object.values(MetadataTargetKind).map(getMetadataTargetKindLabel).join(', ')}`,
+          `A Metadata target kind must be one of: ${Object.values(MetadataTargetLabel).join(', ')}`,
           this.declarationNode.targetKind ?? this.declarationNode,
         ),
       ];
