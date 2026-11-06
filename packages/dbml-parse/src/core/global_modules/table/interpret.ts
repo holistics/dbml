@@ -246,8 +246,8 @@ export class TableInterpreter {
       ? this.compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) ?? []
       : [];
     const ownColumnCount = symbolMembers.filter((symbol) => symbol.isKind(SymbolKind.Column)).length;
-    const partialColumnCount = tableSymbol
-      ? tableSymbol.resolvedPartials(this.compiler).reduce((sum, partial) => {
+    const partialColumnCount = this.symbol
+      ? this.symbol.resolvedPartials(this.compiler).reduce((sum: number, partial) => {
           const members = this.compiler.symbolMembers(partial).getFiltered(UNHANDLED) ?? [];
           return sum + members.filter((m) => m.isKind(SymbolKind.Column)).length;
         }, 0)
