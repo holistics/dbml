@@ -14,10 +14,9 @@ export { ElementKind } from '@/core/types/keywords';
 
 export {
   type NodeSymbol,
+  MetadataKind,
   SymbolKind,
 } from '@/core/types/symbol';
-
-export { MetadataKind } from '@/core/types/symbol/metadata';
 
 export * from '@/core/global_modules/records/utils';
 

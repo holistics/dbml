@@ -241,5 +241,5 @@ export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSy
 
 export function getProgramSymbol (compiler: Compiler, filepath: Filepath): ProgramSymbol | undefined {
   const programNode = compiler.parseFile(filepath).getValue().ast;
-  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol;
+  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol | undefined;
 }

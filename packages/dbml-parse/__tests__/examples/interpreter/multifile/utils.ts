@@ -42,7 +42,7 @@ export function findTable (compiler: Compiler, path: string, name: string) {
   return undefined;
 }
 
-export function canonicalName (compiler: Compiler, path: string, tableName: string): CanonicalName | undefined {
+export function getCanonicalName (compiler: Compiler, path: string, tableName: string): CanonicalName | undefined {
   const t = findTable(compiler, path, tableName);
   if (!t) return undefined;
   return compiler.canonicalName(fp(path), t.originalSymbol).getValue();

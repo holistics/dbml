@@ -71,7 +71,7 @@ Block settings:
 
 - `note`: description of the transformation. Supports [multi-line strings](./language-basics.md#multi-line-string).
 - `color`: lineage line color. See [Colors](./enrichment-visualization.md#colors).
-- Custom keys (e.g. `materialized`, `owner`) are preserved in the output.
+- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties).
 
 :::note
 - All edges in a block must target the **same downstream table**, or columns of that table.
