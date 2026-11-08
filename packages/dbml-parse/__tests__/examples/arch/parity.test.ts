@@ -564,8 +564,8 @@ describe('a brand is a setting, not a keyword', () => {
     }
   });
 
-  it('has 32 roles and no brands among them', () => {
-    expect(Object.keys(ARCH_BUILTIN_ROLES)).toHaveLength(32);
+  it('has 39 roles and no brands among them', () => {
+    expect(Object.keys(ARCH_BUILTIN_ROLES)).toHaveLength(39);
     for (const brand of ['Postgres', 'Mongo', 'Redis', 'HAProxy', 'Docker', 'Kubernetes']) {
       expect(ARCH_BUILTIN_ROLES[brand], brand).toBeUndefined();
     }
@@ -878,20 +878,9 @@ describe('flags in a body', () => {
     '/d',
   );
 
-  it('reads inactive as true, alone or with other words on the line', () => {
-    const { model, diagnostics } = draw("Database d {\n  type: 'postgres'\n  inactive\n}");
-    expect(diagnostics).toEqual([]);
-    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', inactive: true });
-  });
-
   it('refuses a bare word that is not a setting, as DBML refuses a custom flag', () => {
     expect(draw('Database d { ssl }').diagnostics.map((d) => d.message))
       .toEqual(["Custom setting 'ssl' must be a string, a color literal, a number literal, or a boolean literal"]);
-  });
-
-  it('refuses the same flag twice', () => {
-    expect(draw('Database d {\n  inactive\n  inactive\n}').diagnostics.map((x) => x.code))
-      .toEqual(['duplicate-property']);
   });
 
   it('still reads a container body as member names, never as flags', () => {

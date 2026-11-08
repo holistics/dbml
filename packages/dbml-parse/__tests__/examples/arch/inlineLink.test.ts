@@ -28,7 +28,7 @@ const linksOf = (db?: Database) => db?.links?.map((l) => [l.from, l.op, l.to]);
 
 describe('[example] inline links', () => {
   test('a setting on an element is a link from that element, in each of the four directions', () => {
-    const { errors, db } = compile('Server api [link: > db, link: < queue, ref: <> cache, link: - fw]\nDatabase db\nQueue queue\nCache cache\nFirewall fw');
+    const { errors, db } = compile('Server api [link: > db, link: < queue, link: <> cache, link: - fw]\nDatabase db\nQueue queue\nCache cache\nFirewall fw');
     expect(errors).toEqual([]);
     expect(linksOf(db)).toEqual([
       ['api', '>', 'db'],

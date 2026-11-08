@@ -113,7 +113,7 @@ export interface ArchNode {
   type: string | null;
   // The image URL `icon` gives
   icon: string | null;
-  // The built-in settings as written: type, icon, color, style, inactive
+  // The built-in settings as written: type, icon, color, style
   settings: ArchSettings;
   metadata: CustomMetadata;
   note: {
@@ -128,7 +128,7 @@ export interface ArchGroup {
   alias: string | null;
   // The members this group owns, in written order: handle and role (`Group` for a group, `Note` for a sticky note)
   children: ArchRef[];
-  // The built-in settings as written: color, style, inactive, label
+  // The built-in settings as written: color, style, label, stacked
   settings: ArchSettings;
   metadata: CustomMetadata;
   note: {

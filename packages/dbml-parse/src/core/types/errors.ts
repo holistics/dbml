@@ -175,8 +175,7 @@ export enum CompileErrorCode {
   ARCH_DUPLICATE_LINK,
   ARCH_NESTED_ENDPOINTS,
   ARCH_BAD_MEMBER,
-  ARCH_AMBIGUOUS_NAME,
-  ARCH_UNKNOWN_MEMBER,
+  ARCH_UNKNOWN_MEMBER = 6015,
 }
 
 export interface RelatedLocation {

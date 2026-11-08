@@ -50,7 +50,7 @@ CDN "Cloudflare" as cf_dbdiagram {
 CDN "Cloudflare" as cf_dbdocs {
   type: 'cloudflare'
 }
-Client "DBX Engineers" as dbx_eng
+User "DBX Engineers" as dbx_eng
 VPN "Tailscale" as tailscale
 Team "Holistics Data Analytics" as holistics
 Warehouse "Google BigQuery" as bigquery {
@@ -265,7 +265,7 @@ CDN "Cloudflare" as cf_dbdiagram {
 CDN "Cloudflare" as cf_dbdocs {
   type: 'cloudflare'
 }
-Client "DBX Engineers" as dbx_eng
+User "DBX Engineers" as dbx_eng
 VPN "Tailscale" as tailscale
 Team "Holistics Data Analytics" as holistics
 Warehouse "Google BigQuery" as bigquery {

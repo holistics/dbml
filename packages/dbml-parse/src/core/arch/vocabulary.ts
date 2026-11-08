@@ -1,6 +1,6 @@
 import { SUPPORTED_ARCH_TYPES, ARCH_TYPE_ALIAS, resolveArchType } from './icons';
 
-export type ArchRoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
+export type ArchRoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'client' | 'ops' | 'ai';
 
 export interface ArchRoleSpec {
   icon: string;
@@ -32,15 +32,22 @@ export const ARCH_BUILTIN_ROLES: Record<string, ArchRoleSpec> = {
   DNS: { icon: 'dns', category: 'net' },
   CDN: { icon: 'globe', category: 'edge' },
   Internet: { icon: 'cloud', category: 'edge' },
-  Client: { icon: 'person', category: 'people' },
-  Browser: { icon: 'browser', category: 'people' },
-  Mobile: { icon: 'mobile', category: 'people' },
-  Team: { icon: 'users', category: 'people' },
+  User: { icon: 'person', category: 'client' },
+  Browser: { icon: 'browser', category: 'client' },
+  Mobile: { icon: 'mobile', category: 'client' },
+  Team: { icon: 'users', category: 'client' },
+  CLI: { icon: 'terminal', category: 'client' },
   Monitoring: { icon: 'pulse', category: 'ops' },
   Logging: { icon: 'file', category: 'ops' },
   Alerting: { icon: 'bell', category: 'ops' },
   Scheduler: { icon: 'clock', category: 'ops' },
   Pipeline: { icon: 'pipeline', category: 'ops' },
+  Model: { icon: 'model', category: 'ai' },
+  Agent: { icon: 'robot', category: 'ai' },
+  VectorStore: { icon: 'vectorstore', category: 'ai' },
+  MCP: { icon: 'mcp', category: 'ai' },
+  Connector: { icon: 'connector', category: 'ai' },
+  Skill: { icon: 'skill', category: 'ai' },
 };
 
 const ARCH_ROLE_BY_LOWER = new Map(Object.keys(ARCH_BUILTIN_ROLES).map((name) => [name.toLowerCase(), name]));

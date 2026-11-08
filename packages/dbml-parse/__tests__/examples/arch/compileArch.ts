@@ -92,7 +92,6 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.ARCH_DUPLICATE_LINK]: 'duplicate-link',
   [CompileErrorCode.ARCH_NESTED_ENDPOINTS]: 'nested-endpoints',
   [CompileErrorCode.ARCH_BAD_MEMBER]: 'bad-member',
-  [CompileErrorCode.ARCH_AMBIGUOUS_NAME]: 'ambiguous-name',
   [CompileErrorCode.ARCH_UNKNOWN_MEMBER]: 'unknown-member',
 };
 

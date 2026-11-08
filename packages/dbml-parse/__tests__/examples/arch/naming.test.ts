@@ -95,30 +95,30 @@ describe('[example] a role picks the element', () => {
   });
 });
 
-describe('[example] without a role, NAME_PRECEDENCE picks and the editor warns', () => {
-  test('NAME_PRECEDENCE is the 32 roles in order, then Group, then Note', () => {
-    expect(ARCH_NAME_PRECEDENCE).toHaveLength(34);
+describe('[example] without a role, NAME_PRECEDENCE picks', () => {
+  test('NAME_PRECEDENCE is the 39 roles in order, then Group, then Note', () => {
+    expect(ARCH_NAME_PRECEDENCE).toHaveLength(41);
     expect(ARCH_NAME_PRECEDENCE).toEqual([...Object.keys(ARCH_BUILTIN_ROLES), 'Group', 'Note']);
   });
 
-  test('a link goes to the Server before the Group, with a warning', () => {
+  test('a link goes to the Server before the Group, with no warning', () => {
     const { errors, warnings, db } = compile('Server client\nServer api\nGroup api { }\nLink: client > api');
     expect(errors).toEqual([]);
     expect(linksOf(db)).toEqual([['Server client', '>', 'Server api']]);
-    expect(warnings).toEqual(['api matches Server api and Group api; Server api is used. Write Group api for the other.']);
+    expect(warnings).toEqual([]);
   });
 
-  test('a Group before a Note, and three candidates', () => {
+  test('a Group before a Note, and three candidates, with no warning', () => {
     const { warnings, db } = compile("Group api { }\nNote api { 'x' }\nDatabase api\nServer c [link: > api]");
     expect(linksOf(db)).toEqual([['Server c', '>', 'Database api']]);
-    expect(warnings).toEqual(['api matches Database api, Group api and Note api; Database api is used. Write Group api or Note api for the others.']);
+    expect(warnings).toEqual([]);
   });
 
-  test('Metadata without a role follows the same order, with a warning', () => {
+  test('Metadata without a role follows the same order, with no warning', () => {
     const { warnings, db } = compile("Server api\nGroup api { }\nMetadata api {\n  owner: 'x'\n}");
     expect(db?.nodes?.[0].metadata.owner?.value).toBe('x');
     expect(db?.groups?.[0].metadata).not.toHaveProperty('owner');
-    expect(warnings).toEqual(['api matches Server api and Group api; Server api is used. Write Group api for the other.']);
+    expect(warnings).toEqual([]);
   });
 
   test('a name only one element has gives no warning', () => {

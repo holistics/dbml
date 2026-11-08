@@ -28,7 +28,6 @@ export type ArchSort =
 const SORT_BY_WORD: Record<string, ArchSort> = {
   group: 'group',
   link: 'link',
-  ref: 'link',
   metadata: 'metadata',
   project: 'project',
 };
@@ -143,13 +142,13 @@ export function valueOf (node: SyntaxNode): ArchSettingValue | undefined {
   return text;
 }
 
-// `Server api [link: > db]`: a link from the element to `db`. `ref` is the same word, as `Ref:` is `Link:`.
-const ARCH_INLINE_LINK_KEYS = new Set(['link', 'ref']);
+// `Server api [link: > db]`: a link from the element to `db`
+const ARCH_INLINE_LINK_KEYS = new Set(['link']);
 
 export const isArchInlineLinkKey = (key: string): boolean =>
   ARCH_INLINE_LINK_KEYS.has(key.toLowerCase());
 
-// `[style: dashed, inactive]`: a setting with no value is true. An inline link is a link, not a setting.
+// A setting with no value, such as `[stacked]`, is true. An inline link is a link, not a setting.
 export function extractArchNodeSettings (
   list?: ListExpressionNode,
 ): ArchSettings {

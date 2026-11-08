@@ -103,6 +103,17 @@ describe('[example] architecture rules', () => {
     expect(messages).toContain("'stacked' must be true or false");
   });
 
+  test('label is top or bottom on a group, in any case, quoted or not', () => {
+    const settingsOf = (source: string) => project({ '/main.dbml': `${ARCH}Server a\n${source}` }).db?.groups?.[0].settings;
+    expect(settingsOf('Group g [label: top] { a }')).toEqual({ label: 'top' });
+    expect(settingsOf('Group g [label: Bottom] { a }')).toEqual({ label: 'bottom' });
+    expect(settingsOf("Group g [label: 'top'] { a }")).toEqual({ label: 'top' });
+
+    const wrong = project({ '/main.dbml': `${ARCH}Server a\nGroup g [label: left] { a }` });
+    const messages = [...wrong.errors, ...wrong.interpreted.getErrors()].map((e) => e.diagnostic);
+    expect(messages).toContain("'label' can only be top or bottom");
+  });
+
   test('stacked is not a setting on an element', () => {
     const { db } = project({ '/main.dbml': `${ARCH}Server a [stacked: true]` });
     expect(db?.nodes?.[0].settings).toEqual({});

@@ -180,7 +180,7 @@ Group prod [color: #c0453a] {
   db
 }
 Link: api > db [proto: HTTPS]
-Ref: db < api
+Link: db < api
 Metadata Server api {
   owner: 'x'
 }
@@ -194,7 +194,7 @@ Group prod [color: #c0453a] {
   db
 }
 Link: Server web > db [proto: HTTPS]
-Ref: db < Server web
+Link: db < Server web
 Metadata Server web {
   owner: 'x'
 }

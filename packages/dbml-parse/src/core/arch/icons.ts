@@ -139,6 +139,35 @@ export const SUPPORTED_ARCH_TYPES: string[] = [
   'bun',
   'springboot',
   'stripe',
+  // AI models
+  'openai',
+  'anthropic',
+  'gemini',
+  'llama',
+  'qwen',
+  'deepseek',
+  'mistral',
+  'openrouter',
+  // vector databases
+  'pgvector',
+  'qdrant',
+  'weaviate',
+  'chroma',
+  'pinecone',
+  // where an agent runs
+  'app',
+  'cli',
+  'ide',
+  'extension',
+  'background',
+  // apps agents reach
+  'gmail',
+  'googledrive',
+  'notion',
+  'jira',
+  // machine learning infrastructure
+  'mlflow',
+  'gpu',
 ];
 
 // Other values accepted for the same type

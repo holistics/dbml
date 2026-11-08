@@ -84,13 +84,13 @@ const toSettings = (key: string) => (element: Partial<ArchNode | ArchGroup>, val
   element.settings = { ...element.settings, [key]: value };
 };
 
-// `style: dashed` or `label: bottom`, quoted or not
-const keyword = (word: string) => (node?: SyntaxNode): string | undefined => {
-  const value = extractVariableFromExpression(node) ?? extractQuotedStringToken(node);
-  return value?.toLowerCase() === word ? word : undefined;
+// `style: dashed` or `label: top`, quoted or not
+const keyword = (...words: string[]) => (node?: SyntaxNode): string | undefined => {
+  const value = (extractVariableFromExpression(node) ?? extractQuotedStringToken(node))?.toLowerCase();
+  return value !== undefined && words.includes(value) ? value : undefined;
 };
 
-// `[inactive]` alone is true
+// `[stacked]` alone is true
 const flag = (node?: SyntaxNode): boolean | undefined => (node === undefined ? true : extractBooleanLiteral(node) ?? undefined);
 
 const archNote: MetadataField<ArchNode | ArchGroup, string> = {
@@ -116,13 +116,6 @@ const archStyle: MetadataField<ArchNode | ArchGroup, string> = {
   assign: toSettings('style'),
 };
 
-const archInactive: MetadataField<ArchNode | ArchGroup, boolean> = {
-  type: 'bool',
-  parse: flag,
-  message: "'inactive' must be true or false",
-  assign: toSettings('inactive'),
-};
-
 export const NODE_METADATA_FIELDS: MetadataFieldRegistry<ArchNode, any> = {
   type: {
     type: 'string',
@@ -138,18 +131,16 @@ export const NODE_METADATA_FIELDS: MetadataFieldRegistry<ArchNode, any> = {
   },
   color: archColor,
   style: archStyle,
-  inactive: archInactive,
   note: archNote,
 };
 
 export const GROUP_METADATA_FIELDS: MetadataFieldRegistry<ArchGroup, any> = {
   color: archColor,
   style: archStyle,
-  inactive: archInactive,
   label: {
     type: 'string',
-    parse: keyword('bottom'),
-    message: "'label' can only be bottom",
+    parse: keyword('top', 'bottom'),
+    message: "'label' can only be top or bottom",
     assign: toSettings('label'),
   },
   stacked: {
