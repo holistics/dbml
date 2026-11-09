@@ -34,7 +34,7 @@ Link: api > db
 ```
 
 :::note
-Every architecture file must start with `diagram_type: arch` in its [front matter](./enrichment-visualization.md#front-matter).
+Every architecture file must start with `diagram_type: arch` or `diagram_type: architecture` in its [front matter](./enrichment-visualization.md#front-matter).
 :::
 
 ## Elements
