@@ -60,7 +60,7 @@ export function renameElement (
       const target = other.originalSymbol.declaration;
       if (!otherRole || !(target instanceof ElementDeclarationNode)) continue;
       for (const ref of references(this, declarations, target)) {
-        if ('token' in ref || !ref.role) edits.push(...writeRef(source, ref, otherRole, quotedHandle(source, target)));
+        if ('token' in ref || !ref.role) edits.push(...writeRef(source, ref, otherRole, extractQuotedHandle(source, target)));
       }
     }
   }
@@ -111,20 +111,20 @@ function writeRef (source: string, ref: Written, role: string, quoted: string): 
       memberEdit(source, ref.node),
       closeOnOwnLine
         ? { start: lineStart, end: lineStart, newText: `  ${text}\n` }
-        : { start: spaceBefore(source, close.start), end: close.start, newText: `\n  ${text}\n` },
+        : { start: findSpaceBefore(source, close.start), end: close.start, newText: `\n  ${text}\n` },
     ];
   }
   return [{ start: ref.node.start, end: ref.node.end, newText: text }];
 }
 
-function spaceBefore (source: string, at: number): number {
+function findSpaceBefore (source: string, at: number): number {
   let start = at;
   while (start > 0 && (source[start - 1] === ' ' || source[start - 1] === '\t')) start -= 1;
   return start;
 }
 
 // An element's handle as its declaration writes it, quoted or not
-function quotedHandle (source: string, declaration: ElementDeclarationNode): string {
+function extractQuotedHandle (source: string, declaration: ElementDeclarationNode): string {
   const node = declaration.alias ?? declaration.name!;
   return source.substring(node.start, node.end);
 }

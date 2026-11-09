@@ -218,9 +218,11 @@ export default class Parser {
     ast: ProgramNode;
     tokens: SyntaxToken[];
   }> {
+    const frontMatter = this.peek().kind === SyntaxTokenKind.FRONT_MATTER ? this.advance() : undefined;
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, {
+      frontMatter,
       body,
       eof,
       source: this.source,

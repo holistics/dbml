@@ -167,7 +167,6 @@ export * from '@/compiler/projectLayout/layout';
 export { dbmlModules } from '@/core/global_modules';
 export type { GlobalModule } from '@/core/global_modules/types';
 export type { ParserOptions } from '@/core/parser/parser';
-export type { LexerOptions } from '@/core/lexer/lexer';
 export type { DialectOptions } from '@/compiler/index';
 
 export { Compiler };
