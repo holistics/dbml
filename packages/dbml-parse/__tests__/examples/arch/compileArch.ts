@@ -160,7 +160,7 @@ export function compileArch (files: Record<string, string>, entry = '/main.arch.
   return {
     model: modelOf(interpreted.getValue() as Database | undefined, reachable),
     diagnostics,
-    diagramType: compiler.scanFile(entryPath).frontMatter.diagram_type ?? null,
+    diagramType: compiler.frontMatter(entryPath).diagram_type ?? null,
   };
 }
 

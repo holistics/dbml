@@ -64,7 +64,7 @@ function modulesFor (compiler: Compiler, target: unknown): GlobalModule[] {
   if (compiler.explicitModules) return compiler.explicitModules;
   const filepath = (target as { filepath?: Filepath }).filepath
     ?? (target as { declaration?: SyntaxNode }).declaration?.filepath;
-  return filepath && compiler.parsedFileKind(filepath) === 'arch' ? archModules : dbmlModules;
+  return filepath && compiler.fileKind(filepath) === 'arch' ? archModules : dbmlModules;
 }
 
 // Chain-of-responsibility: iterate modules until one handles the node (returns non-PASS_THROUGH)

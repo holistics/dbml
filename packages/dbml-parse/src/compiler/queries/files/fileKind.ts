@@ -1,3 +1,6 @@
+import type Compiler from '@/compiler';
+import Lexer from '@/core/lexer/lexer';
+import type { Filepath } from '@/core/types/filepath';
 import { type SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export type FileKind = 'dbml' | 'arch';
@@ -5,11 +8,6 @@ export type FileKind = 'dbml' | 'arch';
 export const ARCH_DIAGRAM_TYPES = new Set(['arch', 'architecture']);
 
 export const isArchDiagramType = (type: string | null | undefined): boolean => !!type && ARCH_DIAGRAM_TYPES.has(type.toLowerCase());
-
-// What decides a file's kind, read from its tokens without parsing
-export interface FileScan {
-  frontMatter: Record<string, string>;
-}
 
 export function readFrontMatter (block: string): Record<string, string> {
   const out: Record<string, string> = {};
@@ -30,12 +28,15 @@ export function frontMatterToken (tokens: readonly SyntaxToken[]): SyntaxToken |
   return tokens[0]?.leadingTrivia.find((t) => t.kind === SyntaxTokenKind.FRONT_MATTER);
 }
 
-export function scanTokens (tokens: readonly SyntaxToken[]): FileScan {
+// Lex the file and extract front matter key-value pairs
+export function frontMatter (this: Compiler, filepath: Filepath): Record<string, string> {
+  const source = this.getSource(filepath) ?? '';
+  const tokens = new Lexer(source, filepath, { allowFrontMatter: true }).lex().getValue();
   const block = frontMatterToken(tokens);
-  return { frontMatter: block ? readFrontMatter(block.value) : {} };
+  return block ? readFrontMatter(block.value) : {};
 }
 
-// Only `diagram_type` in front matter makes a file an architecture file
-export function decideFileKind (scan: FileScan): FileKind {
-  return isArchDiagramType(scan.frontMatter.diagram_type) ? 'arch' : 'dbml';
+// Determine whether a file is a DBML or architecture file from its front matter
+export function fileKind (this: Compiler, filepath: Filepath): FileKind {
+  return isArchDiagramType(this.frontMatter(filepath).diagram_type) ? 'arch' : 'dbml';
 }

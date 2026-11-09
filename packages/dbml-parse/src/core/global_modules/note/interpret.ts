@@ -75,7 +75,7 @@ export class StickyNoteInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     // An architecture file's note may carry inline links, which are links, not metadata
-    const isArch = this.compiler.parsedFileKind(this.declarationNode.filepath) === 'arch';
+    const isArch = this.compiler.fileKind(this.declarationNode.filepath) === 'arch';
     assignInlineMetadata(this.note, isArch ? omit(settingMap, INLINE_LINK_SETTINGS) : settingMap, NOTE_METADATA_FIELDS);
 
     return [];

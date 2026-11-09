@@ -73,7 +73,7 @@ export const noteModule: LocalModule = {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
     // An architecture file's note carries inline links; the arch module checks those
-    const isArch = compiler.parsedFileKind(node.filepath) === 'arch';
+    const isArch = compiler.fileKind(node.filepath) === 'arch';
 
     for (const [name, attrs] of Object.entries(settingMap)) {
       if (isArch && isArchInlineLinkKey(name)) continue;

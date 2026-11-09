@@ -98,7 +98,7 @@ export default class ProgramInterpreter {
   };
 
   private finishArch () {
-    const isArch = this.compiler.parsedFileKind(this.filepath) === 'arch';
+    const isArch = this.compiler.fileKind(this.filepath) === 'arch';
 
     // A handle can repeat across roles, so an element is keyed by both
     const keyOf = (handle: string, role: string) => `${role}\u0000${handle}`;
@@ -148,8 +148,8 @@ export default class ProgramInterpreter {
       if (isArch || value.length) this.db[key] = value;
     }
 
-    const { frontMatter } = this.compiler.scanFile(this.filepath);
-    if (Object.keys(frontMatter).length) this.db.frontMatter = frontMatter;
+    const fm = this.compiler.frontMatter(this.filepath);
+    if (Object.keys(fm).length) this.db.frontMatter = fm;
     if (isArch) this.db.diagramType = 'arch';
   }
 

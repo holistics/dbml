@@ -117,7 +117,7 @@ export const schemaModule: GlobalModule = {
 
     // 6. Duplicate checking
     // In an architecture file elements, groups and notes are checked together: by role and name, and an alias against every name
-    const isArch = compiler.parsedFileKind(symbol.filepath) === 'arch';
+    const isArch = compiler.fileKind(symbol.filepath) === 'arch';
     const isArchMember = (member: NodeSymbol) => isArch && (member.isKind(SymbolKind.Element) || member.isKind(SymbolKind.StickyNote));
     const keyKind = (member: NodeSymbol) => (isArchMember(member) ? SymbolKind.Element : member.kind);
     const seen = new Map<string, NodeSymbol>();

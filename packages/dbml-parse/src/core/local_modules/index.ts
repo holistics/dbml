@@ -59,7 +59,7 @@ function dispatch<K extends keyof LocalModule> (
   node: SyntaxNode,
   ...args: unknown[]
 ): ReturnType<NonNullable<LocalModule[K]>> | Report<PassThrough> {
-  const list = !compiler.explicitModules && compiler.parsedFileKind(node.filepath) === 'arch' ? archModules : modules;
+  const list = !compiler.explicitModules && compiler.fileKind(node.filepath) === 'arch' ? archModules : modules;
   for (const module of list) {
     const fn = module[method] as any;
     if (fn) {
