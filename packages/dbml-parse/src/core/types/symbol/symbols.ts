@@ -710,6 +710,35 @@ export class TableGroupFieldSymbol extends NodeSymbol {
   }
 }
 
+// An architecture node or group
+export class ElementSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Element,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return true;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
 export class NoteSymbol extends NodeSymbol {
   constructor (
     {

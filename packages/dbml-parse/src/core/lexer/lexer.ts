@@ -34,6 +34,21 @@ export default class Lexer {
     this.filepath = filepath;
   }
 
+  // Consumed character by character so `line` and `column` keep counting.
+  private scanFrontMatter (): void {
+    if (!this.text.startsWith('---')) return;
+    const afterFence = this.text[3];
+    if (afterFence !== '\n' && afterFence !== '\r') return;
+
+    const closing = this.text.indexOf('\n---', 3);
+    if (closing === -1) return; // an unterminated fence is not front matter, it is just text
+
+    let end = this.text.indexOf('\n', closing + 1);
+    if (end === -1) end = this.text.length;
+    while (this.current.offset < end) this.advance();
+    this.addToken(SyntaxTokenKind.FRONT_MATTER);
+  }
+
   private isAtEnd (): boolean {
     return this.current.offset >= this.text.length;
   }
@@ -109,6 +124,7 @@ export default class Lexer {
   }
 
   scanTokens () {
+    this.scanFrontMatter();
     while (!this.isAtEnd()) {
       const c = this.advance();
       switch (c) {
@@ -480,7 +496,9 @@ export default class Lexer {
 
       // The first way to return a numeric literal without error:
       // a digit is encountered as the last character
-      if (!isDot && this.current.offset === this.text.length - 1) {
+      // Without the digit check, a file ending in `[note: 100]` (an element with no body)
+      // lexes `100]` as one NUMERIC_LITERAL and the `]` never reaches the parser.
+      if (!isDot && this.current.offset === this.text.length - 1 && isDigit(this.peek()!)) {
         this.advance();
 
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);

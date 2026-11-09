@@ -32,6 +32,20 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Data Lineage',
         },
         {
+          type: 'category',
+          label: 'System Architecture',
+          collapsed: false,
+          collapsible: true,
+          link: { type: 'doc', id: 'syntax/system-architecture' },
+          items: [
+            {
+              id: 'syntax/architecture-roles-and-types',
+              type: 'doc',
+              label: 'Roles and Types',
+            },
+          ],
+        },
+        {
           id: 'syntax/enrichment-visualization',
           type: 'doc',
           label: 'Enrichment & Visualization',

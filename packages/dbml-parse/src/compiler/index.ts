@@ -7,6 +7,9 @@ import {
   nodeSymbol,
   symbolMembers,
 } from '@/core/global_modules';
+import type { GlobalModule } from '@/core/global_modules/types';
+import type { ParserOptions } from '@/core/parser/parser';
+import { type FileKind, frontMatter, fileKind } from './queries/files/fileKind';
 import {
   nodeFullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
@@ -44,13 +47,18 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
+  renameTable, renameElement, removeElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
   findMetadataBlock, updateElementMetadata, updateElementMetadataEdit,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString, type TypedValue,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
+
+// Every switch inside is off by default
+export interface DialectOptions {
+  parser?: ParserOptions;
+}
 
 // Re-export types
 export { ScopeKind } from './types';
@@ -72,11 +80,33 @@ export default class Compiler {
   readonly symbolIdGenerator = new NodeSymbolIdGenerator();
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  // The structure of the DbmlProject
-  constructor (public layout: DbmlProjectLayout) {}
+  readonly explicitModules: GlobalModule[] | undefined;
+  private readonly explicitDialect: DialectOptions | undefined;
+  readonly dialect: DialectOptions;
+
+  // `layout`: the structure of the DbmlProject
+  // `modules` and `dialect`, when given, apply to every file. When omitted, each file uses the ones of its own kind (DBML or architecture).
+  constructor (
+    public layout: DbmlProjectLayout,
+    modules?: GlobalModule[],
+    dialect?: DialectOptions,
+  ) {
+    this.explicitModules = modules;
+    this.explicitDialect = dialect;
+    this.dialect = dialect ?? {};
+  }
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);
+  }
+
+  parserOptions (kind: FileKind): ParserOptions {
+    return this.explicitDialect
+      ? this.explicitDialect.parser ?? {}
+      : {
+          allowBodylessElement: kind === 'arch',
+          allowRoleReference: kind === 'arch',
+        };
   }
 
   private sourceSnapshot = new Map<string, string | undefined>();
@@ -247,6 +277,9 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
+  frontMatter = this.localQuery(frontMatter);
+  fileKind = this.localQuery(fileKind);
+
   parseFile = this.localQuery(parseFile);
   parseProject = this.globalQuery(parseProject);
 
@@ -287,6 +320,8 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  renameElement = renameElement.bind(this);
+  removeElement = removeElement.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
   updateElementSettingEdit = updateElementSettingEdit.bind(this);
   findMetadataBlock = findMetadataBlock.bind(this);

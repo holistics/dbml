@@ -9,6 +9,7 @@ import {
   ElementDeclarationNode,
   AttributeNode,
   IdentifierStreamNode,
+  KindTaggedExpression,
   PrefixExpressionNode,
   InfixExpressionNode,
   PostfixExpressionNode,
@@ -176,6 +177,13 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.PREFIX_EXPRESSION: {
         const expr = node as PrefixExpressionNode;
         if (expr.op) collectTokens(expr.op);
+        if (expr.expression) collectTokens(expr.expression);
+        break;
+      }
+
+      case SyntaxNodeKind.KIND_TAGGED_EXPRESSION: {
+        const expr = node as KindTaggedExpression;
+        if (expr.kindTag) collectTokens(expr.kindTag);
         if (expr.expression) collectTokens(expr.expression);
         break;
       }

@@ -31,6 +31,8 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
+  // A `---` fenced block at the very top of a file
+  FRONT_MATTER = '<front-matter>',
   WILDCARD = '<wildcard>',
 }
 

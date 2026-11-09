@@ -32,6 +32,10 @@ import {
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
+import { resolveName } from '@/core/global_modules/arch/utils';
+import { type ArchNodeRef, getArchInlineLink, getArchLinkParts } from '@/core/arch';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
+import { getRightmostVariable } from '@/core/utils/validate';
 import { getProgramNamedRefs } from '@/core/global_modules/ref/utils';
 
 declare const __nodeMetadataBrand: unique symbol;
@@ -602,6 +606,82 @@ export class MetadataElementMetadata extends NodeMetadata {
     }
 
     return symbol && symbol !== programSymbol ? [symbol.originalSymbol] : [];
+  }
+}
+
+// Architecture `Link: a > b` (or `Ref:` in an architecture file), or an inline `[link: > b]` on the element `a`
+export class LinkMetadata extends NodeMetadata {
+  declare declaration: ElementDeclarationNode | AttributeNode;
+
+  readonly kind = MetadataKind.Link;
+
+  constructor (declaration: ElementDeclarationNode | AttributeNode) {
+    super(declaration);
+  }
+
+  op (): string | undefined {
+    return this.declaration instanceof AttributeNode
+      ? getArchInlineLink(this.declaration)?.op
+      : getArchLinkParts(this.declaration)?.op;
+  }
+
+  endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
+    const resolve = (ref: ArchNodeRef | undefined) => (ref && isExpressionAVariableNode(ref.node)
+      ? compiler.nodeReferee(ref.node).getFiltered(UNHANDLED)?.originalSymbol
+      : undefined);
+
+    if (this.declaration instanceof AttributeNode) {
+      const inline = getArchInlineLink(this.declaration);
+      const element = this.declaration.parentOfKind(ElementDeclarationNode);
+      if (!inline || !element) return [
+        undefined,
+        undefined,
+      ];
+      return [
+        compiler.nodeSymbol(element).getFiltered(UNHANDLED)?.originalSymbol,
+        resolve(inline),
+      ];
+    }
+
+    const parts = getArchLinkParts(this.declaration);
+    if (!parts) return [
+      undefined,
+      undefined,
+    ];
+    return [
+      resolve(parts.from),
+      resolve(parts.to),
+    ];
+  }
+
+  /** The two linked elements */
+  override targets (compiler: Compiler): NodeSymbol[] {
+    const [from, to] = this.endpoints(compiler);
+    if (!from || !to) return [];
+    return filterDuplicateSymbols([
+      from,
+      to,
+    ]);
+  }
+}
+
+// Architecture `Metadata Server api1 { ... }`, or `Metadata api1 { ... }` with the role left out
+export class ArchMetadataElementMetadata extends MetadataElementMetadata {
+  // A role is not a MetadataTargetKind, so the header is resolved through the binder, or by name when the role is left out
+  override targets (compiler: Compiler): NodeSymbol[] {
+    const nameNode = this.declaration.name;
+    if (nameNode) {
+      const targetNode = getRightmostVariable(nameNode) ?? nameNode;
+      const symbol = compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
+      return symbol ? [symbol] : [];
+    }
+    const name = this.declaration.targetKind?.value;
+    const symbol = name ? resolveName(compiler, this.declaration.filepath, name)?.originalSymbol : undefined;
+    return symbol ? [symbol] : [];
+  }
+
+  target (compiler: Compiler): NodeSymbol | undefined {
+    return this.targets(compiler)[0];
   }
 }
 

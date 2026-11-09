@@ -179,6 +179,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
+  KIND_TAGGED_EXPRESSION = '<kind-tagged-expression>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
 
@@ -190,6 +191,8 @@ export enum SyntaxNodeKind {
 export class ProgramNode extends SyntaxNode {
   body: (UseDeclarationNode | ElementDeclarationNode)[];
 
+  frontMatter?: SyntaxToken;
+
   eof?: SyntaxToken;
 
   source: string;
@@ -197,10 +200,12 @@ export class ProgramNode extends SyntaxNode {
   constructor (
     {
       body = [],
+      frontMatter,
       eof,
       source,
     }: {
       body?: (UseDeclarationNode | ElementDeclarationNode)[];
+      frontMatter?: SyntaxToken;
       eof?: SyntaxToken;
       source: string;
     },
@@ -208,10 +213,12 @@ export class ProgramNode extends SyntaxNode {
     filepath: Filepath,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, filepath, [
+      frontMatter,
       ...body,
       eof,
     ]);
     this.source = source;
+    this.frontMatter = frontMatter;
     this.body = body;
     this.eof = eof;
   }
@@ -322,6 +329,9 @@ export class UseSpecifierNode extends SyntaxNode {
     this.alias = alias;
   }
 
+  // Set on specifiers in an architecture file, whose kind words are roles, `Group` and `Note`
+  declare archImport?: boolean;
+
   isKind (...importKinds: ImportKind[]): boolean {
     return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
   }
@@ -329,6 +339,10 @@ export class UseSpecifierNode extends SyntaxNode {
   getSymbolKind (): SymbolKind | undefined {
     const value = this.importKind?.value?.toLowerCase();
     if (value === undefined) return undefined;
+    if (this.archImport) {
+      // DBML's own kind words still import DBML elements; `note` imports a sticky note
+      return Object.values(ImportKind).find((k) => k.toLowerCase() === value) ?? SymbolKind.Element;
+    }
     return Object.values(SymbolKind).find((k) => k.toLowerCase() === value);
   }
 }
@@ -498,7 +512,7 @@ export class AttributeNode extends SyntaxNode {
 
   colon?: SyntaxToken;
 
-  value?: NormalExpressionNode | IdentifierStreamNode;
+  value?: NormalExpressionNode | IdentifierStreamNode | KindTaggedExpression;
 
   constructor (
     {
@@ -508,7 +522,7 @@ export class AttributeNode extends SyntaxNode {
     }: {
       name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentifierStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
     },
     id: SyntaxNodeId,
     filepath: Filepath,
@@ -568,6 +582,31 @@ export class PrefixExpressionNode extends SyntaxNode {
       expression,
     ]);
     this.op = op;
+    this.expression = expression;
+  }
+}
+
+// Form: <kind-tag> <expression>
+// A kind (role) tag followed by an expression, separated by a space
+// Only in architecture files: [link: > Server api],  Group { Server api },  Metadata Server api { }
+export class KindTaggedExpression extends SyntaxNode {
+  kindTag?: NormalExpressionNode;
+
+  expression?: NormalExpressionNode;
+
+  constructor (
+    {
+      kindTag, expression,
+    }: { kindTag?: NormalExpressionNode;
+      expression?: NormalExpressionNode; },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(id, SyntaxNodeKind.KIND_TAGGED_EXPRESSION, filepath, [
+      kindTag,
+      expression,
+    ]);
+    this.kindTag = kindTag;
     this.expression = expression;
   }
 }

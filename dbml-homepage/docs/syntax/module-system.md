@@ -68,6 +68,7 @@ Only the specified elements will be imported, others will not be visible and wil
 | `note`         | Sticky Note                                   |
 | `schema`       | All elements under that schema                |
 | `tablegroup`   | TableGroup (all tables in the group)          |
+| `Server`, `Database`, … (any [architecture role](./architecture-roles-and-types.mdx#roles)) | Architecture element with that role |
 
 Element type keywords are case-insensitive (`Table`, `TABLE`, and `table` are all valid).
 
@@ -109,6 +110,14 @@ use {
 use {
   tablegroup auth_core
 } from './auth'
+```
+
+```text
+// in an architecture file: grafana and orders are available here
+use {
+  Monitoring grafana
+  Database orders_db as orders
+} from './infra'
 ```
 
 ### Import Aliases

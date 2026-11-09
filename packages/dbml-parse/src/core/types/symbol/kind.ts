@@ -24,6 +24,9 @@ export enum SymbolKind {
 
   Metadata = 'Metadata',
 
+  // Architecture nodes and groups share one kind, so their handles share one namespace
+  Element = 'Element',
+
   Program = 'Program',
 }
 
@@ -47,6 +50,7 @@ export enum MetadataKind {
   Records = 'records',
   Project = 'project',
   MetadataElement = 'metadata element',
+  Link = 'link',
 }
 
 /** Allowed target element types for a Metadata element header */

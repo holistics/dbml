@@ -43,6 +43,9 @@ export interface DatabaseExternals {
   tableGroups: ElementRef[];
   tablePartials: ElementRef[];
   notes: ElementRef[];
+  // Architecture elements, present only when the file imports some
+  nodes?: ElementRef[];
+  groups?: ElementRef[];
 }
 
 /**
@@ -86,6 +89,72 @@ export interface Database {
   externals: DatabaseExternals;
   diagramViews: DiagramView[];
   token?: TokenPosition;
+  // Architecture entries, present only for an architecture file or when the file imports some
+  nodes?: ArchNode[];
+  groups?: ArchGroup[];
+  links?: ArchLink[];
+  // The `---` block at the top of the file, present only when it has keys
+  frontMatter?: Record<string, string>;
+  // 'arch' for a file read as an architecture diagram; absent for a DBML file
+  diagramType?: 'arch';
+}
+
+export type ArchSettingValue = string | number | boolean;
+export type ArchSettings = Record<string, ArchSettingValue>;
+
+// `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique per role;
+// an alias is unique among every handle.
+export interface ArchNode {
+  name: string;
+  alias: string | null;
+  // The role's declared spelling
+  role: string;
+  // The supported type `type` names, in its listed spelling
+  type: string | null;
+  // The image URL `icon` gives
+  icon: string | null;
+  // The built-in settings as written: type, icon, color, style
+  settings: ArchSettings;
+  metadata: CustomMetadata;
+  note: {
+    value: string;
+    token: TokenPosition;
+  } | null;
+  token: TokenPosition;
+}
+
+export interface ArchGroup {
+  name: string;
+  alias: string | null;
+  // The members this group owns, in written order: handle and role (`Group` for a group, `Note` for a sticky note)
+  children: ArchRef[];
+  // The built-in settings as written: color, style, label, stacked
+  settings: ArchSettings;
+  metadata: CustomMetadata;
+  note: {
+    value: string;
+    token: TokenPosition;
+  } | null;
+  token: TokenPosition;
+}
+
+export type ArchLinkOp = '>' | '<' | '<>' | '-';
+
+// An element, group or sticky note as a link or a group names it: a handle can repeat across roles
+export interface ArchRef {
+  handle: string;
+  role: string;
+}
+
+export interface ArchLink {
+  // Handles and roles of the two endpoints
+  from: string;
+  fromRole: string;
+  to: string;
+  toRole: string;
+  op: ArchLinkOp;
+  settings: ArchSettings;
+  token: TokenPosition;
 }
 
 // Multifile project
@@ -370,4 +439,8 @@ export type SchemaElement =
   | TablePartialInjection
   | TableRecord
   | RecordValue
-  | CustomMetadata;
+  | CustomMetadata
+  | ArchNode
+  | ArchGroup
+  | ArchLink
+  | ArchSettings;

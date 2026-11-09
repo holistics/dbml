@@ -24,6 +24,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
 - [DiagramView](#diagramview)
 - [Colors](#colors)
 - [Inactive Ref](#inactive-ref)
+- [Front Matter](#front-matter)
 
 ## Note Definition
 
@@ -437,5 +438,26 @@ Ref: posts.user_id > users.id [delete: cascade, inactive]
 // long form
 Ref {
   posts.user_id > users.id [inactive]
+}
+```
+
+## Front Matter
+
+Front matter is a block of `key: value` lines between two `---` lines. It must be the first thing in the file. Keys and values in front matter generally don't affect the schema or diagram, except `diagram_type`, which marks an [architecture file](./system-architecture.md).
+
+Values can be written with or without quotes: `title: E-commerce`, `title: 'E-commerce'` and `title: "E-commerce"` are the same.
+
+**Example**
+
+```text
+---
+title: E-commerce database
+owner: data-team
+updated: 2026-10-12
+---
+
+Table orders {
+  id int [pk]
+  status varchar
 }
 ```
