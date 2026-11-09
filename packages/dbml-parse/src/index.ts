@@ -1,6 +1,5 @@
 import Compiler from '@/compiler/index';
 
-// Export the types that playground and other consumers need
 export { DEFAULT_ENTRY } from '@/constants';
 
 export { Filepath } from '@/core/types/filepath';
