@@ -55,17 +55,15 @@ export const archModules: LocalModule[] = [
 // Chain-of-responsibility: iterate the node's file's modules until one handles the node (returns non-PASS_THROUGH)
 function dispatch<K extends keyof LocalModule> (
   method: K,
-  ...args: Parameters<NonNullable<LocalModule[K]>>
+  compiler: Compiler,
+  node: SyntaxNode,
+  ...args: unknown[]
 ): ReturnType<NonNullable<LocalModule[K]>> | Report<PassThrough> {
-  const [
-    compiler,
-    node,
-  ] = args as unknown as [Compiler, SyntaxNode];
   const list = !compiler.explicitModules && compiler.parsedFileKind(node.filepath) === 'arch' ? archModules : modules;
   for (const module of list) {
     const fn = module[method] as any;
     if (fn) {
-      const result = fn(...args);
+      const result = fn(compiler, node, ...args);
       if (!result.hasValue(PASS_THROUGH)) {
         return result;
       }
