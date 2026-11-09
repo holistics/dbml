@@ -5,7 +5,10 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = `---
+diagram_type: arch
+---
+`;
 
 function compile (x: string, main: string) {
   const layout = new MemoryProjectLayout();
@@ -34,13 +37,15 @@ describe('[example] selective imports in an architecture file', () => {
   });
 
   test('Group imports a group', () => {
-    const { errors, db } = compile('Server api\nGroup g { api }', "use { Group g } from './x'");
+    const { errors, db } = compile(`Server api
+Group g { api }`, "use { Group g } from './x'");
     expect(errors).toHaveLength(0);
     expect(db?.groups?.map((g) => g.name)).toEqual(['g']);
   });
 
   test('a role word on a group is an error', () => {
-    const { errors } = compile('Server api\nGroup g { api }', "use { Server g } from './x'");
+    const { errors } = compile(`Server api
+Group g { api }`, "use { Server g } from './x'");
     expect(errors.map((e) => e.diagnostic)).toEqual(['g is a Group, not a Server']);
   });
 });

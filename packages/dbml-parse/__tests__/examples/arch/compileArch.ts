@@ -158,15 +158,15 @@ export function compileArch (files: Record<string, string>, entry = '/main.arch.
   }
 
   return {
-    model: modelOf(interpreted.getValue() as Database | undefined, reachable),
+    model: buildModel(interpreted.getValue() as Database | undefined, reachable),
     diagnostics,
     diagramType: compiler.frontMatter(entryPath).diagram_type ?? null,
   };
 }
 
-const valuesOf = (metadata: CustomMetadata | undefined): Record<string, unknown> => Object.fromEntries(Object.entries(metadata ?? {}).map(([key, entry]) => [key, entry.value]));
+const extractValues = (metadata: CustomMetadata | undefined): Record<string, unknown> => Object.fromEntries(Object.entries(metadata ?? {}).map(([key, entry]) => [key, entry.value]));
 
-function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel {
+function buildModel (db: Database | undefined, reachable: Filepath[]): NetworkModel {
   const model: NetworkModel = {
     project: db?.project,
     frontMatter: db?.frontMatter ?? {},
@@ -178,14 +178,14 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
   if (!db) return model;
 
   // A handle can repeat across roles: the second element with a handle is keyed `Role handle`
-  const keyOf = (handle: string, role: string) => `${role}\u0000${handle}`;
+  const formatKey = (handle: string, role: string) => `${role}\u0000${handle}`;
   const parent = new Map<string, string>();
-  for (const group of db.groups ?? []) for (const child of group.children) parent.set(keyOf(child.handle, child.role), group.alias ?? group.name);
-  const idOf = (handle: string, role: string) => (model.elements.has(handle) ? `${role} ${handle}` : handle);
+  for (const group of db.groups ?? []) for (const child of group.children) parent.set(formatKey(child.handle, child.role), group.alias ?? group.name);
+  const formatId = (handle: string, role: string) => (model.elements.has(handle) ? `${role} ${handle}` : handle);
 
   for (const node of db.nodes ?? []) {
     const handle = node.alias ?? node.name;
-    const id = idOf(handle, node.role);
+    const id = formatId(handle, node.role);
     model.elements.set(id, {
       sort: 'node',
       id,
@@ -195,15 +195,15 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       type: node.type,
       icon: node.icon,
       settings: node.settings,
-      metadata: valuesOf(node.metadata),
+      metadata: extractValues(node.metadata),
       note: node.note?.value ?? null,
-      parent: parent.get(keyOf(handle, node.role)) ?? null,
+      parent: parent.get(formatKey(handle, node.role)) ?? null,
       at: locate(node.token),
     });
   }
   for (const group of db.groups ?? []) {
     const handle = group.alias ?? group.name;
-    const id = idOf(handle, 'Group');
+    const id = formatId(handle, 'Group');
     model.elements.set(id, {
       sort: 'group',
       id,
@@ -211,14 +211,14 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       label: group.name,
       children: group.children.map((child) => child.handle),
       settings: group.settings,
-      metadata: valuesOf(group.metadata),
+      metadata: extractValues(group.metadata),
       note: group.note?.value ?? null,
-      parent: parent.get(keyOf(handle, 'Group')) ?? null,
+      parent: parent.get(formatKey(handle, 'Group')) ?? null,
       at: locate(group.token),
     });
   }
   for (const note of db.notes ?? []) {
-    const id = idOf(note.name, 'Note');
+    const id = formatId(note.name, 'Note');
     model.elements.set(id, {
       sort: 'note',
       id,
@@ -226,9 +226,9 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       label: note.name,
       text: note.content,
       settings: {},
-      metadata: valuesOf(note.metadata),
+      metadata: extractValues(note.metadata),
       note: null,
-      parent: parent.get(keyOf(note.name, 'Note')) ?? null,
+      parent: parent.get(formatKey(note.name, 'Note')) ?? null,
       at: locate(note.token),
     });
   }

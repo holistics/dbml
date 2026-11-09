@@ -5,7 +5,10 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = `---
+diagram_type: arch
+---
+`;
 
 function project (files: Record<string, string>, entry = '/main.dbml') {
   const layout = new MemoryProjectLayout();
@@ -23,13 +26,19 @@ function project (files: Record<string, string>, entry = '/main.dbml') {
 
 describe('[example] architecture rules', () => {
   test('a link and a group cannot name a DBML table', () => {
-    const schema = 'Table users {\n  id int [pk]\n}';
-    const viaLink = project({ '/schema.dbml': schema, '/main.dbml': `${ARCH}use * from './schema'\nServer api\nLink: api > users` });
+    const schema = `Table users {
+  id int [pk]
+}`;
+    const viaLink = project({ '/schema.dbml': schema, '/main.dbml': `${ARCH}use * from './schema'
+Server api
+Link: api > users` });
     expect(viaLink.errors.map((e) => [e.code, e.diagnostic])).toEqual([
       [CompileErrorCode.BINDING_ERROR, 'users is a table; a link joins elements'],
     ]);
 
-    const viaGroup = project({ '/schema.dbml': schema, '/main.dbml': `${ARCH}use * from './schema'\nServer api\nGroup g { api users }` });
+    const viaGroup = project({ '/schema.dbml': schema, '/main.dbml': `${ARCH}use * from './schema'
+Server api
+Group g { api users }` });
     expect(viaGroup.errors.map((e) => [e.code, e.diagnostic])).toEqual([
       [CompileErrorCode.BINDING_ERROR, 'users is a table; a group lists elements and groups'],
     ]);
@@ -38,7 +47,10 @@ describe('[example] architecture rules', () => {
   test('a DBML file that imports nodes gets them with their roles', () => {
     const { errors, db } = project({
       '/infra.dbml': `${ARCH}Server api`,
-      '/main.dbml': "use * from './infra'\nTable users {\n  id int\n}",
+      '/main.dbml': `use * from './infra'
+Table users {
+  id int
+}`,
     });
     expect(errors).toHaveLength(0);
     expect(db?.diagramType).toBeUndefined();
@@ -52,7 +64,8 @@ describe('[example] architecture rules', () => {
   });
 
   test('a word that is not a role is an error that names the nearest roles', () => {
-    const { errors } = project({ '/main.dbml': `${ARCH}Sever api\nLakehouse lake` });
+    const { errors } = project({ '/main.dbml': `${ARCH}Sever api
+Lakehouse lake` });
     expect(errors.map((e) => [e.code, e.diagnostic])).toEqual([
       [CompileErrorCode.ARCH_UNKNOWN_ROLE, 'Sever is not a role. Did you mean: Server?'],
       [CompileErrorCode.ARCH_UNKNOWN_ROLE, expect.stringMatching(/^Lakehouse is not a role\. /)],
@@ -63,53 +76,76 @@ describe('[example] architecture rules', () => {
     const base = `${ARCH}Server api`;
     const metadata = (order: string[]) => project({
       '/base.dbml': base,
-      '/a.dbml': `${ARCH}use * from './base'\nMetadata api {\n  tier: 'a'\n}`,
-      '/b.dbml': `${ARCH}use * from './base'\nMetadata api {\n  tier: 'b'\n}`,
-      '/main.dbml': `${ARCH}use * from './base'\n${order.map((f) => `use * from './${f}'`).join('\n')}`,
+      '/a.dbml': `${ARCH}use * from './base'
+Metadata api {
+  tier: 'a'
+}`,
+      '/b.dbml': `${ARCH}use * from './base'
+Metadata api {
+  tier: 'b'
+}`,
+      '/main.dbml': `${ARCH}use * from './base'
+${order.map((f) => `use * from './${f}'`).join('\n')}`,
     }).db?.nodes?.[0].metadata.tier?.value;
     expect(metadata(['a', 'b'])).toBe('b');
     expect(metadata(['b', 'a'])).toBe('a');
 
-    const own = project({ '/base.dbml': base, '/main.dbml': `${ARCH}use * from './base'\nServer web` });
+    const own = project({ '/base.dbml': base, '/main.dbml': `${ARCH}use * from './base'
+Server web` });
     expect(own.db?.nodes?.map((n) => n.name)).toEqual(['web', 'api']);
 
-    const broken = project({ '/main.dbml': `${ARCH}Server a [type: 'postgress']\nLink: a > ghost` });
+    const broken = project({ '/main.dbml': `${ARCH}Server a [type: 'postgress']
+Link: a > ghost` });
     expect(broken.interpreted.getErrors().map((e) => e.code)).toContain(CompileErrorCode.ARCH_UNKNOWN_ENDPOINT);
     expect(broken.interpreted.getWarnings()).toHaveLength(0);
 
-    const dbml = project({ '/main.dbml': 'Table users {\n  id int\n}' });
+    const dbml = project({ '/main.dbml': `Table users {
+  id int
+}` });
     expect(dbml.compiler.fileKind(Filepath.from('/main.dbml'))).toBe('dbml');
     expect(dbml.errors).toHaveLength(0);
     expect(dbml.db?.diagramType).toBeUndefined();
   });
 
   test('link settings go before the colon or after the second end, not both', () => {
-    const before = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink [color: #ff0000]: a > b` });
+    const before = project({ '/main.dbml': `${ARCH}Server a
+Server b
+Link [color: #ff0000]: a > b` });
     expect(before.errors).toEqual([]);
     expect(before.db?.links?.[0].settings).toEqual({ color: '#ff0000' });
-    const both = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink [color: #ff0000]: a > b [proto: 'https']` });
+    const both = project({ '/main.dbml': `${ARCH}Server a
+Server b
+Link [color: #ff0000]: a > b [proto: 'https']` });
     expect(both.errors.map((e) => e.diagnostic)).toEqual(['Write the link settings in one place: before the colon or after the second end']);
   });
 
   test('stacked is a group flag, written bare, as true or false, or in a Metadata block', () => {
-    const settingsOf = (source: string) => project({ '/main.dbml': `${ARCH}Server a\n${source}` }).db?.groups?.[0].settings;
-    expect(settingsOf('Group g [stacked] { a }')).toEqual({ stacked: true });
-    expect(settingsOf('Group g [stacked: false] { a }')).toEqual({ stacked: false });
-    expect(settingsOf('Group g {\n  a\n  stacked: true\n}')).toEqual({ stacked: true });
-    expect(settingsOf('Group g { a }\nMetadata Group g { stacked: true }')).toEqual({ stacked: true });
+    const getSettings = (source: string) => project({ '/main.dbml': `${ARCH}Server a
+${source}` }).db?.groups?.[0].settings;
+    expect(getSettings('Group g [stacked] { a }')).toEqual({ stacked: true });
+    expect(getSettings('Group g [stacked: false] { a }')).toEqual({ stacked: false });
+    expect(getSettings(`Group g {
+  a
+  stacked: true
+}`)).toEqual({ stacked: true });
+    expect(getSettings(`Group g { a }
+Metadata Group g { stacked: true }`)).toEqual({ stacked: true });
 
-    const wrong = project({ '/main.dbml': `${ARCH}Server a\nGroup g [stacked: 3] { a }` });
+    const wrong = project({ '/main.dbml': `${ARCH}Server a
+Group g [stacked: 3] { a }` });
     const messages = [...wrong.errors, ...wrong.interpreted.getErrors()].map((e) => e.diagnostic);
     expect(messages).toContain("'stacked' must be true or false");
   });
 
   test('label is top or bottom on a group, in any case, quoted or not', () => {
-    const settingsOf = (source: string) => project({ '/main.dbml': `${ARCH}Server a\n${source}` }).db?.groups?.[0].settings;
-    expect(settingsOf('Group g [label: top] { a }')).toEqual({ label: 'top' });
-    expect(settingsOf('Group g [label: Bottom] { a }')).toEqual({ label: 'bottom' });
-    expect(settingsOf("Group g [label: 'top'] { a }")).toEqual({ label: 'top' });
+    const getSettings = (source: string) => project({ '/main.dbml': `${ARCH}Server a
+${source}` }).db?.groups?.[0].settings;
+    expect(getSettings('Group g [label: top] { a }')).toEqual({ label: 'top' });
+    expect(getSettings('Group g [label: Bottom] { a }')).toEqual({ label: 'bottom' });
+    expect(getSettings("Group g [label: 'top'] { a }")).toEqual({ label: 'top' });
 
-    const wrong = project({ '/main.dbml': `${ARCH}Server a\nGroup g [label: left] { a }` });
+    const wrong = project({ '/main.dbml': `${ARCH}Server a
+Group g [label: left] { a }` });
     const messages = [...wrong.errors, ...wrong.interpreted.getErrors()].map((e) => e.diagnostic);
     expect(messages).toContain("'label' can only be top or bottom");
   });
@@ -121,7 +157,13 @@ describe('[example] architecture rules', () => {
   });
 
   test('a link end, an inline link end and a group member written a.b is an error', () => {
-    for (const source of ['Server a\nServer b\nLink: a.web > b', 'Server b\nServer a [link: > b.web]', 'Server a\nGroup g {\n  a.web\n}']) {
+    for (const source of [`Server a
+Server b
+Link: a.web > b`, `Server b
+Server a [link: > b.web]`, `Server a
+Group g {
+  a.web
+}`]) {
       const result = project({ '/main.dbml': `${ARCH}${source}` });
       expect(result.errors.map((e) => e.diagnostic)[0]).toMatch(/`a\.b` is not a name/);
     }

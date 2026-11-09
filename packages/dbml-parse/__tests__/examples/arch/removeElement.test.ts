@@ -3,7 +3,10 @@ import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = `---
+diagram_type: arch
+---
+`;
 const MAIN = Filepath.from('/main.dbml');
 
 function remove (source: string, handle: string): string | undefined {
@@ -12,7 +15,7 @@ function remove (source: string, handle: string): string | undefined {
   return new Compiler(layout).removeElement(MAIN, handle).get(MAIN.absolute);
 }
 
-function errorsOf (source: string): string[] {
+function collectDiagnostics (source: string): string[] {
   const layout = new MemoryProjectLayout();
   layout.setSource(MAIN, source);
   const compiler = new Compiler(layout);
@@ -24,42 +27,92 @@ function errorsOf (source: string): string[] {
 
 describe('[example] removing an element', () => {
   test('takes its declaration and the links to and from it', () => {
-    const result = remove('Server api\nDatabase db\nCache c\nLink: api > db\nLink: c - api\nLink: db > c\n', 'api');
-    expect(result).toBe(`${ARCH}Database db\nCache c\nLink: db > c\n`);
-    expect(errorsOf(result!)).toEqual([]);
+    const result = remove(`Server api
+Database db
+Cache c
+Link: api > db
+Link: c - api
+Link: db > c
+`, 'api');
+    expect(result).toBe(`${ARCH}Database db
+Cache c
+Link: db > c
+`);
+    expect(collectDiagnostics(result!)).toEqual([]);
   });
 
   test('takes inline links on other elements that point at it, and keeps their other settings', () => {
-    const result = remove('Server api [color: #ff0000, link: > db]\nServer web [link: > db]\nDatabase db\n', 'db');
-    expect(result).toBe(`${ARCH}Server api [color: #ff0000]\nServer web\n`);
-    expect(errorsOf(result!)).toEqual([]);
+    const result = remove(`Server api [color: #ff0000, link: > db]
+Server web [link: > db]
+Database db
+`, 'db');
+    expect(result).toBe(`${ARCH}Server api [color: #ff0000]
+Server web
+`);
+    expect(collectDiagnostics(result!)).toEqual([]);
   });
 
   test('takes it out of the groups that list it, keeping the other members', () => {
-    expect(remove('Server a\nServer b\nServer c\nGroup g { a b c }\n', 'b'))
-      .toBe(`${ARCH}Server a\nServer c\nGroup g { a c }\n`);
-    expect(remove('Server a\nServer b\nGroup g {\n  a\n  b\n}\n', 'b'))
-      .toBe(`${ARCH}Server a\nGroup g {\n  a\n}\n`);
-    expect(remove('Server a\nGroup g { a }\n', 'a'))
-      .toBe(`${ARCH}Group g { }\n`);
+    expect(remove(`Server a
+Server b
+Server c
+Group g { a b c }
+`, 'b'))
+      .toBe(`${ARCH}Server a
+Server c
+Group g { a c }
+`);
+    expect(remove(`Server a
+Server b
+Group g {
+  a
+  b
+}
+`, 'b'))
+      .toBe(`${ARCH}Server a
+Group g {
+  a
+}
+`);
+    expect(remove(`Server a
+Group g { a }
+`, 'a'))
+      .toBe(`${ARCH}Group g { }
+`);
   });
 
   test('takes Metadata on it, in either target form', () => {
-    expect(remove("Server api\nMetadata api {\n  owner: 'x'\n}\nMetadata Server api {\n  tier: 1\n}\n", 'api'))
+    expect(remove(`Server api
+Metadata api {
+  owner: 'x'
+}
+Metadata Server api {
+  tier: 1
+}
+`, 'api'))
       .toBe(ARCH);
   });
 
   test('removes a group without removing its members', () => {
-    expect(remove('Server a\nGroup g { a }\nLink: a > g\n', 'g')).toBe(`${ARCH}Server a\n`);
+    expect(remove(`Server a
+Group g { a }
+Link: a > g
+`, 'g')).toBe(`${ARCH}Server a
+`);
   });
 
   test('finds an element by its alias', () => {
-    expect(remove('Server "API 1" as api1\nServer b\nLink: b > api1\n', 'api1')).toBe(`${ARCH}Server b\n`);
+    expect(remove(`Server "API 1" as api1
+Server b
+Link: b > api1
+`, 'api1')).toBe(`${ARCH}Server b
+`);
   });
 
   test('changes nothing for a name that is not declared', () => {
     const layout = new MemoryProjectLayout();
-    layout.setSource(MAIN, `${ARCH}Server a\n`);
+    layout.setSource(MAIN, `${ARCH}Server a
+`);
     expect(new Compiler(layout).removeElement(MAIN, 'ghost').size).toBe(0);
   });
 });

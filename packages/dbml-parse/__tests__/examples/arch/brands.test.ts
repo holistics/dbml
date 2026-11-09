@@ -9,14 +9,14 @@ function compileNode (settings: string) {
   return { node: [...model.elements.values()].find(isNode), diagnostics };
 }
 
-const typeOf = (value: string) => compileNode(`type: '${value}'`).node?.type ?? null;
+const resolveType = (value: string) => compileNode(`type: '${value}'`).node?.type ?? null;
 
 describe('[example] supported types', () => {
   it('reach the model as the listed value, in any case and through an alternative', () => {
-    expect(SUPPORTED_ARCH_TYPES.filter((name) => typeOf(name) !== name)).toEqual([]);
-    expect(typeOf('Postgres')).toBe('postgres');
-    expect(typeOf('PostgreSQL')).toBe('postgres');
-    expect(typeOf('k8s')).toBe('kubernetes');
+    expect(SUPPORTED_ARCH_TYPES.filter((name) => resolveType(name) !== name)).toEqual([]);
+    expect(resolveType('Postgres')).toBe('postgres');
+    expect(resolveType('PostgreSQL')).toBe('postgres');
+    expect(resolveType('k8s')).toBe('kubernetes');
     expect(resolveArchType('MONGO')).toBe('mongodb');
   });
 
