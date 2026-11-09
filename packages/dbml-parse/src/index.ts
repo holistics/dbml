@@ -136,7 +136,7 @@ export type {
 } from '@/compiler/queries/transform';
 
 export { findDiagramViewBlocks, syncElementMetadata, applyTextEdits } from '@/compiler/queries/transform';
-export { fullName } from '@/compiler/queries/transform/utils/arch';
+export { formatRoleQualifiedName } from '@/compiler/queries/transform/utils/arch';
 
 // Dep transform types
 export type { DepSyncOperation, DepSyncEdge, DepEndpointRef } from '@/compiler/queries/transform';

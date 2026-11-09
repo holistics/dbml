@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { ARCH_BUILTIN_ROLES, ARCH_NAME_PRECEDENCE } from '@/core/arch/vocabulary';
-import { fullName } from '@/compiler/queries/transform/utils/arch';
+import { formatRoleQualifiedName } from '@/compiler/queries/transform/utils/arch';
 import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import type { Database } from '@/core/types/schemaJson';
@@ -283,9 +283,9 @@ Group api { }` });
   });
 
   test('the app writes a reference as its full name, role and handle, quoted when needed', () => {
-    expect(fullName('api', 'Server')).toBe('Server api');
-    expect(fullName('API 1', 'Server')).toBe('Server "API 1"');
-    expect(fullName('memo', 'Note')).toBe('Note memo');
+    expect(formatRoleQualifiedName('api', 'Server')).toBe('Server api');
+    expect(formatRoleQualifiedName('API 1', 'Server')).toBe('Server "API 1"');
+    expect(formatRoleQualifiedName('memo', 'Note')).toBe('Note memo');
   });
 
   test('moving an inline link out writes both ends by full name, with no warning', () => {

@@ -41,7 +41,7 @@ export function refersTo (compiler: Compiler, node: SyntaxNode | undefined, targ
 
 // How the app writes a reference to an element, group or sticky note: always its role and handle,
 // so the reference means that element whatever else shares the handle
-export const fullName = (handle: string, role: string): string => `${role} ${isValidIdentifier(handle) ? handle : `"${handle}"`}`;
+export const formatRoleQualifiedName = (handle: string, role: string): string => `${role} ${isValidIdentifier(handle) ? handle : `"${handle}"`}`;
 
 export type ArchLinkDefinition =
   | { kind: 'standalone'; declaration: ElementDeclarationNode }

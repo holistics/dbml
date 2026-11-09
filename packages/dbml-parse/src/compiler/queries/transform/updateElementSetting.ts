@@ -12,7 +12,7 @@ import {
   formatEndpoint, formatSetting, findRefDefinition, findDepDefinition,
 } from './utils';
 import {
-  findArchElement, findArchLink, fullName, removeAttributeEdit,
+  findArchElement, findArchLink, formatRoleQualifiedName, removeAttributeEdit,
 } from './utils/arch';
 import { getLocalHandle, getSymbolRole } from '@/core/global_modules/arch/utils';
 import { LinkMetadata } from '@/core/types/symbol/metadata';
@@ -188,7 +188,7 @@ function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, targ
     const targetRole = target && getSymbolRole(target);
     if (value === null || !definition.element.attributeList || handle === undefined || !role || targetHandle === undefined || !targetRole) return [];
     const setting = formatSetting(settingName, value);
-    const line = `Link: ${fullName(handle, role)} ${definition.op} ${fullName(targetHandle, targetRole)}`;
+    const line = `Link: ${formatRoleQualifiedName(handle, role)} ${definition.op} ${formatRoleQualifiedName(targetHandle, targetRole)}`;
     return [
       removeAttributeEdit(definition.element.attributeList, definition.attribute, source),
       { start: source.length, end: source.length, newText: `\n\n${setting ? `${line} [${setting}]` : line}\n` },

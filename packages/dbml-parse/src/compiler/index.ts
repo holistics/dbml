@@ -109,7 +109,6 @@ export default class Compiler {
         };
   }
 
-
   private sourceSnapshot = new Map<string, string | undefined>();
   // Purge local + global caches if `filepath`'s content changed since last seen
   private cleanStaleLocalCache (filepath: Filepath): void {
