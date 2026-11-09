@@ -9,7 +9,6 @@ import {
 } from '@/core/global_modules';
 import type { GlobalModule } from '@/core/global_modules/types';
 import type { ParserOptions } from '@/core/parser/parser';
-import type { LexerOptions } from '@/core/lexer/lexer';
 import { type FileKind, frontMatter, fileKind } from './queries/files/fileKind';
 import {
   nodeFullname, nodeAlias, nodeSettings, validateNode,
@@ -58,7 +57,6 @@ import { DEFAULT_ENTRY } from '@/constants';
 
 // Every switch inside is off by default
 export interface DialectOptions {
-  lexer?: LexerOptions;
   parser?: ParserOptions;
 }
 
@@ -100,10 +98,6 @@ export default class Compiler {
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);
-  }
-
-  lexerOptions (): LexerOptions {
-    return this.explicitDialect ? this.explicitDialect.lexer ?? {} : { allowFrontMatter: true };
   }
 
   parserOptions (kind: FileKind): ParserOptions {

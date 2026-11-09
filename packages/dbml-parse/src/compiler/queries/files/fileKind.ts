@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import Lexer from '@/core/lexer/lexer';
 import type { Filepath } from '@/core/types/filepath';
-import { type SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { SyntaxTokenKind } from '@/core/types/tokens';
 
 export type FileKind = 'dbml' | 'arch';
 
@@ -23,17 +23,15 @@ export function readFrontMatter (block: string): Record<string, string> {
   return out;
 }
 
-// The block is trivia, so it arrives on the first real token (or on EOF in an otherwise empty file)
-export function frontMatterToken (tokens: readonly SyntaxToken[]): SyntaxToken | undefined {
-  return tokens[0]?.leadingTrivia.find((t) => t.kind === SyntaxTokenKind.FRONT_MATTER);
-}
-
-// Lex the file and extract front matter key-value pairs
+// Lex the file and extract front matter key-value pairs from the first non-trivia token
 export function frontMatter (this: Compiler, filepath: Filepath): Record<string, string> {
   const source = this.getSource(filepath) ?? '';
-  const tokens = new Lexer(source, filepath, { allowFrontMatter: true }).lex().getValue();
-  const block = frontMatterToken(tokens);
-  return block ? readFrontMatter(block.value) : {};
+  const tokens = new Lexer(source, filepath).lex().getValue();
+  const first = tokens[0];
+  if (first?.kind === SyntaxTokenKind.FRONT_MATTER) {
+    return readFrontMatter(first.value);
+  }
+  return {};
 }
 
 // Determine whether a file is a DBML or architecture file from its front matter

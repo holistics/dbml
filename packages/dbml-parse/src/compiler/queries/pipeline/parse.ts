@@ -15,8 +15,7 @@ export type FileParseIndex = {
 
 export function parseFile (this: Compiler, filepath: Filepath): Report<FileParseIndex> {
   const source = this.getSource(filepath) ?? '';
-  const lexerOptions = this.lexerOptions();
-  return new Lexer(source, filepath, lexerOptions)
+  return new Lexer(source, filepath)
     .lex()
     .chain((lexedTokens) => {
       const kind = this.fileKind(filepath);

@@ -26,9 +26,9 @@ import { lookupVisible, resolveName } from './utils';
 // Nodes, groups and notes take `[link: > b]`
 const takesInlineLinks = (declaration: ElementDeclarationNode): boolean => ['node', 'group'].includes(archSort(declaration) ?? '') || isTopLevelNote(declaration);
 
-const describe = (name: string, role?: string): string => (role ? `${role} ${name}` : name);
+const formatElementName = (name: string, role?: string): string => (role ? `${role} ${name}` : name);
 
-const makeUndeclaredError = (code: CompileErrorCode, name: string, at: SyntaxNode, role?: string) => new CompileError(code, `${describe(name, role)} is not declared anywhere`, at);
+const makeUndeclaredError = (code: CompileErrorCode, name: string, at: SyntaxNode, role?: string) => new CompileError(code, `${formatElementName(name, role)} is not declared anywhere`, at);
 
 // A table visible under that name, which a link or a group cannot use
 function makeTableError (compiler: Compiler, node: SyntaxNode, name: string, rule: string): CompileError | undefined {

@@ -26,7 +26,7 @@ export function getRolePrecedence (role: string | undefined): number {
   return at < 0 ? ARCH_NAME_PRECEDENCE.length : at;
 }
 
-const symbolPrecedence = (symbol: NodeSymbol): number => getRolePrecedence(getSymbolRole(symbol));
+const getSymbolPrecedence = (symbol: NodeSymbol): number => getRolePrecedence(getSymbolRole(symbol));
 
 // An alias is an identifier no other may share, whatever its role: `as` on the declaration, or on the import
 export function isAliasSymbol (symbol: NodeSymbol): boolean {
@@ -48,7 +48,7 @@ export function getCandidates (compiler: Compiler, filepath: Filepath, name: str
       found.push(symbol);
     }
   }
-  return found.sort((a, b) => symbolPrecedence(a) - symbolPrecedence(b));
+  return found.sort((a, b) => getSymbolPrecedence(a) - getSymbolPrecedence(b));
 }
 
 // What a name means: the element with that role when one is written, else the first by NAME_PRECEDENCE

@@ -8,12 +8,6 @@ import {
 } from '@/core/types/tokens';
 import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
-// Every switch is off by default
-export interface LexerOptions {
-  // Read a `---` fenced block at the very top of a file as one trivia token
-  allowFrontMatter?: boolean;
-}
-
 export default class Lexer {
   private start: Position = {
     offset: 0,
@@ -35,18 +29,13 @@ export default class Lexer {
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  private readonly options: LexerOptions;
-
-  constructor (text: string, filepath: Filepath, options: LexerOptions = {}) {
+  constructor (text: string, filepath: Filepath) {
     this.text = text;
     this.filepath = filepath;
-    this.options = options;
   }
 
-  // Consumed character by character so `line` and `column` keep counting. Cutting the block out
-  // of the text instead would shift every diagnostic in the file by however many lines it had.
+  // Consumed character by character so `line` and `column` keep counting.
   private scanFrontMatter (): void {
-    if (!this.options.allowFrontMatter) return;
     if (!this.text.startsWith('---')) return;
     const afterFence = this.text[3];
     if (afterFence !== '\n' && afterFence !== '\r') return;

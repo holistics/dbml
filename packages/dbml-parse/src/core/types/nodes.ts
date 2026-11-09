@@ -190,6 +190,8 @@ export enum SyntaxNodeKind {
 export class ProgramNode extends SyntaxNode {
   body: (UseDeclarationNode | ElementDeclarationNode)[];
 
+  frontMatter?: SyntaxToken;
+
   eof?: SyntaxToken;
 
   source: string;
@@ -197,10 +199,12 @@ export class ProgramNode extends SyntaxNode {
   constructor (
     {
       body = [],
+      frontMatter,
       eof,
       source,
     }: {
       body?: (UseDeclarationNode | ElementDeclarationNode)[];
+      frontMatter?: SyntaxToken;
       eof?: SyntaxToken;
       source: string;
     },
@@ -208,10 +212,12 @@ export class ProgramNode extends SyntaxNode {
     filepath: Filepath,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, filepath, [
+      frontMatter,
       ...body,
       eof,
     ]);
     this.source = source;
+    this.frontMatter = frontMatter;
     this.body = body;
     this.eof = eof;
   }

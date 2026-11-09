@@ -60,7 +60,7 @@ export const archModules: GlobalModule[] = [
 ];
 
 // A node, symbol or metadata is handled by the modules of the file that declares it
-function modulesFor (compiler: Compiler, target: unknown): GlobalModule[] {
+function getModules (compiler: Compiler, target: unknown): GlobalModule[] {
   if (compiler.explicitModules) return compiler.explicitModules;
   const filepath = (target as { filepath?: Filepath }).filepath
     ?? (target as { declaration?: SyntaxNode }).declaration?.filepath;
@@ -73,7 +73,7 @@ function dispatch<K extends keyof GlobalModule> (
   method: K,
   ...args: Parameters<NonNullable<GlobalModule[K]>>
 ): ReturnType<NonNullable<GlobalModule[K]>> | Report<PassThrough> {
-  for (const module of modulesFor(compiler, args[1])) {
+  for (const module of getModules(compiler, args[1])) {
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);
