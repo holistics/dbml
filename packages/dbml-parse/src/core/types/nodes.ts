@@ -179,6 +179,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
+  KIND_TAGGED_EXPRESSION = '<kind-tagged-expression>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
 
@@ -511,8 +512,7 @@ export class AttributeNode extends SyntaxNode {
 
   colon?: SyntaxToken;
 
-  // A FunctionApplicationNode only in an architecture file's role reference:  [link: > Server api]
-  value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
+  value?: NormalExpressionNode | IdentifierStreamNode | KindTaggedExpression;
 
   constructor (
     {
@@ -582,6 +582,31 @@ export class PrefixExpressionNode extends SyntaxNode {
       expression,
     ]);
     this.op = op;
+    this.expression = expression;
+  }
+}
+
+// Form: <kind-tag> <expression>
+// A kind (role) tag followed by an expression, separated by a space
+// Only in architecture files: [link: > Server api],  Group { Server api },  Metadata Server api { }
+export class KindTaggedExpression extends SyntaxNode {
+  kindTag?: NormalExpressionNode;
+
+  expression?: NormalExpressionNode;
+
+  constructor (
+    {
+      kindTag, expression,
+    }: { kindTag?: NormalExpressionNode;
+      expression?: NormalExpressionNode; },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(id, SyntaxNodeKind.KIND_TAGGED_EXPRESSION, filepath, [
+      kindTag,
+      expression,
+    ]);
+    this.kindTag = kindTag;
     this.expression = expression;
   }
 }

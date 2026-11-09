@@ -3,6 +3,7 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
+  KindTaggedExpression,
   IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
@@ -271,13 +272,16 @@ export function getArchInlineLink (
   attribute: AttributeNode,
 ): ArchInlineLink | undefined {
   const { value } = attribute;
-  const applied = value instanceof FunctionApplicationNode ? value : undefined;
-  const prefix = applied ? applied.callee : value;
+  const tagged = value instanceof KindTaggedExpression ? value : undefined;
+  const prefix = tagged ? tagged.kindTag : value;
   if (!(prefix instanceof PrefixExpressionNode) || !prefix.expression)
     return undefined;
   const op = prefix.op?.value;
   if (!op || !ARCH_LINK_OPS.has(op)) return undefined;
-  const ref = getArchNodeRef([prefix.expression, ...(applied?.args ?? [])]);
+  const parts = tagged?.expression
+    ? [prefix.expression, tagged.expression]
+    : [prefix.expression];
+  const ref = getArchNodeRef(parts);
   return ref && { op, ...ref };
 }
 

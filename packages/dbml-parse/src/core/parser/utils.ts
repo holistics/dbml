@@ -14,6 +14,7 @@ import {
   GroupExpressionNode,
   IdentifierStreamNode,
   InfixExpressionNode,
+  KindTaggedExpression,
   ListExpressionNode,
   LiteralNode,
   NormalExpressionNode,
@@ -189,6 +190,7 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.array);
     markInvalid(node.indexer);
   } else if (node instanceof ProgramNode) {
+    markInvalid(node.frontMatter);
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
   } else if (node instanceof EmptyNode) {
@@ -207,6 +209,9 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.name);
     markInvalid(node.asKeyword);
     markInvalid(node.alias);
+  } else if (node instanceof KindTaggedExpression) {
+    markInvalid(node.kindTag);
+    markInvalid(node.expression);
   } else if (node instanceof WildcardNode) {
     markInvalid(node.token);
   } else {
@@ -222,7 +227,7 @@ function filterUndefined (
 
 export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | SyntaxToken)[]> {
   if (node instanceof ProgramNode) {
-    return filterUndefined(...node.body, node.eof);
+    return filterUndefined(node.frontMatter, ...node.body, node.eof);
   }
 
   if (node instanceof ElementDeclarationNode) {
@@ -333,6 +338,10 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   if (node instanceof UseSpecifierNode) {
     return filterUndefined(node.importKind, node.name, node.asKeyword, node.alias);
+  }
+
+  if (node instanceof KindTaggedExpression) {
+    return filterUndefined(node.kindTag, node.expression);
   }
 
   if (node instanceof WildcardNode) {

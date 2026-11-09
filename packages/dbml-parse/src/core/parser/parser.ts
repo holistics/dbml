@@ -25,6 +25,7 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
+  KindTaggedExpression,
   NormalExpressionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
@@ -1491,16 +1492,16 @@ export default class Parser {
     }
   };
 
-  private attributeValue (): NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode {
-    let value: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode | undefined;
+  private attributeValue (): NormalExpressionNode | IdentifierStreamNode | KindTaggedExpression {
+    let value: NormalExpressionNode | IdentifierStreamNode | KindTaggedExpression | undefined;
     try {
       value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
         ? this.attributeName()
         : this.normalExpression();
-      // `> Server api` reads as `> Server` applied to `api`, the way a Link row reads
+      // `> Server api` reads as a kind-tagged expression: the prefix `> Server` tags `api` with its role
       if (this.options.allowRoleReference && value instanceof PrefixExpressionNode && this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
-        value = this.nodeFactory.create(FunctionApplicationNode, { callee: value, args: [this.primaryExpression()] });
+        value = this.nodeFactory.create(KindTaggedExpression, { kindTag: value, expression: this.primaryExpression() });
       }
     } catch (e) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
