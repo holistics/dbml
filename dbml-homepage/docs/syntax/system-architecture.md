@@ -1,8 +1,8 @@
 ---
-title: System Architecture
+title: System Architecture Markup
 ---
 
-# System Architecture
+# System Architecture Markup
 
 **System Architecture** is the part of DBML that defines and documents the elements of a system and the connections between them. It allows you to model networks, infrastructure, service dependencies and deployment environments.
 

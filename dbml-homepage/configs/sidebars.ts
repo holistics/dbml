@@ -29,12 +29,12 @@ const SidebarConfigs: SidebarsConfig = {
         {
           id: 'syntax/data-lineage',
           type: 'doc',
-          label: 'Data Lineage',
+          label: 'Data Lineage Markup',
         },
         {
           type: 'category',
-          label: 'System Architecture',
-          collapsed: false,
+          label: 'System Architecture Markup',
+          collapsed: true,
           collapsible: true,
           link: { type: 'doc', id: 'syntax/system-architecture' },
           items: [

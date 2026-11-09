@@ -1,8 +1,8 @@
 ---
-title: Data Lineage
+title: Data Lineage Markup
 ---
 
-# Data Lineage
+# Data Lineage Markup
 
 `Dep` lets you describe **data dependency** among tables and their columns. It allows you to model: Which tables (or columns) this table (or column) is computed from? Think of it like a SQL view where the view is computed from one or more source tables (or other views).
 
