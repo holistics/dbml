@@ -1,3 +1,16 @@
+## v12.0.0 (2026-11-09)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#1010](https://github.com/holistics/dbml/pull/1010) ft: Support architecture dbml ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* [#1030](https://github.com/holistics/dbml/pull/1030) chore: upgrade node to v22.23.4 for doc deploy action ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v11.1.0 (2026-11-06)
 
 #### :rocket: New Feature
