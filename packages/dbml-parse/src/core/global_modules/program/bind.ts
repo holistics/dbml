@@ -137,7 +137,7 @@ export default class Binder {
   }
 
   private isArchFile (filepath: Filepath): boolean {
-    return !this.compiler.explicitModules && this.compiler.parsedFileKind(filepath) === 'arch';
+    return !this.compiler.explicitModules && this.compiler.fileKind(filepath) === 'arch';
   }
 
   private checkDuplicateRefs (): CompileError[] {

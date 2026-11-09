@@ -16,7 +16,7 @@ import type { TextEdit } from '../applyTextEdits';
 // A DBML file has no architecture declarations, so a `Table` is never taken for a node
 export function archDeclarations (compiler: Compiler, filepath: Filepath): ElementDeclarationNode[] {
   const ast = compiler.parseFile(filepath).getValue().ast;
-  if (compiler.parsedFileKind(filepath) !== 'arch') return [];
+  if (compiler.fileKind(filepath) !== 'arch') return [];
   return ast.body.filter(isTopLevel);
 }
 

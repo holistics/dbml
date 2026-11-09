@@ -19,8 +19,7 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
   return new Lexer(source, filepath, lexerOptions)
     .lex()
     .chain((lexedTokens) => {
-      // The kind is read from the tokens before the parser attaches invalid tokens to them
-      const kind = this.fileKindForParse(filepath, lexerOptions.allowFrontMatter ? lexedTokens : undefined);
+      const kind = this.fileKind(filepath);
       return new Parser(source, lexedTokens, this.nodeIdGenerator, filepath, this.parserOptions(kind)).parse()
         .map((parsed) => {
           if (kind === 'arch' && !this.explicitModules) markArchImports(parsed.ast);
