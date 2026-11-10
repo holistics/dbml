@@ -36,7 +36,9 @@ import { resolveName } from '@/core/global_modules/arch/utils';
 import { type ArchNodeRef, getArchInlineLink, getArchLinkParts } from '@/core/arch';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
-import { getProgramNamedRefs } from '@/core/global_modules/ref/utils';
+import { getProgramNamedMetadata, isNamedTargetKind } from '@/core/global_modules/metadata/namedTargets';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { isEqual } from 'lodash-es';
 
 declare const __nodeMetadataBrand: unique symbol;
 export type NodeMetadataId = number & { readonly [__nodeMetadataBrand]: true };
@@ -95,9 +97,12 @@ export class RefMetadata extends NodeMetadata {
 
   /** The name of a named standalone top-level Ref (`Ref name: ...`), undefined for unnamed and inline refs */
   name (compiler: Compiler): string | undefined {
-    if (!(this.declaration instanceof ElementDeclarationNode)) return undefined;
-    if (!(this.declaration.parentNode instanceof ProgramNode)) return undefined;
-    return compiler.nodeFullname(this.declaration).getFiltered(UNHANDLED)?.at(-1);
+    return namedTopLevelFullname(compiler, this.declaration)?.at(-1);
+  }
+
+  /** `[schema, name]` of a named standalone top-level Ref, undefined for unnamed and inline refs */
+  qualifiedName (compiler: Compiler): string[] | undefined {
+    return namedTopLevelFullname(compiler, this.declaration);
   }
 
   // This is set for inline refs
@@ -273,6 +278,16 @@ export class DepMetadata extends NodeMetadata {
 
   constructor (declaration: ElementDeclarationNode | AttributeNode) {
     super(declaration);
+  }
+
+  /** The name of a named top-level Dep (`Dep name { ... }`), undefined for unnamed and inline deps */
+  name (compiler: Compiler): string | undefined {
+    return namedTopLevelFullname(compiler, this.declaration)?.at(-1);
+  }
+
+  /** `[schema, name]` of a named top-level Dep, undefined for unnamed and inline deps */
+  qualifiedName (compiler: Compiler): string[] | undefined {
+    return namedTopLevelFullname(compiler, this.declaration);
   }
 
   container (compiler: Compiler): TableSymbol | undefined {
@@ -585,7 +600,7 @@ export class MetadataElementMetadata extends NodeMetadata {
   }
 
   /**
-    * The symbols/Refs named by the header. 0 = not found, 2+ = ambiguous (the block is then registered nowhere).
+    * The symbols/Refs/Deps named by the header. 0 = not found, 2+ = ambiguous (the block is then registered nowhere).
     */
   override targets (compiler: Compiler): (NodeSymbol | NodeMetadata)[] {
     const programSymbol = getProgramSymbol(compiler, this.declaration.filepath);
@@ -595,8 +610,9 @@ export class MetadataElementMetadata extends NodeMetadata {
     const nameParts = destructureComplexVariable(this.declaration.name);
     if (!nameParts?.length || !targetKind) return [];
 
-    if (targetKind === MetadataTargetKind.Ref) {
-      return getProgramNamedRefs(compiler, programSymbol).filter((r) => r.name(compiler) === nameParts[0]);
+    if (isNamedTargetKind(targetKind)) {
+      const qualifiedName = withDefaultSchema(nameParts);
+      return getProgramNamedMetadata(compiler, programSymbol, targetKind).filter((m) => isEqual(m.qualifiedName(compiler), qualifiedName));
     }
 
     let symbol: NodeSymbol | undefined = programSymbol;
@@ -776,6 +792,19 @@ function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | und
   return undefined;
 }
 
+// Prefix a bare name with the default schema: `name` -> `public.name`
+function withDefaultSchema (nameParts: string[]): string[] {
+  return nameParts.length === 1 ? [DEFAULT_SCHEMA_NAME, ...nameParts] : nameParts;
+}
+
+// `[schema, name]` of a named top-level Ref/Dep declaration, undefined for unnamed, nested and inline ones
+function namedTopLevelFullname (compiler: Compiler, declaration: SyntaxNode): string[] | undefined {
+  if (!(declaration instanceof ElementDeclarationNode)) return undefined;
+  if (!(declaration.parentNode instanceof ProgramNode)) return undefined;
+  const nameParts = compiler.nodeFullname(declaration).getFiltered(UNHANDLED);
+  return nameParts?.length ? withDefaultSchema(nameParts) : undefined;
+}
+
 export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
   const value = node.targetKind?.value?.toLowerCase();
   return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
@@ -787,7 +816,7 @@ export type NameWithSymbolKind = {
 };
 
 /** @internal Exported for testing only. */
-export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref | MetadataTargetKind.Dep>): NameWithSymbolKind[] {
   if (nameParts.length === 0) return [];
 
   let kindParts: SymbolKind[];

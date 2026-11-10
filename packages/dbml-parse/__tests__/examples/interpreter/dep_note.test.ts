@@ -158,9 +158,9 @@ describe('dep settings validation', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it('valid: custom identifier setting', () => {
+  it('invalid: custom identifier setting', () => {
     const errors = analyze(`${PRELUDE}Dep [materialized: view] { a -> b }`).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.map((e) => e.code)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
   });
 
   it('valid: custom numeric setting', () => {
@@ -219,13 +219,13 @@ Dep {
     expect(errors).toHaveLength(0);
   });
 
-  it('valid: custom identifier body sub-declaration', () => {
+  it('invalid: custom identifier body sub-declaration', () => {
     const errors = analyze(`${PRELUDE}
 Dep {
   a -> b
   materialized: view
 }`).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.map((e) => e.code)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
   });
 
   it('valid: custom numeric body sub-declaration', () => {

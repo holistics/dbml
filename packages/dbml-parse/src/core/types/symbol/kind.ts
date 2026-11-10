@@ -59,8 +59,9 @@ export enum MetadataTargetKind {
   Column = SymbolKind.Column,
   TableGroup = SymbolKind.TableGroup,
   Note = SymbolKind.StickyNote,
-  // The header keyword `Metadata Ref <name>`, a Ref is not a symbol so there is no SymbolKind for it
+  // The header keywords `Metadata Ref <name>` and `Metadata Dep <name>`, Refs and Deps are not symbols so there is no SymbolKind for them
   Ref = MetadataKind.Ref,
+  Dep = MetadataKind.Dep,
 }
 
 // Human-readable target kind keyword
@@ -70,4 +71,5 @@ export const MetadataTargetLabel: Record<MetadataTargetKind, string> = {
   [MetadataTargetKind.TableGroup]: 'TableGroup',
   [MetadataTargetKind.Note]: 'Note',
   [MetadataTargetKind.Ref]: 'Ref',
+  [MetadataTargetKind.Dep]: 'Dep',
 };

@@ -1,6 +1,6 @@
 import { SettingName } from '@/core/types/keywords';
 import type {
-  ArchSettingValue, Color, Column, ArchGroup, ArchNode, Note, Ref, Table, TableGroup,
+  ArchSettingValue, Color, Column, ArchGroup, ArchNode, Dep, Note, Ref, Table, TableGroup,
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import { extractBooleanLiteral, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
@@ -90,12 +90,32 @@ export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, { [SettingName.Colo
   },
 };
 
+export const DEP_METADATA_FIELDS: MetadataFieldRegistry<Dep, { [SettingName.Color]: Color; [SettingName.Note]: string }> = {
+  [SettingName.Color]: {
+    type: 'color',
+    parse: extractHexColor,
+    message: "'color' must be a color literal",
+    assign (element, value) {
+      element.color = value;
+    },
+  },
+  [SettingName.Note]: {
+    type: 'string',
+    parse: extractNote,
+    message: "'note' must be a string literal",
+    assign (element, value, token) {
+      element.note = { value, token };
+    },
+  },
+};
+
 export const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<any, any>> = {
   [MetadataTargetKind.Table]: TABLE_METADATA_FIELDS,
   [MetadataTargetKind.Column]: COLUMN_METADATA_FIELDS,
   [MetadataTargetKind.TableGroup]: TABLEGROUP_METADATA_FIELDS,
   [MetadataTargetKind.Note]: NOTE_METADATA_FIELDS,
   [MetadataTargetKind.Ref]: REF_METADATA_FIELDS,
+  [MetadataTargetKind.Dep]: DEP_METADATA_FIELDS,
 };
 
 // Architecture nodes and groups keep their settings as written in `settings`. The interpreter resolves `type` and `icon` from there.

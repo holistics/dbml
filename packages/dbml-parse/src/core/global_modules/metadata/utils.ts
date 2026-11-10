@@ -3,7 +3,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Note, Ref, Table, TableGroup, TokenPosition,
+  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Dep, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import {
@@ -11,7 +11,7 @@ import {
 } from '@/core/types/symbol';
 import { getProgramSymbol } from '../utils';
 
-export type MetadataTarget = Table | TableGroup | Note | Column | Ref | ArchNode | ArchGroup;
+export type MetadataTarget = Table | TableGroup | Note | Column | Ref | Dep | ArchNode | ArchGroup;
 
 /**
   * Spec for one builtin metadata field (table's note, tablegroup's color, .etc) of an element kind.

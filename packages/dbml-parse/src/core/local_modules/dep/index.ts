@@ -6,11 +6,12 @@ import { ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {
-  aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAQuotedString,
-  isExpressionASignedNumberExpression, isSimpleName, isValidHexColor,
+  aggregateSettingList, isElementFieldNode, isElementNode, isSimpleName,
   type Settings,
 } from '@/core/utils/validate';
+import { DEP_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import { type LocalModule } from '../types';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 import DepValidator from './validate';
 
 export const depModule: LocalModule = {
@@ -75,31 +76,23 @@ export const depModule: LocalModule = {
     for (const [name, attrs] of Object.entries(settingMap)) {
       switch (name) {
         case SettingName.Color:
+        case SettingName.Note: {
           if (attrs.length > 1) errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attr)));
+          const field = DEP_METADATA_FIELDS[name];
           attrs.forEach((attr) => {
-            if (!isValidHexColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attr));
+            if (field.parse(attr.value) === undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, field.message, attr));
             }
           });
           break;
-        case SettingName.Note:
-          if (attrs.length > 1) errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${name}' can only appear once`, attr)));
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attr));
-            }
-          });
-          break;
+        }
         default:
-          attrs.forEach((attr) => {
-            if (attr.value
-              && !isExpressionAQuotedString(attr.value)
-              && !isValidHexColor(attr.value)
-              && !isExpressionASignedNumberExpression(attr.value)
-              && !isSimpleName(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attr));
-            }
-          });
+          // Any non-builtin key is free-form inline custom metadata
+          errors.push(
+            ...validateCustomInlineMetadata(name, attrs, {
+              duplicate: CompileErrorCode.DUPLICATE_DEP_SETTING,
+              invalidValue: CompileErrorCode.INVALID_DEP_SETTING_VALUE,
+            }));
           break;
       }
     }

@@ -6,7 +6,7 @@ import { ElementDeclarationNode, SyntaxNode, SyntaxNodeKind } from '@/core/types
 import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition, getNamedRefAt } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getNamedTargetAt } from '@/services/utils';
 import { MetadataElementMetadata } from '@/core/types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
@@ -44,12 +44,12 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
         if (symbol) {
           references = this.compiler.symbolReferences(symbol);
         } else {
-          // A named Ref has no symbol: its references are its declaration name and the Metadata Ref header names
-          const ref = getNamedRefAt(this.compiler, node);
-          references = ref
+          // A named Ref/Dep has no symbol: its references are its declaration name and the `Metadata Ref|Dep` header names
+          const target = getNamedTargetAt(this.compiler, node);
+          references = target
             ? [
-                ...(ref.declaration instanceof ElementDeclarationNode && ref.declaration.name ? [ref.declaration.name] : []),
-                ...this.compiler.symbolMetadata(ref)
+                ...(target.declaration instanceof ElementDeclarationNode && target.declaration.name ? [target.declaration.name] : []),
+                ...this.compiler.symbolMetadata(target)
                   .filter((m) => m instanceof MetadataElementMetadata)
                   .flatMap((m) => m.declaration.name ?? []),
               ]

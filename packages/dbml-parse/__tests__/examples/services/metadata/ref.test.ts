@@ -149,6 +149,40 @@ Metadata Ref "user posts" {
   });
 });
 
+describe('[example] Metadata Ref qualified target', () => {
+  it('resolves a `public`-qualified ref target', () => {
+    const source = `Ref user_posts: posts.user_id > users.id
+
+Metadata Ref public.user_posts {
+  color: #e67e22
+}`;
+    expect(errorCodes(source)).toEqual([]);
+    expect(ref(source, 'user_posts')?.color).toBe('#e67e22');
+  });
+
+  it('does not resolve a ref target qualified with another schema', () => {
+    const source = `Ref user_posts: posts.user_id > users.id
+
+Metadata Ref user_posts.user_posts {
+  color: #e67e22
+}`;
+    const errors = interpret(TABLES + source).getErrors();
+    expect(errors.map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Ref user_posts.user_posts`');
+    expect(ref(source, 'user_posts')?.color).toBeUndefined();
+  });
+
+  it('reports a ref target with too many name parts as not found', () => {
+    const source = `Ref user_posts: posts.user_id > users.id
+
+Metadata Ref a.public.user_posts {
+  color: #e67e22
+}`;
+    const errors = interpret(TABLES + source).getErrors();
+    expect(errors.map((e) => e.code)).not.toContain(CompileErrorCode.INVALID_NAME);
+    expect(errors.map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Ref a.public.user_posts`');
+  });
+});
+
 describe('[example] Ref inline custom metadata', () => {
   it('stores custom settings of a named ref in ref.metadata', () => {
     const source = "Ref r: posts.user_id > users.id [delete: cascade, owner: 'team-a', color: #123456]";
