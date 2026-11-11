@@ -6,7 +6,7 @@ import { SyntaxNode, SyntaxNodeKind, UseDeclarationNode } from '@/core/types/nod
 import {
   Definition, DefinitionProvider, Position, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition, getNamedTargetAt } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getNamedTargetsAt } from '@/services/utils';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
@@ -38,8 +38,8 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       if (!referee) {
         // A named Ref/Dep has no symbol: a `Metadata Ref|Dep name` header name jumps to its declaration name
         if ([SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node.kind)) {
-          const nameNode = getNamedTargetAt(this.compiler, node)?.declaration.name;
-          if (nameNode) return this.toDefinition(nameNode, uri);
+          const nameNodes = getNamedTargetsAt(this.compiler, node).flatMap((t) => t.declaration.name ?? []);
+          if (nameNodes.length) return nameNodes.flatMap((nameNode) => this.toDefinition(nameNode, uri));
         }
         continue;
       }

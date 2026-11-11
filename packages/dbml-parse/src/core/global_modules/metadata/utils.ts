@@ -1,13 +1,33 @@
 import type Compiler from '@/compiler/index';
 import {
-  Filepath, FilepathId, SettingName, UNHANDLED,
+  ElementKind, Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
   Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Dep, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import type { SyntaxNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol';
+import { isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { getProgramSymbol } from '../utils';
+
+/**
+  * The targets named by `node` when it is (part of) the header name of a `Metadata <kind> <name>` block, [] otherwise.
+  * 0 = not found or not a header name, 2+ = ambiguous.
+  */
+export function metadataHeaderTargets (compiler: Compiler, node: SyntaxNode): (NodeSymbol | NodeMetadata)[] {
+  if (!isExpressionAVariableNode(node)) return [];
+
+  const metadataNode = node.parentOfKind(ElementDeclarationNode);
+  if (!metadataNode || !isElementNode(metadataNode, ElementKind.Metadata)) return [];
+
+  // Only the header target name, not anything inside the body
+  if (!metadataNode.name?.containsEq(node)) return [];
+
+  const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
+  if (!(block instanceof MetadataElementMetadata)) return [];
+
+  return block.targets(compiler);
+}
 
 export type MetadataTarget = Table | TableGroup | Note | Column | Ref | Dep | ArchNode | ArchGroup;
 

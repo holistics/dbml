@@ -4,7 +4,7 @@ import { UNHANDLED } from '@/core/types/module';
 import {
   DepMetadata, MetadataTargetKind, ProgramSymbol, RefMetadata,
 } from '@/core/types/symbol';
-import { getProgramNamedMetadata, type NamedTargetKind } from '@/core/global_modules/metadata/namedTargets';
+import { getProgramNamedMetadata, type NamedTargetKind } from '@/core/types/symbol/metadata';
 import { Filepath } from '@/index';
 import { setupCompiler } from '../../interpreter/multifile/utils';
 

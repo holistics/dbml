@@ -233,6 +233,31 @@ Metadata Dep pipeline {
     expect(references.map((r) => r.range.startLineNumber)).toContain(metadataLine);
   });
 
+  describe('ambiguous target name', () => {
+    const ambiguousProgram = `${TABLES}Dep pipe { raw_orders -> stg_orders }
+Dep pipe { stg_orders -> raw_orders }
+
+Metadata Dep pipe {
+  color: #e67e22
+}`;
+    // `Dep pipe` on lines 9 and 10, `Metadata Dep pipe` on line 12
+
+    it('go-to-definition on the target name offers every declaration', () => {
+      const { compiler, model } = setup(ambiguousProgram);
+      const provider = new DBMLDefinitionProvider(compiler);
+      const definition = provider.provideDefinition(model, createPosition(12, 16));
+      const locations = Array.isArray(definition) ? definition : [definition];
+      expect(locations.map((l) => l.range.startLineNumber).sort((a, b) => a - b)).toEqual([9, 10]);
+    });
+
+    it('find-references on the target name includes every declaration and the header once', () => {
+      const { compiler, model } = setup(ambiguousProgram);
+      const provider = new DBMLReferencesProvider(compiler);
+      const references = provider.provideReferences(model, createPosition(12, 16));
+      expect(references.map((r) => r.range.startLineNumber).sort((a, b) => a - b)).toEqual([9, 10, 12]);
+    });
+  });
+
   it('suggests Dep as a Metadata target kind', () => {
     const { compiler, model } = setup('Metadata ');
     const provider = new DBMLCompletionItemProvider(compiler);
