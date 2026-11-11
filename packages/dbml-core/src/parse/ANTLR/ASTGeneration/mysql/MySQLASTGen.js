@@ -820,7 +820,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     return {
       type: CONSTRAINT_TYPE.EXPRESSION,
-      value: ctx.expression().getText(),
+      value: getOriginalText(ctx.expression()),
       ...sortOrder,
     };
   }
