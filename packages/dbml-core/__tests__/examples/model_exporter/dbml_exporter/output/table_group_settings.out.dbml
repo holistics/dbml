@@ -1,3 +1,7 @@
+Project "a" {
+  database_type: '''aaa\'hehe'''
+}
+
 Enum "ecommerce"."products_status" {
   "out_of_stock"
   "in_stock"
