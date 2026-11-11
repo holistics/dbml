@@ -20,10 +20,10 @@ export function isNamedTargetKind (kind: MetadataTargetKind): kind is NamedTarge
 }
 
 /**
-  * The named standalone refs (or deps) usable from `program`: they are not imported via `use`, a named ref/dep is usable
+  * The named standalone refs/deps usable from `program`: they are not imported via `use`, a named ref/dep is usable
   * wherever it applies (the program reaches its file and sees all of its endpoint tables).
   *
-  * Cycle rule: this is reachable from NodeMetadata.declaredTargets() (through MetadataElementMetadata.declaredTargets()), so it must not read the resolution index.
+  * Cycle rule: this is reachable from NodeMetadata.targets() (through MetadataElementMetadata.targets()), so it must not read the resolution index.
   * It scans the top-level declarations of the reachable files directly.
   */
 export function getProgramNamedMetadata (compiler: Compiler, program: ProgramSymbol, kind: NamedTargetKind): NamedTargetMetadata[] {

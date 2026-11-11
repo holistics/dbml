@@ -65,8 +65,8 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
   /**
     * Whether this declaration applies in `program`: the program reaches the declaration's file, and the elements
     * the declaration is bound to by syntax are in the program's nested schema.
-    * Cycle rule: never reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents),
-    * because the index is built from declaredTargets().
+    * WARN: Cycle rule: never reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents),
+    * because the index is built from targets().
     */
   isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
     if (!compiler.reachableFiles(program.filepath).some((f) => f.equals(this.declaration.filepath))) return false;
@@ -74,7 +74,7 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
     const targets = this.targets(compiler);
     if (targets.length === 0) return false;
 
-    return targets.every((t) => t instanceof NodeMetadata ? t.isVisibleFrom(compiler, program) : program.inNestedSchema(compiler, t));
+    return targets.every((t) => t.isVisibleFrom(compiler, program));
   };
 
   /**

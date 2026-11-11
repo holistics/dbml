@@ -6,9 +6,7 @@ import type {
   Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, ArchGroup, ArchNode, Dep, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
-import {
-  NodeSymbol, SymbolKind, MetadataElementMetadata, NodeMetadata,
-} from '@/core/types/symbol';
+import { NodeSymbol, MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol';
 import { getProgramSymbol } from '../utils';
 
 export type MetadataTarget = Table | TableGroup | Note | Column | Ref | Dep | ArchNode | ArchGroup;
@@ -67,18 +65,7 @@ export function attachCustomMetadata<T extends MetadataTarget> (
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return;
 
-  const visible = targetSymbol instanceof NodeMetadata
-    ? targetSymbol.isVisibleFrom(compiler, programSymbol)
-    // FIXME: This logic is adhoc
-    // Symbol should expose an isVisibleFrom method to check visibility
-    : (() => {
-        if (targetSymbol.isKind(SymbolKind.Column)) {
-          const tableSymbol = compiler.symbolParents(targetSymbol).find((s) => s.isKind(SymbolKind.Table));
-          return !!tableSymbol && programSymbol.inNestedSchema(compiler, tableSymbol);
-        }
-        return programSymbol.inNestedSchema(compiler, targetSymbol);
-      })();
-  if (!visible) return;
+  if (!targetSymbol.isVisibleFrom(compiler, programSymbol)) return;
 
   // symbolMetadata also returns the blocks aimed at the target's members
   const metas = compiler
