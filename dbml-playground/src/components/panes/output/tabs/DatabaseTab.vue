@@ -25,137 +25,99 @@
           :icon="PhTable"
           icon-color="text-blue-500"
         >
-          <div
+          <DbRow
             v-for="(table, ti) in database.tables"
             :key="ti"
+            :icon="PhTable"
+            icon-color="text-blue-500"
+            tooltip="Table"
           >
-            <div
-              class="flex items-center gap-2 py-1 cursor-pointer hover:bg-blue-50 border-b border-gray-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-              @click="toggleTable(ti)"
-            >
-              <PhCaretRight
-                class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
-                :class="expandedTables.has(ti) ? 'rotate-90' : ''"
-              />
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhTable class="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">Table</span>
-                </template>
-              </VTooltip>
-              <span class="text-blue-500 hover:underline">{{ table.name }}</span>
-              <span
-                v-if="table.schemaName && table.schemaName !== 'public'"
-                class="text-gray-400"
-              >.{{ table.schemaName }}</span>
-              <span class="text-gray-400 ml-auto text-xs">{{ table.fields.length }} cols</span>
-            </div>
-            <div v-if="expandedTables.has(ti)">
+            <span class="text-blue-500 hover:underline">{{ table.name }}</span>
+            <span
+              v-if="table.schemaName && table.schemaName !== 'public'"
+              class="text-gray-400"
+            >.{{ table.schemaName }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ table.fields.length }} cols</span>
+            </template>
+            <template #children>
               <!-- Columns -->
-              <div
+              <DbRow
                 v-for="(col, ci) in table.fields"
                 :key="ci"
+                :icon="PhListBullets"
+                tooltip="Column"
               >
-                <div
-                  class="flex items-center gap-1.5 py-1 border-b border-gray-50 hover:bg-blue-50"
-                  :style="{ paddingLeft: '40px', paddingRight: '12px' }"
-                >
-                  <VTooltip
-                    placement="right"
-                    :distance="6"
-                  >
-                    <PhListBullets class="w-3 h-3 text-gray-500 flex-shrink-0" />
-                    <template #popper>
-                      <span class="text-xs">Column</span>
-                    </template>
-                  </VTooltip>
-                  <span class="text-gray-700">{{ col.name }}</span>
-                  <PhKey
-                    v-if="col.pk"
-                    class="w-3 h-3 text-blue-400 flex-shrink-0"
-                  />
-                  <span
-                    v-if="col.not_null"
-                    class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
-                  >NN</span>
-                  <span
-                    v-if="col.unique"
-                    class="text-[10px] px-1 bg-purple-100 text-purple-600 rounded font-medium leading-[14px]"
-                  >U</span>
-                  <span
-                    v-if="col.increment"
-                    class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
-                  >AI</span>
-                  <VDropdown
-                    v-if="colRefs(table, col).length"
-                    placement="bottom-start"
-                    :distance="4"
-                    :arrow-padding="0"
-                    no-auto-focus
-                    @click.stop
-                  >
-                    <PhLink class="w-3 h-3 text-blue-400 flex-shrink-0 cursor-pointer hover:text-blue-600" />
-                    <template #popper>
-                      <div
-                        class="py-1 min-w-[180px] max-w-[320px]"
-                        style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
-                      >
-                        <div
-                          v-for="(entry, ri) in colRefs(table, col)"
-                          :key="ri"
-                          class="flex items-center gap-2 px-3 py-1 text-xs"
-                        >
-                          <span class="text-blue-500 font-mono font-bold flex-shrink-0">{{ entry.arrow }}</span>
-                          <span class="text-blue-600">{{ entry.otherLabel }}</span>
-                        </div>
-                      </div>
-                    </template>
-                  </VDropdown>
-                  <span class="text-green-700 ml-auto">{{ col.type.type_name }}</span>
-                </div>
-                <!-- Column metadata -->
-                <DbMetadata
-                  :metadata="col.metadata"
-                  :indent="56"
+                <span class="text-gray-700">{{ col.name }}</span>
+                <PhKey
+                  v-if="col.pk"
+                  class="w-3 h-3 text-blue-400 flex-shrink-0"
                 />
-              </div>
-              <!-- Indexes -->
-              <template v-if="table.indexes.length">
-                <div
-                  class="flex items-center gap-1.5 px-3 py-[3px] border-b border-gray-100 bg-gray-50/60 select-none"
-                  :style="{ paddingLeft: '40px' }"
+                <span
+                  v-if="col.not_null"
+                  class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
+                >NN</span>
+                <span
+                  v-if="col.unique"
+                  class="text-[10px] px-1 bg-purple-100 text-purple-600 rounded font-medium leading-[14px]"
+                >U</span>
+                <span
+                  v-if="col.increment"
+                  class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
+                >AI</span>
+                <VDropdown
+                  v-if="colRefs(table, col).length"
+                  placement="bottom-start"
+                  :distance="4"
+                  :arrow-padding="0"
+                  no-auto-focus
+                  @click.stop
                 >
-                  <PhArrowsDownUp class="w-3 h-3 text-indigo-400 flex-shrink-0" />
-                  <span class="text-[11px] text-gray-400 font-medium">indexes</span>
-                </div>
-                <div
-                  v-for="(idx, ii) in table.indexes"
-                  :key="ii"
-                >
-                  <div
-                    class="flex items-center gap-2 py-[3px] cursor-pointer border-b border-gray-50 hover:bg-indigo-50"
-                    :style="{ paddingLeft: '48px', paddingRight: '12px' }"
-                    @click="toggleIndex(`${ti}-${ii}`)"
-                  >
-                    <PhCaretRight
-                      class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
-                      :class="expandedIndexes.has(`${ti}-${ii}`) ? 'rotate-90' : ''"
-                    />
-                    <VTooltip
-                      placement="right"
-                      :distance="6"
+                  <PhLink class="w-3 h-3 text-blue-400 flex-shrink-0 cursor-pointer hover:text-blue-600" />
+                  <template #popper>
+                    <div
+                      class="py-1 min-w-[180px] max-w-[320px]"
+                      style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
                     >
-                      <PhArrowsDownUp class="w-3 h-3 text-indigo-400 flex-shrink-0" />
-                      <template #popper>
-                        <span class="text-xs">Index</span>
-                      </template>
-                    </VTooltip>
+                      <div
+                        v-for="(entry, ri) in colRefs(table, col)"
+                        :key="ri"
+                        class="flex items-center gap-2 px-3 py-1 text-xs"
+                      >
+                        <span class="text-blue-500 font-mono font-bold flex-shrink-0">{{ entry.arrow }}</span>
+                        <span class="text-blue-600">{{ entry.otherLabel }}</span>
+                      </div>
+                    </div>
+                  </template>
+                </VDropdown>
+                <template #trailing>
+                  <span class="text-green-700">{{ col.type.type_name }}</span>
+                </template>
+                <template #attached>
+                  <DbMetadata :metadata="col.metadata" />
+                </template>
+              </DbRow>
+              <!-- Indexes -->
+              <DbRow
+                v-if="table.indexes.length"
+                :icon="PhArrowsDownUp"
+                icon-color="text-indigo-400"
+                heading
+                dense
+              >
+                <span class="text-[11px] text-gray-400 font-medium">indexes</span>
+                <template #attached>
+                  <DbRow
+                    v-for="(idx, ii) in table.indexes"
+                    :key="ii"
+                    :icon="PhArrowsDownUp"
+                    icon-color="text-indigo-400"
+                    tooltip="Index"
+                    hover="indigo"
+                    dense
+                  >
                     <span class="text-indigo-600 truncate">{{ idx.name || indexLabel(idx) }}</span>
-                    <span class="flex gap-1 ml-auto flex-shrink-0">
+                    <template #trailing>
                       <DbBadge
                         v-if="idx.pk"
                         label="pk"
@@ -171,52 +133,32 @@
                         :label="idx.type"
                         color="indigo"
                       />
-                    </span>
-                  </div>
-                  <div v-if="expandedIndexes.has(`${ti}-${ii}`)">
-                    <div
-                      v-for="(col, ci) in idx.columns"
-                      :key="ci"
-                      class="flex items-center gap-2 py-[3px] border-b border-gray-50 hover:bg-indigo-50"
-                      :style="{ paddingLeft: '64px', paddingRight: '12px' }"
-                    >
-                      <VTooltip
-                        v-if="col.type === 'expression'"
-                        placement="right"
-                        :distance="6"
+                    </template>
+                    <template #children>
+                      <DbRow
+                        v-for="(col, ci) in idx.columns"
+                        :key="ci"
+                        :icon="col.type === 'expression' ? PhLightning : PhListBullets"
+                        :icon-color="col.type === 'expression' ? 'text-orange-400' : 'text-indigo-400'"
+                        :tooltip="col.type === 'expression' ? 'Expression' : 'Column ref'"
+                        hover="indigo"
+                        dense
                       >
-                        <PhLightning class="w-3 h-3 text-orange-400 flex-shrink-0" />
-                        <template #popper>
-                          <span class="text-xs">Expression</span>
-                        </template>
-                      </VTooltip>
-                      <VTooltip
-                        v-else
-                        placement="right"
-                        :distance="6"
-                      >
-                        <PhListBullets class="w-3 h-3 text-indigo-400 flex-shrink-0" />
-                        <template #popper>
-                          <span class="text-xs">Column ref</span>
-                        </template>
-                      </VTooltip>
-                      <span :class="col.type === 'expression' ? 'text-orange-600 italic' : 'text-indigo-600'">{{ col.value }}</span>
-                      <DbBadge
-                        v-if="col.type === 'expression'"
-                        label="expr"
-                        color="orange"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </template>
+                        <span :class="col.type === 'expression' ? 'text-orange-600 italic' : 'text-indigo-600'">{{ col.value }}</span>
+                        <DbBadge
+                          v-if="col.type === 'expression'"
+                          label="expr"
+                          color="orange"
+                        />
+                      </DbRow>
+                    </template>
+                  </DbRow>
+                </template>
+              </DbRow>
               <!-- Table metadata -->
-              <DbMetadata
-                :metadata="table.metadata"
-                :indent="40"
-              />
-            </div>
-          </div>
+              <DbMetadata :metadata="table.metadata" />
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Refs -->
@@ -226,73 +168,66 @@
           :icon="PhArrowsLeftRight"
           icon-color="text-purple-500"
         >
-          <div
+          <DbRow
             v-for="(ref_, ri) in database.refs"
             :key="ri"
+            :icon="PhArrowsLeftRight"
+            icon-color="text-purple-500"
+            tooltip="Ref"
           >
-            <div
-              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+            <span
+              v-if="ref_.name"
+              class="text-purple-700"
+            >{{ ref_.name }}:</span>
+            <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[0]) }}</span>
+            <span class="text-gray-400">{{ ref_.endpoints[0].relation }}-{{ ref_.endpoints[1].relation }}</span>
+            <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
+            <template
+              v-if="ref_.color"
+              #trailing
             >
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhArrowsLeftRight class="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">Ref</span>
-                </template>
-              </VTooltip>
-              <span
-                v-if="ref_.name"
-                class="text-purple-700"
-              >{{ ref_.name }}:</span>
-              <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[0]) }}</span>
-              <span class="text-gray-400">{{ ref_.endpoints[0].relation }}-{{ ref_.endpoints[1].relation }}</span>
-              <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
-              <span
-                v-if="ref_.color"
-                class="text-gray-400 text-xs ml-auto"
-              >{{ ref_.color }}</span>
-            </div>
-            <DbMetadata
-              :metadata="ref_.metadata"
-              :indent="36"
-            />
-          </div>
+              <span class="text-gray-400 text-xs">{{ ref_.color }}</span>
+            </template>
+            <template #attached>
+              <DbMetadata :metadata="ref_.metadata" />
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Deps -->
         <DbSection
           label="Deps"
-          :count="database.deps.length ?? 0"
+          :count="database.deps.length"
           :icon="PhArrowRight"
           icon-color="text-orange-500"
         >
-          <template
+          <DbRow
             v-for="(dep, di) in database.deps"
             :key="di"
           >
-            <div
-              v-for="(edge, ei) in dep.edges"
-              :key="`${di}-${ei}`"
-              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-            >
-              <VTooltip
-                placement="right"
-                :distance="6"
+            <span
+              v-if="dep.name"
+              class="text-orange-700"
+            >{{ dep.name }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ dep.edges.length }} edges</span>
+            </template>
+            <template #children>
+              <DbRow
+                v-for="(edge, ei) in dep.edges"
+                :key="`${di}-${ei}`"
+                :icon="PhArrowRight"
+                icon-color="text-orange-500"
+                tooltip="Dep"
               >
-                <PhArrowRight class="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">Dep</span>
-                </template>
-              </VTooltip>
-              <span class="text-blue-500">{{ depEndpointLabel(edge.upstream) }}</span>
-              <span class="text-gray-400">→</span>
-              <span class="text-blue-500">{{ depEndpointLabel(edge.downstream) }}</span>
-            </div>
-          </template>
+                <span class="text-blue-500">{{ depEndpointLabel(edge.upstream) }}</span>
+                <span class="text-gray-400">→</span>
+                <span class="text-blue-500">{{ depEndpointLabel(edge.downstream) }}</span>
+                <!-- A Dep's metadata is shown once, under its last edge -->
+              </DbRow>
+              <DbMetadata :metadata="dep.metadata" />
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Enums -->
@@ -302,51 +237,30 @@
           :icon="PhTextAa"
           icon-color="text-green-600"
         >
-          <div
+          <DbRow
             v-for="(en, ei) in database.enums"
             :key="ei"
+            :icon="PhTextAa"
+            icon-color="text-green-600"
+            tooltip="Enum"
           >
-            <div
-              class="flex items-center gap-2 py-1 cursor-pointer border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-              @click="toggleEnum(ei)"
-            >
-              <PhCaretRight
-                class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
-                :class="expandedEnums.has(ei) ? 'rotate-90' : ''"
-              />
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhTextAa class="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">Enum</span>
-                </template>
-              </VTooltip>
-              <span class="text-green-700 hover:underline">{{ en.name }}</span>
-              <span class="text-gray-400 text-xs ml-auto">{{ en.values.length }} values</span>
-            </div>
-            <div v-if="expandedEnums.has(ei)">
-              <div
+            <span class="text-green-700 hover:underline">{{ en.name }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ en.values.length }} values</span>
+            </template>
+            <template #children>
+              <DbRow
                 v-for="(val, vi) in en.values"
                 :key="vi"
-                class="flex items-center gap-2 py-[3px] border-b border-gray-50 hover:bg-blue-50"
-                :style="{ paddingLeft: '40px', paddingRight: '12px' }"
+                :icon="PhNumberSquareOne"
+                icon-color="text-green-500"
+                tooltip="Enum field"
+                dense
               >
-                <VTooltip
-                  placement="right"
-                  :distance="6"
-                >
-                  <PhNumberSquareOne class="w-3 h-3 text-green-500 flex-shrink-0" />
-                  <template #popper>
-                    <span class="text-xs">Enum field</span>
-                  </template>
-                </VTooltip>
                 <span class="text-green-700">{{ val.name }}</span>
-              </div>
-            </div>
-          </div>
+              </DbRow>
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- TableGroups -->
@@ -356,31 +270,21 @@
           :icon="PhFolder"
           icon-color="text-yellow-600"
         >
-          <div
+          <DbRow
             v-for="(tg, tgi) in database.tableGroups"
             :key="tgi"
+            :icon="PhFolder"
+            icon-color="text-yellow-600"
+            tooltip="TableGroup"
           >
-            <div
-              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-            >
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhFolder class="w-3.5 h-3.5 text-yellow-600 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">TableGroup</span>
-                </template>
-              </VTooltip>
-              <span class="text-yellow-700">{{ tg.name }}</span>
-              <span class="text-gray-400 text-xs ml-auto">{{ tg.tables.length }} tables</span>
-            </div>
-            <DbMetadata
-              :metadata="tg.metadata"
-              :indent="36"
-            />
-          </div>
+            <span class="text-yellow-700">{{ tg.name }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ tg.tables.length }} tables</span>
+            </template>
+            <template #attached>
+              <DbMetadata :metadata="tg.metadata" />
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- TablePartials -->
@@ -390,52 +294,31 @@
           :icon="PhPuzzlePiece"
           icon-color="text-teal-500"
         >
-          <div
+          <DbRow
             v-for="(tp, tpi) in database.tablePartials"
             :key="tpi"
+            :icon="PhPuzzlePiece"
+            icon-color="text-teal-500"
+            tooltip="TablePartial"
           >
-            <div
-              class="flex items-center gap-2 py-1 cursor-pointer border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-              @click="toggleTablePartial(tpi)"
-            >
-              <PhCaretRight
-                class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
-                :class="expandedTablePartials.has(tpi) ? 'rotate-90' : ''"
-              />
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhPuzzlePiece class="w-3.5 h-3.5 text-teal-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">TablePartial</span>
-                </template>
-              </VTooltip>
-              <span class="text-teal-700 hover:underline">{{ tp.name }}</span>
-              <span class="text-gray-400 ml-auto text-xs">{{ tp.fields.length }} cols</span>
-            </div>
-            <div v-if="expandedTablePartials.has(tpi)">
-              <div
+            <span class="text-teal-700 hover:underline">{{ tp.name }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ tp.fields.length }} cols</span>
+            </template>
+            <template #children>
+              <DbRow
                 v-for="(col, ci) in tp.fields"
                 :key="ci"
-                class="flex items-center gap-1.5 py-1 border-b border-gray-50 hover:bg-blue-50"
-                :style="{ paddingLeft: '40px', paddingRight: '12px' }"
+                :icon="PhListBullets"
+                tooltip="Column"
               >
-                <VTooltip
-                  placement="right"
-                  :distance="6"
-                >
-                  <PhListBullets class="w-3 h-3 text-gray-500 flex-shrink-0" />
-                  <template #popper>
-                    <span class="text-xs">Column</span>
-                  </template>
-                </VTooltip>
                 <span class="text-gray-700">{{ col.name }}</span>
-                <span class="text-green-700 ml-auto">{{ col.type.type_name }}</span>
-              </div>
-            </div>
-          </div>
+                <template #trailing>
+                  <span class="text-green-700">{{ col.type.type_name }}</span>
+                </template>
+              </DbRow>
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Records -->
@@ -445,24 +328,17 @@
           :icon="PhRows"
           icon-color="text-gray-500"
         >
-          <div
+          <DbRow
             v-for="(rec, ri) in database.records"
             :key="ri"
-            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+            :icon="PhRows"
+            tooltip="Record"
           >
-            <VTooltip
-              placement="right"
-              :distance="6"
-            >
-              <PhRows class="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-              <template #popper>
-                <span class="text-xs">Record</span>
-              </template>
-            </VTooltip>
             <span class="text-blue-500">{{ rec.tableName }}</span>
-            <span class="text-gray-400 text-xs ml-auto">{{ rec.values.length }} rows</span>
-          </div>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ rec.values.length }} rows</span>
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Notes (Sticky Notes) -->
@@ -473,30 +349,18 @@
           :icon="PhNote"
           icon-color="text-yellow-500"
         >
-          <div
+          <DbRow
             v-for="(note, ni) in database.notes"
             :key="ni"
+            :icon="PhNote"
+            icon-color="text-yellow-500"
+            tooltip="Sticky Note"
           >
-            <div
-              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-            >
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhNote class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">Sticky Note</span>
-                </template>
-              </VTooltip>
-              <span class="text-blue-500">{{ note.name }}</span>
-            </div>
-            <DbMetadata
-              :metadata="note.metadata"
-              :indent="36"
-            />
-          </div>
+            <span class="text-blue-500">{{ note.name }}</span>
+            <template #attached>
+              <DbMetadata :metadata="note.metadata" />
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- DiagramViews -->
@@ -506,59 +370,47 @@
           :icon="PhLayout"
           icon-color="text-pink-500"
         >
-          <div
+          <DbRow
             v-for="(dv, dvi) in database.diagramViews"
             :key="dvi"
+            :icon="PhLayout"
+            icon-color="text-pink-500"
+            tooltip="DiagramView"
           >
-            <div
-              class="flex items-center gap-2 py-1 cursor-pointer border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
-              @click="toggleDiagramView(dvi)"
-            >
-              <PhCaretRight
-                class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
-                :class="expandedDiagramViews.has(dvi) ? 'rotate-90' : ''"
-              />
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <PhLayout class="w-3.5 h-3.5 text-pink-500 flex-shrink-0" />
-                <template #popper>
-                  <span class="text-xs">DiagramView</span>
-                </template>
-              </VTooltip>
-              <span class="text-pink-600">{{ dv.name }}</span>
-              <span
-                v-if="dv.schemaName && dv.schemaName !== 'public'"
-                class="text-gray-400"
-              >.{{ dv.schemaName }}</span>
-              <span class="text-gray-400 text-xs ml-auto">{{ diagramViewMemberCount(dv) }} members</span>
-            </div>
-            <div v-if="expandedDiagramViews.has(dvi)">
+            <span class="text-pink-600">{{ dv.name }}</span>
+            <span
+              v-if="dv.schemaName && dv.schemaName !== 'public'"
+              class="text-gray-400"
+            >.{{ dv.schemaName }}</span>
+            <template #trailing>
+              <span class="text-gray-400 text-xs">{{ diagramViewMemberCount(dv) }} members</span>
+            </template>
+            <template #children>
               <template
                 v-for="(items, kind) in diagramViewMembers(dv)"
                 :key="kind"
               >
-                <div
+                <DbRow
                   v-for="(item, ii) in items"
                   :key="`${kind}-${ii}`"
-                  class="flex items-center gap-2 py-[3px] border-b border-gray-50 hover:bg-pink-50"
-                  :style="{ paddingLeft: '40px', paddingRight: '12px' }"
+                  hover="pink"
+                  dense
                 >
                   <span class="text-pink-500">{{ item.name }}</span>
-                  <span class="text-gray-400 text-xs ml-auto">{{ kind }}</span>
-                </div>
+                  <template #trailing>
+                    <span class="text-gray-400 text-xs">{{ kind }}</span>
+                  </template>
+                </DbRow>
               </template>
-              <div
+              <DbRow
                 v-if="diagramViewMemberCount(dv) === 0"
-                class="py-[3px] text-gray-400 text-xs italic"
-                :style="{ paddingLeft: '40px' }"
+                hover="pink"
+                dense
               >
-                show all (no filter)
-              </div>
-            </div>
-          </div>
+                <span class="text-gray-400 text-xs italic">show all (no filter)</span>
+              </DbRow>
+            </template>
+          </DbRow>
         </DbSection>
 
         <!-- Externals -->
@@ -572,25 +424,13 @@
             v-for="(entries, category) in externalCategories"
             :key="category"
           >
-            <div
+            <DbRow
               v-for="(ext, ei) in entries"
               :key="`${category}-${ei}`"
-              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+              :icon="externalIcon(String(category))"
+              :icon-color="externalIconColor(String(category))"
+              :tooltip="String(category)"
             >
-              <VTooltip
-                placement="right"
-                :distance="6"
-              >
-                <component
-                  :is="externalIcon(String(category))"
-                  class="w-3.5 h-3.5 flex-shrink-0"
-                  :class="externalIconColor(String(category))"
-                />
-                <template #popper>
-                  <span class="text-xs">{{ category }}</span>
-                </template>
-              </VTooltip>
               <span class="text-orange-600">{{ ext.name }}</span>
               <span
                 v-if="ext.schemaName"
@@ -600,7 +440,7 @@
                 label="external"
                 color="orange"
               />
-            </div>
+            </DbRow>
           </template>
         </DbSection>
       </div>
@@ -609,9 +449,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import {
-  PhCaretRight,
   PhTable,
   PhListBullets,
   PhArrowsLeftRight,
@@ -637,6 +476,7 @@ type DepEndpoint = NonNullable<Database['deps']>[number]['edges'][number]['upstr
 type IndexEntry = Database['tables'][number]['indexes'][number];
 
 import DbSection from './common/DbSection.vue';
+import DbRow from './common/DbRow.vue';
 import DbBadge from './common/DbBadge.vue';
 import DbMetadata from './common/DbMetadata.vue';
 
@@ -676,37 +516,6 @@ const totalCount = computed(() => {
     + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0)
     + (db.notes?.length ?? 0) + (db.diagramViews?.length ?? 0) + externalsCount.value;
 });
-
-const expandedTables = ref(new Set<number>());
-const expandedEnums = ref(new Set<number>());
-const expandedIndexes = ref(new Set<string>());
-const expandedTablePartials = ref(new Set<number>());
-const expandedDiagramViews = ref(new Set<number>());
-
-function toggleTable (i: number) {
-  if (expandedTables.value.has(i)) expandedTables.value.delete(i);
-  else expandedTables.value.add(i);
-}
-
-function toggleEnum (i: number) {
-  if (expandedEnums.value.has(i)) expandedEnums.value.delete(i);
-  else expandedEnums.value.add(i);
-}
-
-function toggleIndex (key: string) {
-  if (expandedIndexes.value.has(key)) expandedIndexes.value.delete(key);
-  else expandedIndexes.value.add(key);
-}
-
-function toggleTablePartial (i: number) {
-  if (expandedTablePartials.value.has(i)) expandedTablePartials.value.delete(i);
-  else expandedTablePartials.value.add(i);
-}
-
-function toggleDiagramView (i: number) {
-  if (expandedDiagramViews.value.has(i)) expandedDiagramViews.value.delete(i);
-  else expandedDiagramViews.value.add(i);
-}
 
 type DiagramViewEntry = Database['diagramViews'][number];
 
