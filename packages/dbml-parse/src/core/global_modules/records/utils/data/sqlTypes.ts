@@ -1,3 +1,10 @@
+export type ViewKind = 'simple' | 'materialized' | 'recursive';
+
+export interface View {
+  name: string;
+  kind?: ViewKind;
+  definition?: string;
+}
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 
 // Dialect-specific type mappings
