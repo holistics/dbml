@@ -294,6 +294,11 @@ export class TableInterpreter {
 
     column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
+    const generatedAttrs = (settingMap as any).generated || [];
+    if (generatedAttrs.length) {
+      (column as any).generated = extractQuotedStringToken(generatedAttrs[0].value!) ?? undefined;
+    }
+
     const programSymbol = getProgramSymbol(this.compiler, this.filepath);
 
     const refs = settingMap[SettingName.Ref] || [];

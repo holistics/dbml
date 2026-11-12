@@ -274,6 +274,16 @@ function validateFieldSetting (parts: ExpressionNode[]): Report<Settings> {
           }
         });
         break;
+      case 'generated':
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'generated\' can only appear once', attr)));
+        }
+        attrs.forEach((attr) => {
+          if (attr.value === undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'generated\' must have a value', attr.name || attr));
+          }
+        });
+        break;
       case SettingName.Default:
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'default\' can only appear once', attr)));
