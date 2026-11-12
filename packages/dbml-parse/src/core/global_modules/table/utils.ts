@@ -19,10 +19,10 @@ import {
 } from '@/core/utils/validate';
 import { getNumberTextFromExpression } from '@/core/utils/numbers';
 
-export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
+export function interpretColumnType (typeNode?: SyntaxNode): ColumnType & { collation?: string | null } {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type
   let rawTypeNode: SyntaxNode | undefined = typeNode instanceof ListExpressionNode ? undefined : typeNode;
-  let columnType: ColumnType = {
+  let columnType: ColumnType & { collation?: string | null } = {
     schemaName: null,
     type_name: '',
     args: null,
@@ -80,6 +80,12 @@ export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
         args: typeArgs,
       };
     }
+  }
+
+  const collateMatch = columnType.type_name.match(/^(.*?)\s+COLLATE\s+(.+)$/i);
+  if (collateMatch) {
+    columnType.type_name = collateMatch[1];
+    columnType.collation = collateMatch[2];
   }
 
   return columnType;
