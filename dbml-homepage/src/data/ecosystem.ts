@@ -290,4 +290,14 @@ export const communityProjects: EcosystemItem[] = [
     author: 'Scafoldr',
     categories: ['from-dbml'],
   },
+  {
+    name: 'drizzle-dbml-generator',
+    description:
+      'Generate a DBML schema from your Drizzle ORM schema, ready to paste into dbdiagram or the playground.',
+    href: 'https://github.com/MorpheusNephew/drizzle-dbml-generator',
+    repo: 'MorpheusNephew/drizzle-dbml-generator',
+    language: 'TypeScript',
+    author: 'MorpheusNephew',
+    categories: ['to-dbml'],
+  },
 ];
