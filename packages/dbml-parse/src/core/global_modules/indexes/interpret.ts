@@ -53,6 +53,7 @@ export default class IndexesInterpreter {
         token: TokenPosition;
       } | undefined;
       let type: string | undefined;
+      let include: Index['columns'] | undefined;
 
       // Pop trailing ListExpressionNode so it doesn't pollute column parsing
       if (last(args) instanceof ListExpressionNode) {
@@ -76,6 +77,29 @@ export default class IndexesInterpreter {
           }
         }
         type = extractVariableFromExpression(settingsMap[SettingName.Type]?.at(0)?.value);
+
+        const includeSetting = (settingsMap as Record<string, any>)?.include?.at(0)?.value
+          ?? (settingsMap as Record<string, any>)?.includes?.at(0)?.value;
+        if (includeSetting) {
+          const result = destructureIndexNode(includeSetting);
+          if (result) {
+            include = [];
+            for (const { name } of result.nonFunctional) {
+              include.push({
+                value: extractVarNameFromPrimaryVariable(name) ?? '',
+                type: 'column',
+                token: getTokenPosition(name),
+              });
+            }
+            for (const { name } of result.functional) {
+              include.push({
+                value: name.value?.value ?? '',
+                type: 'expression',
+                token: getTokenPosition(name),
+              });
+            }
+          }
+        }
       }
 
       // Flatten call expressions like (id, name)(age, weight) into individual column refs
@@ -127,6 +151,9 @@ export default class IndexesInterpreter {
         type,
         token,
       };
+      if (include?.length) {
+        (idx as Index & { include?: Index['columns'] }).include = include;
+      }
       return [
         idx,
       ];

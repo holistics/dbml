@@ -86,7 +86,16 @@ export default class IndexesBinder {
         field.callee,
         ...field.args,
       ];
-      const bindees = args.flatMap(withoutSortOrders).flatMap(scanNonListNodeForBinding)
+      const settingsMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED);
+      const includeSettings = (settingsMap as Record<string, any>)?.include
+        ?? (settingsMap as Record<string, any>)?.includes
+        ?? [];
+      const includeBindees = includeSettings
+        .flatMap((setting) => (setting.value ? scanNonListNodeForBinding(setting.value) : []));
+      const bindees = [
+        ...args.flatMap(withoutSortOrders).flatMap(scanNonListNodeForBinding),
+        ...includeBindees,
+      ]
         .flatMap((bindee) => {
           // Indexes can never be schema-qualified (they reference table columns)
           if (bindee.variables.length > 1) {
