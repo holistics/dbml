@@ -359,9 +359,9 @@ Table "tbl" {
   "data" JSON
 
   Indexes {
-    `(SUBSTRING(col1,1,10))` [name: "idx1"]
-    `(CAST(JSON_EXTRACT(data,_utf8mb4'$')ASUNSIGNEDARRAY))` [name: "idx2"]
-    `(CAST(data->>'$.name'ASCHAR(30)))`
+    `(SUBSTRING(col1, 1, 10))` [name: "idx1"]
+    `(CAST(JSON_EXTRACT(data, _utf8mb4'$') AS UNSIGNED ARRAY))` [name: "idx2"]
+    `(CAST(data->>'$.name' AS CHAR(30)))`
   }
 }
 
@@ -373,7 +373,7 @@ Table "orders_json_2" {
   "updated_at" timestamp
 
   Indexes {
-    `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
+    `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes') as char(17) array))` [name: "idx_order_codes"]
   }
 }
 

@@ -149,7 +149,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "((getdate()),(upper(gender)))"
+              "value": "((getdate()), (upper(gender)))"
             }
           ]
         },
