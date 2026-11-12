@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler/index';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import { IndexesMetadata, MetadataKind, SymbolKind } from '@/core/types/symbol';
 import type { NodeSymbol, NodeMetadata } from '@/core/types/symbol';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
@@ -10,7 +10,7 @@ import type { SyntaxToken } from '@/core/types/tokens';
 import type { GlobalModule } from '../types';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
-import { isElementNode, isExpressionAVariableNode, isInsideSettingList } from '@/core/utils/validate';
+import { isElementNode, isExpressionAVariableNode, isInsideSettingList, isInsideSettingValue } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types';
 
 export const indexesModule: GlobalModule = {
@@ -28,8 +28,10 @@ export const indexesModule: GlobalModule = {
       return Report.create(PASS_THROUGH);
     }
 
-    // Skip variables inside index settings (e.g. [type: btree])
-    if (isInsideSettingList(node)) return Report.create(PASS_THROUGH);
+    // Skip variables inside index settings (e.g. [type: btree]), except included columns
+    if (isInsideSettingList(node)
+      && !isInsideSettingValue(node, 'include' as unknown as SettingName)
+      && !isInsideSettingValue(node, 'includes' as unknown as SettingName)) return Report.create(PASS_THROUGH);
 
     // Check that node belongs to an indexes element
     let indexesNode: SyntaxNode | undefined = node;
