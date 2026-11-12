@@ -96,7 +96,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(SUBSTRING(code,1,5))"
+              "value": "(SUBSTRING(code, 1, 5))"
             }
           ]
         }
@@ -138,7 +138,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(first_name,' ',last_name))"
+              "value": "(CONCAT(first_name, ' ', last_name))"
             }
           ]
         }
@@ -180,7 +180,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(price*(1+tax_rate))"
+              "value": "(price * (1 + tax_rate))"
             }
           ]
         }
@@ -214,7 +214,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND(value,2))"
+              "value": "(ROUND(value, 2))"
             }
           ]
         }
@@ -402,7 +402,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(DATE_FORMAT(event_date,'%Y-%m'))"
+              "value": "(DATE_FORMAT(event_date, '%Y-%m'))"
             }
           ]
         }
@@ -436,7 +436,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(data->>'$.name'ASCHAR(100)))"
+              "value": "(CAST(data->>'$.name' AS CHAR(100)))"
             }
           ]
         },
@@ -445,7 +445,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(data->>'$.age'ASUNSIGNED))"
+              "value": "(CAST(data->>'$.age' AS UNSIGNED))"
             }
           ]
         }
@@ -479,7 +479,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.type')))"
+              "value": "(JSON_UNQUOTE(JSON_EXTRACT(metadata, '$.type')))"
             }
           ]
         }
@@ -513,7 +513,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(valueASSIGNED))"
+              "value": "(CAST(value AS SIGNED))"
             }
           ]
         },
@@ -522,7 +522,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(valueASDECIMAL(10,2)))"
+              "value": "(CAST(value AS DECIMAL(10,2)))"
             }
           ]
         }
@@ -564,7 +564,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(COALESCE(primary_val,secondary_val,0))"
+              "value": "(COALESCE(primary_val, secondary_val, 0))"
             }
           ]
         }
@@ -675,7 +675,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(REPLACE(REPLACE(phone,'-',''),' ',''))"
+              "value": "(REPLACE(REPLACE(phone, '-', ''), ' ', ''))"
             }
           ]
         }
@@ -709,7 +709,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(IF(age>=18,1,0))"
+              "value": "(IF(age >= 18, 1, 0))"
             }
           ]
         }
@@ -743,7 +743,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CASEWHENscore>=90THEN'A'WHENscore>=80THEN'B'WHENscore>=70THEN'C'ELSE'F'END)"
+              "value": "(\n    CASE\n      WHEN score >= 90 THEN 'A'\n      WHEN score >= 80 THEN 'B'\n      WHEN score >= 70 THEN 'C'\n      ELSE 'F'\n    END\n  )"
             }
           ]
         }
@@ -811,7 +811,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(LEFT(code,5))"
+              "value": "(LEFT(code, 5))"
             }
           ]
         },
@@ -820,7 +820,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(RIGHT(code,5))"
+              "value": "(RIGHT(code, 5))"
             }
           ]
         }
@@ -854,7 +854,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(MOD(value,10))"
+              "value": "(MOD(value, 10))"
             }
           ]
         }
@@ -904,7 +904,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(GREATEST(val1,val2,val3))"
+              "value": "(GREATEST(val1, val2, val3))"
             }
           ]
         },
@@ -913,7 +913,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(LEAST(val1,val2,val3))"
+              "value": "(LEAST(val1, val2, val3))"
             }
           ]
         }
@@ -955,7 +955,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(numerator/NULLIF(denominator,0))"
+              "value": "(numerator / NULLIF(denominator, 0))"
             }
           ]
         }
@@ -989,7 +989,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(LPAD(code,8,'0'))"
+              "value": "(LPAD(code, 8, '0'))"
             }
           ]
         }
@@ -1039,7 +1039,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND((a*b+c)/NULLIF(a+b,0),2))"
+              "value": "(ROUND((a * b + c) / NULLIF(a + b, 0), 2))"
             }
           ]
         }
@@ -1149,7 +1149,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(TIMESTAMPDIFF(SECOND,start_time,end_time))"
+              "value": "(TIMESTAMPDIFF(SECOND, start_time, end_time))"
             }
           ]
         }
@@ -1191,7 +1191,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(DATEDIFF(end_date,start_date))"
+              "value": "(DATEDIFF(end_date, start_date))"
             }
           ]
         }
@@ -1507,7 +1507,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(first_name,' ',last_name))"
+              "value": "(CONCAT(first_name, ' ', last_name))"
             }
           ]
         },
@@ -1516,7 +1516,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND(price,2))"
+              "value": "(ROUND(price, 2))"
             }
           ]
         }
@@ -1628,7 +1628,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(computed_val+10)"
+              "value": "(computed_val + 10)"
             }
           ]
         }
@@ -1662,7 +1662,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(UPPER(TRIM(SUBSTRING(text_data,1,50))))"
+              "value": "(UPPER(TRIM(SUBSTRING(text_data, 1, 50))))"
             }
           ]
         }
@@ -1712,7 +1712,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(UPPER(first_name),' ',UPPER(last_name),' ',COALESCE(suffix,'')))"
+              "value": "(CONCAT(UPPER(first_name), ' ', UPPER(last_name), ' ', COALESCE(suffix, '')))"
             }
           ]
         }
@@ -1916,7 +1916,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(ELT(status_code,'pending','active','inactive'))"
+              "value": "(ELT(status_code, 'pending', 'active', 'inactive'))"
             }
           ]
         }
@@ -1950,7 +1950,7 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(FIELD(priority,'high','medium','low'))"
+              "value": "(FIELD(priority, 'high', 'medium', 'low'))"
             }
           ]
         }
