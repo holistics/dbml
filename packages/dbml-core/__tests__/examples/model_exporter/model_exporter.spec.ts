@@ -169,6 +169,36 @@ describe('@dbml/core - DbmlExporter flags', () => {
   });
 });
 
+describe('@dbml/core - DbmlExporter project', () => {
+  const DBML_WITH_PROJECT = `
+Project "project_name" {
+  database_type: 'PostgreSQL'
+  Note: 'Description of the project'
+}
+
+Table "users" {
+  "id" integer [pk]
+}`.trim();
+
+  test('exports the Project block', () => {
+    const database = (new Parser()).parse(DBML_WITH_PROJECT, 'dbmlv2');
+    const res = DbmlExporter.export(database.normalize(), { includeRecords: true });
+    expect(res.trim()).toBe(DBML_WITH_PROJECT);
+  });
+
+  test('exports a Project with only a note', () => {
+    const database = (new Parser()).parse(`Project {\n  Note: 'It\\'s a note'\n}`, 'dbmlv2');
+    const res = DbmlExporter.export(database.normalize(), { includeRecords: true });
+    expect(res.trim()).toBe(`Project {\n  Note: '''It\\'s a note'''\n}`);
+  });
+
+  test('exports nothing when there is no Project', () => {
+    const database = (new Parser()).parse('Table "users" {\n  "id" integer\n}', 'dbmlv2');
+    const res = DbmlExporter.export(database.normalize(), { includeRecords: true });
+    expect(res).not.toMatch(/^Project\b/m);
+  });
+});
+
 describe('@dbml/core - ModelExporter table groups', () => {
   test('does not schema-qualify TableGroup names', () => {
     const database = (new Parser()).parse(
