@@ -121,6 +121,11 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const indexStmt = ctx.indexstmt().accept(this);
       const { tableName, schemaName } = indexStmt.pathName;
 
+      const whereClause = ctx.indexstmt().where_clause?.();
+      if (whereClause) {
+        indexStmt.index.expression = getOriginalText(whereClause.a_expr());
+      }
+
       const table = findTable(this.data.tables, schemaName, tableName);
       if (table) table.indexes.push(indexStmt.index);
       return;
