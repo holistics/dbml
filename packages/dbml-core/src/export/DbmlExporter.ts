@@ -1,6 +1,6 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatTypedValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
+  addDoubleQuoteIfNeeded, formatTypedValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
 } from '@dbml/parse';
 import type { CustomMetadata, CustomMetadataValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
@@ -363,26 +363,27 @@ class DbmlExporter {
     return `${schemaPart}${tablePart}.${fieldsPart}`;
   }
 
-  static formatDepCustomValue (value: unknown): string {
-    if (typeof value === 'string') return `'${escapeString(value)}'`;
-    if (value === null || value === undefined) return 'null';
-    return String(value);
-  }
-
   static exportDeps (depIds: number[], model: NormalizedModel): string {
     const strArr = depIds.map((depId) => {
       const dep = model.deps[depId];
       const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
 
+      const depName = dep.name
+        ? ` ${shouldPrintSchema(model.schemas[dep.schemaId], model)
+          ? `"${model.schemas[dep.schemaId].name}".`
+          : ''}"${dep.name}"`
+        : '';
+
       const hasNote = !!dep.note;
-      const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
-      const hasAttrs = hasNote || customEntries.length > 0;
+      const hasColor = !!dep.color;
+      const customEntries = Object.entries(dep.metadata ?? {});
+      const hasAttrs = hasNote || hasColor || customEntries.length > 0;
 
       if (edges.length === 1 && !hasAttrs) {
-        return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
+        return `Dep${depName}: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
       }
 
-      let str = 'Dep {\n';
+      let str = `Dep${depName} {\n`;
       edges.forEach((edge) => {
         str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
       });
@@ -390,8 +391,9 @@ class DbmlExporter {
       if (hasAttrs) {
         str += '\n';
         if (hasNote) str += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
+        if (hasColor) str += `  color: ${dep.color}\n`;
         customEntries.forEach(([key, value]) => {
-          str += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
+          str += `  ${key}: ${DbmlExporter.formatMetadataValue(value)}\n`;
         });
       }
 

@@ -7,10 +7,9 @@ import {
 import { SettingName } from '@/core/types/keywords';
 import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
-import {
-  isSimpleName, isValidHexColor, isExpressionAQuotedString,
-  isExpressionASignedNumberExpression,
-} from '@/core/utils/validate';
+import { isSimpleName } from '@/core/utils/validate';
+import { extractMetadataValue } from '@/core/utils/interpret';
+import { DEP_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 
 export default class DepValidator {
   private declarationNode: ElementDeclarationNode;
@@ -144,13 +143,15 @@ export default class DepValidator {
       if (!key) return [];
 
       switch (key) {
-        case SettingName.Color:
-          if (sub.name || !(subBody instanceof FunctionApplicationNode) || !subBody.callee || !isValidHexColor(subBody.callee)) {
+        case SettingName.Color: {
+          const field = DEP_METADATA_FIELDS[SettingName.Color];
+          if (sub.name || !(subBody instanceof FunctionApplicationNode) || field.parse(subBody.callee) === undefined) {
             return [
-              new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub),
+              new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, field.message, sub),
             ];
           }
           return [];
+        }
         case SettingName.Note: {
           let noteValue: SyntaxNode | undefined;
           if (subBody instanceof FunctionApplicationNode) {
@@ -158,9 +159,10 @@ export default class DepValidator {
           } else if (subBody instanceof BlockExpressionNode && subBody.body[0] instanceof FunctionApplicationNode) {
             noteValue = subBody.body[0].callee;
           }
-          if (!noteValue || !isExpressionAQuotedString(noteValue)) {
+          const field = DEP_METADATA_FIELDS[SettingName.Note];
+          if (field.parse(noteValue) === undefined) {
             return [
-              new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', sub),
+              new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, field.message, sub),
             ];
           }
           return [];
@@ -171,13 +173,10 @@ export default class DepValidator {
               new CompileError(CompileErrorCode.INVALID_SETTINGS, `'${key}' must be a simple field (e.g. ${key}: value). Block syntax is not allowed`, sub),
             ];
           }
-          if (!(subBody instanceof FunctionApplicationNode) || !subBody.callee) return [];
-          if (!isExpressionAQuotedString(subBody.callee)
-            && !isValidHexColor(subBody.callee)
-            && !isExpressionASignedNumberExpression(subBody.callee)
-            && !isSimpleName(subBody.callee)) {
+          // Any non-builtin field is free-form custom metadata, with the same values as an inline custom setting
+          if (!(subBody instanceof FunctionApplicationNode) || extractMetadataValue(subBody.callee) === undefined) {
             return [
-              new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for '${key}'. Expected a string, number, color, or identifier`, sub),
+              new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, `Custom setting '${sub.type.value}' must be a string, a color literal, a number literal, or a boolean literal`, sub),
             ];
           }
           return [];

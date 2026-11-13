@@ -1216,7 +1216,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_DEP_SETTING_VALUE)).toBe(true);
     });
 
     test('should allow simple color inside Dep', () => {
@@ -1230,7 +1230,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS || e.code === CompileErrorCode.INVALID_DEP_SETTING_VALUE)).toHaveLength(0);
     });
 
     test('should allow Note block form inside Dep', () => {
@@ -1246,7 +1246,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS || e.code === CompileErrorCode.INVALID_DEP_SETTING_VALUE)).toHaveLength(0);
     });
 
     test('should allow Note colon form inside Dep', () => {
@@ -1260,7 +1260,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS || e.code === CompileErrorCode.INVALID_DEP_SETTING_VALUE)).toHaveLength(0);
     });
 
     test('should allow simple key-value custom field inside Dep', () => {
@@ -1274,7 +1274,7 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS || e.code === CompileErrorCode.INVALID_DEP_SETTING_VALUE)).toHaveLength(0);
     });
   });
 

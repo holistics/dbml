@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { fp, getDatabase, setupCompiler } from './utils';
+import { excludeMetadataValueToken } from '@tests/utils';
 
 describe('[example] multifile interpreter - cross-file standalone Dep with column-level endpoints', () => {
   // Dep is declared in the consumer, both endpoint tables come from the import
@@ -255,7 +256,7 @@ Dep {
   raw_orders -> fct_orders
 
   note: 'Pipeline from raw to fact'
-  materialized: table
+  materialized: 'table'
   owner: 'data-team'
 }
 `,
@@ -275,9 +276,9 @@ use { table fct_orders } from './source.dbml'
     expect(db.deps).toHaveLength(1);
     const dep = db.deps[0];
     expect(dep.note?.value).toBe('Pipeline from raw to fact');
-    expect(dep.metadata).toEqual({
-      materialized: 'table',
-      owner: 'data-team',
+    expect(excludeMetadataValueToken(dep.metadata)).toEqual({
+      materialized: { value: 'table', type: 'string' },
+      owner: { value: 'data-team', type: 'string' },
     });
   });
 });

@@ -5,7 +5,7 @@
       @click="open = !open"
     >
       <PhCaretRight
-        class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
+        class="w-3.5 h-3.5 text-gray-400 transition-transform duration-100 flex-shrink-0"
         :class="open ? 'rotate-90' : ''"
       />
       <component
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { ref, type Component } from 'vue';
 import { PhCaretRight } from '@phosphor-icons/vue';
+import { provideDbTreeRoot } from './dbTree';
 
 const {
   label,
@@ -37,4 +38,5 @@ const {
   iconColor?: string;
 }>();
 const open = ref(true);
+provideDbTreeRoot();
 </script>

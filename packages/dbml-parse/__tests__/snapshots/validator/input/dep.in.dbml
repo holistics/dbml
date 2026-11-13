@@ -46,7 +46,7 @@ Dep {
   my_schema.events.id -> users.id
 
   note: 'ok'
-  materialized: view
+  materialized: 'view'
   owner: 'team-data'
   priority: 1
 }

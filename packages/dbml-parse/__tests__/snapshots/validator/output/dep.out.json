@@ -3201,47 +3201,47 @@
                   },
                   {
                     "context": {
-                      "id": "node@<element-declaration>@@[L48:C2, L48:C20]",
-                      "snippet": "materialized: view"
+                      "id": "node@<element-declaration>@@[L48:C2, L48:C22]",
+                      "snippet": "materialized: 'view'"
                     },
                     "children": {
                       "body": {
                         "context": {
-                          "id": "node@<function-application>@view@[L48:C16, L48:C20]",
-                          "snippet": "view"
+                          "id": "node@<function-application>@view@[L48:C16, L48:C22]",
+                          "snippet": "'view'"
                         },
                         "children": {
                           "callee": {
                             "context": {
-                              "id": "node@<primary-expression>@view@[L48:C16, L48:C20]",
-                              "snippet": "view"
+                              "id": "node@<primary-expression>@view@[L48:C16, L48:C22]",
+                              "snippet": "'view'"
                             },
                             "children": {
                               "expression": {
                                 "context": {
-                                  "id": "node@<variable>@view@[L48:C16, L48:C20]",
-                                  "snippet": "view"
+                                  "id": "node@<literal>@view@[L48:C16, L48:C22]",
+                                  "snippet": "'view'"
                                 },
                                 "children": {
-                                  "variable": {
+                                  "literal": {
                                     "context": {
-                                      "id": "token@<identifier>@view@[L48:C16, L48:C20]",
-                                      "snippet": "view"
+                                      "id": "token@<string>@view@[L48:C16, L48:C22]",
+                                      "snippet": "'view'"
                                     },
                                     "leadingTrivia": "",
                                     "trailingTrivia": "\n",
                                     "value": "view"
                                   }
                                 },
-                                "fullEnd": 808,
+                                "fullEnd": 810,
                                 "fullStart": 803
                               }
                             },
-                            "fullEnd": 808,
+                            "fullEnd": 810,
                             "fullStart": 803
                           }
                         },
-                        "fullEnd": 808,
+                        "fullEnd": 810,
                         "fullStart": 803
                       },
                       "bodyColon": {
@@ -3263,7 +3263,7 @@
                         "value": "materialized"
                       }
                     },
-                    "fullEnd": 808,
+                    "fullEnd": 810,
                     "fullStart": 787
                   },
                   {
@@ -3300,16 +3300,16 @@
                                     "value": "team-data"
                                   }
                                 },
-                                "fullEnd": 829,
-                                "fullStart": 817
+                                "fullEnd": 831,
+                                "fullStart": 819
                               }
                             },
-                            "fullEnd": 829,
-                            "fullStart": 817
+                            "fullEnd": 831,
+                            "fullStart": 819
                           }
                         },
-                        "fullEnd": 829,
-                        "fullStart": 817
+                        "fullEnd": 831,
+                        "fullStart": 819
                       },
                       "bodyColon": {
                         "context": {
@@ -3330,8 +3330,8 @@
                         "value": "owner"
                       }
                     },
-                    "fullEnd": 829,
-                    "fullStart": 808
+                    "fullEnd": 831,
+                    "fullStart": 810
                   },
                   {
                     "context": {
@@ -3367,16 +3367,16 @@
                                     "value": "1"
                                   }
                                 },
-                                "fullEnd": 843,
-                                "fullStart": 841
+                                "fullEnd": 845,
+                                "fullStart": 843
                               }
                             },
-                            "fullEnd": 843,
-                            "fullStart": 841
+                            "fullEnd": 845,
+                            "fullStart": 843
                           }
                         },
-                        "fullEnd": 843,
-                        "fullStart": 841
+                        "fullEnd": 845,
+                        "fullStart": 843
                       },
                       "bodyColon": {
                         "context": {
@@ -3397,12 +3397,12 @@
                         "value": "priority"
                       }
                     },
-                    "fullEnd": 843,
-                    "fullStart": 829
+                    "fullEnd": 845,
+                    "fullStart": 831
                   }
                 ]
               },
-              "fullEnd": 845,
+              "fullEnd": 847,
               "fullStart": 662
             },
             "type": {
@@ -3415,7 +3415,7 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 845,
+          "fullEnd": 847,
           "fullStart": 632
         },
         {
@@ -3464,8 +3464,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 911,
-                        "fullStart": 908
+                        "fullEnd": 913,
+                        "fullStart": 910
                       },
                       "value": {
                         "context": {
@@ -3495,12 +3495,12 @@
                                     "value": "users"
                                   }
                                 },
-                                "fullEnd": 921,
-                                "fullStart": 916
+                                "fullEnd": 923,
+                                "fullStart": 918
                               }
                             },
-                            "fullEnd": 921,
-                            "fullStart": 916
+                            "fullEnd": 923,
+                            "fullStart": 918
                           },
                           "op": {
                             "context": {
@@ -3512,12 +3512,12 @@
                             "value": "<-"
                           }
                         },
-                        "fullEnd": 921,
-                        "fullStart": 913
+                        "fullEnd": 923,
+                        "fullStart": 915
                       }
                     },
-                    "fullEnd": 921,
-                    "fullStart": 908
+                    "fullEnd": 923,
+                    "fullStart": 910
                   }
                 ],
                 "listCloseBracket": {
@@ -3539,8 +3539,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 923,
-              "fullStart": 907
+              "fullEnd": 925,
+              "fullStart": 909
             },
             "body": {
               "context": {
@@ -3596,12 +3596,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 932,
-                              "fullStart": 928
+                              "fullEnd": 934,
+                              "fullStart": 930
                             }
                           },
-                          "fullEnd": 932,
-                          "fullStart": 928
+                          "fullEnd": 934,
+                          "fullStart": 930
                         }
                       ],
                       "callee": {
@@ -3626,21 +3626,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 928,
-                            "fullStart": 925
+                            "fullEnd": 930,
+                            "fullStart": 927
                           }
                         },
-                        "fullEnd": 928,
-                        "fullStart": 925
+                        "fullEnd": 930,
+                        "fullStart": 927
                       }
                     },
-                    "fullEnd": 932,
-                    "fullStart": 925
+                    "fullEnd": 934,
+                    "fullStart": 927
                   }
                 ]
               },
-              "fullEnd": 934,
-              "fullStart": 923
+              "fullEnd": 936,
+              "fullStart": 925
             },
             "name": {
               "context": {
@@ -3664,12 +3664,12 @@
                       "value": "good_header_bare"
                     }
                   },
-                  "fullEnd": 907,
-                  "fullStart": 890
+                  "fullEnd": 909,
+                  "fullStart": 892
                 }
               },
-              "fullEnd": 907,
-              "fullStart": 890
+              "fullEnd": 909,
+              "fullStart": 892
             },
             "type": {
               "context": {
@@ -3681,8 +3681,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 934,
-          "fullStart": 845
+          "fullEnd": 936,
+          "fullStart": 847
         },
         {
           "context": {
@@ -3730,8 +3730,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 963,
-                        "fullStart": 960
+                        "fullEnd": 965,
+                        "fullStart": 962
                       },
                       "value": {
                         "context": {
@@ -3767,12 +3767,12 @@
                                         "value": "my_schema"
                                       }
                                     },
-                                    "fullEnd": 977,
-                                    "fullStart": 968
+                                    "fullEnd": 979,
+                                    "fullStart": 970
                                   }
                                 },
-                                "fullEnd": 977,
-                                "fullStart": 968
+                                "fullEnd": 979,
+                                "fullStart": 970
                               },
                               "op": {
                                 "context": {
@@ -3805,16 +3805,16 @@
                                         "value": "events"
                                       }
                                     },
-                                    "fullEnd": 984,
-                                    "fullStart": 978
+                                    "fullEnd": 986,
+                                    "fullStart": 980
                                   }
                                 },
-                                "fullEnd": 984,
-                                "fullStart": 978
+                                "fullEnd": 986,
+                                "fullStart": 980
                               }
                             },
-                            "fullEnd": 984,
-                            "fullStart": 968
+                            "fullEnd": 986,
+                            "fullStart": 970
                           },
                           "op": {
                             "context": {
@@ -3826,12 +3826,12 @@
                             "value": "<-"
                           }
                         },
-                        "fullEnd": 984,
-                        "fullStart": 965
+                        "fullEnd": 986,
+                        "fullStart": 967
                       }
                     },
-                    "fullEnd": 984,
-                    "fullStart": 960
+                    "fullEnd": 986,
+                    "fullStart": 962
                   }
                 ],
                 "listCloseBracket": {
@@ -3853,8 +3853,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 986,
-              "fullStart": 959
+              "fullEnd": 988,
+              "fullStart": 961
             },
             "body": {
               "context": {
@@ -3910,12 +3910,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 995,
-                              "fullStart": 991
+                              "fullEnd": 997,
+                              "fullStart": 993
                             }
                           },
-                          "fullEnd": 995,
-                          "fullStart": 991
+                          "fullEnd": 997,
+                          "fullStart": 993
                         }
                       ],
                       "callee": {
@@ -3940,21 +3940,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 991,
-                            "fullStart": 988
+                            "fullEnd": 993,
+                            "fullStart": 990
                           }
                         },
-                        "fullEnd": 991,
-                        "fullStart": 988
+                        "fullEnd": 993,
+                        "fullStart": 990
                       }
                     },
-                    "fullEnd": 995,
-                    "fullStart": 988
+                    "fullEnd": 997,
+                    "fullStart": 990
                   }
                 ]
               },
-              "fullEnd": 997,
-              "fullStart": 986
+              "fullEnd": 999,
+              "fullStart": 988
             },
             "name": {
               "context": {
@@ -3978,12 +3978,12 @@
                       "value": "good_header_schema"
                     }
                   },
-                  "fullEnd": 959,
-                  "fullStart": 940
+                  "fullEnd": 961,
+                  "fullStart": 942
                 }
               },
-              "fullEnd": 959,
-              "fullStart": 940
+              "fullEnd": 961,
+              "fullStart": 942
             },
             "type": {
               "context": {
@@ -3995,8 +3995,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 997,
-          "fullStart": 934
+          "fullEnd": 999,
+          "fullStart": 936
         },
         {
           "context": {
@@ -4044,8 +4044,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 1101,
-                        "fullStart": 1098
+                        "fullEnd": 1103,
+                        "fullStart": 1100
                       },
                       "value": {
                         "context": {
@@ -4075,12 +4075,12 @@
                                     "value": "users"
                                   }
                                 },
-                                "fullEnd": 1110,
-                                "fullStart": 1105
+                                "fullEnd": 1112,
+                                "fullStart": 1107
                               }
                             },
-                            "fullEnd": 1110,
-                            "fullStart": 1105
+                            "fullEnd": 1112,
+                            "fullStart": 1107
                           },
                           "op": {
                             "context": {
@@ -4092,12 +4092,12 @@
                             "value": ">"
                           }
                         },
-                        "fullEnd": 1110,
-                        "fullStart": 1103
+                        "fullEnd": 1112,
+                        "fullStart": 1105
                       }
                     },
-                    "fullEnd": 1110,
-                    "fullStart": 1098
+                    "fullEnd": 1112,
+                    "fullStart": 1100
                   }
                 ],
                 "listCloseBracket": {
@@ -4119,8 +4119,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 1112,
-              "fullStart": 1097
+              "fullEnd": 1114,
+              "fullStart": 1099
             },
             "body": {
               "context": {
@@ -4176,12 +4176,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1121,
-                              "fullStart": 1117
+                              "fullEnd": 1123,
+                              "fullStart": 1119
                             }
                           },
-                          "fullEnd": 1121,
-                          "fullStart": 1117
+                          "fullEnd": 1123,
+                          "fullStart": 1119
                         }
                       ],
                       "callee": {
@@ -4206,21 +4206,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1117,
-                            "fullStart": 1114
+                            "fullEnd": 1119,
+                            "fullStart": 1116
                           }
                         },
-                        "fullEnd": 1117,
-                        "fullStart": 1114
+                        "fullEnd": 1119,
+                        "fullStart": 1116
                       }
                     },
-                    "fullEnd": 1121,
-                    "fullStart": 1114
+                    "fullEnd": 1123,
+                    "fullStart": 1116
                   }
                 ]
               },
-              "fullEnd": 1123,
-              "fullStart": 1112
+              "fullEnd": 1125,
+              "fullStart": 1114
             },
             "name": {
               "context": {
@@ -4244,12 +4244,12 @@
                       "value": "bad_header_op"
                     }
                   },
-                  "fullEnd": 1097,
-                  "fullStart": 1083
+                  "fullEnd": 1099,
+                  "fullStart": 1085
                 }
               },
-              "fullEnd": 1097,
-              "fullStart": 1083
+              "fullEnd": 1099,
+              "fullStart": 1085
             },
             "type": {
               "context": {
@@ -4261,8 +4261,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1123,
-          "fullStart": 997
+          "fullEnd": 1125,
+          "fullStart": 999
         },
         {
           "context": {
@@ -4310,8 +4310,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 1152,
-                        "fullStart": 1149
+                        "fullEnd": 1154,
+                        "fullStart": 1151
                       },
                       "value": {
                         "context": {
@@ -4335,16 +4335,16 @@
                                 "value": "not_a_dep"
                               }
                             },
-                            "fullEnd": 1165,
-                            "fullStart": 1154
+                            "fullEnd": 1167,
+                            "fullStart": 1156
                           }
                         },
-                        "fullEnd": 1165,
-                        "fullStart": 1154
+                        "fullEnd": 1167,
+                        "fullStart": 1156
                       }
                     },
-                    "fullEnd": 1165,
-                    "fullStart": 1149
+                    "fullEnd": 1167,
+                    "fullStart": 1151
                   }
                 ],
                 "listCloseBracket": {
@@ -4366,8 +4366,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 1167,
-              "fullStart": 1148
+              "fullEnd": 1169,
+              "fullStart": 1150
             },
             "body": {
               "context": {
@@ -4423,12 +4423,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1176,
-                              "fullStart": 1172
+                              "fullEnd": 1178,
+                              "fullStart": 1174
                             }
                           },
-                          "fullEnd": 1176,
-                          "fullStart": 1172
+                          "fullEnd": 1178,
+                          "fullStart": 1174
                         }
                       ],
                       "callee": {
@@ -4453,21 +4453,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1172,
-                            "fullStart": 1169
+                            "fullEnd": 1174,
+                            "fullStart": 1171
                           }
                         },
-                        "fullEnd": 1172,
-                        "fullStart": 1169
+                        "fullEnd": 1174,
+                        "fullStart": 1171
                       }
                     },
-                    "fullEnd": 1176,
-                    "fullStart": 1169
+                    "fullEnd": 1178,
+                    "fullStart": 1171
                   }
                 ]
               },
-              "fullEnd": 1178,
-              "fullStart": 1167
+              "fullEnd": 1180,
+              "fullStart": 1169
             },
             "name": {
               "context": {
@@ -4491,12 +4491,12 @@
                       "value": "bad_header_literal"
                     }
                   },
-                  "fullEnd": 1148,
-                  "fullStart": 1129
+                  "fullEnd": 1150,
+                  "fullStart": 1131
                 }
               },
-              "fullEnd": 1148,
-              "fullStart": 1129
+              "fullEnd": 1150,
+              "fullStart": 1131
             },
             "type": {
               "context": {
@@ -4508,8 +4508,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1178,
-          "fullStart": 1123
+          "fullEnd": 1180,
+          "fullStart": 1125
         },
         {
           "context": {
@@ -4571,12 +4571,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1240,
-                              "fullStart": 1236
+                              "fullEnd": 1242,
+                              "fullStart": 1238
                             }
                           },
-                          "fullEnd": 1240,
-                          "fullStart": 1236
+                          "fullEnd": 1242,
+                          "fullStart": 1238
                         },
                         {
                           "context": {
@@ -4618,8 +4618,8 @@
                                         }
                                       ]
                                     },
-                                    "fullEnd": 1244,
-                                    "fullStart": 1241
+                                    "fullEnd": 1246,
+                                    "fullStart": 1243
                                   },
                                   "value": {
                                     "context": {
@@ -4655,12 +4655,12 @@
                                                     "value": "users"
                                                   }
                                                 },
-                                                "fullEnd": 1254,
-                                                "fullStart": 1249
+                                                "fullEnd": 1256,
+                                                "fullStart": 1251
                                               }
                                             },
-                                            "fullEnd": 1254,
-                                            "fullStart": 1249
+                                            "fullEnd": 1256,
+                                            "fullStart": 1251
                                           },
                                           "op": {
                                             "context": {
@@ -4693,16 +4693,16 @@
                                                     "value": "id"
                                                   }
                                                 },
-                                                "fullEnd": 1257,
-                                                "fullStart": 1255
+                                                "fullEnd": 1259,
+                                                "fullStart": 1257
                                               }
                                             },
-                                            "fullEnd": 1257,
-                                            "fullStart": 1255
+                                            "fullEnd": 1259,
+                                            "fullStart": 1257
                                           }
                                         },
-                                        "fullEnd": 1257,
-                                        "fullStart": 1249
+                                        "fullEnd": 1259,
+                                        "fullStart": 1251
                                       },
                                       "op": {
                                         "context": {
@@ -4714,12 +4714,12 @@
                                         "value": "->"
                                       }
                                     },
-                                    "fullEnd": 1257,
-                                    "fullStart": 1246
+                                    "fullEnd": 1259,
+                                    "fullStart": 1248
                                   }
                                 },
-                                "fullEnd": 1257,
-                                "fullStart": 1241
+                                "fullEnd": 1259,
+                                "fullStart": 1243
                               }
                             ],
                             "listCloseBracket": {
@@ -4741,8 +4741,8 @@
                               "value": "["
                             }
                           },
-                          "fullEnd": 1259,
-                          "fullStart": 1240
+                          "fullEnd": 1261,
+                          "fullStart": 1242
                         }
                       ],
                       "callee": {
@@ -4767,21 +4767,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1236,
-                            "fullStart": 1233
+                            "fullEnd": 1238,
+                            "fullStart": 1235
                           }
                         },
-                        "fullEnd": 1236,
-                        "fullStart": 1233
+                        "fullEnd": 1238,
+                        "fullStart": 1235
                       }
                     },
-                    "fullEnd": 1259,
-                    "fullStart": 1233
+                    "fullEnd": 1261,
+                    "fullStart": 1235
                   }
                 ]
               },
-              "fullEnd": 1261,
-              "fullStart": 1231
+              "fullEnd": 1263,
+              "fullStart": 1233
             },
             "name": {
               "context": {
@@ -4805,12 +4805,12 @@
                       "value": "good_col_bare"
                     }
                   },
-                  "fullEnd": 1231,
-                  "fullStart": 1217
+                  "fullEnd": 1233,
+                  "fullStart": 1219
                 }
               },
-              "fullEnd": 1231,
-              "fullStart": 1217
+              "fullEnd": 1233,
+              "fullStart": 1219
             },
             "type": {
               "context": {
@@ -4822,8 +4822,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1261,
-          "fullStart": 1178
+          "fullEnd": 1263,
+          "fullStart": 1180
         },
         {
           "context": {
@@ -4885,12 +4885,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1292,
-                              "fullStart": 1288
+                              "fullEnd": 1294,
+                              "fullStart": 1290
                             }
                           },
-                          "fullEnd": 1292,
-                          "fullStart": 1288
+                          "fullEnd": 1294,
+                          "fullStart": 1290
                         },
                         {
                           "context": {
@@ -4932,8 +4932,8 @@
                                         }
                                       ]
                                     },
-                                    "fullEnd": 1296,
-                                    "fullStart": 1293
+                                    "fullEnd": 1298,
+                                    "fullStart": 1295
                                   },
                                   "value": {
                                     "context": {
@@ -4975,12 +4975,12 @@
                                                         "value": "my_schema"
                                                       }
                                                     },
-                                                    "fullEnd": 1310,
-                                                    "fullStart": 1301
+                                                    "fullEnd": 1312,
+                                                    "fullStart": 1303
                                                   }
                                                 },
-                                                "fullEnd": 1310,
-                                                "fullStart": 1301
+                                                "fullEnd": 1312,
+                                                "fullStart": 1303
                                               },
                                               "op": {
                                                 "context": {
@@ -5013,16 +5013,16 @@
                                                         "value": "events"
                                                       }
                                                     },
-                                                    "fullEnd": 1317,
-                                                    "fullStart": 1311
+                                                    "fullEnd": 1319,
+                                                    "fullStart": 1313
                                                   }
                                                 },
-                                                "fullEnd": 1317,
-                                                "fullStart": 1311
+                                                "fullEnd": 1319,
+                                                "fullStart": 1313
                                               }
                                             },
-                                            "fullEnd": 1317,
-                                            "fullStart": 1301
+                                            "fullEnd": 1319,
+                                            "fullStart": 1303
                                           },
                                           "op": {
                                             "context": {
@@ -5055,16 +5055,16 @@
                                                     "value": "id"
                                                   }
                                                 },
-                                                "fullEnd": 1320,
-                                                "fullStart": 1318
+                                                "fullEnd": 1322,
+                                                "fullStart": 1320
                                               }
                                             },
-                                            "fullEnd": 1320,
-                                            "fullStart": 1318
+                                            "fullEnd": 1322,
+                                            "fullStart": 1320
                                           }
                                         },
-                                        "fullEnd": 1320,
-                                        "fullStart": 1301
+                                        "fullEnd": 1322,
+                                        "fullStart": 1303
                                       },
                                       "op": {
                                         "context": {
@@ -5076,12 +5076,12 @@
                                         "value": "->"
                                       }
                                     },
-                                    "fullEnd": 1320,
-                                    "fullStart": 1298
+                                    "fullEnd": 1322,
+                                    "fullStart": 1300
                                   }
                                 },
-                                "fullEnd": 1320,
-                                "fullStart": 1293
+                                "fullEnd": 1322,
+                                "fullStart": 1295
                               }
                             ],
                             "listCloseBracket": {
@@ -5103,8 +5103,8 @@
                               "value": "["
                             }
                           },
-                          "fullEnd": 1322,
-                          "fullStart": 1292
+                          "fullEnd": 1324,
+                          "fullStart": 1294
                         }
                       ],
                       "callee": {
@@ -5129,21 +5129,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1288,
-                            "fullStart": 1285
+                            "fullEnd": 1290,
+                            "fullStart": 1287
                           }
                         },
-                        "fullEnd": 1288,
-                        "fullStart": 1285
+                        "fullEnd": 1290,
+                        "fullStart": 1287
                       }
                     },
-                    "fullEnd": 1322,
-                    "fullStart": 1285
+                    "fullEnd": 1324,
+                    "fullStart": 1287
                   }
                 ]
               },
-              "fullEnd": 1324,
-              "fullStart": 1283
+              "fullEnd": 1326,
+              "fullStart": 1285
             },
             "name": {
               "context": {
@@ -5167,12 +5167,12 @@
                       "value": "good_col_schema"
                     }
                   },
-                  "fullEnd": 1283,
-                  "fullStart": 1267
+                  "fullEnd": 1285,
+                  "fullStart": 1269
                 }
               },
-              "fullEnd": 1283,
-              "fullStart": 1267
+              "fullEnd": 1285,
+              "fullStart": 1269
             },
             "type": {
               "context": {
@@ -5184,8 +5184,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1324,
-          "fullStart": 1261
+          "fullEnd": 1326,
+          "fullStart": 1263
         },
         {
           "context": {
@@ -5227,12 +5227,12 @@
                               "value": "users"
                             }
                           },
-                          "fullEnd": 1362,
-                          "fullStart": 1356
+                          "fullEnd": 1364,
+                          "fullStart": 1358
                         }
                       },
-                      "fullEnd": 1362,
-                      "fullStart": 1356
+                      "fullEnd": 1364,
+                      "fullStart": 1358
                     },
                     "op": {
                       "context": {
@@ -5265,20 +5265,20 @@
                               "value": "unknown_table"
                             }
                           },
-                          "fullEnd": 1379,
-                          "fullStart": 1365
+                          "fullEnd": 1381,
+                          "fullStart": 1367
                         }
                       },
-                      "fullEnd": 1379,
-                      "fullStart": 1365
+                      "fullEnd": 1381,
+                      "fullStart": 1367
                     }
                   },
-                  "fullEnd": 1379,
-                  "fullStart": 1356
+                  "fullEnd": 1381,
+                  "fullStart": 1358
                 }
               },
-              "fullEnd": 1379,
-              "fullStart": 1356
+              "fullEnd": 1381,
+              "fullStart": 1358
             },
             "bodyColon": {
               "context": {
@@ -5299,8 +5299,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1379,
-          "fullStart": 1324
+          "fullEnd": 1381,
+          "fullStart": 1326
         },
         {
           "context": {
@@ -5348,12 +5348,12 @@
                                   "value": "users"
                                 }
                               },
-                              "fullEnd": 1389,
-                              "fullStart": 1384
+                              "fullEnd": 1391,
+                              "fullStart": 1386
                             }
                           },
-                          "fullEnd": 1389,
-                          "fullStart": 1384
+                          "fullEnd": 1391,
+                          "fullStart": 1386
                         },
                         "op": {
                           "context": {
@@ -5386,16 +5386,16 @@
                                   "value": "unknown_col"
                                 }
                               },
-                              "fullEnd": 1402,
-                              "fullStart": 1390
+                              "fullEnd": 1404,
+                              "fullStart": 1392
                             }
                           },
-                          "fullEnd": 1402,
-                          "fullStart": 1390
+                          "fullEnd": 1404,
+                          "fullStart": 1392
                         }
                       },
-                      "fullEnd": 1402,
-                      "fullStart": 1384
+                      "fullEnd": 1404,
+                      "fullStart": 1386
                     },
                     "op": {
                       "context": {
@@ -5434,12 +5434,12 @@
                                   "value": "users"
                                 }
                               },
-                              "fullEnd": 1410,
-                              "fullStart": 1405
+                              "fullEnd": 1412,
+                              "fullStart": 1407
                             }
                           },
-                          "fullEnd": 1410,
-                          "fullStart": 1405
+                          "fullEnd": 1412,
+                          "fullStart": 1407
                         },
                         "op": {
                           "context": {
@@ -5472,24 +5472,24 @@
                                   "value": "id"
                                 }
                               },
-                              "fullEnd": 1414,
-                              "fullStart": 1411
+                              "fullEnd": 1416,
+                              "fullStart": 1413
                             }
                           },
-                          "fullEnd": 1414,
-                          "fullStart": 1411
+                          "fullEnd": 1416,
+                          "fullStart": 1413
                         }
                       },
-                      "fullEnd": 1414,
-                      "fullStart": 1405
+                      "fullEnd": 1416,
+                      "fullStart": 1407
                     }
                   },
-                  "fullEnd": 1414,
-                  "fullStart": 1384
+                  "fullEnd": 1416,
+                  "fullStart": 1386
                 }
               },
-              "fullEnd": 1414,
-              "fullStart": 1384
+              "fullEnd": 1416,
+              "fullStart": 1386
             },
             "bodyColon": {
               "context": {
@@ -5510,8 +5510,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1414,
-          "fullStart": 1379
+          "fullEnd": 1416,
+          "fullStart": 1381
         },
         {
           "context": {
@@ -5559,12 +5559,12 @@
                                   "value": "unknown_schema"
                                 }
                               },
-                              "fullEnd": 1433,
-                              "fullStart": 1419
+                              "fullEnd": 1435,
+                              "fullStart": 1421
                             }
                           },
-                          "fullEnd": 1433,
-                          "fullStart": 1419
+                          "fullEnd": 1435,
+                          "fullStart": 1421
                         },
                         "op": {
                           "context": {
@@ -5597,16 +5597,16 @@
                                   "value": "events"
                                 }
                               },
-                              "fullEnd": 1441,
-                              "fullStart": 1434
+                              "fullEnd": 1443,
+                              "fullStart": 1436
                             }
                           },
-                          "fullEnd": 1441,
-                          "fullStart": 1434
+                          "fullEnd": 1443,
+                          "fullStart": 1436
                         }
                       },
-                      "fullEnd": 1441,
-                      "fullStart": 1419
+                      "fullEnd": 1443,
+                      "fullStart": 1421
                     },
                     "op": {
                       "context": {
@@ -5639,20 +5639,20 @@
                               "value": "users"
                             }
                           },
-                          "fullEnd": 1450,
-                          "fullStart": 1444
+                          "fullEnd": 1452,
+                          "fullStart": 1446
                         }
                       },
-                      "fullEnd": 1450,
-                      "fullStart": 1444
+                      "fullEnd": 1452,
+                      "fullStart": 1446
                     }
                   },
-                  "fullEnd": 1450,
-                  "fullStart": 1419
+                  "fullEnd": 1452,
+                  "fullStart": 1421
                 }
               },
-              "fullEnd": 1450,
-              "fullStart": 1419
+              "fullEnd": 1452,
+              "fullStart": 1421
             },
             "bodyColon": {
               "context": {
@@ -5673,8 +5673,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1450,
-          "fullStart": 1414
+          "fullEnd": 1452,
+          "fullStart": 1416
         },
         {
           "context": {
@@ -5722,12 +5722,12 @@
                                   "value": "my_schema"
                                 }
                               },
-                              "fullEnd": 1464,
-                              "fullStart": 1455
+                              "fullEnd": 1466,
+                              "fullStart": 1457
                             }
                           },
-                          "fullEnd": 1464,
-                          "fullStart": 1455
+                          "fullEnd": 1466,
+                          "fullStart": 1457
                         },
                         "op": {
                           "context": {
@@ -5760,16 +5760,16 @@
                                   "value": "unknown_table"
                                 }
                               },
-                              "fullEnd": 1479,
-                              "fullStart": 1465
+                              "fullEnd": 1481,
+                              "fullStart": 1467
                             }
                           },
-                          "fullEnd": 1479,
-                          "fullStart": 1465
+                          "fullEnd": 1481,
+                          "fullStart": 1467
                         }
                       },
-                      "fullEnd": 1479,
-                      "fullStart": 1455
+                      "fullEnd": 1481,
+                      "fullStart": 1457
                     },
                     "op": {
                       "context": {
@@ -5802,20 +5802,20 @@
                               "value": "users"
                             }
                           },
-                          "fullEnd": 1488,
-                          "fullStart": 1482
+                          "fullEnd": 1490,
+                          "fullStart": 1484
                         }
                       },
-                      "fullEnd": 1488,
-                      "fullStart": 1482
+                      "fullEnd": 1490,
+                      "fullStart": 1484
                     }
                   },
-                  "fullEnd": 1488,
-                  "fullStart": 1455
+                  "fullEnd": 1490,
+                  "fullStart": 1457
                 }
               },
-              "fullEnd": 1488,
-              "fullStart": 1455
+              "fullEnd": 1490,
+              "fullStart": 1457
             },
             "bodyColon": {
               "context": {
@@ -5836,8 +5836,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1488,
-          "fullStart": 1450
+          "fullEnd": 1490,
+          "fullStart": 1452
         },
         {
           "context": {
@@ -5891,12 +5891,12 @@
                                       "value": "my_schema"
                                     }
                                   },
-                                  "fullEnd": 1502,
-                                  "fullStart": 1493
+                                  "fullEnd": 1504,
+                                  "fullStart": 1495
                                 }
                               },
-                              "fullEnd": 1502,
-                              "fullStart": 1493
+                              "fullEnd": 1504,
+                              "fullStart": 1495
                             },
                             "op": {
                               "context": {
@@ -5929,16 +5929,16 @@
                                       "value": "events"
                                     }
                                   },
-                                  "fullEnd": 1509,
-                                  "fullStart": 1503
+                                  "fullEnd": 1511,
+                                  "fullStart": 1505
                                 }
                               },
-                              "fullEnd": 1509,
-                              "fullStart": 1503
+                              "fullEnd": 1511,
+                              "fullStart": 1505
                             }
                           },
-                          "fullEnd": 1509,
-                          "fullStart": 1493
+                          "fullEnd": 1511,
+                          "fullStart": 1495
                         },
                         "op": {
                           "context": {
@@ -5971,16 +5971,16 @@
                                   "value": "unknown_col"
                                 }
                               },
-                              "fullEnd": 1522,
-                              "fullStart": 1510
+                              "fullEnd": 1524,
+                              "fullStart": 1512
                             }
                           },
-                          "fullEnd": 1522,
-                          "fullStart": 1510
+                          "fullEnd": 1524,
+                          "fullStart": 1512
                         }
                       },
-                      "fullEnd": 1522,
-                      "fullStart": 1493
+                      "fullEnd": 1524,
+                      "fullStart": 1495
                     },
                     "op": {
                       "context": {
@@ -6019,12 +6019,12 @@
                                   "value": "users"
                                 }
                               },
-                              "fullEnd": 1530,
-                              "fullStart": 1525
+                              "fullEnd": 1532,
+                              "fullStart": 1527
                             }
                           },
-                          "fullEnd": 1530,
-                          "fullStart": 1525
+                          "fullEnd": 1532,
+                          "fullStart": 1527
                         },
                         "op": {
                           "context": {
@@ -6057,24 +6057,24 @@
                                   "value": "id"
                                 }
                               },
-                              "fullEnd": 1534,
-                              "fullStart": 1531
+                              "fullEnd": 1536,
+                              "fullStart": 1533
                             }
                           },
-                          "fullEnd": 1534,
-                          "fullStart": 1531
+                          "fullEnd": 1536,
+                          "fullStart": 1533
                         }
                       },
-                      "fullEnd": 1534,
-                      "fullStart": 1525
+                      "fullEnd": 1536,
+                      "fullStart": 1527
                     }
                   },
-                  "fullEnd": 1534,
-                  "fullStart": 1493
+                  "fullEnd": 1536,
+                  "fullStart": 1495
                 }
               },
-              "fullEnd": 1534,
-              "fullStart": 1493
+              "fullEnd": 1536,
+              "fullStart": 1495
             },
             "bodyColon": {
               "context": {
@@ -6095,8 +6095,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1534,
-          "fullStart": 1488
+          "fullEnd": 1536,
+          "fullStart": 1490
         },
         {
           "context": {
@@ -6163,12 +6163,12 @@
                                     "value": "users"
                                   }
                                 },
-                                "fullEnd": 1574,
-                                "fullStart": 1566
+                                "fullEnd": 1576,
+                                "fullStart": 1568
                               }
                             },
-                            "fullEnd": 1574,
-                            "fullStart": 1566
+                            "fullEnd": 1576,
+                            "fullStart": 1568
                           },
                           "op": {
                             "context": {
@@ -6201,20 +6201,20 @@
                                     "value": "unknown_a"
                                   }
                                 },
-                                "fullEnd": 1587,
-                                "fullStart": 1577
+                                "fullEnd": 1589,
+                                "fullStart": 1579
                               }
                             },
-                            "fullEnd": 1587,
-                            "fullStart": 1577
+                            "fullEnd": 1589,
+                            "fullStart": 1579
                           }
                         },
-                        "fullEnd": 1587,
-                        "fullStart": 1566
+                        "fullEnd": 1589,
+                        "fullStart": 1568
                       }
                     },
-                    "fullEnd": 1587,
-                    "fullStart": 1566
+                    "fullEnd": 1589,
+                    "fullStart": 1568
                   },
                   {
                     "context": {
@@ -6256,12 +6256,12 @@
                                         "value": "my_schema"
                                       }
                                     },
-                                    "fullEnd": 1598,
-                                    "fullStart": 1587
+                                    "fullEnd": 1600,
+                                    "fullStart": 1589
                                   }
                                 },
-                                "fullEnd": 1598,
-                                "fullStart": 1587
+                                "fullEnd": 1600,
+                                "fullStart": 1589
                               },
                               "op": {
                                 "context": {
@@ -6294,16 +6294,16 @@
                                         "value": "events"
                                       }
                                     },
-                                    "fullEnd": 1606,
-                                    "fullStart": 1599
+                                    "fullEnd": 1608,
+                                    "fullStart": 1601
                                   }
                                 },
-                                "fullEnd": 1606,
-                                "fullStart": 1599
+                                "fullEnd": 1608,
+                                "fullStart": 1601
                               }
                             },
-                            "fullEnd": 1606,
-                            "fullStart": 1587
+                            "fullEnd": 1608,
+                            "fullStart": 1589
                           },
                           "op": {
                             "context": {
@@ -6336,20 +6336,20 @@
                                     "value": "unknown_b"
                                   }
                                 },
-                                "fullEnd": 1619,
-                                "fullStart": 1609
+                                "fullEnd": 1621,
+                                "fullStart": 1611
                               }
                             },
-                            "fullEnd": 1619,
-                            "fullStart": 1609
+                            "fullEnd": 1621,
+                            "fullStart": 1611
                           }
                         },
-                        "fullEnd": 1619,
-                        "fullStart": 1587
+                        "fullEnd": 1621,
+                        "fullStart": 1589
                       }
                     },
-                    "fullEnd": 1619,
-                    "fullStart": 1587
+                    "fullEnd": 1621,
+                    "fullStart": 1589
                   },
                   {
                     "context": {
@@ -6391,12 +6391,12 @@
                                         "value": "users"
                                       }
                                     },
-                                    "fullEnd": 1626,
-                                    "fullStart": 1619
+                                    "fullEnd": 1628,
+                                    "fullStart": 1621
                                   }
                                 },
-                                "fullEnd": 1626,
-                                "fullStart": 1619
+                                "fullEnd": 1628,
+                                "fullStart": 1621
                               },
                               "op": {
                                 "context": {
@@ -6429,16 +6429,16 @@
                                         "value": "id"
                                       }
                                     },
-                                    "fullEnd": 1630,
-                                    "fullStart": 1627
+                                    "fullEnd": 1632,
+                                    "fullStart": 1629
                                   }
                                 },
-                                "fullEnd": 1630,
-                                "fullStart": 1627
+                                "fullEnd": 1632,
+                                "fullStart": 1629
                               }
                             },
-                            "fullEnd": 1630,
-                            "fullStart": 1619
+                            "fullEnd": 1632,
+                            "fullStart": 1621
                           },
                           "op": {
                             "context": {
@@ -6477,12 +6477,12 @@
                                         "value": "unknown_c"
                                       }
                                     },
-                                    "fullEnd": 1642,
-                                    "fullStart": 1633
+                                    "fullEnd": 1644,
+                                    "fullStart": 1635
                                   }
                                 },
-                                "fullEnd": 1642,
-                                "fullStart": 1633
+                                "fullEnd": 1644,
+                                "fullStart": 1635
                               },
                               "op": {
                                 "context": {
@@ -6515,24 +6515,24 @@
                                         "value": "col"
                                       }
                                     },
-                                    "fullEnd": 1647,
-                                    "fullStart": 1643
+                                    "fullEnd": 1649,
+                                    "fullStart": 1645
                                   }
                                 },
-                                "fullEnd": 1647,
-                                "fullStart": 1643
+                                "fullEnd": 1649,
+                                "fullStart": 1645
                               }
                             },
-                            "fullEnd": 1647,
-                            "fullStart": 1633
+                            "fullEnd": 1649,
+                            "fullStart": 1635
                           }
                         },
-                        "fullEnd": 1647,
-                        "fullStart": 1619
+                        "fullEnd": 1649,
+                        "fullStart": 1621
                       }
                     },
-                    "fullEnd": 1647,
-                    "fullStart": 1619
+                    "fullEnd": 1649,
+                    "fullStart": 1621
                   },
                   {
                     "context": {
@@ -6580,12 +6580,12 @@
                                             "value": "my_schema"
                                           }
                                         },
-                                        "fullEnd": 1658,
-                                        "fullStart": 1647
+                                        "fullEnd": 1660,
+                                        "fullStart": 1649
                                       }
                                     },
-                                    "fullEnd": 1658,
-                                    "fullStart": 1647
+                                    "fullEnd": 1660,
+                                    "fullStart": 1649
                                   },
                                   "op": {
                                     "context": {
@@ -6618,16 +6618,16 @@
                                             "value": "events"
                                           }
                                         },
-                                        "fullEnd": 1665,
-                                        "fullStart": 1659
+                                        "fullEnd": 1667,
+                                        "fullStart": 1661
                                       }
                                     },
-                                    "fullEnd": 1665,
-                                    "fullStart": 1659
+                                    "fullEnd": 1667,
+                                    "fullStart": 1661
                                   }
                                 },
-                                "fullEnd": 1665,
-                                "fullStart": 1647
+                                "fullEnd": 1667,
+                                "fullStart": 1649
                               },
                               "op": {
                                 "context": {
@@ -6660,16 +6660,16 @@
                                         "value": "id"
                                       }
                                     },
-                                    "fullEnd": 1669,
-                                    "fullStart": 1666
+                                    "fullEnd": 1671,
+                                    "fullStart": 1668
                                   }
                                 },
-                                "fullEnd": 1669,
-                                "fullStart": 1666
+                                "fullEnd": 1671,
+                                "fullStart": 1668
                               }
                             },
-                            "fullEnd": 1669,
-                            "fullStart": 1647
+                            "fullEnd": 1671,
+                            "fullStart": 1649
                           },
                           "op": {
                             "context": {
@@ -6708,12 +6708,12 @@
                                         "value": "users"
                                       }
                                     },
-                                    "fullEnd": 1677,
-                                    "fullStart": 1672
+                                    "fullEnd": 1679,
+                                    "fullStart": 1674
                                   }
                                 },
-                                "fullEnd": 1677,
-                                "fullStart": 1672
+                                "fullEnd": 1679,
+                                "fullStart": 1674
                               },
                               "op": {
                                 "context": {
@@ -6746,29 +6746,29 @@
                                         "value": "unknown_d"
                                       }
                                     },
-                                    "fullEnd": 1688,
-                                    "fullStart": 1678
+                                    "fullEnd": 1690,
+                                    "fullStart": 1680
                                   }
                                 },
-                                "fullEnd": 1688,
-                                "fullStart": 1678
+                                "fullEnd": 1690,
+                                "fullStart": 1680
                               }
                             },
-                            "fullEnd": 1688,
-                            "fullStart": 1672
+                            "fullEnd": 1690,
+                            "fullStart": 1674
                           }
                         },
-                        "fullEnd": 1688,
-                        "fullStart": 1647
+                        "fullEnd": 1690,
+                        "fullStart": 1649
                       }
                     },
-                    "fullEnd": 1688,
-                    "fullStart": 1647
+                    "fullEnd": 1690,
+                    "fullStart": 1649
                   }
                 ]
               },
-              "fullEnd": 1690,
-              "fullStart": 1564
+              "fullEnd": 1692,
+              "fullStart": 1566
             },
             "type": {
               "context": {
@@ -6780,8 +6780,8 @@
               "value": "Dep"
             }
           },
-          "fullEnd": 1690,
-          "fullStart": 1534
+          "fullEnd": 1692,
+          "fullStart": 1536
         },
         {
           "context": {
@@ -6829,8 +6829,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 1755,
-                        "fullStart": 1752
+                        "fullEnd": 1757,
+                        "fullStart": 1754
                       },
                       "value": {
                         "context": {
@@ -6860,12 +6860,12 @@
                                     "value": "unknown_source"
                                   }
                                 },
-                                "fullEnd": 1774,
-                                "fullStart": 1760
+                                "fullEnd": 1776,
+                                "fullStart": 1762
                               }
                             },
-                            "fullEnd": 1774,
-                            "fullStart": 1760
+                            "fullEnd": 1776,
+                            "fullStart": 1762
                           },
                           "op": {
                             "context": {
@@ -6877,12 +6877,12 @@
                             "value": "<-"
                           }
                         },
-                        "fullEnd": 1774,
-                        "fullStart": 1757
+                        "fullEnd": 1776,
+                        "fullStart": 1759
                       }
                     },
-                    "fullEnd": 1774,
-                    "fullStart": 1752
+                    "fullEnd": 1776,
+                    "fullStart": 1754
                   }
                 ],
                 "listCloseBracket": {
@@ -6904,8 +6904,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 1776,
-              "fullStart": 1751
+              "fullEnd": 1778,
+              "fullStart": 1753
             },
             "body": {
               "context": {
@@ -6961,12 +6961,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1785,
-                              "fullStart": 1781
+                              "fullEnd": 1787,
+                              "fullStart": 1783
                             }
                           },
-                          "fullEnd": 1785,
-                          "fullStart": 1781
+                          "fullEnd": 1787,
+                          "fullStart": 1783
                         }
                       ],
                       "callee": {
@@ -6991,21 +6991,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1781,
-                            "fullStart": 1778
+                            "fullEnd": 1783,
+                            "fullStart": 1780
                           }
                         },
-                        "fullEnd": 1781,
-                        "fullStart": 1778
+                        "fullEnd": 1783,
+                        "fullStart": 1780
                       }
                     },
-                    "fullEnd": 1785,
-                    "fullStart": 1778
+                    "fullEnd": 1787,
+                    "fullStart": 1780
                   }
                 ]
               },
-              "fullEnd": 1787,
-              "fullStart": 1776
+              "fullEnd": 1789,
+              "fullStart": 1778
             },
             "name": {
               "context": {
@@ -7029,12 +7029,12 @@
                       "value": "bad_header_bare"
                     }
                   },
-                  "fullEnd": 1751,
-                  "fullStart": 1735
+                  "fullEnd": 1753,
+                  "fullStart": 1737
                 }
               },
-              "fullEnd": 1751,
-              "fullStart": 1735
+              "fullEnd": 1753,
+              "fullStart": 1737
             },
             "type": {
               "context": {
@@ -7046,8 +7046,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1787,
-          "fullStart": 1690
+          "fullEnd": 1789,
+          "fullStart": 1692
         },
         {
           "context": {
@@ -7095,8 +7095,8 @@
                             }
                           ]
                         },
-                        "fullEnd": 1815,
-                        "fullStart": 1812
+                        "fullEnd": 1817,
+                        "fullStart": 1814
                       },
                       "value": {
                         "context": {
@@ -7132,12 +7132,12 @@
                                         "value": "unknown_schema"
                                       }
                                     },
-                                    "fullEnd": 1834,
-                                    "fullStart": 1820
+                                    "fullEnd": 1836,
+                                    "fullStart": 1822
                                   }
                                 },
-                                "fullEnd": 1834,
-                                "fullStart": 1820
+                                "fullEnd": 1836,
+                                "fullStart": 1822
                               },
                               "op": {
                                 "context": {
@@ -7170,16 +7170,16 @@
                                         "value": "events"
                                       }
                                     },
-                                    "fullEnd": 1841,
-                                    "fullStart": 1835
+                                    "fullEnd": 1843,
+                                    "fullStart": 1837
                                   }
                                 },
-                                "fullEnd": 1841,
-                                "fullStart": 1835
+                                "fullEnd": 1843,
+                                "fullStart": 1837
                               }
                             },
-                            "fullEnd": 1841,
-                            "fullStart": 1820
+                            "fullEnd": 1843,
+                            "fullStart": 1822
                           },
                           "op": {
                             "context": {
@@ -7191,12 +7191,12 @@
                             "value": "<-"
                           }
                         },
-                        "fullEnd": 1841,
-                        "fullStart": 1817
+                        "fullEnd": 1843,
+                        "fullStart": 1819
                       }
                     },
-                    "fullEnd": 1841,
-                    "fullStart": 1812
+                    "fullEnd": 1843,
+                    "fullStart": 1814
                   }
                 ],
                 "listCloseBracket": {
@@ -7218,8 +7218,8 @@
                   "value": "["
                 }
               },
-              "fullEnd": 1843,
-              "fullStart": 1811
+              "fullEnd": 1845,
+              "fullStart": 1813
             },
             "body": {
               "context": {
@@ -7275,12 +7275,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1852,
-                              "fullStart": 1848
+                              "fullEnd": 1854,
+                              "fullStart": 1850
                             }
                           },
-                          "fullEnd": 1852,
-                          "fullStart": 1848
+                          "fullEnd": 1854,
+                          "fullStart": 1850
                         }
                       ],
                       "callee": {
@@ -7305,21 +7305,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1848,
-                            "fullStart": 1845
+                            "fullEnd": 1850,
+                            "fullStart": 1847
                           }
                         },
-                        "fullEnd": 1848,
-                        "fullStart": 1845
+                        "fullEnd": 1850,
+                        "fullStart": 1847
                       }
                     },
-                    "fullEnd": 1852,
-                    "fullStart": 1845
+                    "fullEnd": 1854,
+                    "fullStart": 1847
                   }
                 ]
               },
-              "fullEnd": 1854,
-              "fullStart": 1843
+              "fullEnd": 1856,
+              "fullStart": 1845
             },
             "name": {
               "context": {
@@ -7343,12 +7343,12 @@
                       "value": "bad_header_schema"
                     }
                   },
-                  "fullEnd": 1811,
-                  "fullStart": 1793
+                  "fullEnd": 1813,
+                  "fullStart": 1795
                 }
               },
-              "fullEnd": 1811,
-              "fullStart": 1793
+              "fullEnd": 1813,
+              "fullStart": 1795
             },
             "type": {
               "context": {
@@ -7360,8 +7360,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1854,
-          "fullStart": 1787
+          "fullEnd": 1856,
+          "fullStart": 1789
         },
         {
           "context": {
@@ -7423,12 +7423,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1915,
-                              "fullStart": 1911
+                              "fullEnd": 1917,
+                              "fullStart": 1913
                             }
                           },
-                          "fullEnd": 1915,
-                          "fullStart": 1911
+                          "fullEnd": 1917,
+                          "fullStart": 1913
                         },
                         {
                           "context": {
@@ -7470,8 +7470,8 @@
                                         }
                                       ]
                                     },
-                                    "fullEnd": 1919,
-                                    "fullStart": 1916
+                                    "fullEnd": 1921,
+                                    "fullStart": 1918
                                   },
                                   "value": {
                                     "context": {
@@ -7507,12 +7507,12 @@
                                                     "value": "unknown_table"
                                                   }
                                                 },
-                                                "fullEnd": 1937,
-                                                "fullStart": 1924
+                                                "fullEnd": 1939,
+                                                "fullStart": 1926
                                               }
                                             },
-                                            "fullEnd": 1937,
-                                            "fullStart": 1924
+                                            "fullEnd": 1939,
+                                            "fullStart": 1926
                                           },
                                           "op": {
                                             "context": {
@@ -7545,16 +7545,16 @@
                                                     "value": "col"
                                                   }
                                                 },
-                                                "fullEnd": 1941,
-                                                "fullStart": 1938
+                                                "fullEnd": 1943,
+                                                "fullStart": 1940
                                               }
                                             },
-                                            "fullEnd": 1941,
-                                            "fullStart": 1938
+                                            "fullEnd": 1943,
+                                            "fullStart": 1940
                                           }
                                         },
-                                        "fullEnd": 1941,
-                                        "fullStart": 1924
+                                        "fullEnd": 1943,
+                                        "fullStart": 1926
                                       },
                                       "op": {
                                         "context": {
@@ -7566,12 +7566,12 @@
                                         "value": "->"
                                       }
                                     },
-                                    "fullEnd": 1941,
-                                    "fullStart": 1921
+                                    "fullEnd": 1943,
+                                    "fullStart": 1923
                                   }
                                 },
-                                "fullEnd": 1941,
-                                "fullStart": 1916
+                                "fullEnd": 1943,
+                                "fullStart": 1918
                               }
                             ],
                             "listCloseBracket": {
@@ -7593,8 +7593,8 @@
                               "value": "["
                             }
                           },
-                          "fullEnd": 1943,
-                          "fullStart": 1915
+                          "fullEnd": 1945,
+                          "fullStart": 1917
                         }
                       ],
                       "callee": {
@@ -7619,21 +7619,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1911,
-                            "fullStart": 1908
+                            "fullEnd": 1913,
+                            "fullStart": 1910
                           }
                         },
-                        "fullEnd": 1911,
-                        "fullStart": 1908
+                        "fullEnd": 1913,
+                        "fullStart": 1910
                       }
                     },
-                    "fullEnd": 1943,
-                    "fullStart": 1908
+                    "fullEnd": 1945,
+                    "fullStart": 1910
                   }
                 ]
               },
-              "fullEnd": 1945,
-              "fullStart": 1906
+              "fullEnd": 1947,
+              "fullStart": 1908
             },
             "name": {
               "context": {
@@ -7657,12 +7657,12 @@
                       "value": "bad_col_bare"
                     }
                   },
-                  "fullEnd": 1906,
-                  "fullStart": 1893
+                  "fullEnd": 1908,
+                  "fullStart": 1895
                 }
               },
-              "fullEnd": 1906,
-              "fullStart": 1893
+              "fullEnd": 1908,
+              "fullStart": 1895
             },
             "type": {
               "context": {
@@ -7674,8 +7674,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 1945,
-          "fullStart": 1854
+          "fullEnd": 1947,
+          "fullStart": 1856
         },
         {
           "context": {
@@ -7737,12 +7737,12 @@
                                   "value": "int"
                                 }
                               },
-                              "fullEnd": 1975,
-                              "fullStart": 1971
+                              "fullEnd": 1977,
+                              "fullStart": 1973
                             }
                           },
-                          "fullEnd": 1975,
-                          "fullStart": 1971
+                          "fullEnd": 1977,
+                          "fullStart": 1973
                         },
                         {
                           "context": {
@@ -7784,8 +7784,8 @@
                                         }
                                       ]
                                     },
-                                    "fullEnd": 1979,
-                                    "fullStart": 1976
+                                    "fullEnd": 1981,
+                                    "fullStart": 1978
                                   },
                                   "value": {
                                     "context": {
@@ -7827,12 +7827,12 @@
                                                         "value": "my_schema"
                                                       }
                                                     },
-                                                    "fullEnd": 1993,
-                                                    "fullStart": 1984
+                                                    "fullEnd": 1995,
+                                                    "fullStart": 1986
                                                   }
                                                 },
-                                                "fullEnd": 1993,
-                                                "fullStart": 1984
+                                                "fullEnd": 1995,
+                                                "fullStart": 1986
                                               },
                                               "op": {
                                                 "context": {
@@ -7865,16 +7865,16 @@
                                                         "value": "unknown_table"
                                                       }
                                                     },
-                                                    "fullEnd": 2007,
-                                                    "fullStart": 1994
+                                                    "fullEnd": 2009,
+                                                    "fullStart": 1996
                                                   }
                                                 },
-                                                "fullEnd": 2007,
-                                                "fullStart": 1994
+                                                "fullEnd": 2009,
+                                                "fullStart": 1996
                                               }
                                             },
-                                            "fullEnd": 2007,
-                                            "fullStart": 1984
+                                            "fullEnd": 2009,
+                                            "fullStart": 1986
                                           },
                                           "op": {
                                             "context": {
@@ -7907,16 +7907,16 @@
                                                     "value": "col"
                                                   }
                                                 },
-                                                "fullEnd": 2011,
-                                                "fullStart": 2008
+                                                "fullEnd": 2013,
+                                                "fullStart": 2010
                                               }
                                             },
-                                            "fullEnd": 2011,
-                                            "fullStart": 2008
+                                            "fullEnd": 2013,
+                                            "fullStart": 2010
                                           }
                                         },
-                                        "fullEnd": 2011,
-                                        "fullStart": 1984
+                                        "fullEnd": 2013,
+                                        "fullStart": 1986
                                       },
                                       "op": {
                                         "context": {
@@ -7928,12 +7928,12 @@
                                         "value": "->"
                                       }
                                     },
-                                    "fullEnd": 2011,
-                                    "fullStart": 1981
+                                    "fullEnd": 2013,
+                                    "fullStart": 1983
                                   }
                                 },
-                                "fullEnd": 2011,
-                                "fullStart": 1976
+                                "fullEnd": 2013,
+                                "fullStart": 1978
                               }
                             ],
                             "listCloseBracket": {
@@ -7955,8 +7955,8 @@
                               "value": "["
                             }
                           },
-                          "fullEnd": 2013,
-                          "fullStart": 1975
+                          "fullEnd": 2015,
+                          "fullStart": 1977
                         }
                       ],
                       "callee": {
@@ -7981,21 +7981,21 @@
                                 "value": "id"
                               }
                             },
-                            "fullEnd": 1971,
-                            "fullStart": 1968
+                            "fullEnd": 1973,
+                            "fullStart": 1970
                           }
                         },
-                        "fullEnd": 1971,
-                        "fullStart": 1968
+                        "fullEnd": 1973,
+                        "fullStart": 1970
                       }
                     },
-                    "fullEnd": 2013,
-                    "fullStart": 1968
+                    "fullEnd": 2015,
+                    "fullStart": 1970
                   }
                 ]
               },
-              "fullEnd": 2015,
-              "fullStart": 1966
+              "fullEnd": 2017,
+              "fullStart": 1968
             },
             "name": {
               "context": {
@@ -8019,12 +8019,12 @@
                       "value": "bad_col_schema"
                     }
                   },
-                  "fullEnd": 1966,
-                  "fullStart": 1951
+                  "fullEnd": 1968,
+                  "fullStart": 1953
                 }
               },
-              "fullEnd": 1966,
-              "fullStart": 1951
+              "fullEnd": 1968,
+              "fullStart": 1953
             },
             "type": {
               "context": {
@@ -8036,8 +8036,8 @@
               "value": "Table"
             }
           },
-          "fullEnd": 2015,
-          "fullStart": 1945
+          "fullEnd": 2017,
+          "fullStart": 1947
         }
       ],
       "eof": {
@@ -8050,7 +8050,7 @@
         "value": ""
       }
     },
-    "fullEnd": 2015,
+    "fullEnd": 2017,
     "fullStart": 0
   }
 }
