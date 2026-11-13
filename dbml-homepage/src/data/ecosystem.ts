@@ -190,6 +190,15 @@ export const communityProjects: EcosystemItem[] = [
     categories: ['to-dbml'],
   },
   {
+    name: 'drizzle-dbml-generator',
+    description: 'Generate a DBML schema from your Drizzle ORM schema.',
+    href: 'https://github.com/nicolasmelo1/drizzle-dbml-generator',
+    repo: 'nicolasmelo1/drizzle-dbml-generator',
+    language: 'TypeScript',
+    author: 'Nicolas Melo',
+    categories: ['to-dbml'],
+  },
+  {
     name: 'schema_to_dbml',
     description: "Ruby gem that generates DBML from a Rails schema.rb file.",
     href: 'https://github.com/ricardojcribeiro/schema_to_dbml',
