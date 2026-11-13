@@ -533,10 +533,24 @@ class DbmlExporter {
     return blocks.join('\n');
   }
 
+  static exportProject (model: NormalizedModel): string {
+    const { name, databaseType, note } = model.database['1'];
+    if (!name && !databaseType && !note) return '';
+
+    const projectName = name ? ` "${name}"` : '';
+    const databaseTypeStr = databaseType ? `  database_type: ${DbmlExporter.escapeNote(databaseType)}\n` : '';
+    const noteStr = note ? `  Note: ${DbmlExporter.escapeNote(note)}\n` : '';
+
+    return `Project${projectName} {\n${databaseTypeStr}${noteStr}}\n`;
+  }
+
   static export (model: NormalizedModel, options: DbmlExporterOptions): string {
     const elementStrs: string[] = [];
     const database = model.database['1'];
     const { includeRecords } = options;
+
+    const projectStr = DbmlExporter.exportProject(model);
+    if (projectStr) elementStrs.push(projectStr);
 
     database.schemaIds.forEach((schemaId) => {
       const {
