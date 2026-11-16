@@ -208,7 +208,7 @@ Metadata Dep posts_by_user {
 
 :::note
 - `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name, and `Metadata Dep` targets a [named dependency](./data-lineage.md) by its name. Unnamed refs and deps cannot be targeted.
-- The name can be written as `name` or `schema.name`. A bare name means the `public` schema, so `Metadata Ref user_posts` and `Metadata Ref public.user_posts` are the same.
+- The name can optionally be prefixed with `public.`, so `Metadata Ref user_posts` and `Metadata Ref public.user_posts` are the same.
 - A `Metadata Ref` or `Metadata Dep` block is only valid when the ref or dep exists (it is defined in the same file, or all of its endpoint tables are imported).
 - `color` and `note` in a `Metadata Ref` or `Metadata Dep` block set the relationship's or dependency's color and note.
 :::

@@ -12,7 +12,7 @@ import { isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { getMetadataTargetKind, MetadataTargetLabel } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/registries';
-import { extractMetadataValue } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}
@@ -145,7 +145,7 @@ export default class MetadataValidator {
         return [
           new CompileError(
             CompileErrorCode.INVALID_METADATA_FIELD,
-            'A Metadata field value must be a string, a color literal, a number literal, or a boolean literal',
+            invalidMetadataValueMessage('A Metadata field value', sub.body?.callee),
             sub.body ?? sub,
           ),
         ];

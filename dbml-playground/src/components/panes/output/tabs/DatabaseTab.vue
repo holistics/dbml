@@ -204,13 +204,25 @@
           <DbRow
             v-for="(dep, di) in database.deps"
             :key="di"
+            :icon="PhArrowRight"
+            icon-color="text-orange-500"
+            tooltip="Dep"
           >
             <span
               v-if="dep.name"
               class="text-orange-700"
             >{{ dep.name }}</span>
+            <!-- An unnamed Dep is labelled by its first edge -->
+            <template v-else-if="dep.edges.length">
+              <span class="text-blue-500">{{ depEndpointLabel(dep.edges[0].upstream) }}</span>
+              <span class="text-gray-400">→</span>
+              <span class="text-blue-500">{{ depEndpointLabel(dep.edges[0].downstream) }}</span>
+            </template>
             <template #trailing>
-              <span class="text-gray-400 text-xs">{{ dep.edges.length }} edges</span>
+              <span class="text-gray-400 text-xs">{{ dep.edges.length }} {{ dep.edges.length === 1 ? 'edge' : 'edges' }}</span>
+            </template>
+            <template #attached>
+              <DbMetadata :metadata="dep.metadata" />
             </template>
             <template #children>
               <DbRow
@@ -223,9 +235,7 @@
                 <span class="text-blue-500">{{ depEndpointLabel(edge.upstream) }}</span>
                 <span class="text-gray-400">→</span>
                 <span class="text-blue-500">{{ depEndpointLabel(edge.downstream) }}</span>
-                <!-- A Dep's metadata is shown once, under its last edge -->
               </DbRow>
-              <DbMetadata :metadata="dep.metadata" />
             </template>
           </DbRow>
         </DbSection>

@@ -188,6 +188,66 @@ describe('[example] Dep inline custom metadata', () => {
     expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_DEP_SETTING_VALUE);
   });
 
+  describe('unquoted legacy values', () => {
+    const QUOTE_HINT = 'must be a string, a color literal, a number literal, or a boolean literal';
+
+    function messages (source: string) {
+      return interpret(TABLES + source).getErrors().map((e) => e.diagnostic);
+    }
+
+    it('rejects a bare identifier block-body value and hints to quote it', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  materialized: table
+}`;
+      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+      expect(messages(source)).toEqual([`Custom setting 'materialized' ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
+    });
+
+    it('rejects `null` and hints to quote it', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: null
+}`;
+      expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}. Did you mean 'null'? Text values must be quoted`]);
+    });
+
+    it('hints to quote a bare identifier in the settings list', () => {
+      const source = 'Dep pipeline: raw_orders -> stg_orders [materialized: table]';
+      expect(messages(source)).toEqual([`Custom setting 'materialized' ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
+    });
+
+    it('hints to quote a bare identifier in a Metadata Dep block', () => {
+      const source = `Dep pipeline: raw_orders -> stg_orders
+Metadata Dep pipeline {
+  materialized: table
+}`;
+      expect(messages(source)).toEqual([`A Metadata field value ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
+    });
+
+    it('hints to quote a bare identifier in a Table inline setting', () => {
+      const source = 'Table t [owner: data_team] { id int }';
+      expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}. Did you mean 'data_team'? Text values must be quoted`]);
+    });
+
+    it('gives no hint for a non-identifier value', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: a.b
+}`;
+      expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}`]);
+    });
+
+    it('accepts the quoted form', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  materialized: 'table'
+  owner: 'data-team'
+}`;
+      expect(errorCodes(source)).toEqual([]);
+    });
+  });
+
   it('reports a valueless custom setting', () => {
     const source = 'Dep pipeline: raw_orders -> stg_orders [owner]';
     expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_DEP_SETTING_VALUE);

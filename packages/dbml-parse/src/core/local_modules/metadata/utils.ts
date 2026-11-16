@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/types';
 import type { AttributeNode } from '@/core/types/nodes';
-import { extractMetadataValue } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
 
 export function validateCustomInlineMetadata (
   name: string,
@@ -21,7 +21,7 @@ export function validateCustomInlineMetadata (
     if (extractMetadataValue(attr.value) === undefined) {
       errors.push(new CompileError(
         errorCodes.invalidValue,
-        `Custom setting '${name}' must be a string, a color literal, a number literal, or a boolean literal`,
+        invalidMetadataValueMessage(`Custom setting '${name}'`, attr.value),
         attr.value || attr.name || attr,
       ));
     }

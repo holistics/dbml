@@ -8,7 +8,7 @@ import { SettingName } from '@/core/types/keywords';
 import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isSimpleName } from '@/core/utils/validate';
-import { extractMetadataValue } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
 import { DEP_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 
 export default class DepValidator {
@@ -176,7 +176,7 @@ export default class DepValidator {
           // Any non-builtin field is free-form custom metadata, with the same values as an inline custom setting
           if (!(subBody instanceof FunctionApplicationNode) || extractMetadataValue(subBody.callee) === undefined) {
             return [
-              new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, `Custom setting '${sub.type.value}' must be a string, a color literal, a number literal, or a boolean literal`, sub),
+              new CompileError(CompileErrorCode.INVALID_DEP_SETTING_VALUE, invalidMetadataValueMessage(`Custom setting '${sub.type.value}'`, subBody instanceof FunctionApplicationNode ? subBody.callee : undefined), sub),
             ];
           }
           return [];

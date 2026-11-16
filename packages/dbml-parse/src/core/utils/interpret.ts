@@ -265,3 +265,12 @@ export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataVal
 
   return undefined;
 }
+
+// Error message for a value that is not a property value type; a bare identifier gets a quoting hint
+export function invalidMetadataValueMessage (subject: string, node?: SyntaxNode): string {
+  const message = `${subject} must be a string, a color literal, a number literal, or a boolean literal`;
+  const identifier = extractVariableFromExpression(node);
+  return identifier === undefined
+    ? message
+    : `${message}. Did you mean '${identifier}'? Text values must be quoted`;
+}

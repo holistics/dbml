@@ -15,7 +15,7 @@ import type { SchemaElement } from '@/core/types/schemaJson';
 import { ElementSymbol, type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, LinkMetadata, type NodeMetadata } from '@/core/types/symbol/metadata';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
-import { extractMetadataValue } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
 import type { MetadataFieldRegistry } from '../metadata/utils';
 import type { GlobalModule } from '../types';
 import {
@@ -100,7 +100,7 @@ function metadataValueErrors (declaration: ElementDeclarationNode, fields: Metad
     if (field ? field.parse(value) !== undefined : extractMetadataValue(value) !== undefined) continue;
     errors.push(new CompileError(
       CompileErrorCode.ARCH_BAD_PROPERTY,
-      field ? field.message : 'A Metadata field value must be a string, a color literal, a number literal, or a boolean literal',
+      field ? field.message : invalidMetadataValueMessage('A Metadata field value', value),
       value,
     ));
   }
