@@ -5,6 +5,9 @@ import exporter from './export';
 import {
   renameTable,
   renameElement,
+  renameElementEdit,
+  groupElementsEdit,
+  ungroupElementsEdit,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -14,6 +17,9 @@ import {
 export {
   renameTable,
   renameElement,
+  renameElementEdit,
+  groupElementsEdit,
+  ungroupElementsEdit,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,

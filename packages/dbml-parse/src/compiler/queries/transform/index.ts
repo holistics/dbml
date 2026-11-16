@@ -1,5 +1,6 @@
 export { renameTable } from './renameTable';
-export { renameElement } from './renameElement';
+export { renameElement, renameElementEdit } from './renameElement';
+export { groupElementsEdit, ungroupElementsEdit } from './groupElements';
 export { removeElement } from './removeElement';
 export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
 export {

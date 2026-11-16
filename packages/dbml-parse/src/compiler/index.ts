@@ -47,7 +47,8 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  renameTable, renameElement, removeElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
+  renameTable, renameElement, renameElementEdit, groupElementsEdit, ungroupElementsEdit, removeElement,
+  syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
   findMetadataBlock, updateElementMetadata, updateElementMetadataEdit,
 } from './queries/transform';
 import {
@@ -321,6 +322,9 @@ export default class Compiler {
   // transform queries
   renameTable = renameTable.bind(this);
   renameElement = renameElement.bind(this);
+  renameElementEdit = renameElementEdit.bind(this);
+  groupElementsEdit = groupElementsEdit.bind(this);
+  ungroupElementsEdit = ungroupElementsEdit.bind(this);
   removeElement = removeElement.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
   updateElementSettingEdit = updateElementSettingEdit.bind(this);

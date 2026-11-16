@@ -1,6 +1,6 @@
 import type {
   DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
-  DepSyncOperation, ElementIdentifier, TableIdentifier,
+  DepSyncOperation, ElementIdentifier, TableIdentifier, ArchElementIdentifier,
 } from '@dbml/parse';
 
 export function renameTable(
@@ -15,6 +15,27 @@ export function renameElement(
   dbmlCode: string,
   role?: string,
 ): string;
+
+export function renameElementEdit(
+  dbmlCode: string,
+  oldHandle: string,
+  newName: string,
+  role?: string,
+): TextEdit[];
+
+export function groupElementsEdit(
+  dbmlCode: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+  name: string,
+): TextEdit[];
+
+export function ungroupElementsEdit(
+  dbmlCode: string,
+  handle: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+): TextEdit[];
 
 export function updateElementSettingEdit(
   dbmlCode: string,

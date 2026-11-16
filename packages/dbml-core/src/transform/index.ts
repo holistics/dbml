@@ -1,7 +1,7 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
 import type {
   DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
-  DepSyncOperation, ElementIdentifier, TableIdentifier,
+  DepSyncOperation, ElementIdentifier, TableIdentifier, ArchElementIdentifier,
 } from '@dbml/parse';
 
 export { findDiagramViewBlocks } from '@dbml/parse';
@@ -21,6 +21,37 @@ export function renameElement (oldHandle: string, newName: string, dbmlCode: str
   const compiler = new Compiler(layout);
   const changes = compiler.renameElement(DEFAULT_ENTRY, oldHandle, newName, role);
   return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
+}
+
+export function renameElementEdit (dbmlCode: string, oldHandle: string, newName: string, role?: string): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.renameElementEdit(DEFAULT_ENTRY, oldHandle, newName, role);
+}
+
+export function groupElementsEdit (
+  dbmlCode: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+  name: string,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.groupElementsEdit(DEFAULT_ENTRY, members, parent, name);
+}
+
+export function ungroupElementsEdit (
+  dbmlCode: string,
+  handle: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.ungroupElementsEdit(DEFAULT_ENTRY, handle, members, parent);
 }
 
 export function syncDiagramView (
