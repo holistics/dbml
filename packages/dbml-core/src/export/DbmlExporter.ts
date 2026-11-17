@@ -69,9 +69,13 @@ class DbmlExporter {
         schemaName = DbmlExporter.hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
       }
 
-      let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
-        ? `"${field.type.type_name}"`
-        : field.type.type_name}`;
+      // A schema-qualified type that is not an enum has the schema prepended to `type_name`
+      // (see Field#bindType), so use the unqualified name to avoid printing the schema twice
+      const typeName = (schemaName && field.type.originalTypeName) || field.type.type_name;
+
+      let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(typeName) || DbmlExporter.hasSquareBracket(typeName)
+        ? `"${typeName}"`
+        : typeName}`;
 
       const constraints: string[] = [];
       if (field.unique) {

@@ -32,7 +32,7 @@ Table "foo" {
   "bar5" "int[2]"
   "bar6" "text[8]"
   "bar7" "text[100]"
-  "bar8" "time(2)[]"
+  "bar8" "timetz(2)[]"
   "bar9" "time(1)[1]"
   "bar10" "time(1)[]"
   "bar11" "time[5]"
