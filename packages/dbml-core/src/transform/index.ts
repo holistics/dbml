@@ -1,7 +1,7 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
 import type {
   DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
-  DepSyncOperation, ElementIdentifier, TableIdentifier,
+  DepSyncOperation, ElementIdentifier, TableIdentifier, ArchElementIdentifier, EndpointRef,
 } from '@dbml/parse';
 
 export { findDiagramViewBlocks } from '@dbml/parse';
@@ -21,6 +21,79 @@ export function renameElement (oldHandle: string, newName: string, dbmlCode: str
   const compiler = new Compiler(layout);
   const changes = compiler.renameElement(DEFAULT_ENTRY, oldHandle, newName, role);
   return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
+}
+
+export function renameTableEdit (dbmlCode: string, oldName: string | TableIdentifier, newName: string | TableIdentifier): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.renameTableEdit(DEFAULT_ENTRY, oldName, newName);
+}
+
+export function createRefEdit (dbmlCode: string, left: EndpointRef, op: string, right: EndpointRef): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.createRefEdit(DEFAULT_ENTRY, left, op, right);
+}
+
+export function createStickyNoteEdit (dbmlCode: string, name: string, text: string, color?: string): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.createStickyNoteEdit(DEFAULT_ENTRY, name, text, color);
+}
+
+export function setStickyNoteTextEdit (dbmlCode: string, name: string, text: string): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.setStickyNoteTextEdit(DEFAULT_ENTRY, name, text);
+}
+
+export function removeStickyNoteEdit (dbmlCode: string, name: string): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.removeStickyNoteEdit(DEFAULT_ENTRY, name);
+}
+
+export function setNoteEdit (dbmlCode: string, target: ElementIdentifier, text: string | null): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.setNoteEdit(DEFAULT_ENTRY, target, text);
+}
+
+export function renameElementEdit (dbmlCode: string, oldHandle: string, newName: string, role?: string): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.renameElementEdit(DEFAULT_ENTRY, oldHandle, newName, role);
+}
+
+export function groupElementsEdit (
+  dbmlCode: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+  name: string,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.groupElementsEdit(DEFAULT_ENTRY, members, parent, name);
+}
+
+export function ungroupElementsEdit (
+  dbmlCode: string,
+  handle: string,
+  members: ArchElementIdentifier[],
+  parent: string | null,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.ungroupElementsEdit(DEFAULT_ENTRY, handle, members, parent);
 }
 
 export function syncDiagramView (
