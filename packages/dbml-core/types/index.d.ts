@@ -90,7 +90,7 @@ export {
   makeRelationshipRequired,
   ARCH_BUILTIN_ROLES,
   ARCH_NAME_PRECEDENCE,
-  fullName,
+  formatRoleQualifiedName,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';
