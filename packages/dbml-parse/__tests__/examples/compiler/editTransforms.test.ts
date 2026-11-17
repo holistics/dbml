@@ -20,7 +20,10 @@ function errorsOf (source: string): string[] {
   return createCompiler(source).interpretFile(DEFAULT_ENTRY).getErrors().map((e) => e.diagnostic);
 }
 
-const ARCH = '---\ndiagram_type: arch\n---\n';
+const ARCH = `---
+diagram_type: arch
+---
+`;
 
 describe('formatNoteString', () => {
   it('uses single quotes for plain text', () => {
@@ -35,11 +38,19 @@ describe('formatNoteString', () => {
 });
 
 describe('createRefEdit', () => {
-  const tables = 'Table users {\n  id int\n}\nTable posts {\n  user_id int\n}';
+  const tables = `Table users {
+  id int
+}
+Table posts {
+  user_id int
+}`;
 
   it('adds a ref at the end, quoting names only when needed', () => {
     const result = apply(tables, (c) => c.createRefEdit(DEFAULT_ENTRY, { tableName: 'posts', fieldNames: ['user_id'] }, '>', { tableName: 'users', fieldNames: ['id'] }));
-    expect(result).toBe(`${tables}\n\nRef: posts.user_id > users.id\n`);
+    expect(result).toBe(`${tables}
+
+Ref: posts.user_id > users.id
+`);
     expect(errorsOf(result)).toEqual([]);
   });
 
@@ -51,32 +62,70 @@ describe('createRefEdit', () => {
 
 describe('sticky note edits', () => {
   it('adds a sticky note with its color', () => {
-    const result = apply('Table t {\n  id int\n}', (c) => c.createStickyNoteEdit(DEFAULT_ENTRY, 'note_1', 'Read me', '#ffcc00'));
-    expect(result).toBe("Table t {\n  id int\n}\n\nNote note_1 [color: #ffcc00] {\n  'Read me'\n}\n");
+    const result = apply(`Table t {
+  id int
+}`, (c) => c.createStickyNoteEdit(DEFAULT_ENTRY, 'note_1', 'Read me', '#ffcc00'));
+    expect(result).toBe(`Table t {
+  id int
+}
+
+Note note_1 [color: #ffcc00] {
+  'Read me'
+}
+`);
     expect(errorsOf(result)).toEqual([]);
   });
 
   it('replaces the text of a sticky note', () => {
-    const source = "Note n {\n  'old'\n}\n";
+    const source = `Note n {
+  'old'
+}
+`;
     const result = apply(source, (c) => c.setStickyNoteTextEdit(DEFAULT_ENTRY, 'n', "it's new"));
-    expect(result).toBe("Note n {\n  '''it\\'s new'''\n}\n");
+    expect(result).toBe(`Note n {
+  '''it\\'s new'''
+}
+`);
     expect(errorsOf(result)).toEqual([]);
   });
 
   it('replaces the text of a sticky note in an architecture file', () => {
-    const source = `${ARCH}Server api\nNote n {\n  'old'\n}\n`;
-    expect(apply(source, (c) => c.setStickyNoteTextEdit(DEFAULT_ENTRY, 'n', 'new'))).toBe(`${ARCH}Server api\nNote n {\n  'new'\n}\n`);
+    const source = `${ARCH}Server api
+Note n {
+  'old'
+}
+`;
+    expect(apply(source, (c) => c.setStickyNoteTextEdit(DEFAULT_ENTRY, 'n', 'new'))).toBe(`${ARCH}Server api
+Note n {
+  'new'
+}
+`);
   });
 
   it('removes a sticky note with its whole lines', () => {
-    const source = "Table t {\n  id int\n}\nNote n {\n  'bye'\n}\nTable u {\n  id int\n}";
+    const source = `Table t {
+  id int
+}
+Note n {
+  'bye'
+}
+Table u {
+  id int
+}`;
     const result = apply(source, (c) => c.removeStickyNoteEdit(DEFAULT_ENTRY, 'n'));
-    expect(result).toBe('Table t {\n  id int\n}\nTable u {\n  id int\n}');
+    expect(result).toBe(`Table t {
+  id int
+}
+Table u {
+  id int
+}`);
     expect(errorsOf(result)).toEqual([]);
   });
 
   it('gives no edits for a sticky note that does not exist', () => {
-    const compiler = createCompiler('Table t {\n  id int\n}');
+    const compiler = createCompiler(`Table t {
+  id int
+}`);
     expect(compiler.setStickyNoteTextEdit(DEFAULT_ENTRY, 'missing', 'x')).toEqual([]);
     expect(compiler.removeStickyNoteEdit(DEFAULT_ENTRY, 'missing')).toEqual([]);
   });
@@ -84,41 +133,74 @@ describe('sticky note edits', () => {
 
 describe('setNoteEdit', () => {
   it('keeps a body Note line in the body', () => {
-    const source = "Table users {\n  id int\n  Note: 'old'\n}";
+    const source = `Table users {
+  id int
+  Note: 'old'
+}`;
     const result = apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.Table, table: 'users' }, 'new'));
-    expect(result).toBe("Table users {\n  id int\n  Note: 'new'\n}");
+    expect(result).toBe(`Table users {
+  id int
+  Note: 'new'
+}`);
     expect(errorsOf(result)).toEqual([]);
   });
 
   it('keeps a note setting as a setting', () => {
-    const source = "Table users {\n  id int [note: 'old']\n}";
+    const source = `Table users {
+  id int [note: 'old']
+}`;
     const result = apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.Column, table: 'users', column: 'id' }, 'new'));
-    expect(result).toBe("Table users {\n  id int [note: 'new']\n}");
+    expect(result).toBe(`Table users {
+  id int [note: 'new']
+}`);
   });
 
   it('adds a note setting when there is no note', () => {
-    const source = 'Table users {\n  id int\n}\nTableGroup g {\n  users\n}';
+    const source = `Table users {
+  id int
+}
+TableGroup g {
+  users
+}`;
     const result = apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.TableGroup, name: 'g' }, 'Core tables'));
-    expect(result).toBe("Table users {\n  id int\n}\nTableGroup g [note: 'Core tables'] {\n  users\n}");
+    expect(result).toBe(`Table users {
+  id int
+}
+TableGroup g [note: 'Core tables'] {
+  users
+}`);
     expect(errorsOf(result)).toEqual([]);
   });
 
   it('removes the note on null', () => {
-    const source = "Table users [note: 'old'] {\n  id int\n}";
-    expect(apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.Table, table: 'users' }, null))).toBe('Table users {\n  id int\n}');
+    const source = `Table users [note: 'old'] {
+  id int
+}`;
+    expect(apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.Table, table: 'users' }, null))).toBe(`Table users {
+  id int
+}`);
   });
 
   it('sets the note of an architecture node', () => {
-    const source = `${ARCH}Server api {\n  Note: 'old'\n}`;
+    const source = `${ARCH}Server api {
+  Note: 'old'
+}`;
     const result = apply(source, (c) => c.setNoteEdit(DEFAULT_ENTRY, { kind: SymbolKind.Element, name: 'api', role: 'Server' }, 'new'));
-    expect(result).toBe(`${ARCH}Server api {\n  Note: 'new'\n}`);
+    expect(result).toBe(`${ARCH}Server api {
+  Note: 'new'
+}`);
     expect(errorsOf(result)).toEqual([]);
   });
 });
 
 describe('renameTableEdit', () => {
   it('gives the edits renameTable applies', () => {
-    const source = 'Table users {\n  id int\n}\nTable posts {\n  user_id int [ref: > users.id]\n}';
+    const source = `Table users {
+  id int
+}
+Table posts {
+  user_id int [ref: > users.id]
+}`;
     const compiler = createCompiler(source);
     const edits = compiler.renameTableEdit(DEFAULT_ENTRY, 'users', 'members');
     expect(applyTextEdits(source, edits)).toBe(createCompiler(source).renameTable(DEFAULT_ENTRY, 'users', 'members').get(DEFAULT_ENTRY.absolute));
@@ -126,6 +208,8 @@ describe('renameTableEdit', () => {
   });
 
   it('gives no edits for a table that does not exist', () => {
-    expect(createCompiler('Table users {\n  id int\n}').renameTableEdit(DEFAULT_ENTRY, 'missing', 'x')).toEqual([]);
+    expect(createCompiler(`Table users {
+  id int
+}`).renameTableEdit(DEFAULT_ENTRY, 'missing', 'x')).toEqual([]);
   });
 });

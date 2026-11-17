@@ -4,6 +4,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { DEFAULT_ENTRY } from '@/constants';
 import { SymbolKind } from '@/core/types/symbol';
 import type { ArchElementIdentifier, ElementIdentifier } from '@/compiler/queries/transform/types';
+import type { Database } from '@/core/types/schemaJson/types';
 import { applyTextEdits } from '@/compiler/queries/transform/applyTextEdits';
 
 function createCompiler (source: string): Compiler {
@@ -307,22 +308,23 @@ Server web`;
 
 const server = (name: string): ArchElementIdentifier => ({ name, role: 'Server' });
 
-function groupsOf (text: string): Record<string, string[]> {
-  const value = createCompiler(text).interpretFile(DEFAULT_ENTRY).getValue() as unknown as {
-    groups?: { name: string; alias?: string | null; children?: { handle: string }[] }[];
-  };
+// Extract group membership from the interpreted arch result
+function extractGroups (text: string): Record<string, string[]> {
+  const value = createCompiler(text).interpretFile(DEFAULT_ENTRY).getValue() as Database;
   return Object.fromEntries((value.groups ?? []).map((g) => [
     g.alias ?? g.name,
-    (g.children ?? []).map((child) => child.handle),
+    g.children.map((child) => child.handle),
   ]));
 }
 
-function group (source: string, members: ArchElementIdentifier[], parent: string | null, name: string): string {
+// Apply a groupElementsEdit and return the resulting source
+function applyGroup (source: string, members: ArchElementIdentifier[], parent: string | null, name: string): string {
   const edits = createCompiler(FRONT_MATTER + source).groupElementsEdit(DEFAULT_ENTRY, members, parent, name);
   return applyTextEdits(FRONT_MATTER + source, edits);
 }
 
-function ungroup (source: string, handle: string, members: ArchElementIdentifier[], parent: string | null): string {
+// Apply an ungroupElementsEdit and return the resulting source
+function applyUngroup (source: string, handle: string, members: ArchElementIdentifier[], parent: string | null): string {
   const edits = createCompiler(FRONT_MATTER + source).ungroupElementsEdit(DEFAULT_ENTRY, handle, members, parent);
   return applyTextEdits(FRONT_MATTER + source, edits);
 }
@@ -349,7 +351,9 @@ Server web`).renameElementEdit(DEFAULT_ENTRY, 'api', 'web')).toEqual([]);
 
 describe('groupElementsEdit', () => {
   it('writes the new group at the end, its members by full name', () => {
-    expect(withoutFrontMatter(group('Server a\nServer b\n', [server('a'), server('b')], null, 'g1'))).toBe(`Server a
+    expect(withoutFrontMatter(applyGroup(`Server a
+Server b
+`, [server('a'), server('b')], null, 'g1'))).toBe(`Server a
 Server b
 
 Group g1 {
@@ -360,21 +364,38 @@ Group g1 {
   });
 
   it('groups selected elements inside their common parent', () => {
-    const result = group('Server a\nServer b\nServer c\nGroup outer {\n  a\n  b\n  c\n}', [server('a'), server('b')], 'outer', 'group_1');
+    const result = applyGroup(`Server a
+Server b
+Server c
+Group outer {
+  a
+  b
+  c
+}`, [server('a'), server('b')], 'outer', 'group_1');
     expect(collectDiagnostics(withoutFrontMatter(result))).toEqual([]);
-    expect(groupsOf(result)).toEqual({ outer: ['c', 'group_1'], group_1: ['a', 'b'] });
+    expect(extractGroups(result)).toEqual({ outer: ['c', 'group_1'], group_1: ['a', 'b'] });
   });
 
   it('takes a member out of the group that listed it', () => {
-    const result = group('Server a\nServer b\nServer c\nGroup g { a b c }\nGroup outer {\n  g\n}', [server('b')], 'outer', 'group_1');
+    const result = applyGroup(`Server a
+Server b
+Server c
+Group g { a b c }
+Group outer {
+  g
+}`, [server('b')], 'outer', 'group_1');
     expect(collectDiagnostics(withoutFrontMatter(result))).toEqual([]);
-    expect(groupsOf(result)).toEqual({ g: ['a', 'c'], outer: ['g', 'group_1'], group_1: ['b'] });
+    expect(extractGroups(result)).toEqual({ g: ['a', 'c'], outer: ['g', 'group_1'], group_1: ['b'] });
   });
 
   it('groups two members of one group without touching the block after it', () => {
-    const result = group('Server application_server\nServer web\nGroup backend { application_server web }\nCache web {}\n', [server('application_server'), server('web')], null, 'group_1');
+    const result = applyGroup(`Server application_server
+Server web
+Group backend { application_server web }
+Cache web {}
+`, [server('application_server'), server('web')], null, 'group_1');
     expect(result).toContain('Cache web {}');
-    expect(groupsOf(result)).toEqual({ backend: [], group_1: ['application_server', 'web'] });
+    expect(extractGroups(result)).toEqual({ backend: [], group_1: ['application_server', 'web'] });
   });
 
   it('gives no edits when no member is declared', () => {
@@ -384,16 +405,28 @@ Group g1 {
 
 describe('ungroupElementsEdit', () => {
   it('removes the group, leaving its members where they are', () => {
-    expect(withoutFrontMatter(ungroup('Server a\nServer b\nGroup g { a b }\nServer c\n', 'g', [server('a'), server('b')], null))).toBe(`Server a
+    expect(withoutFrontMatter(applyUngroup(`Server a
+Server b
+Group g { a b }
+Server c
+`, 'g', [server('a'), server('b')], null))).toBe(`Server a
 Server b
 Server c
 `);
   });
 
   it('moves the members into the group around it', () => {
-    const result = ungroup('Server a\nServer b\nServer c\nGroup g { a b }\nGroup outer {\n  g\n  c\n}\n', 'g', [server('a'), server('b')], 'outer');
+    const result = applyUngroup(`Server a
+Server b
+Server c
+Group g { a b }
+Group outer {
+  g
+  c
+}
+`, 'g', [server('a'), server('b')], 'outer');
     expect(collectDiagnostics(withoutFrontMatter(result))).toEqual([]);
-    expect(groupsOf(result)).toEqual({ outer: ['c', 'a', 'b'] });
+    expect(extractGroups(result)).toEqual({ outer: ['c', 'a', 'b'] });
   });
 
   it('gives no edits when no group has that handle', () => {
