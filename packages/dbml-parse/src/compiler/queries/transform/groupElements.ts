@@ -75,7 +75,7 @@ function findElements (compiler: Compiler, filepath: Filepath, members: ArchElem
     .filter((declaration): declaration is ElementDeclarationNode => !!declaration);
 }
 
-// By full name (`Server api`), so it means that element whatever else shares the handle
+// By full name (`Server api`). A bare handle could mean another element that shares it.
 const writtenName = (declaration: ElementDeclarationNode): string => formatRoleQualifiedName(handleOf(declaration) ?? '', roleOf(declaration) ?? '');
 
 // Each name on a line of its own, before the closing brace: a role cannot be written on the line of `{`
@@ -95,7 +95,6 @@ function addMembersEdit (source: string, group: ElementDeclarationNode, names: s
   return { start: at, end: at, newText: lines };
 }
 
-// After the last text in the file, a blank line apart
 function appendEdit (source: string, edits: TextEdit[], block: string): TextEdit {
   let start = source.length;
   while (start > 0 && /\s/.test(source[start - 1]!)) start -= 1;
@@ -103,7 +102,6 @@ function appendEdit (source: string, edits: TextEdit[], block: string): TextEdit
   return { start, end: source.length, newText: `\n\n${block}\n` };
 }
 
-// The block with the line breaks after it
 function blockEdit (source: string, declaration: ElementDeclarationNode): TextEdit {
   let end = declaration.end;
   while (source[end] === '\n' || source[end] === '\r') end += 1;

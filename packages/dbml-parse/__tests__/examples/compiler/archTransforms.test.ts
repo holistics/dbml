@@ -307,7 +307,6 @@ Server web`;
 
 const server = (name: string): ArchElementIdentifier => ({ name, role: 'Server' });
 
-// Group handle to the handles it lists, as the interpreter reads them
 function groupsOf (text: string): Record<string, string[]> {
   const value = createCompiler(text).interpretFile(DEFAULT_ENTRY).getValue() as unknown as {
     groups?: { name: string; alias?: string | null; children?: { handle: string }[] }[];

@@ -92,7 +92,7 @@ function expandToWholeLines (source: string, start: number, end: number): TextEd
   return { start: lineStart, end: lineEnd === -1 ? source.length : lineEnd + 1, newText: '' };
 }
 
-// Takes the members `isTarget` picks out of a group's list: a row goes whole when every name on it goes
+// Removes the members `isTarget` picks from a group's list. A row is removed whole when all its names are.
 export function groupMemberEdits (source: string, group: ElementDeclarationNode, isTarget: (node: SyntaxNode) => boolean): TextEdit[] {
   const edits: TextEdit[] = [];
   const roleNodes = new Set(getArchMembers(group).refs.map((ref) => ref.roleNode));

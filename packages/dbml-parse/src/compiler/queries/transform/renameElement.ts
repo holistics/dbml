@@ -37,7 +37,7 @@ export function renameElement (
   ]);
 }
 
-// The edits renameElement applies. None means no change (lookup miss or name collision).
+// The edits renameElement applies. An empty list means no change: no such element, or the new name is taken.
 export function renameElementEdit (
   this: Compiler,
   filepath: Filepath,
