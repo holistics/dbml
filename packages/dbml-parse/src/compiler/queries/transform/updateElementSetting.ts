@@ -69,7 +69,7 @@ export function updateElementSetting (
   return applyTextEdits(source, edits);
 }
 
-function findNamedElementDeclaration (compiler: Compiler, filepath: Filepath, target: ElementIdentifier): SyntaxNode | undefined {
+export function findNamedElementDeclaration (compiler: Compiler, filepath: Filepath, target: ElementIdentifier): SyntaxNode | undefined {
   const schema = ('schema' in target ? target.schema : undefined) ?? DEFAULT_SCHEMA_NAME;
 
   switch (target.kind) {

@@ -111,6 +111,13 @@ export function formatEndpoint (ep: EndpointRef): string {
   return parts.join('.');
 }
 
+// A note's text as a DBML string: single quotes, or triple quotes when it has a quote or a line break
+export function formatNoteString (text: string): string {
+  const escaped = text.replaceAll('\\', '\\\\').replaceAll("'", "\\'");
+  if (!/[\n\r']/.test(escaped)) return `'${escaped}'`;
+  return `'''${escaped.replaceAll('\r\n', '\n')}'''`;
+}
+
 // Serialize setting to a nice string
 export function formatSetting (
   name: string,

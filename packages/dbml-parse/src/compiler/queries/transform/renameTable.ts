@@ -181,6 +181,31 @@ export function renameTable (
   oldName: string | TableIdentifier,
   newName: string | TableIdentifier,
 ): Map<string, string> {
+  const result = new Map<string, string>();
+  for (const [path, { filepath: fileToChange, edits }] of renameTableEditsByFile.call(this, filepath, oldName, newName)) {
+    result.set(path, applyTextEdits(this.getSource(fileToChange) ?? '', edits));
+  }
+  return result;
+}
+
+// The edits renameTable applies to `filepath`. An empty list means no change there.
+export function renameTableEdit (
+  this: Compiler,
+  filepath: Filepath,
+  oldName: string | TableIdentifier,
+  newName: string | TableIdentifier,
+): TextEdit[] {
+  return renameTableEditsByFile.call(this, filepath, oldName, newName).get(filepath.absolute)?.edits ?? [];
+}
+
+type EditsByFile = Map<string, { filepath: Filepath; edits: TextEdit[] }>;
+
+function renameTableEditsByFile (
+  this: Compiler,
+  filepath: Filepath,
+  oldName: string | TableIdentifier,
+  newName: string | TableIdentifier,
+): EditsByFile {
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);
   const oldSchema = normalizedOld.schema;
@@ -238,7 +263,7 @@ function renameAlias (
   useSymbol: UseSymbol,
   newSchema: string,
   newTable: string,
-): Map<string, string> {
+): EditsByFile {
   const source = compiler.getSource(filepath) ?? '';
   if (!spec.alias) return new Map();
   const aliasText = source.substring(spec.alias.start, spec.alias.end);
@@ -267,7 +292,7 @@ function renameAlias (
   return new Map([
     [
       filepath.absolute,
-      applyTextEdits(source, edits),
+      { filepath, edits },
     ],
   ]);
 }
@@ -285,7 +310,7 @@ function renameRemoteNamedSpecifier (
   oldTable: string,
   newSchema: string,
   newTable: string,
-): Map<string, string> {
+): EditsByFile {
   const source = compiler.getSource(filepath) ?? '';
   const usedQuotes = spec.name ? source.substring(spec.name.start, spec.name.end).includes('"') : false;
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
@@ -315,7 +340,7 @@ function renameRemoteNamedSpecifier (
     });
   }
 
-  return new Map([[filepath.absolute, applyTextEdits(source, edits)]]);
+  return new Map([[filepath.absolute, { filepath, edits }]]);
 }
 
 /**
@@ -330,7 +355,7 @@ function renameRemoteWildcard (
   oldTable: string,
   newSchema: string,
   newTable: string,
-): Map<string, string> {
+): EditsByFile {
   const wildcard = useSymbol.useSpecifierDeclaration as WildcardNode;
   const useDecl = wildcard.parentOfKind(UseDeclarationNode);
   if (!useDecl) return new Map();
@@ -369,7 +394,7 @@ function renameRemoteWildcard (
     });
   }
 
-  return new Map([[filepath.absolute, applyTextEdits(source, edits)]]);
+  return new Map([[filepath.absolute, { filepath, edits }]]);
 }
 
 function renameRealDeclaration (
@@ -379,7 +404,7 @@ function renameRealDeclaration (
   oldTable: string,
   newSchema: string,
   newTable: string,
-): Map<string, string> {
+): EditsByFile {
   const original = tableSymbol.originalSymbol;
   const declNode = original.declaration;
   if (!declNode || !(declNode instanceof ElementDeclarationNode)) return new Map();
@@ -432,13 +457,5 @@ function renameRealDeclaration (
     }
   }
 
-  const result = new Map<string, string>();
-  for (const {
-    fp, edits,
-  } of editsByFile.values()) {
-    const src = compiler.getSource(fp) ?? '';
-    result.set(fp.absolute, applyTextEdits(src, edits));
-  }
-
-  return result;
+  return new Map([...editsByFile].map(([path, { fp, edits }]) => [path, { filepath: fp, edits }]));
 }

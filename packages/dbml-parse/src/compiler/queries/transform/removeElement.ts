@@ -85,7 +85,7 @@ const isOnOwnLine = (source: string, start: number, end: number): boolean => {
 };
 
 // The span, widened to its whole lines and their line break when nothing else shares them
-function expandToWholeLines (source: string, start: number, end: number): TextEdit {
+export function expandToWholeLines (source: string, start: number, end: number): TextEdit {
   if (!isOnOwnLine(source, start, end)) return { start, end, newText: '' };
   const lineStart = source.lastIndexOf('\n', start - 1) + 1;
   const lineEnd = source.indexOf('\n', end);
