@@ -4,7 +4,7 @@ import {
   getArchNodeName, getArchProperties, getArchProperty,
 } from '@/core/arch';
 import { GROUP_METADATA_FIELDS, NODE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
-import { extractMetadataValue, extractHexColor, invalidMetadataValueMessage } from '@/core/utils/interpret';
+import { extractMetadataValue, extractHexColor, invalidMetadataValueError } from '@/core/utils/interpret';
 import { isAccessExpression } from '@/core/utils/validate';
 import { AttributeNode } from '@/core/types/nodes';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -37,11 +37,10 @@ function propertyErrors (declaration: ElementDeclarationNode, sort: 'node' | 'gr
     }
     const field = fields[key];
     if (field ? field.parse(entry.value) !== undefined : extractMetadataValue(entry.value) !== undefined) continue;
-    errors.push(new CompileError(
-      CompileErrorCode.ARCH_BAD_PROPERTY,
-      field ? field.message : invalidMetadataValueMessage(`Custom setting '${entry.key}'`, entry.value),
-      entry.value ?? entry.node,
-    ));
+    const errorNode = entry.value ?? entry.node;
+    errors.push(field
+      ? new CompileError(CompileErrorCode.ARCH_BAD_PROPERTY, field.message, errorNode)
+      : invalidMetadataValueError(CompileErrorCode.ARCH_BAD_PROPERTY, `Custom setting '${entry.key}'`, entry.value, errorNode));
   }
   return errors;
 }

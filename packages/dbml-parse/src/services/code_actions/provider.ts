@@ -27,24 +27,25 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     // Only proceed if Monaco passed markers at the cursor position
     if (!context.markers.length) return undefined;
 
-    // Collect infos for the current file that have quick fixes attached
+    // Collect diagnostics (errors, warnings, infos) for the current file that have quick fixes attached
     const filepath = Filepath.fromUri(String(model.uri));
-    const infos = this.compiler.interpretProject().getInfos()
-      .filter((h) => h.quickFixes?.length && h.filepath.equals(filepath));
-    if (!infos.length) return undefined;
+    const report = this.compiler.interpretProject();
+    const diagnostics = [...report.getErrors(), ...report.getWarnings(), ...report.getInfos()]
+      .filter((d) => d.details?.quickFixes?.length && d.filepath.equals(filepath));
+    if (!diagnostics.length) return undefined;
 
-    // Match each marker to its corresponding hint by exact position, then collect the quick fixes
+    // Match each marker to its corresponding diagnostic by exact position, then collect the quick fixes
     const actions: CodeAction[] = [];
 
     for (const marker of context.markers) {
-      for (const hint of infos) {
-        const range = getEditorRange(model, hint.nodeOrToken);
+      for (const diagnostic of diagnostics) {
+        const range = getEditorRange(model, diagnostic.nodeOrToken);
         if (range.startLineNumber !== marker.startLineNumber
           || range.startColumn !== marker.startColumn
           || range.endLineNumber !== marker.endLineNumber
           || range.endColumn !== marker.endColumn) continue;
 
-        for (const fix of hint.quickFixes ?? []) {
+        for (const fix of diagnostic.details?.quickFixes ?? []) {
           const action = this.quickFixToCodeAction(fix, model, marker);
           if (action) actions.push(action);
         }

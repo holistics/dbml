@@ -12,7 +12,7 @@ import { isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { getMetadataTargetKind, MetadataTargetLabel } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/registries';
-import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueError } from '@/core/utils/interpret';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}
@@ -143,9 +143,10 @@ export default class MetadataValidator {
       // Only validate the value when a real callee is present. Missing callee is handled as `parse` phase
       if (extractMetadataValue(sub.body?.callee) === undefined) {
         return [
-          new CompileError(
+          invalidMetadataValueError(
             CompileErrorCode.INVALID_METADATA_FIELD,
-            invalidMetadataValueMessage('A Metadata field value', sub.body?.callee),
+            'A Metadata field value',
+            sub.body?.callee,
             sub.body ?? sub,
           ),
         ];

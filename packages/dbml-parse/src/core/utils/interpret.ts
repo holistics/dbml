@@ -3,7 +3,9 @@ import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type {
   Color, ColumnType, CustomMetadata, CustomMetadataValue, TokenPosition,
 } from '@/core/types/schemaJson';
-import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
+import {
+  ArrayNode, CallExpressionNode, FunctionApplicationNode, FunctionExpressionNode, IdentifierStreamNode,
+} from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { UNHANDLED } from '@/core/types/module';
@@ -266,11 +268,53 @@ export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataVal
   return undefined;
 }
 
-// Error message for a value that is not a property value type; a bare identifier gets a quoting hint
-export function invalidMetadataValueMessage (subject: string, node?: SyntaxNode): string {
+/**
+  * The unquoted words of a bare text value, and the source range they span:
+  * - `data` (a single identifier)
+  * - `data team` in a setting list (an identifier stream)
+  * - `data team` in a body field (a callee applied to identifier args). Given the callee alone, it is lifted to the whole application.
+  * Undefined for anything else, e.g. `a.b` or `data [x]`.
+  */
+export function bareTextValue (node?: SyntaxNode): { text: string; start: number; end: number } | undefined {
+  if (!node) return undefined;
+  const parent = node.parentNode;
+  const value = parent instanceof FunctionApplicationNode && parent.callee === node ? parent : node;
+
+  const words = value instanceof IdentifierStreamNode
+    ? value.identifiers.map((token) => token.value)
+    : value instanceof FunctionApplicationNode
+      ? [value.callee, ...value.args].map(extractVariableFromExpression)
+      : [extractVariableFromExpression(value)];
+  if (!words.length || words.some((word) => word === undefined)) return undefined;
+
+  return { text: words.join(' '), start: value.start, end: value.end };
+}
+
+/**
+  * Error for a custom metadata value that is not a property value type (string, color, number, boolean).
+  * A bare text value (`owner: data team`) gets a quoting hint and a quick fix that quotes it.
+  * `valueNode` is the value (or a body field's callee), `errorNode` is where the error is reported.
+  */
+export function invalidMetadataValueError (
+  code: CompileErrorCode,
+  subject: string,
+  valueNode: SyntaxNode | undefined,
+  errorNode: SyntaxNode,
+): CompileError {
   const message = `${subject} must be a string, a color literal, a number literal, or a boolean literal`;
-  const identifier = extractVariableFromExpression(node);
-  return identifier === undefined
-    ? message
-    : `${message}. Did you mean '${identifier}'? Text values must be quoted`;
+  const bare = bareTextValue(valueNode);
+  if (!bare) return new CompileError(code, message, errorNode);
+
+  const quoted = `'${bare.text.replace(/\\/g, '\\\\').replace(/'/g, '\\\'')}'`;
+  return new CompileError(code, `${message}. Did you mean ${quoted}? Text values must be quoted`, errorNode, {
+    quickFixes: [
+      {
+        title: `Quote the value: ${quoted}`,
+        shortTitle: 'Quote value',
+        filepath: errorNode.filepath,
+        edits: [{ start: bare.start, end: bare.end, newText: quoted }],
+        isPreferred: true,
+      },
+    ],
+  });
 }

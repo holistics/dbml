@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/types';
 import type { AttributeNode } from '@/core/types/nodes';
-import { extractMetadataValue, invalidMetadataValueMessage } from '@/core/utils/interpret';
+import { extractMetadataValue, invalidMetadataValueError } from '@/core/utils/interpret';
 
 export function validateCustomInlineMetadata (
   name: string,
@@ -19,9 +19,10 @@ export function validateCustomInlineMetadata (
 
   attrs.forEach((attr) => {
     if (extractMetadataValue(attr.value) === undefined) {
-      errors.push(new CompileError(
+      errors.push(invalidMetadataValueError(
         errorCodes.invalidValue,
-        invalidMetadataValueMessage(`Custom setting '${name}'`, attr.value),
+        `Custom setting '${name}'`,
+        attr.value,
         attr.value || attr.name || attr,
       ));
     }
