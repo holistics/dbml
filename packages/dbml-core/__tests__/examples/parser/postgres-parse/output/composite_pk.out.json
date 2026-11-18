@@ -266,7 +266,7 @@
             "schemaName": null
           },
           "dbdefault": {
-            "value": "current_date+interval'1 year'",
+            "value": "current_date + interval '1 year'",
             "type": "expression"
           },
           "checks": []

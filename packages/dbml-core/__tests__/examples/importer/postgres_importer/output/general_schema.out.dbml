@@ -101,7 +101,7 @@ Table "accounts" {
 
 Table "tests" {
   "id" bigint [not null]
-  "type" "character varying" [default: `'testing'::charactervarying`]
+  "type" "character varying" [default: `'testing'::character varying`]
 }
 
 Table "users2" {
@@ -109,7 +109,7 @@ Table "users2" {
   "hashed_password" "character varying" [not null]
   "full_name" "character varying" [not null]
   "email" "character varying" [not null]
-  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
+  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestamp with time zone`]
   "created_at" timestamp [not null, default: `now()`]
 }
 

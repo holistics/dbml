@@ -465,7 +465,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitB_expr (ctx) {
     if (ctx.c_expr()) return ctx.c_expr().accept(this);
     return {
-      value: ctx.getText(),
+      value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
     };
   }
@@ -475,12 +475,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
     if (ctx.a_expr()) {
       return {
-        value: ctx.a_expr().getText(),
+        value: getOriginalText(ctx.a_expr()),
         type: DATA_TYPE.EXPRESSION,
       };
     }
     return {
-      value: ctx.getText(),
+      value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
     };
   }
