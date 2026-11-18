@@ -66,12 +66,17 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
     };
   }
   if (default_type === 'string') {
-    const defaultValues = column_default.split('::')[0];
-    const isJson = data_type === 'json' || data_type === 'jsonb';
-    const type = isJson ? 'expression' : 'string';
+    // A JSON default is kept as the full expression ('{}'::jsonb): its bare text ({} or [])
+    // is not valid SQL when the DBML is exported again
+    if (data_type === 'json' || data_type === 'jsonb') {
+      return {
+        type: 'expression',
+        value: column_default,
+      };
+    }
     return {
-      type,
-      value: defaultValues.slice(1, -1),
+      type: 'string',
+      value: column_default.split('::')[0].slice(1, -1),
     };
   }
   return {
