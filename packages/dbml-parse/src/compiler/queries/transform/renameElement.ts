@@ -26,15 +26,34 @@ export function renameElement (
   newName: string,
   role?: string,
 ): Map<string, string> {
+  const edits = this.renameElementEdit(filepath, oldHandle, newName, role);
+  if (edits.length === 0) return new Map();
+
+  return new Map([
+    [
+      filepath.absolute,
+      applyTextEdits(this.getSource(filepath) ?? '', edits),
+    ],
+  ]);
+}
+
+// The edits renameElement applies. An empty list means no change: no such element, or the new name is taken.
+export function renameElementEdit (
+  this: Compiler,
+  filepath: Filepath,
+  oldHandle: string,
+  newName: string,
+  role?: string,
+): TextEdit[] {
   const declaration = findArchElement(this, filepath, oldHandle, role);
   const targetRole = declaration && roleOf(declaration);
-  if (!declaration?.name || !targetRole) return new Map();
+  if (!declaration?.name || !targetRole) return [];
 
   const renamesHandle = !declaration.alias;
   const others = getCandidates(this, filepath, newName).filter((symbol) => symbol.originalSymbol.declaration !== declaration);
   const taken = others.some((symbol) => getSymbolRole(symbol) === targetRole || isAliasSymbol(symbol));
   if (renamesHandle && newName !== oldHandle && taken) {
-    return new Map();
+    return [];
   }
 
   const source = this.getSource(filepath) ?? '';
@@ -65,12 +84,7 @@ export function renameElement (
     }
   }
 
-  return new Map([
-    [
-      filepath.absolute,
-      applyTextEdits(source, edits),
-    ],
-  ]);
+  return edits;
 }
 
 // A reference as rename sees it: a name in a link, an inline link or a group, or a Metadata target
