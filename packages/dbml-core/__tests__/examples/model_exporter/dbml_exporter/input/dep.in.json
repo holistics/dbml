@@ -36,7 +36,7 @@
     {
       "schemaName": "public",
       "note": { "value": "Aggregate staging into facts" },
-      "metadata": { "materialized": "table", "owner": "data-team", "priority": 1 },
+      "metadata": { "materialized": { "value": "table", "type": "string" }, "owner": { "value": "data-team", "type": "string" }, "priority": { "value": 1, "type": "number" } },
       "edges": [
         { "upstream": { "tableName": "stg_orders", "fieldNames": [] }, "downstream": { "tableName": "fct_orders", "fieldNames": [] } },
         { "upstream": { "tableName": "stg_orders", "fieldNames": ["id"] }, "downstream": { "tableName": "fct_orders", "fieldNames": ["amount"] } }

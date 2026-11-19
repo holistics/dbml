@@ -1,18 +1,17 @@
 import type Compiler from '@/compiler/index';
 import type { Filepath } from '@/core/types/filepath';
-import { PASS_THROUGH, PassThrough, UNHANDLED } from '@/core/types/module';
+import { PASS_THROUGH, PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { NodeSymbol } from '@/core/types/symbol';
 import { MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
-import { destructureComplexVariable } from '@/core/utils/expression';
 import { isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { ElementKind } from '@/core/types';
-import { getMetadataTargetKind } from '@/core/types/symbol';
 
 import MetadataBinder from './bind';
 import MetadataInterpreter from './interpret';
+import { metadataHeaderTargets } from './utils';
 import type { GlobalModule } from '../types';
 
 export const metadataModule: GlobalModule = {
@@ -34,17 +33,8 @@ export const metadataModule: GlobalModule = {
     // Only the header target name, not anything inside the body
     if (!metadataNode.name?.containsEq(node)) return new Report(PASS_THROUGH);
 
-    const nameParts = destructureComplexVariable(metadataNode.name);
-    if (!nameParts) return new Report(undefined);
-
-    const targetKind = getMetadataTargetKind(metadataNode);
-    if (!targetKind) return new Report(undefined);
-
-    const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
-    if (!(block instanceof MetadataElementMetadata)) return new Report(undefined);
-
-    const targets = block.targets(compiler);
-    // A Target that is not a symbol (a named Ref) is not a symbol reference
+    const targets = metadataHeaderTargets(compiler, node);
+    // A Target that is not a symbol (a named Ref/Dep) is not a symbol reference
     return new Report(targets.length === 1 && !(targets[0] instanceof NodeMetadata) ? targets[0] : undefined);
   },
 

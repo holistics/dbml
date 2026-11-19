@@ -1,4 +1,5 @@
 import { get } from 'lodash-es';
+import type { CustomMetadata } from '@dbml/parse';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import DepEdge from './depEdge';
 import Element from './element';
@@ -14,7 +15,7 @@ class Dep extends Element {
   color: Color | undefined;
   note: string | null;
   noteToken: Token | null;
-  metadata: Record<string, string | number | boolean | null> | null;
+  metadata: CustomMetadata;
   edges: DepEdge[];
   schema: Schema;
   dbState: DbState;
@@ -28,7 +29,7 @@ class Dep extends Element {
     this.color = color;
     this.note = note ? get(note, 'value', note) as string : null;
     this.noteToken = note ? get(note, 'token', null) : null;
-    this.metadata = metadata ?? null;
+    this.metadata = metadata ?? {};
     this.edges = [];
     this.schema = schema;
     this.dbState = this.schema.dbState;

@@ -73,7 +73,7 @@ Dep {
   stg_orders -> fct_orders
 
   note: 'Aggregate staging orders into facts'
-  materialized: table
+  materialized: 'table'
   owner: 'data-team'
 }
 

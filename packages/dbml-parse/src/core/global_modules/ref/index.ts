@@ -22,30 +22,19 @@ import {
   extractStringFromIdentifierStream, getBody,
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
-import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
+import {
+  isAccessExpression, isElementNode, isExpressionAVariableNode, isInsideElementBody,
+} from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types';
 import type { GlobalModule } from '../types';
 import { getDefaultSchemaSymbol, nodeRefereeOfLeftExpression } from '../utils';
 import RefBinder from './bind';
 import { RefInterpreter } from './interpret';
 
-// Check if a node is a descendant of a Ref element's body (not its name/alias)
-function isInsideRefBody (node: SyntaxNode): boolean {
-  let current: SyntaxNode | undefined = node.parent;
-  while (current) {
-    if (current instanceof ElementDeclarationNode && current.isKind(ElementKind.Ref)) {
-      // Only if our ancestor path goes through the body, not the name
-      return current.body?.containsEq(node) ?? false;
-    }
-    current = current.parent;
-  }
-  return false;
-}
-
 export const refModule: GlobalModule = {
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
-    if (!isInsideRefBody(node)) return Report.create(PASS_THROUGH);
+    if (!isInsideElementBody(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     // Skip variables that are inside setting attribute values (e.g. delete: cascade)
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);

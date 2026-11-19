@@ -1,3 +1,4 @@
+import type { CustomMetadata } from '@dbml/parse';
 import Element, { Token, Color } from './element';
 import DepEdge from './dep_edge';
 import Schema from './schema';
@@ -20,7 +21,7 @@ export interface RawDep {
     name?: string | null;
     color?: Color;
     note?: { value?: string; token?: Token } | string | null;
-    metadata?: Record<string, string | number | boolean | null> | null;
+    metadata?: CustomMetadata;
     edges: RawDepEdgeInput[];
     token?: Token;
     schema: Schema;
@@ -31,7 +32,7 @@ declare class Dep extends Element {
     color?: Color;
     note: string | null;
     noteToken: Token;
-    metadata: Record<string, string | number | boolean | null> | null;
+    metadata: CustomMetadata;
     edges: DepEdge[];
     schema: Schema;
     dbState: DbState;
@@ -43,7 +44,7 @@ declare class Dep extends Element {
         name: string | null;
         color?: Color;
         note: string | null;
-        metadata: Record<string, string | number | boolean | null> | null;
+        metadata: CustomMetadata;
         edges: {
             upstream: { schemaName: string | null; tableName: string; fieldNames: string[] };
             downstream: { schemaName: string | null; tableName: string; fieldNames: string[] };
@@ -53,7 +54,7 @@ declare class Dep extends Element {
         name: string | null;
         color?: Color;
         note: string | null;
-        metadata: Record<string, string | number | boolean | null> | null;
+        metadata: CustomMetadata;
     };
     exportChild(): {
         edges: {
@@ -75,7 +76,7 @@ export interface NormalizedDep {
     name: string | null;
     color?: Color;
     note: string | null;
-    metadata: Record<string, string | number | boolean | null> | null;
+    metadata: CustomMetadata;
     schemaId: number;
     edgeIds: number[];
 }

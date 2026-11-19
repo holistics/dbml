@@ -59,7 +59,7 @@ Dep order_staging [color: #79AD51] {
   raw_orders.amount -> stg_orders.revenue
 
   note: 'Join orders with payments, compute revenue'
-  materialized: table
+  materialized: 'table'
   query: '''
      Transformation query
   '''
@@ -71,7 +71,8 @@ Block settings:
 
 - `note`: description of the transformation. Supports [multi-line strings](./language-basics.md#multi-line-string).
 - `color`: lineage line color. See [Colors](./enrichment-visualization.md#colors).
-- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties).
+- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties). Its value must be one of the [property value types](./enrichment-visualization.md#property-value-types), so a text value must be quoted (`materialized: 'table'`, not `materialized: table`).
+- A named Dep can also get properties from a [`Metadata Dep` block](./enrichment-visualization.md#metadata-block).
 
 :::note
 - All edges in a block must target the **same downstream table**, or columns of that table.
