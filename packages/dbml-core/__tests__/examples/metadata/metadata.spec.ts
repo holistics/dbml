@@ -476,3 +476,35 @@ describe('@dbml/core - Dep metadata', () => {
     expect(deps.find((d) => d.name === 'nightly')).toBeDefined();
   });
 });
+
+test('@dbml/core - exporter writes multi-word Dep keys into the header settings list', () => {
+  const dbml = `
+Table a { id int }
+Table b { id int }
+
+Dep pipeline {
+  a -> b [data owner: 'x']
+  owner: 'y'
+}
+
+Dep: b -> a [run mode: 'nightly']
+`.trim();
+
+  const out = exporter.export(dbml, 'dbml');
+  expect(out).toContain(`Dep "pipeline" [data owner: 'x'] {
+  "a" -> "b"
+
+  owner: 'y'
+}`);
+  expect(out).toContain(`Dep [run mode: 'nightly'] {
+  "b" -> "a"
+}`);
+
+  // Exported DBML re-parses to the same metadata
+  const deps = parse(out).schemas[0].deps;
+  expect(excludeMetadataValueToken(deps[0].metadata)).toEqual({
+    'data owner': { value: 'x', type: 'string' },
+    owner: { value: 'y', type: 'string' },
+  });
+  expect(excludeMetadataValueToken(deps[1].metadata)).toEqual({ 'run mode': { value: 'nightly', type: 'string' } });
+});

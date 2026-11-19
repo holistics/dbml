@@ -258,6 +258,122 @@ Metadata Dep pipeline {
     expect(errorCodes(source)).toContain(CompileErrorCode.DUPLICATE_DEP_SETTING);
   });
 
+  describe('block-form edge settings list', () => {
+    it('reports a bare identifier value and drops nothing silently', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [owner: data]
+}`;
+      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+    });
+
+    it('reports invalid builtin values', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [color: red, note: 12]
+}`;
+      expect(errorCodes(source)).toEqual([
+        CompileErrorCode.INVALID_DEP_SETTING_VALUE,
+        CompileErrorCode.INVALID_DEP_SETTING_VALUE,
+      ]);
+    });
+
+    it('reports a duplicate key within one list once per occurrence', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [owner: 'x', owner: 'y']
+}`;
+      expect(errorCodes(source)).toEqual([
+        CompileErrorCode.DUPLICATE_DEP_SETTING,
+        CompileErrorCode.DUPLICATE_DEP_SETTING,
+      ]);
+    });
+
+    it('reports a short-form settings error only once', () => {
+      const source = 'Dep pipeline: raw_orders -> stg_orders [owner: data]';
+      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+    });
+  });
+
+  describe('multi-word custom keys', () => {
+    it.each([
+      ['header list', "Dep pipeline [data owner: 'x'] {\n  raw_orders -> stg_orders\n}"],
+      ['short-form list', "Dep pipeline: raw_orders -> stg_orders [data owner: 'x']"],
+      ['block-form edge list', "Dep pipeline {\n  raw_orders -> stg_orders [data owner: 'x']\n}"],
+    ])('accepts a multi-word key in the %s, like other inline settings', (_, source) => {
+      expect(errorCodes(source)).toEqual([]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({ 'data owner': { value: 'x', type: 'string' } });
+    });
+  });
+
+  describe('duplicate keys across sources', () => {
+    const DUP = [
+      CompileErrorCode.DUPLICATE_DEP_SETTING,
+      CompileErrorCode.DUPLICATE_DEP_SETTING,
+    ];
+
+    it('reports body fields differing only in case', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  Owner: 'x'
+  owner: 'y'
+}`;
+      expect(errorCodes(source)).toEqual(DUP);
+    });
+
+    it('reports repeated body fields', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: 'x'
+  owner: 'y'
+}`;
+      expect(errorCodes(source)).toEqual(DUP);
+    });
+
+    it('reports a header key repeated in a body field', () => {
+      const source = `Dep pipeline [owner: 'x'] {
+  raw_orders -> stg_orders
+  owner: 'y'
+}`;
+      expect(errorCodes(source)).toEqual(DUP);
+    });
+
+    it('reports a key repeated across edge lists', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [owner: 'x']
+  stg_orders -> raw_orders [owner: 'y']
+}`;
+      expect(errorCodes(source)).toContain(CompileErrorCode.DUPLICATE_DEP_SETTING);
+      expect(errorCodes(source).filter((c) => c === CompileErrorCode.DUPLICATE_DEP_SETTING)).toHaveLength(2);
+    });
+
+    it('reports a builtin repeated across header and body', () => {
+      const source = `Dep pipeline [color: #fff] {
+  raw_orders -> stg_orders
+  color: #000
+}`;
+      expect(errorCodes(source)).toEqual(DUP);
+    });
+
+    it('lowercases a body-field key', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  Owner: 'x'
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({ owner: { value: 'x', type: 'string' } });
+    });
+
+    it('merges a mixed-case body key with a Metadata block key', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  Owner: 'inline'
+}
+
+Metadata Dep pipeline {
+  owner: 'block'
+}`;
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({ owner: { value: 'block', type: 'string' } });
+    });
+  });
+
   it('lets a Metadata block override an inline custom setting', () => {
     const source = `Dep pipeline: raw_orders -> stg_orders [owner: 'inline']
 

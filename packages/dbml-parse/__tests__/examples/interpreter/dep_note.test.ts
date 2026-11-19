@@ -45,13 +45,16 @@ Dep: a -> b [note: 'short']`);
     expect(note).toBe('short');
   });
 
-  it('body note overrides header note (last-write-wins)', () => {
-    const note = getDepNote(`${PRELUDE}
+  it('reports a note set in both the header and the body as a duplicate', () => {
+    const errors = interpret(`${PRELUDE}
 Dep [note: 'header'] {
   a -> b
   note: 'body'
-}`);
-    expect(note).toBe('body');
+}`).getErrors();
+    expect(errors.map((e) => e.code)).toEqual([
+      CompileErrorCode.DUPLICATE_DEP_SETTING,
+      CompileErrorCode.DUPLICATE_DEP_SETTING,
+    ]);
   });
 
   it('reads color sub-declaration inside body (lowercase)', () => {

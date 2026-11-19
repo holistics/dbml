@@ -134,7 +134,7 @@ export class DepInterpreter {
     if (body instanceof BlockExpressionNode) {
       const subs = body.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode);
       for (const sub of subs) {
-        const name = sub.type?.value;
+        const name = sub.type?.value?.toLowerCase();
         if (!name) continue;
         const subBody = sub.body;
         if (subBody instanceof FunctionApplicationNode) {

@@ -5,6 +5,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import { SettingName } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isSimpleName } from '@/core/utils/validate';
@@ -25,22 +26,56 @@ export default class DepValidator {
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettings(),
+      // Header settings list. Each edge's settings list is validated in validateFields
+      ...this.compiler.nodeSettings(this.declarationNode).getErrors(),
       ...this.validateBody(this.declarationNode.body),
+      ...this.validateDuplicateKeys(),
     ];
   }
 
-  private validateSettings (): CompileError[] {
-    const errors: CompileError[] = [
-      // Header attribute list
-      ...this.compiler.nodeSettings(this.declarationNode).getErrors(),
-    ];
-    // Short-form body settings list
+  // A Dep has one metadata map, so a key (case-insensitive) may appear in only one place:
+  // the header list, one edge's list, or one block-body field.
+  // Repeats within a single list are already reported by nodeSettings
+  private validateDuplicateKeys (): CompileError[] {
     const body = this.declarationNode.body;
-    if (body instanceof FunctionApplicationNode) {
-      errors.push(...this.compiler.nodeSettings(body).getErrors());
-    }
-    return errors;
+    const fields = body instanceof FunctionApplicationNode
+      ? [
+          body,
+        ]
+      : (body?.body ?? []).filter((e): e is FunctionApplicationNode => e instanceof FunctionApplicationNode);
+    const subs = body instanceof BlockExpressionNode
+      ? body.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode)
+      : [];
+
+    const sources: [string, SyntaxNode[]][][] = [
+      this.declarationNode,
+      ...fields,
+    ].map((node) => Object.entries(this.compiler.nodeSettings(node).getFiltered(UNHANDLED) ?? {}));
+    subs.forEach((sub) => {
+      const key = sub.type?.value?.toLowerCase();
+      if (key) sources.push([
+        [
+          key,
+          [
+            sub,
+          ],
+        ],
+      ]);
+    });
+
+    const occurrences = new Map<string, SyntaxNode[][]>();
+    sources.forEach((source) => source.forEach(([key, nodes]) => {
+      occurrences.set(key, [
+        ...(occurrences.get(key) ?? []),
+        nodes,
+      ]);
+    }));
+
+    return [
+      ...occurrences.entries(),
+    ]
+      .filter(([, groups]) => groups.length > 1)
+      .flatMap(([key, groups]) => groups.flat().map((node) => new CompileError(CompileErrorCode.DUPLICATE_DEP_SETTING, `'${key}' can only appear once`, node)));
   }
 
   private validateContext (): CompileError[] {
@@ -98,6 +133,8 @@ export default class DepValidator {
     const errors: CompileError[] = [];
 
     fields.forEach((field) => {
+      errors.push(...this.compiler.nodeSettings(field).getErrors());
+
       if (!field.callee) {
         errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field must be a binary relationship', field));
         return;

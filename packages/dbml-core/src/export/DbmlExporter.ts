@@ -1,4 +1,6 @@
-import { groupBy, isEmpty, reduce } from 'lodash-es';
+import {
+  groupBy, isEmpty, partition, reduce,
+} from 'lodash-es';
 import {
   addDoubleQuoteIfNeeded, formatTypedValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
 } from '@dbml/parse';
@@ -376,14 +378,19 @@ class DbmlExporter {
 
       const hasNote = !!dep.note;
       const hasColor = !!dep.color;
-      const customEntries = Object.entries(dep.metadata ?? {});
+      // A multi-word key (only possible from a settings list) can't be written as a `key: value` body field,
+      // so it goes back into the header settings list
+      const [headerEntries, customEntries] = partition(Object.entries(dep.metadata ?? {}), ([key]) => /\s/.test(key));
       const hasAttrs = hasNote || hasColor || customEntries.length > 0;
+      const headerSettings = headerEntries.length > 0
+        ? ` [${headerEntries.map(([key, value]) => `${key}: ${DbmlExporter.formatMetadataValue(value)}`).join(', ')}]`
+        : '';
 
-      if (edges.length === 1 && !hasAttrs) {
+      if (edges.length === 1 && !hasAttrs && !headerSettings) {
         return `Dep${depName}: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
       }
 
-      let str = `Dep${depName} {\n`;
+      let str = `Dep${depName}${headerSettings} {\n`;
       edges.forEach((edge) => {
         str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
       });
