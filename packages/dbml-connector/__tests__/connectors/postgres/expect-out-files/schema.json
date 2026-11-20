@@ -748,7 +748,7 @@
         },
         "dbdefault": {
           "type": "expression",
-          "value": "{\"default_key\": \"default_value\"}"
+          "value": "'{\"default_key\": \"default_value\"}'::json"
         },
         "not_null": false,
         "increment": false,
@@ -764,7 +764,7 @@
         },
         "dbdefault": {
           "type": "expression",
-          "value": "{\"default_key\": \"default_value\"}"
+          "value": "'{\"default_key\": \"default_value\"}'::jsonb"
         },
         "not_null": false,
         "increment": false,
