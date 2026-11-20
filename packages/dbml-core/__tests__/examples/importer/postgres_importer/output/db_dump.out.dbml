@@ -21,7 +21,7 @@ Table "humanresources"."employee" {
   "currentflag" public.Flag [not null, default: true, note: '0 = Inactive, 1 = Active']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
-  "organizationnode" "character varying" [default: `'/'::charactervarying`, note: 'Where the employee is located in corporate hierarchy.']
+  "organizationnode" "character varying" [default: `'/'::character varying`, note: 'Where the employee is located in corporate hierarchy.']
 
   Checks {
     `((birthdate >= '1930-01-01'::date) AND (birthdate <= (now() - '18 years'::interval)))` [name: 'CK_Employee_BirthDate']
@@ -270,7 +270,7 @@ Table "production"."document" {
   "document" bytea [note: 'Complete document.']
   "rowguid" uuid [unique, not null, default: `public.uuid_generate_v1()`, note: 'ROWGUIDCOL number uniquely identifying the record. Required for FileStream.']
   "modifieddate" timestamp [not null, default: `now()`]
-  "documentnode" "character varying" [pk, not null, default: `'/'::charactervarying`, note: 'Primary key for Document records.']
+  "documentnode" "character varying" [pk, not null, default: `'/'::character varying`, note: 'Primary key for Document records.']
 
   Checks {
     `((status >= 1) AND (status <= 3))` [name: 'CK_Document_Status']
@@ -378,7 +378,7 @@ Table "production"."productdescription" {
 Table "production"."productdocument" {
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "modifieddate" timestamp [not null, default: `now()`]
-  "documentnode" "character varying" [not null, default: `'/'::charactervarying`, note: 'Document identification number. Foreign key to Document.DocumentNode.']
+  "documentnode" "character varying" [not null, default: `'/'::character varying`, note: 'Document identification number. Foreign key to Document.DocumentNode.']
 
   Indexes {
     (productid, documentnode) [pk, name: "PK_ProductDocument_ProductID_DocumentNode"]
