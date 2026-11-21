@@ -201,7 +201,7 @@
         {
           "name": "bar8",
           "type": {
-            "type_name": "time(2)[]",
+            "type_name": "timetz(2)[]",
             "schemaName": null
           },
           "checks": []

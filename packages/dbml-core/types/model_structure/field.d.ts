@@ -104,6 +104,8 @@ export interface NormalizedField {
     type: {
         schemaName: string | null;
         type_name: string;
+        /** Set for a schema-qualified type that is not an enum; `type_name` then includes the schema */
+        originalTypeName?: string;
     };
     unique: boolean;
     pk: boolean;
