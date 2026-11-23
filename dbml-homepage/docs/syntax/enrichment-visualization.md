@@ -12,6 +12,8 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Column Notes](#column-notes)
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
+  - [Relationship Notes](#relationship-notes)
+  - [Dependency Notes](#dependency-notes)
 - [Custom Properties](#custom-properties)
   - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
@@ -112,6 +114,24 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
   // or
   Note: 'Contains tables that are related to e-commerce system'
+}
+```
+
+### Relationship Notes
+
+```text
+Ref: posts.user_id > users.id [note: 'The author of the post']
+```
+
+### Dependency Notes
+
+```text
+Dep: raw_orders -> stg_orders [note: 'Daily load of raw orders']
+
+// or
+Dep order_staging {
+  raw_orders -> stg_orders
+  note: 'Join orders with payments, compute revenue'
 }
 ```
 
