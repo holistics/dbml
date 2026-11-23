@@ -71,12 +71,10 @@ Block settings:
 
 - `note`: description of the transformation. Supports [multi-line strings](./language-basics.md#multi-line-string). See [Dependency Notes](./enrichment-visualization.md#dependency-notes).
 - `color`: lineage line color. See [Colors](./enrichment-visualization.md#colors).
-- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties). Its value must be one of the [property value types](./enrichment-visualization.md#property-value-types), so a text value must be quoted (`materialized: 'table'`, not `materialized: table`).
-- Settings can also go in the settings list of a short-form Dep (`Dep: a -> b [owner: 'x']`), the header list of a block (`Dep name [owner: 'x'] { ... }`) or an edge's list (`a -> b [owner: 'x']`). All of them apply to the whole Dep.
+- Any other key (e.g. `materialized`, `owner`) is a [custom property](./enrichment-visualization.md#custom-properties).
 - A named Dep can also get properties from a [`Metadata Dep` block](./enrichment-visualization.md#metadata-block).
 
 :::note
 - All edges in a block must target the **same downstream table**, or columns of that table.
 - Each directed edge must be unique. Reversed pairs and different levels are considered distinct.
-- A key (case-insensitive) can appear only once per Dep, across the header list, edge lists and block fields.
 :::

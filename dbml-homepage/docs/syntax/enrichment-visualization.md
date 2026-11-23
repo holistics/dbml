@@ -121,6 +121,18 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
 ```text
 Ref: posts.user_id > users.id [note: 'The author of the post']
+
+// or
+Ref {
+  posts.user_id > users.id [
+  note: '''
+    # Relationship between `users` and `posts`
+
+    Each post is written by exactly one user.
+    A user can write many posts.
+  '''
+  ]
+}
 ```
 
 ### Dependency Notes
@@ -192,6 +204,11 @@ Table posts {
   user_id int
 }
 
+Table stg_posts {
+  id int
+  user_id int
+}
+
 TableGroup g1 {
   users
 }
@@ -218,9 +235,11 @@ Metadata Ref user_posts {
   critical: true
 }
 
-Dep posts_by_user: users.id -> posts.user_id
+Dep posts_staging {
+  posts -> stg_posts
+}
 
-Metadata Dep posts_by_user {
+Metadata Dep posts_staging {
   owner: 'analytics'
   color: #e67e22
 }
@@ -228,9 +247,7 @@ Metadata Dep posts_by_user {
 
 :::note
 - `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name, and `Metadata Dep` targets a [named dependency](./data-lineage.md) by its name. Unnamed refs and deps cannot be targeted.
-- The name can optionally be prefixed with `public.`, so `Metadata Ref user_posts` and `Metadata Ref public.user_posts` are the same.
 - A `Metadata Ref` or `Metadata Dep` block is only valid when the ref or dep exists (it is defined in the same file, or all of its endpoint tables are imported).
-- `color` and `note` in a `Metadata Ref` or `Metadata Dep` block set the relationship's or dependency's color and note.
 :::
 
 ### Property Value Types
