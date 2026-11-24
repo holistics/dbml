@@ -31,6 +31,7 @@ import { canonicalName } from './queries/canonicalName';
 import { fileDependencies } from './queries/files/fileDependencies';
 import { reachableFiles, walkDependencies } from './queries/files/reachableFiles';
 import { usableMembers } from './queries/files/usableMembers';
+import { programNamedMetadata } from './queries/symbol/programNamedMetadata';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
 } from './queries/legacy/parse';
@@ -317,6 +318,7 @@ export default class Compiler {
   fileDependencies = this.localQuery(fileDependencies);
   reachableFiles = this.globalQuery(reachableFiles);
   usableMembers = this.globalQuery(usableMembers);
+  programNamedMetadata = this.globalQuery(programNamedMetadata);
 
   nodeAtPosition = this.localQuery(nodeAtPosition);
 

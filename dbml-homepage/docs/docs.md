@@ -336,6 +336,7 @@ Ref {
 
 - `delete / update: cascade | restrict | set null | set default | no action`:
 define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+- `note: 'string to add notes'`: add a metadata note to this relationship *(enrichment & visualization only — see [Relationship Notes](./syntax/enrichment-visualization.md#relationship-notes))*
 
 For the `color` setting on relationships, see [Colors](./syntax/enrichment-visualization.md#colors).
 
