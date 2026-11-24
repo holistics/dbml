@@ -119,6 +119,14 @@ Link [color: #ff0000]: a > b [proto: 'https']` });
     expect(both.errors.map((e) => e.diagnostic)).toEqual(['Write the link settings in one place: before the colon or after the second end']);
   });
 
+  test('a link takes a label for its purpose, beside proto and host', () => {
+    const { errors, db } = project({ '/main.dbml': `${ARCH}Server a
+Server b
+Link: a > b [label: 'reads orders', proto: TCP, host: 'db.internal']` });
+    expect(errors).toEqual([]);
+    expect(db?.links?.[0].settings).toEqual({ label: 'reads orders', proto: 'TCP', host: 'db.internal' });
+  });
+
   test('stacked is a group flag, written bare, as true or false, or in a Metadata block', () => {
     const getSettings = (source: string) => project({ '/main.dbml': `${ARCH}Server a
 ${source}` }).db?.groups?.[0].settings;
