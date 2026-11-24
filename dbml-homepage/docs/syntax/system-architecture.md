@@ -218,7 +218,7 @@ Write settings in `[ ]`, or as `key: value` lines in `{ }`. In `{ }`, a single w
 - `style: dashed`: a dashed border.
 - `Note` and custom properties: as for an element.
 - `label: top` or `label: bottom`: puts the group's name at the top (the default) or at the bottom.
-- `stacked`: draws the group as one card with two cards behind it, to show copies of the same service, such as servers behind a load balancer.
+- `stacked`: draws the group as one card with two cards behind it, to show copies of the same service, such as servers behind a load balancer. The card hides the names of the members behind it. `stacked` is meant for copies: when the members differ in role (such as a `Server` and a `Database`) or in `type`, the group is still drawn as one card, and you get a warning.
 
 ## Notes
 

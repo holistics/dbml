@@ -169,3 +169,100 @@ Group g {
     }
   });
 });
+
+describe('[example] a stacked group whose members differ', () => {
+  const stackedWarnings = (source: string, files: Record<string, string> = {}) => {
+    const text = `${ARCH}${source}`;
+    const result = project({ ...files, '/main.dbml': text });
+    const warnings = result.interpreted.getWarnings()
+      .filter((w) => w.code === CompileErrorCode.ARCH_STACKED_MIXED_MEMBERS);
+    return {
+      ...result,
+      warnings: warnings.map((w) => w.diagnostic),
+      at: warnings.map((w) => text.slice(w.start, w.end)),
+    };
+  };
+
+  test('members of different roles get a warning on stacked, and still draw', () => {
+    const { errors, interpreted, warnings, at, db } = stackedWarnings(`Server app
+Database db
+Queue q
+Cache c
+Group g [stacked] { app db q c }`);
+    expect(errors).toEqual([]);
+    expect(interpreted.getErrors()).toEqual([]);
+    expect(warnings).toEqual(['stacked draws these 4 members as one card; they differ in role']);
+    expect(at).toEqual(['stacked']);
+    expect(db?.groups?.[0].settings).toEqual({ stacked: true });
+    expect(db?.groups?.[0].children).toHaveLength(4);
+  });
+
+  test('members of one role and different types get a warning', () => {
+    const { warnings } = stackedWarnings(`Database a [type: 'postgres']
+Database b [type: 'mysql']
+Group g [stacked: true] { a b }`);
+    expect(warnings).toEqual(['stacked draws these 2 members as one card; they differ in type']);
+  });
+
+  test('a typed and an untyped member of one role differ in type', () => {
+    const { warnings } = stackedWarnings(`Database a [type: 'postgres']
+Database b
+Group g [stacked] { a b }`);
+    expect(warnings).toEqual(['stacked draws these 2 members as one card; they differ in type']);
+  });
+
+  test('members differing in both are named so', () => {
+    const { warnings } = stackedWarnings(`Server a [type: 'nodejs']
+Database b [type: 'postgres']
+Group g [stacked] { a b }`);
+    expect(warnings).toEqual(['stacked draws these 2 members as one card; they differ in role and type']);
+  });
+
+  test('copies of one thing get no warning', () => {
+    expect(stackedWarnings(`Server a
+Server b
+Server c
+Group g [stacked] { a b c }`).warnings).toEqual([]);
+    expect(stackedWarnings(`Database a [type: 'postgres']
+Database b [type: 'Postgres']
+Group g [stacked] { a b }`).warnings).toEqual([]);
+  });
+
+  test('a group that is not stacked gets no warning', () => {
+    for (const settings of ['', '[stacked: false]']) {
+      expect(stackedWarnings(`Server a
+Database b
+Group g ${settings} { a b }`).warnings, settings).toEqual([]);
+    }
+  });
+
+  test('stacked written in the body is where the warning points', () => {
+    const { warnings, at } = stackedWarnings(`Server a
+Database b
+Group g {
+  a
+  b
+  stacked: true
+}`);
+    expect(warnings).toHaveLength(1);
+    expect(at).toEqual(['stacked: true']);
+  });
+
+  test('stacked set in a Metadata block still warns, at the group', () => {
+    const { warnings, at } = stackedWarnings(`Server a
+Database b
+Group g { a b }
+Metadata Group g { stacked: true }`);
+    expect(warnings).toHaveLength(1);
+    expect(at[0]).toMatch(/^Group g/);
+  });
+
+  test('imported members are compared by their own role and type', () => {
+    const { warnings } = stackedWarnings(`use * from './shared'
+Group g [stacked] { a b }`, {
+      '/shared.dbml': `${ARCH}Database a [type: 'postgres']
+Database b [type: 'redis']`,
+    });
+    expect(warnings).toEqual(['stacked draws these 2 members as one card; they differ in type']);
+  });
+});
