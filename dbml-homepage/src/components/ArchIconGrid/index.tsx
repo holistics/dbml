@@ -4,31 +4,58 @@ import {
   ArchMark,
   ArchRoleIcon,
   ArchTypeIcon,
+  MARK_DETAIL_WEIGHT,
+  MARK_DOT_RADIUS,
+  MARK_STROKE_WIDTH,
   ROLE_CATEGORY_COLORS,
 } from '@site/src/data/archIcons';
 import gridStyles from '../EcosystemGrid/styles.module.scss';
 import styles from './styles.module.scss';
 
 // The colors are set as CSS variables, and styles.module.scss picks the one for the current theme.
+//
+// A mark is drawn the way the diagram draws it, which is what makes this page worth looking at:
+// the fit is applied as a transform, and the stroke is divided by the fit's scale so that
+// normalising a mark's size never changes its apparent weight.
 function Mark({ mark, colors }: { mark: ArchMark; colors?: { light: string; dark: string } }) {
   const style = colors && ({ '--mark-light': colors.light, '--mark-dark': colors.dark } as React.CSSProperties);
+  const { s, dx, dy } = mark.fit;
   return (
     <svg className={styles.mark} style={style} viewBox="0 0 24 24" aria-hidden="true">
-      {'fill' in mark ? (
-        <path d={mark.fill} fill="currentColor" />
-      ) : (
-        mark.stroke.map((d) => (
-          <path
-            key={d}
-            d={d}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.7}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ))
-      )}
+      <g transform={`translate(${dx} ${dy}) scale(${s})`}>
+        {'fill' in mark ? (
+          <path d={mark.fill} fill="currentColor" fillRule={mark.fillRule} />
+        ) : (
+          <>
+            {mark.stroke.map((d) => (
+              <path
+                key={d}
+                d={d}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={MARK_STROKE_WIDTH / s}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
+            {mark.detail?.map((d) => (
+              <path
+                key={d}
+                d={d}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={(MARK_STROKE_WIDTH * MARK_DETAIL_WEIGHT) / s}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
+            {mark.filled?.map((d) => <path key={d} d={d} fill="currentColor" />)}
+            {mark.dots?.map(([cx, cy]) => (
+              <circle key={`${cx},${cy}`} cx={cx} cy={cy} r={MARK_DOT_RADIUS / s} fill="currentColor" />
+            ))}
+          </>
+        )}
+      </g>
     </svg>
   );
 }
