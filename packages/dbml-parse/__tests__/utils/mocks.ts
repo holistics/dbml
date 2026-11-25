@@ -66,6 +66,10 @@ export class MockTextModel {
     } as Position;
   }
 
+  getVersionId (): number {
+    return 1;
+  }
+
   getLineContent (lineNumber: number): string {
     const lines = this.content.split(/\r\n|\r|\n/);
     return lines[lineNumber - 1] || '';

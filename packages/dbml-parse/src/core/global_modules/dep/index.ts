@@ -18,28 +18,19 @@ import type { SchemaElement } from '@/core/types/schemaJson';
 import { SymbolKind, type NodeSymbol } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import { extractStringFromIdentifierStream, extractVarNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
-import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
+import {
+  isAccessExpression, isElementNode, isExpressionAVariableNode, isInsideElementBody,
+} from '@/core/utils/validate';
 import { getDefaultSchemaSymbol } from '../utils';
 import { nodeRefereeOfLeftExpression } from '../utils';
 import type { GlobalModule } from '../types';
 import DepBinder from './bind';
 import { DepInterpreter } from './interpret';
 
-function isInsideDepBody (node: SyntaxNode): boolean {
-  let current: SyntaxNode | undefined = node.parent;
-  while (current) {
-    if (current instanceof ElementDeclarationNode && current.isKind(ElementKind.Dep)) {
-      return current.body?.containsEq(node) ?? false;
-    }
-    current = current.parent;
-  }
-  return false;
-}
-
 export const depModule: GlobalModule = {
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
-    if (!isInsideDepBody(node)) return Report.create(PASS_THROUGH);
+    if (!isInsideElementBody(node, ElementKind.Dep)) return Report.create(PASS_THROUGH);
     if (node.parentOfKind(AttributeNode)) return Report.create(PASS_THROUGH);
 
     const programNode = compiler.parseFile(node.filepath).getValue().ast;

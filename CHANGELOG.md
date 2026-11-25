@@ -1,3 +1,18 @@
+## v13.0.0 (2026-11-24)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#1011](https://github.com/holistics/dbml/pull/1011) [DBX-7354] Feat: Support Metadata block for Dep ([@xuantho573](https://github.com/xuantho573))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#1047](https://github.com/holistics/dbml/pull/1047) fix(connector): keep Postgres json/jsonb defaults as valid expressions ([@jayhemnani9910](https://github.com/jayhemnani9910))
+
+#### Committers: 3
+- Jay Hemnani ([@jayhemnani9910](https://github.com/jayhemnani9910))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v12.1.0 (2026-11-17)
 
 #### :rocket: New Feature

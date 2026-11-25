@@ -790,11 +790,10 @@ Database d [${line}]` },
   });
 
   it('refuses a bare word and a bare flag, in the words DBML uses', () => {
-    for (const line of ['provider: aws', 'multi_az']) {
-      const { diagnostics } = read(line);
-      expect(diagnostics.map((d) => d.message), line)
-        .toEqual([`Custom setting '${line.split(':')[0]}' must be a string, a color literal, a number literal, or a boolean literal`]);
-    }
+    expect(read('provider: aws').diagnostics.map((d) => d.message))
+      .toEqual(["Custom setting 'provider' must be a string, a color literal, a number literal, or a boolean literal. Did you mean 'aws'? Text values must be quoted"]);
+    expect(read('multi_az').diagnostics.map((d) => d.message))
+      .toEqual(["Custom setting 'multi_az' must be a string, a color literal, a number literal, or a boolean literal"]);
   });
 
   it('carries custom properties through to the model, wherever they are written', () => {
@@ -919,7 +918,7 @@ Metadata api {
 Metadata api {
   owner: platform
 }`).diagnostics.map((d) => d.message))
-      .toEqual(['A Metadata field value must be a string, a color literal, a number literal, or a boolean literal']);
+      .toEqual(["A Metadata field value must be a string, a color literal, a number literal, or a boolean literal. Did you mean 'platform'? Text values must be quoted"]);
   });
 
   it('lets a later file outrank an earlier one, as DBML documents', () => {
