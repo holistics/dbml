@@ -177,6 +177,7 @@ export enum CompileErrorCode {
   ARCH_NESTED_ENDPOINTS,
   ARCH_BAD_MEMBER,
   ARCH_UNKNOWN_MEMBER = 6015,
+  ARCH_STACKED_MIXED_MEMBERS,
 }
 
 export interface RelatedLocation {
