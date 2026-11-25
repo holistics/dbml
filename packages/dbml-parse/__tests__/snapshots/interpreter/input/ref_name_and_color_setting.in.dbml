@@ -15,3 +15,11 @@ Ref short_ref: b.id < c.id [color: #aabbcc]
 Ref long_ref {
   c.id < b.c_id [color: #123456]
 }
+
+// Color and multi-line note together
+Ref noted_ref: b.id - c.b_id [color: #abcdef, note: '''
+    First line
+      indented line
+
+    Last line
+  ''']
