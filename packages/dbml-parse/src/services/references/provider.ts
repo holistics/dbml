@@ -1,4 +1,5 @@
 import { Uri } from '@/services/types';
+import { uniq } from 'lodash-es';
 import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
@@ -6,7 +7,7 @@ import { ElementDeclarationNode, SyntaxNode, SyntaxNodeKind } from '@/core/types
 import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition, getNamedRefAt } from '@/services/utils';
+import { getOffsetFromMonacoPosition, getNamedTargetsAt } from '@/services/utils';
 import { MetadataElementMetadata } from '@/core/types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
@@ -44,15 +45,15 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
         if (symbol) {
           references = this.compiler.symbolReferences(symbol);
         } else {
-          // A named Ref has no symbol: its references are its declaration name and the Metadata Ref header names
-          const ref = getNamedRefAt(this.compiler, node);
-          references = ref
-            ? [
-                ...(ref.declaration instanceof ElementDeclarationNode && ref.declaration.name ? [ref.declaration.name] : []),
-                ...this.compiler.symbolMetadata(ref)
+          // A named Ref/Dep has no symbol: its references are its declaration name and the `Metadata Ref|Dep` header names
+          const targets = getNamedTargetsAt(this.compiler, node);
+          references = targets.length
+            ? uniq(targets.flatMap((target) => [
+                ...(target.declaration instanceof ElementDeclarationNode && target.declaration.name ? [target.declaration.name] : []),
+                ...this.compiler.symbolMetadata(target)
                   .filter((m) => m instanceof MetadataElementMetadata)
                   .flatMap((m) => m.declaration.name ?? []),
-              ]
+              ]))
             : undefined;
         }
         if (references && references.length > 0) {

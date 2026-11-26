@@ -1,6 +1,4 @@
-import {
-  destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression, getBody,
-} from '@/core/utils/expression';
+import { destructureComplexVariable, extractVariableFromExpression, getBody } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
@@ -19,22 +17,18 @@ import {
 } from '@/core/types';
 import type Compiler from '@/compiler';
 import {
-  extractColor,
+  assignInlineMetadata,
   getTokenPosition,
-  normalizeNote,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 import { validateCardinality } from './constraint_fixes';
 import { getMultiplicities } from '@/core/types/relation';
-import { zip } from 'lodash-es';
-import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { omit, zip } from 'lodash-es';
 import { attachCustomMetadata } from '../metadata/utils';
 import { REF_METADATA_FIELDS } from '../metadata/registries';
 
-// Ref settings that are natively attached to the ref, so they are never custom metadata
-const REF_BUILTIN_SETTINGS = [
-  SettingName.Color,
-  SettingName.Note,
+// Ref settings that are neither metadata fields (color, note) nor custom metadata
+const REF_NATIVE_SETTINGS = [
   SettingName.Delete,
   SettingName.Update,
   SettingName.Inactive,
@@ -167,22 +161,9 @@ export class RefInterpreter {
         ? extractStringFromIdentifierStream(updateSetting)
         : extractVariableFromExpression(updateSetting) as string;
 
-      this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value) : undefined;
-
-      const [
-        noteNode,
-      ] = settingMap[SettingName.Note] || [];
-      const noteValue = noteNode && extractQuotedStringToken(noteNode.value);
-      this.ref.note = noteValue !== undefined
-        ? {
-            value: normalizeNote(noteValue),
-            token: getTokenPosition(noteNode),
-          }
-        : undefined;
-
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
 
-      this.ref.metadata = extractCustomInlineMetadata(settingMap, REF_BUILTIN_SETTINGS);
+      assignInlineMetadata(this.ref, omit(settingMap, REF_NATIVE_SETTINGS), REF_METADATA_FIELDS);
     }
 
     return [];

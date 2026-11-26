@@ -134,6 +134,15 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     if (result.hasValue(UNHANDLED)) return [];
     return result.getValue();
   }
+
+  /**
+    * Whether this symbol is in `program` (the program or one of its nested schemas).
+    * Cycle rule: NEVER reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents),
+    * because NodeMetadata.isVisibleFrom relies on it.
+    */
+  isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
+    return program.inNestedSchema(compiler, this);
+  }
 }
 
 // Schema namespace
@@ -456,29 +465,29 @@ export class ColumnSymbol extends NodeSymbol {
     return this;
   }
 
+  // The table owning this column (for an injected column, the table it is injected into), found by syntax
+  private parentSymbol (compiler: Compiler): NodeSymbol | undefined {
+    const decl = this instanceof InjectedColumnSymbol ? this.injectionDeclaration : this.declaration;
+    const ownerNode = decl?.parentOfKind(ElementDeclarationNode);
+    if (!ownerNode) return undefined;
+    return compiler.nodeSymbol(ownerNode).getFiltered(UNHANDLED);
+  }
+
+  // A column is visible when its table is (columns of a TablePartial are never visible on their own)
+  override isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
+    const owner = this.parentSymbol(compiler);
+    return owner instanceof TableSymbol && owner.isVisibleFrom(compiler, program);
+  }
+
   qualifiedName (compiler: Compiler): string[] {
     const colName = this.name ?? '';
-    const decl = this instanceof InjectedColumnSymbol ? this.injectionDeclaration : this.declaration;
-    const tableNode = decl?.parentOfKind(ElementDeclarationNode);
-    if (!tableNode) return [
-      colName,
-    ];
-    const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
-    if (!tableSymbol) return [
-      colName,
-    ];
+    const tableSymbol = this.parentSymbol(compiler);
+    if (!tableSymbol) return [colName];
 
     const { schema, name } = tableSymbol.interpretedName(compiler, this.filepath);
     return schema
-      ? [
-          schema,
-          name,
-          colName,
-        ]
-      : [
-          name,
-          colName,
-        ];
+      ? [schema, name, colName]
+      : [name, colName];
   }
 
   pk (compiler: Compiler): boolean {
