@@ -359,3 +359,25 @@ describe("@dbml/core - exporter flags", () => {
     });
   });
 });
+
+describe("@dbml/core - exporter string defaults", () => {
+  const dbml = "Table notes {\n  greeting varchar [default: 'Don\\'t panic']\n}";
+
+  test.each(["postgres", "mysql", "mssql", "oracle"] as const)("%s doubles a quote in a default", (format) => {
+    expect(exporter.export(dbml, format)).toContain("DEFAULT 'Don''t panic'");
+  });
+
+  test("dbml escapes a quote in a default", () => {
+    expect(exporter.export(dbml, "dbml")).toContain("[default: 'Don\\'t panic']");
+  });
+
+  test("mysql escapes a backslash in a default", () => {
+    const path = "Table t {\n  p varchar [default: 'C:\\\\temp']\n}";
+    expect(exporter.export(path, "mysql")).toContain("DEFAULT 'C:\\\\temp'");
+  });
+
+  test.each(["postgres", "mysql", "mssql", "oracle"] as const)("%s doubles a quote in an enum value", (format) => {
+    const withEnum = "Enum mood {\n  \"it's ok\"\n}\nTable t {\n  m mood\n}";
+    expect(exporter.export(withEnum, format)).toContain("'it''s ok'");
+  });
+});

@@ -203,7 +203,7 @@ class PostgresExporter {
 
       const enumValueArr = _enum.valueIds.map((valueId) => {
         const value = model.enumValues[valueId];
-        return `  '${value.name}'`;
+        return `  '${value.name.replace(/'/g, "''")}'`;
       });
       const enumValueStr = enumValueArr.join(',\n');
       const enumLine = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
@@ -283,7 +283,7 @@ class PostgresExporter {
           if (field.dbdefault.type === 'expression') {
             line += ` DEFAULT (${field.dbdefault.value})`;
           } else if (field.dbdefault.type === 'string') {
-            line += ` DEFAULT '${field.dbdefault.value}'`;
+            line += ` DEFAULT '${field.dbdefault.value.replace(/'/g, "''")}'`;
           } else {
             line += ` DEFAULT ${field.dbdefault.value}`;
           }

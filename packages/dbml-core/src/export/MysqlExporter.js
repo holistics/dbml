@@ -69,7 +69,7 @@ class MySQLExporter {
         const _enum = model.enums[field.enumId];
         line = `\`${field.name}\` ENUM (`;
         const enumValues = _enum.valueIds.map((valueId) => {
-          return `'${model.enumValues[valueId].name}'`;
+          return `'${model.enumValues[valueId].name.replace(/'/g, "''")}'`;
         });
         line += `${enumValues.join(', ')})`;
       } else {
@@ -114,7 +114,7 @@ class MySQLExporter {
           if (field.dbdefault.type === 'expression') {
             line += ` DEFAULT (${field.dbdefault.value})`;
           } else if (field.dbdefault.type === 'string') {
-            line += ` DEFAULT '${field.dbdefault.value}'`;
+            line += ` DEFAULT '${field.dbdefault.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}'`;
           } else {
             line += ` DEFAULT ${field.dbdefault.value}`;
           }

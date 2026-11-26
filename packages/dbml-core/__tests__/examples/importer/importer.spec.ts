@@ -84,3 +84,23 @@ describe('@dbml/core - importer', () => {
     });
   }
 });
+
+describe('@dbml/core - importer string defaults', () => {
+  test.each(['postgres', 'mysql', 'mssql'] as const)('%s keeps a quote in a default as one quote', (format) => {
+    const sql = "CREATE TABLE notes (id int PRIMARY KEY, greeting varchar(20) DEFAULT 'Don''t panic');";
+    expect(importer.import(sql, format)).toContain("[default: 'Don\\'t panic']");
+  });
+
+  test('postgres comment keeps a doubled quote once', () => {
+    const sql = "CREATE TABLE t (id int); COMMENT ON TABLE t IS 'a''''b';";
+    expect(importer.import(sql, 'postgres')).toContain("Note: '''a\\'\\'b'''");
+  });
+
+  test('mysql decodes backslash escapes and charset introducers', () => {
+    const sql = "CREATE TABLE t (a varchar(20) DEFAULT 'C:\\\\temp', b varchar(20) DEFAULT 'Don\\'t', c varchar(20) DEFAULT _utf8mb4'xxx');";
+    const dbml = importer.import(sql, 'mysql');
+    expect(dbml).toContain("[default: 'C:\\\\temp']");
+    expect(dbml).toContain("[default: 'Don\\'t']");
+    expect(dbml).toContain("[default: 'xxx']");
+  });
+});
