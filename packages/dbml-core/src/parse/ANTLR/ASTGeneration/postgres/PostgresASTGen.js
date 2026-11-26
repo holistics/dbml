@@ -904,6 +904,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             table.checks.push(cmd.value);
             break;
           }
+          case COLUMN_CONSTRAINT_KIND.INCREMENT: {
+            const table = findTable(this.data.tables, schemaName, tableName);
+            const field = table && table.fields.find((f) => f.name === cmd.value.column);
+            if (field) field.increment = true;
+            break;
+          }
           case TABLE_CONSTRAINT_KIND.UNIQUE:
           case TABLE_CONSTRAINT_KIND.PK:
           case TABLE_CONSTRAINT_KIND.INDEX: {
@@ -956,6 +962,20 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.tableconstraint()) {
       const constraint = ctx.tableconstraint().accept(this);
       return constraint;
+    }
+
+    // pg_dump attaches a serial column's sequence and an identity column's generator
+    // with ALTER COLUMN after the CREATE TABLE
+    if (ctx.ALTER() && ctx.colid(0)) {
+      const columnDefault = ctx.alter_column_default();
+      const isSequenceDefault = columnDefault && columnDefault.SET()
+        && /^nextval\s*\(/i.test(getOriginalText(columnDefault.a_expr()));
+      if (isSequenceDefault || (ctx.GENERATED() && ctx.IDENTITY_P())) {
+        return {
+          kind: COLUMN_CONSTRAINT_KIND.INCREMENT,
+          value: { column: ctx.colid(0).accept(this) },
+        };
+      }
     }
   }
 
