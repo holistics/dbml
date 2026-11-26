@@ -160,6 +160,7 @@ Linking the same two ends more than once gives a warning, whatever the operators
 // on its own line
 Link: internet > cdn
 Link: cdn > api [proto: HTTPS, host: 'api.example.com']
+Link: api > db [label: 'reads orders', proto: TCP]
 
 // inline: same as Link: api > db and Link: api < queue
 Server api [link: > db, link: < queue]
@@ -169,10 +170,20 @@ Server api [link: > db, link: < queue]
 
 Write settings in `[ ]` after the second end. An inline link takes no settings.
 
+- `label`: what the connection is for, a word or a quoted string, such as `'reads orders'`.
 - `proto`: the protocol, a word or a quoted string, such as `HTTPS`.
 - `host`: the hostname the link reaches, a word or a quoted string.
 - `color`: the line's color, such as `#f38020`.
 - `style: dashed`: a dashed line.
+
+The text on the line puts the purpose first and the technology in brackets after it, as in C4 diagrams:
+
+| Settings | Text on the line |
+| --- | --- |
+| `label: 'reads orders', proto: TCP, host: 'db.internal'` | `reads orders [TCP]`, with `db.internal` below it |
+| `label: 'reads orders', proto: TCP` | `reads orders [TCP]` |
+| `label: 'reads orders'` | `reads orders` |
+| `proto: HTTPS, host: 'api.example.com'` | `[HTTPS]`, with `api.example.com` below it |
 
 ## Groups
 
@@ -218,7 +229,7 @@ Write settings in `[ ]`, or as `key: value` lines in `{ }`. In `{ }`, a single w
 - `style: dashed`: a dashed border.
 - `Note` and custom properties: as for an element.
 - `label: top` or `label: bottom`: puts the group's name at the top (the default) or at the bottom.
-- `stacked`: draws the group as one card with two cards behind it, to show copies of the same service, such as servers behind a load balancer.
+- `stacked`: draws the group as one card with two cards behind it, to show copies of the same service, such as servers behind a load balancer. The card hides the names of the members behind it. `stacked` is meant for copies: when the members differ in role (such as a `Server` and a `Database`) or in `type`, the group is still drawn as one card, and you get a warning.
 
 ## Notes
 

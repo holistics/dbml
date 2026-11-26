@@ -7,14 +7,16 @@ const PROPERTY_TEST_CONFIG = {
   numRuns: 200,
 };
 
-const TERMINAL_KIND: Record<Exclude<MetadataTargetKind, MetadataTargetKind.Ref>, SymbolKind> = {
+type SchemaPathTargetKind = Exclude<MetadataTargetKind, MetadataTargetKind.Ref | MetadataTargetKind.Dep>;
+
+const TERMINAL_KIND: Record<SchemaPathTargetKind, SymbolKind> = {
   [MetadataTargetKind.Table]: SymbolKind.Table,
   [MetadataTargetKind.Column]: SymbolKind.Column,
   [MetadataTargetKind.TableGroup]: SymbolKind.TableGroup,
   [MetadataTargetKind.Note]: SymbolKind.StickyNote,
 };
 
-const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind).filter((k): k is Exclude<MetadataTargetKind, MetadataTargetKind.Ref> => k !== MetadataTargetKind.Ref));
+const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind).filter((k): k is SchemaPathTargetKind => k !== MetadataTargetKind.Ref && k !== MetadataTargetKind.Dep));
 
 // Bias generation toward the schema name and short arrays to exercise the Column single-part branch and the `public` handling downstream
 const namePartArbitrary = fc.oneof(

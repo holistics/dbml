@@ -1,0 +1,4 @@
+Table "dbo"."users" {
+  "id" int [pk]
+  "email" nvarchar(255) [not null]
+}

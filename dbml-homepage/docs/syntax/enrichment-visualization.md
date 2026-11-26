@@ -12,6 +12,8 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Column Notes](#column-notes)
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
+  - [Relationship Notes](#relationship-notes)
+  - [Dependency Notes](#dependency-notes)
 - [Custom Properties](#custom-properties)
   - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
@@ -115,6 +117,36 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 }
 ```
 
+### Relationship Notes
+
+```text
+Ref: posts.user_id > users.id [note: 'The author of the post']
+
+// or
+Ref {
+  posts.user_id > users.id [
+  note: '''
+    # Relationship between `users` and `posts`
+
+    Each post is written by exactly one user.
+    A user can write many posts.
+  '''
+  ]
+}
+```
+
+### Dependency Notes
+
+```text
+Dep: raw_orders -> stg_orders [note: 'Daily load of raw orders']
+
+// or
+Dep order_staging {
+  raw_orders -> stg_orders
+  note: 'Join orders with payments, compute revenue'
+}
+```
+
 ## Custom Properties
 
 Custom Properties let you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
@@ -155,7 +187,7 @@ A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) 
 
 You can also declare custom properties separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding properties to elements defined elsewhere (including across files).
 
-The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note` or `Ref`. `Dep` is not supported yet.
+The block targets an element by kind and name, using `Metadata <kind> <name>`, where `<kind>` is one of `Table`, `Column`, `TableGroup`, `Note`, `Ref` or `Dep`.
 
 Each field uses the `key: value` syntax with one of the [property value types](#property-value-types). A key cannot be repeated within the same block.
 
@@ -169,6 +201,11 @@ Table users {
 
 Table posts {
   id int [pk]
+  user_id int
+}
+
+Table stg_posts {
+  id int
   user_id int
 }
 
@@ -197,11 +234,20 @@ Metadata Ref user_posts {
   owner: 'reporting'
   critical: true
 }
+
+Dep posts_staging {
+  posts -> stg_posts
+}
+
+Metadata Dep posts_staging {
+  owner: 'analytics'
+  color: #e67e22
+}
 ```
 
 :::note
-- `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name. Unnamed refs cannot be targeted.
-- A `Metadata Ref` block is only valid when the ref exists (it is defined in the same file, or both of the endpoint tables are imported).
+- `Metadata Ref` targets a [named relationship](../docs.md#relationships--foreign-key-definitions) by its name, and `Metadata Dep` targets a [named dependency](./data-lineage.md) by its name. Unnamed refs and deps cannot be targeted.
+- A `Metadata Ref` or `Metadata Dep` block is only valid when the ref or dep exists (it is defined in the same file, or all of its endpoint tables are imported).
 :::
 
 ### Property Value Types

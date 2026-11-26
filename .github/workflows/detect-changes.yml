@@ -1,0 +1,62 @@
+name: Detect Changes
+
+on:
+  workflow_call:
+    inputs:
+      patterns:
+        description: Regex patterns (one per line) matched against changed file paths
+        type: string
+        required: true
+    outputs:
+      relevant:
+        description: "'true' if any changed file (including deleted ones) matches, or the event is not a PR/push"
+        value: ${{ jobs.detect.outputs.relevant }}
+      files:
+        description: Space-separated matching files that still exist (deleted files excluded)
+        value: ${{ jobs.detect.outputs.files }}
+
+jobs:
+  detect:
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    outputs:
+      relevant: ${{ steps.check.outputs.relevant }}
+      files: ${{ steps.check.outputs.files }}
+
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # ratchet:actions/checkout@v7.0.0
+      with:
+        # full history so the base branch is available for git diff
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Check for matching file changes
+      id: check
+      env:
+        PATTERNS: ${{ inputs.patterns }}
+        EVENT_NAME: ${{ github.event_name }}
+        BASE_REF: ${{ github.base_ref }}
+      run: |
+        if [ "$EVENT_NAME" = "pull_request" ]; then
+          BASE="origin/$BASE_REF"
+        elif [ "$EVENT_NAME" = "push" ]; then
+          BASE=HEAD~1
+        else
+          echo "relevant=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        REGEX=$(echo "$PATTERNS" | sed '/^[[:space:]]*$/d' | paste -sd '|' -)
+
+        ALL_FILES=$(git diff --name-only "$BASE...HEAD")
+        echo "Changed files:"
+        echo "$ALL_FILES"
+
+        if echo "$ALL_FILES" | grep -qE "$REGEX"; then
+          echo "relevant=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "relevant=false" >> "$GITHUB_OUTPUT"
+        fi
+
+        # lowercase d excludes deleted files
+        FILES=$(git diff --name-only --diff-filter=d "$BASE...HEAD" | grep -E "$REGEX" | tr '\n' ' ' || true)
+        echo "files=$FILES" >> "$GITHUB_OUTPUT"

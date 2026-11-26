@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDirs": ["./src", "./"],                          /* Allow multiple folders to be treated as one when resolving modules. */
+    "rootDirs": ["./src", "./lib", "./"],                      /* Allow multiple folders to be treated as one when resolving modules. */
     "baseUrl": "./src",                                   /* Specify the base directory to resolve non-relative module names. */
     "outDir": "./lib",                                    /* Specify an output folder for all emitted files. */
     "lib": ["es2023"],                                     /* Include es2023 for Array.toReversed() support. */

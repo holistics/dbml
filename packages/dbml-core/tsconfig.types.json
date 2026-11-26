@@ -1,0 +1,18 @@
+{
+  // Emits .d.ts files for migrated TypeScript sources into lib/, next to the built JS.
+  // Add a source file to "files" once its hand-written counterpart in types/ is replaced
+  // by a re-export from ../../lib/<same path>.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "incremental": false,
+    "rootDir": "./src",
+    "declarationDir": "./lib"
+  },
+  "files": [
+    "src/model_structure/element.ts"
+  ],
+  "include": []
+}

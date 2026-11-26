@@ -1,0 +1,5 @@
+Table "products" {
+  "id" integer [pk]
+  "price" "double precision"
+  "weight" "double precision" [not null]
+}

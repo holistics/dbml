@@ -387,7 +387,8 @@ class SqlServerExporter {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
 
-      if (shouldPrintSchema(schema, model)) {
+      // dbo is SQL Server's default schema and always exists
+      if (shouldPrintSchema(schema, model) && schema.name.toLowerCase() !== 'dbo') {
         prevStatements.schemas.push(`CREATE SCHEMA [${schema.name}]\nGO\n`);
       }
 

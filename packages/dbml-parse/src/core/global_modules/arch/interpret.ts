@@ -110,6 +110,43 @@ function getNodeNote (declaration: ElementDeclarationNode): ArchNode['note'] {
     : null;
 }
 
+// The resolved type of an element member; a group or a note has none
+function getMemberType (compiler: Compiler, symbol: NodeSymbol, role: string, filepath: Filepath): string | null {
+  if (role === 'Group' || role === 'Note') return null;
+  const value = compiler.interpretSymbol(symbol, filepath).getFiltered(UNHANDLED);
+  return value && !Array.isArray(value) && 'type' in value && typeof value.type === 'string'
+    ? value.type
+    : null;
+}
+
+// `stacked` draws a group's members as one card, which is meant for copies of one thing.
+// Members of different roles or types are allowed, but their names are hidden, so this warns at the `stacked` setting.
+function checkStackedMembers (
+  compiler: Compiler,
+  declaration: ElementDeclarationNode,
+  children: ArchRef[],
+  childSymbols: NodeSymbol[],
+  filepath: Filepath,
+): CompileWarning | undefined {
+  if (children.length < 2) return undefined;
+  const roles = new Set(children.map((child) => child.role));
+  const types = new Set(children.map((child, i) => getMemberType(compiler, childSymbols[i], child.role, filepath)));
+  const differs = [
+    roles.size > 1 ? 'role' : undefined,
+    types.size > 1 ? 'type' : undefined,
+  ].filter(Boolean);
+  if (!differs.length) return undefined;
+  // The last `stacked` in `[ ]` or the body is the one that counts; one set by a Metadata block points at the group
+  const setting = getArchProperties(declaration, false).entries
+    .filter((entry) => entry.key.toLowerCase() === 'stacked')
+    .pop();
+  return new CompileWarning(
+    CompileErrorCode.ARCH_STACKED_MIXED_MEMBERS,
+    `stacked draws these ${children.length} members as one card; they differ in ${differs.join(' and ')}`,
+    setting?.node ?? declaration,
+  );
+}
+
 export function interpretElement (
   compiler: Compiler,
   symbol: ElementSymbol,
@@ -139,20 +176,24 @@ export function interpretElement (
 
   if (sort === 'group') {
     const children: ArchRef[] = [];
+    const childSymbols: NodeSymbol[] = [];
     for (const ref of getArchMembers(declaration).refs) {
       if (!isExpressionAVariableNode(ref.node)) continue;
-      const child = makeArchRef(
-        compiler,
-        compiler.nodeReferee(ref.node).getFiltered(UNHANDLED),
-        filepath,
-      );
+      const symbol = compiler.nodeReferee(ref.node).getFiltered(UNHANDLED);
+      const child = makeArchRef(compiler, symbol, filepath);
       if (!child) continue;
       if (
         !children.some(
           (other) => other.handle === child.handle && other.role === child.role,
         )
-      )
+      ) {
         children.push(child);
+        childSymbols.push(symbol!);
+      }
+    }
+    if (element.settings!.stacked === true) {
+      const warning = checkStackedMembers(compiler, declaration, children, childSymbols, filepath);
+      if (warning) warnings.push(warning);
     }
     return new Report(
       {
