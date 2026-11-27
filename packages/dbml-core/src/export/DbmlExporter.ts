@@ -107,7 +107,7 @@ class DbmlExporter {
               break;
 
             case 'string': {
-              const strValue = String(field.dbdefault.value);
+              const strValue = String(field.dbdefault.value).replaceAll('\\', '\\\\').replaceAll('\'', '\\\'');
               const quote = strValue.includes('\n') ? '\'\'\'' : '\'';
               value += `${quote}${strValue}${quote}`;
               break;

@@ -96,7 +96,7 @@ Table "boolean_table" {
 Table "default_table" {
   "c1" int [default: 42]
   "c2" int [default: `-42`]
-  "c3" varchar(256) [default: 'utf8mb3'xxx']
+  "c3" varchar(256) [default: 'xxx']
 }
 
 Table "ts_table" {

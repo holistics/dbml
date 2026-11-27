@@ -133,7 +133,7 @@ class OracleExporter {
 
         const enumValues = _enum.valueIds.map((valueId) => {
           const value = model.enumValues[valueId];
-          return `'${value.name}'`;
+          return `'${value.name.replace(/'/g, "''")}'`;
         });
 
         const enumString = enumValues.join(', ');
@@ -164,7 +164,7 @@ class OracleExporter {
 
         if (!isNullDefault) {
           if (cloneField.dbdefault.type === 'string') {
-            line += ` DEFAULT '${cloneField.dbdefault.value}'`;
+            line += ` DEFAULT '${cloneField.dbdefault.value.replace(/'/g, "''")}'`;
           } else {
             line += ` DEFAULT ${cloneField.dbdefault.value}`;
           }

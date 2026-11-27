@@ -29,13 +29,6 @@ const findTable = (tables, schemaName, tableName) => {
   return table;
 };
 
-const escapeStr = (str) => {
-  if (str) {
-    return str.replaceAll("''", "'");
-  }
-  return str;
-};
-
 export default class PostgresASTGen extends PostgreSQLParserVisitor {
   constructor () {
     super();
@@ -992,7 +985,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         if (!table) return;
 
         const note = ctx.comment_text().accept(this);
-        table.note = { value: escapeStr(note) };
+        table.note = { value: note };
       }
     }
 
@@ -1008,7 +1001,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       if (!field) return;
 
       const note = ctx.comment_text().accept(this);
-      field.note = { value: escapeStr(note) };
+      field.note = { value: note };
     }
   }
 
@@ -1026,7 +1019,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // StringConstant | UnicodeEscapeStringConstant | BeginDollarStringConstant DollarText* EndDollarStringConstant | EscapeStringConstant
   visitAnysconst (ctx) {
     const value = ctx.getChild(0).getText();
-    return value.slice(1, value.length - 1);
+    const inner = value.slice(1, value.length - 1);
+    // A quote inside a standard string is written twice
+    return ctx.StringConstant() ? inner.replace(/''/g, '\'') : inner;
   }
 
   // TABLE | SEQUENCE | VIEW | MATERIALIZED VIEW | INDEX | FOREIGN TABLE | COLLATION | CONVERSION_P | STATISTICS | TEXT_P SEARCH PARSER | TEXT_P SEARCH DICTIONARY | TEXT_P SEARCH TEMPLATE | TEXT_P SEARCH CONFIGURATION

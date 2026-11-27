@@ -51,6 +51,22 @@ const getFieldNames = (names) => {
   };
 };
 
+const MYSQL_ESCAPES = {
+  0: '\0', b: '\b', n: '\n', r: '\r', t: '\t', Z: '\x1a',
+};
+
+// 'it''s', 'it\'s', N'..' and _utf8mb4'..' all hold the text between the quotes,
+// with MySQL's doubled quotes and backslash escapes decoded
+const unquoteMysqlString = (literal) => {
+  const start = literal.search(/['"]/);
+  const quote = literal[start];
+  return literal.slice(start + 1, -1).replace(new RegExp(`\\\\(.)|${quote}${quote}`, 'gs'), (match, escaped) => {
+    if (escaped === undefined) return quote;
+    if (escaped === '%' || escaped === '_') return match;
+    return MYSQL_ESCAPES[escaped] ?? escaped;
+  });
+};
+
 export default class MySQLASTGen extends MySQLParserVisitor {
   constructor () {
     super();
@@ -699,9 +715,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // | REAL_LITERAL | BIT_STRING | NOT? nullLiteral = (NULL_LITERAL | NULL_SPEC_LITERAL)
   visitConstant (ctx) {
     if (ctx.stringLiteral()) {
-      const quotedString = ctx.stringLiteral().getText();
       return {
-        value: quotedString.slice(1, quotedString.length - 1),
+        value: unquoteMysqlString(ctx.stringLiteral().getText()),
         type: DATA_TYPE.STRING,
       };
     }

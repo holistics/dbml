@@ -71,7 +71,7 @@ class SqlServerExporter {
         line = `[${field.name}] nvarchar(255) CHECK ([${field.name}] IN (`;
         const enumValues = _enum.valueIds.map((valueId) => {
           const value = model.enumValues[valueId];
-          return `'${value.name}'`;
+          return `'${value.name.replace(/'/g, "''")}'`;
         });
         line += `${enumValues.join(', ')}))`;
       } else {
@@ -116,7 +116,7 @@ class SqlServerExporter {
           if (field.dbdefault.type === 'expression') {
             line += ` DEFAULT (${field.dbdefault.value})`;
           } else if (field.dbdefault.type === 'string') {
-            line += ` DEFAULT '${field.dbdefault.value}'`;
+            line += ` DEFAULT '${field.dbdefault.value.replace(/'/g, "''")}'`;
           } else {
             line += ` DEFAULT (${field.dbdefault.value})`;
           }

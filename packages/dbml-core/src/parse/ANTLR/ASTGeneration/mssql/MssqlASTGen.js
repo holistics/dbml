@@ -29,7 +29,7 @@ const getStringFromRawString = (rawString) => {
     return rawString;
   }
 
-  return rawString.slice(1, rawString.length - 1);
+  return rawString.slice(1, rawString.length - 1).replace(/''/g, '\'');
 };
 
 /**
