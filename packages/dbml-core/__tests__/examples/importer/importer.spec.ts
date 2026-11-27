@@ -7,6 +7,11 @@ import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - importer optional refs', () => {
   describe('postgres', () => {
+    test('default expression keeps its spaces', () => {
+      const sql = "CREATE TABLE t (note character varying(500) DEFAULT 'n/a'::character varying);";
+      expect(importer.import(sql, 'postgres')).toContain("default: `'n/a'::character varying`");
+    });
+
     test('NOT NULL FK to PK', () => {
       const sql = `
         CREATE TABLE a (id int PRIMARY KEY);

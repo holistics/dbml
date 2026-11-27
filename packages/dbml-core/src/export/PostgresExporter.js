@@ -232,7 +232,9 @@ class PostgresExporter {
         const originalTypeName = field.type.type_name;
         const upperCaseTypeName = originalTypeName.toUpperCase();
 
-        const shouldDoubleQuote = !POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName)
+        // `character varying(64)`, `timestamp(3) with time zone`: look up the type without its modifier
+        const baseTypeName = upperCaseTypeName.replace(/\s*\([^)]*\)/g, '').replace(/(\[\])+$/, '');
+        const shouldDoubleQuote = !POSTGRES_BUILTIN_TYPES.includes(baseTypeName)
           && (hasWhiteSpaceOrUpperCase(originalTypeName) || POSTGRES_RESERVED_KEYWORDS.includes(upperCaseTypeName));
 
         const typeName = shouldDoubleQuote ? `"${originalTypeName}"` : originalTypeName;
