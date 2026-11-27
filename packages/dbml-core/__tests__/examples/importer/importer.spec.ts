@@ -1,4 +1,5 @@
 import importer from '../../../src/import';
+import Parser from '../../../src/parse/Parser';
 import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
 import { readFileSync } from 'fs';
@@ -56,6 +57,33 @@ describe('@dbml/core - importer optional refs', () => {
       `;
       expect(importer.import(sql, 'mysql')).toContain('Ref:"a"."id" ?<? "b"."a_id"');
     });
+  });
+});
+
+describe('@dbml/core - importer postgres types', () => {
+  test('keeps the time zone of timestamp and time', () => {
+    const sql = `
+      CREATE TABLE t (
+        a timestamp with time zone,
+        b timestamp(3) with time zone,
+        c time with time zone,
+        d timestamp without time zone,
+        e TIMESTAMP WITH TIME ZONE
+      );
+    `;
+    const res = importer.import(sql, 'postgres');
+    expect(res).toContain('"a" timestamptz\n');
+    expect(res).toContain('"b" timestamptz(3)\n');
+    expect(res).toContain('"c" timetz\n');
+    expect(res).toContain('"d" timestamp\n');
+    expect(res).toContain('"e" TIMESTAMPTZ\n');
+  });
+
+  test('prints a schema-qualified non-enum type once', () => {
+    const sql = 'CREATE TABLE t (email extensions.citext);';
+    const res = importer.import(sql, 'postgres');
+    expect(res).toContain('"email" extensions.citext\n');
+    expect(() => new Parser().parse(res, 'dbmlv2')).not.toThrow();
   });
 });
 

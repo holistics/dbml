@@ -711,7 +711,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // (TIMESTAMP | TIME) (OPEN_PAREN iconst CLOSE_PAREN)? timezone_?
   visitConstdatetime (ctx) {
-    return `${ctx.getChild(0).getText()}${ctx.iconst() ? `(${ctx.iconst().accept(this)})` : ''}`;
+    let type = ctx.getChild(0).getText();
+    // `timestamp with time zone` -> `timestamptz`, `time with time zone` -> `timetz`
+    // `without time zone` is the default, so the plain name is kept
+    if (ctx.timezone_()?.WITH()) {
+      type += type === type.toUpperCase() ? 'TZ' : 'tz';
+    }
+    return `${type}${ctx.iconst() ? `(${ctx.iconst().accept(this)})` : ''}`;
   }
 
   // INT_P | INTEGER | SMALLINT | BIGINT | REAL | FLOAT_P float_? | DOUBLE_P PRECISION | DECIMAL_P type_modifiers_? | DEC type_modifiers_? | NUMERIC type_modifiers_? | BOOLEAN_P

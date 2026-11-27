@@ -137,6 +137,21 @@ describe("@dbml/core - ref inactive setting", () => {
   });
 });
 
+describe("@dbml/core - schema-qualified field types", () => {
+  test("prints the schema of a non-enum type once", () => {
+    const dbml = `
+Table t {
+  email extensions.citext
+  label "my schema"."my type"
+}
+`.trim();
+    const res = exporter.export(dbml, "dbml");
+    expect(res).toContain('"email" extensions.citext\n');
+    expect(res).toContain('"label" "my schema"."my type"\n');
+    expect(exporter.export(res, "dbml")).toBe(res);
+  });
+});
+
 describe("@dbml/core - optional ref operators", () => {
   describe("dbml exporter", () => {
     test("should export ref with operator -?", () => {

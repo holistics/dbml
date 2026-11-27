@@ -22,8 +22,8 @@ Table "order_items" {
   "order_id" int
   "product_id" int
   "quantity" int [default: 1]
-  "created_at" timestamp
-  "modified_at" time
+  "created_at" timestamptz
+  "modified_at" timetz
 }
 
 Table "products" {
@@ -78,7 +78,7 @@ Table "foo" {
   "bar5" "int[2]"
   "bar6" "text[8]"
   "bar7" "text[100]"
-  "bar8" "time(2)[]"
+  "bar8" "timetz(2)[]"
   "bar9" "time(1)[1]"
   "bar10" "time(1)[]"
   "bar11" "time[5]"
@@ -109,8 +109,8 @@ Table "users2" {
   "hashed_password" "character varying" [not null]
   "full_name" "character varying" [not null]
   "email" "character varying" [not null]
-  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
-  "created_at" timestamp [not null, default: `now()`]
+  "password_changed_at" timestamptz [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
+  "created_at" timestamptz [not null, default: `now()`]
 }
 
 Table "table1" {
