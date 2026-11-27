@@ -5,6 +5,15 @@ import exporter from './export';
 import {
   renameTable,
   renameElement,
+  renameElementEdit,
+  renameTableEdit,
+  createRefEdit,
+  createStickyNoteEdit,
+  setStickyNoteTextEdit,
+  removeStickyNoteEdit,
+  setNoteEdit,
+  groupElementsEdit,
+  ungroupElementsEdit,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -14,6 +23,15 @@ import {
 export {
   renameTable,
   renameElement,
+  renameElementEdit,
+  renameTableEdit,
+  createRefEdit,
+  createStickyNoteEdit,
+  setStickyNoteTextEdit,
+  removeStickyNoteEdit,
+  setNoteEdit,
+  groupElementsEdit,
+  ungroupElementsEdit,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -72,7 +90,7 @@ export {
   makeRelationshipRequired,
   ARCH_BUILTIN_ROLES,
   ARCH_NAME_PRECEDENCE,
-  fullName,
+  formatRoleQualifiedName,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';

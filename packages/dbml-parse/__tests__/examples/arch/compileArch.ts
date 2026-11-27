@@ -93,6 +93,7 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.ARCH_NESTED_ENDPOINTS]: 'nested-endpoints',
   [CompileErrorCode.ARCH_BAD_MEMBER]: 'bad-member',
   [CompileErrorCode.ARCH_UNKNOWN_MEMBER]: 'unknown-member',
+  [CompileErrorCode.ARCH_STACKED_MIXED_MEMBERS]: 'stacked-mixed-members',
 };
 
 const locate = (token: TokenPosition): Located => ({

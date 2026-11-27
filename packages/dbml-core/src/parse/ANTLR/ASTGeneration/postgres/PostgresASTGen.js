@@ -722,6 +722,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // INT_P | INTEGER | SMALLINT | BIGINT | REAL | FLOAT_P float_? | DOUBLE_P PRECISION | DECIMAL_P type_modifiers_? | DEC type_modifiers_? | NUMERIC type_modifiers_? | BOOLEAN_P
   visitNumeric (ctx) {
+    if (ctx.DOUBLE_P()) return `${ctx.DOUBLE_P().getText()} ${ctx.PRECISION().getText()}`;
     return ctx.getText();
   }
 

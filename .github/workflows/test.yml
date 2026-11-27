@@ -2,24 +2,30 @@ name: Run unit test & coverage
 on:
   push:
     branches: [master]
-    paths-ignore:
-      - "dbml-homepage/**"
-      - "!dbml-homepage/yarn.lock"
-      - "!dbml-homepage/package.json"
+  # no paths filter: build (22.x) is a required check. A workflow skipped by a
+  # paths filter never reports it and the PR stays blocked. detect-changes decides instead.
   pull_request:
     branches: [master]
     types: [opened, synchronize]
-    paths-ignore:
-      - "dbml-homepage/**"
-      - "!dbml-homepage/yarn.lock"
-      - "!dbml-homepage/package.json"
 jobs:
+  detect-changes:
+    uses: ./.github/workflows/detect-changes.yml
+    with:
+      patterns: |
+        ^packages/
+        ^dbml-playground/
+        ^(package\.json|yarn\.lock|lerna\.json|tsconfig\.json|vitest\.config\.ts)$
+        ^dbml-homepage/(package\.json|yarn\.lock)$
+        ^\.github/workflows/(test|detect-changes)\.yml$
+        ^\.github/workflows/scripts/
+
   build:
+    # fixed name and no matrix: the required check matches this name, also when the job is skipped
+    name: build (22.x)
+    needs: detect-changes
+    if: needs.detect-changes.outputs.relevant == 'true'
     runs-on: blacksmith-2vcpu-ubuntu-2204
     timeout-minutes: 20
-    strategy:
-      matrix:
-        node-version: [22.x]
     services:
       postgres:
         image: postgres:15-bullseye
@@ -92,10 +98,10 @@ jobs:
     - name: Import DDL to Oracle
       run: |
         sqlplus -s dbml/root@localhost:1521/dbml_test @packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22.x
         cache: "yarn"
     - name: Install dependencies
       run: yarn install --frozen-lockfile
@@ -115,6 +121,8 @@ jobs:
         include-hidden-files: true
 
   windows:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.relevant == 'true'
     runs-on: windows-latest
     timeout-minutes: 20
     steps:

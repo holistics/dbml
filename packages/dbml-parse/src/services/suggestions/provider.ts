@@ -58,7 +58,7 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { getProgramSymbol } from '@/core/global_modules/utils';
-import { getProgramNamedRefs } from '@/core/global_modules/ref/utils';
+import { getProgramNamedMetadata, isNamedTargetKind, type NamedTargetKind } from '@/core/types/symbol/metadata';
 
 // Display labels for element/keyword suggestions
 const SUGGESTION_LABEL = {
@@ -1105,13 +1105,16 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
     SymbolKind.Column,
   ],
   [MetadataTargetKind.TableGroup]: [
+    SymbolKind.Schema,
     SymbolKind.TableGroup,
   ],
   [MetadataTargetKind.Note]: [
+    SymbolKind.Schema,
     SymbolKind.StickyNote,
   ],
-  // Refs are not scope members of the files they appear in, see suggestRefNamesForMetadata
+  // Refs and Deps are not scope members of the files they appear in, see suggestNamedTargetsForMetadata
   [MetadataTargetKind.Ref]: [],
+  [MetadataTargetKind.Dep]: [],
 };
 
 function suggestMetadataTargetKinds (): CompletionList {
@@ -1141,7 +1144,7 @@ function suggestInMetadataHeader (
   }
 
   // After the targetKind -> suggest names of the chosen target kind.
-  if (kind === MetadataTargetKind.Ref) return suggestRefNamesForMetadata(compiler, filepath);
+  if (isNamedTargetKind(kind)) return suggestNamedMetadata(compiler, filepath, kind);
 
   const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
   if (!symbolKinds) return noSuggestions();
@@ -1149,15 +1152,15 @@ function suggestInMetadataHeader (
   return suggestNamesInScope(compiler, filepath, offset, container.parent, symbolKinds);
 }
 
-// Refs are not imported, so they are suggested by the same visibility rule used to resolve `Metadata Ref <name>`
-function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): CompletionList {
+// Refs and Deps are not imported, so they are suggested by the same visibility rule used to resolve `Metadata Ref|Dep <name>`
+function suggestNamedMetadata (compiler: Compiler, filepath: Filepath, kind: NamedTargetKind): CompletionList {
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = getProgramNamedRefs(compiler, programSymbol).flatMap((ref) => {
-    const name = ref.name(compiler);
-    const refFilepath = ref.declaration.filepath;
+  const suggestions = getProgramNamedMetadata(compiler, programSymbol, kind).flatMap((meta) => {
+    const name = meta.name(compiler);
+    const metaFilepath = meta.declaration.filepath;
     if (name === undefined || seen.has(name)) return [];
     seen.add(name);
     return [
@@ -1167,7 +1170,7 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
         kind: CompletionItemKind.Text,
         sortText: CompletionItemKind.Text.toString().padStart(2, '0'),
-        detail: refFilepath.equals(filepath) ? 'this file' : `from ${refFilepath.basename}`,
+        detail: metaFilepath.equals(filepath) ? 'this file' : `from ${metaFilepath.basename}`,
         range: undefined as any,
       },
     ];

@@ -1,3 +1,38 @@
+## v13.0.0 (2026-11-24)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#1011](https://github.com/holistics/dbml/pull/1011) [DBX-7354] Feat: Support Metadata block for Dep ([@xuantho573](https://github.com/xuantho573))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#1047](https://github.com/holistics/dbml/pull/1047) fix(connector): keep Postgres json/jsonb defaults as valid expressions ([@jayhemnani9910](https://github.com/jayhemnani9910))
+
+#### Committers: 3
+- Jay Hemnani ([@jayhemnani9910](https://github.com/jayhemnani9910))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v12.1.0 (2026-11-17)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#1044](https://github.com/holistics/dbml/pull/1044) feat(parse): add transforms that return text edits ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#1034](https://github.com/holistics/dbml/pull/1034) fix(core): export the Project block in the DBML exporter ([@mateuscmtropical](https://github.com/mateuscmtropical))
+  * [#1033](https://github.com/holistics/dbml/pull/1033) fix(mysql): keep the original text of index expressions ([@zzoraemon043](https://github.com/zzoraemon043))
+
+#### :memo: Documentation
+* `dbml-parse`
+  * [#1032](https://github.com/holistics/dbml/pull/1032) misc(doc): make arch sidebar collapsed by default and add markup to title ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 3
+- MateusSilva ([@mateuscmtropical](https://github.com/mateuscmtropical))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Oba Yang ([@zzoraemon043](https://github.com/zzoraemon043))
+
 ## v12.0.0 (2026-11-09)
 
 #### :boom: Breaking Change

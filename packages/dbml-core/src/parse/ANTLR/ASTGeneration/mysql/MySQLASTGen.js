@@ -1,6 +1,7 @@
 import { flatten, flattenDepth, last } from 'lodash-es';
 import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
+import MySqlLexer from '../../parsers/mysql/MySqlLexer';
 import MySqlParser from '../../parsers/mysql/MySqlParser';
 import {
   Endpoint, Enum, Field, Index, Ref, Table,
@@ -9,9 +10,11 @@ import {
 import {
   COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
-import { getOriginalText } from '../helpers';
+import { getOriginalText, getOriginalTextWithoutComment } from '../helpers';
 import { DEFAULT_SCHEMA_NAME } from '../../../../model_structure/config';
 import { CARDINALITY_MANY, CARDINALITY_MAYBE, normalizeQualifiedName } from '@dbml/parse';
+
+const isMySqlCommentToken = (token) => token.type === MySqlLexer.COMMENT_INPUT || token.type === MySqlLexer.LINE_COMMENT;
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -636,7 +639,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // checkColumnConstraint: (CONSTRAINT name = uid?)? CHECK '(' expression ')'
   visitCheckColumnConstraint (ctx) {
     const name = ctx.name?.accept(this);
-    const expression = getOriginalText(ctx.expression());
+    const expression = getOriginalTextWithoutComment(ctx.expression(), isMySqlCommentToken);
     return {
       kind: COLUMN_CONSTRAINT_KIND.CHECK,
       value: {
@@ -820,7 +823,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     return {
       type: CONSTRAINT_TYPE.EXPRESSION,
-      value: getOriginalText(ctx.expression()),
+      value: getOriginalTextWithoutComment(ctx.expression(), isMySqlCommentToken),
       ...sortOrder,
     };
   }
@@ -909,7 +912,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // checkTableConstraint: (CONSTRAINT name = uid?)? CHECK '(' expression ')'
   visitCheckTableConstraint (ctx) {
     const name = ctx.name?.accept(this);
-    const expression = getOriginalText(ctx.expression());
+    const expression = getOriginalTextWithoutComment(ctx.expression(), isMySqlCommentToken);
     return {
       kind: TABLE_CONSTRAINT_KIND.CHECK,
       value: {
@@ -1061,7 +1064,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // ADD (CONSTRAINT name = uid?)? CHECK '(' expression ')'
   visitAlterByAddCheckTableConstraint (ctx) {
     const name = ctx.name?.accept(this);
-    const expression = getOriginalText(ctx.expression());
+    const expression = getOriginalTextWithoutComment(ctx.expression(), isMySqlCommentToken);
     return {
       kind: ALTER_KIND.ADD_CHECK,
       value: {

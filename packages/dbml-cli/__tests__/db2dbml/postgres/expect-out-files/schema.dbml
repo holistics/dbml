@@ -110,8 +110,8 @@ Table "all_string_types" {
   "name_col" name [default: 'default_name']
   "bpchar_col" bpchar(15) [default: 'default_bpchar']
   "text_array_col" "text[]" [default: `ARRAY['default_text1',  'default_text2']`]
-  "json_col" json [default: `{"default_key": "default_value"}`]
-  "jsonb_col" jsonb [default: `{"default_key": "default_value"}`]
+  "json_col" json [default: `'{"default_key": "default_value"}'::json`]
+  "jsonb_col" jsonb [default: `'{"default_key": "default_value"}'::jsonb`]
 }
 
 Table "all_default_values" {

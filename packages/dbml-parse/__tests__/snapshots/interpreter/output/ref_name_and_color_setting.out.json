@@ -118,6 +118,81 @@
             "offset": 161
           }
         }
+      },
+      {
+        "color": "#abcdef",
+        "endpoints": [
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "b",
+            "token": {
+              "end": {
+                "column": 20,
+                "line": 20,
+                "offset": 269
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 16,
+                "line": 20,
+                "offset": 265
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "b_id"
+            ],
+            "relation": "1",
+            "tableName": "c",
+            "token": {
+              "end": {
+                "column": 29,
+                "line": 20,
+                "offset": 278
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 23,
+                "line": 20,
+                "offset": 272
+              }
+            }
+          }
+        ],
+        "name": "noted_ref",
+        "note": {
+          "token": {
+            "end": {
+              "column": 6,
+              "line": 25,
+              "offset": 361
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 47,
+              "line": 20,
+              "offset": 296
+            }
+          },
+          "value": "First line\n  indented line\n\nLast line\n"
+        },
+        "token": {
+          "end": {
+            "column": 7,
+            "line": 25,
+            "offset": 362
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 20,
+            "offset": 250
+          }
+        }
       }
     ],
     "tables": [
@@ -245,9 +320,9 @@
     ],
     "token": {
       "end": {
-        "column": 2,
-        "line": 17,
-        "offset": 210
+        "column": 1,
+        "line": 26,
+        "offset": 363
       },
       "filepath": "/main.dbml",
       "start": {
@@ -258,6 +333,18 @@
     }
   },
   "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `b.id` should be unique or primary key for operator `-`",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
     {
       "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column `b.id` should be unique or primary key for operator `<`",
@@ -308,6 +395,30 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `c.b_id` is nullable but operator `-` requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@b_id@[L7:C2, L7:C10]",
+          "snippet": "b_id int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `c.b_id` should be unique or primary key for operator `-`",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@b_id@[L7:C2, L7:C10]",
+          "snippet": "b_id int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column `b.id` should be unique or primary key for operator `<`",
       "filepath": "/main.dbml",
       "level": "info",
@@ -351,6 +462,42 @@
         "context": {
           "id": "node@<infix-expression>@@[L15:C9, L15:C15]",
           "snippet": "b.c_id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `b.id` should be unique or primary key for operator `-`",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L19:C15, L19:C19]",
+          "snippet": "b.id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `c.b_id` is nullable but operator `-` requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L19:C22, L19:C28]",
+          "snippet": "c.b_id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column `c.b_id` should be unique or primary key for operator `-`",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L19:C22, L19:C28]",
+          "snippet": "c.b_id"
         }
       }
     }

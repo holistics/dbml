@@ -3,7 +3,9 @@ import {
 } from '@/core/arch';
 import { resolveName } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
-import { FunctionApplicationNode, ListExpressionNode, type SyntaxNode } from '@/core/types/nodes';
+import {
+  FunctionApplicationNode, ListExpressionNode, type ElementDeclarationNode, type SyntaxNode,
+} from '@/core/types/nodes';
 import { SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
@@ -53,22 +55,7 @@ export function removeElement (
       }
 
       case 'group': {
-        const roleNodes = new Set(getArchMembers(declaration).refs.map((ref) => ref.roleNode));
-        for (const row of getArchNodeBody(declaration)) {
-          if (!(row instanceof FunctionApplicationNode)) continue;
-          // `Server api` on its own line is one member: its role goes with it
-          const members = [
-            row.callee,
-            ...row.args,
-          ].filter((node): node is SyntaxNode => !!node && !roleNodes.has(node));
-          const hits = members.filter(names);
-          if (!hits.length) continue;
-          if (hits.length === members.length && isOnOwnLine(source, row.start, row.end)) {
-            edits.push(expandToWholeLines(source, row.start, row.end));
-            continue;
-          }
-          for (const hit of hits) edits.push(memberEdit(source, hit));
-        }
+        edits.push(...groupMemberEdits(source, declaration, names));
         break;
       }
 
@@ -98,11 +85,33 @@ const isOnOwnLine = (source: string, start: number, end: number): boolean => {
 };
 
 // The span, widened to its whole lines and their line break when nothing else shares them
-function expandToWholeLines (source: string, start: number, end: number): TextEdit {
+export function expandToWholeLines (source: string, start: number, end: number): TextEdit {
   if (!isOnOwnLine(source, start, end)) return { start, end, newText: '' };
   const lineStart = source.lastIndexOf('\n', start - 1) + 1;
   const lineEnd = source.indexOf('\n', end);
   return { start: lineStart, end: lineEnd === -1 ? source.length : lineEnd + 1, newText: '' };
+}
+
+// Removes the members `isTarget` picks from a group's list. A row is removed whole when all its names are.
+export function groupMemberEdits (source: string, group: ElementDeclarationNode, isTarget: (node: SyntaxNode) => boolean): TextEdit[] {
+  const edits: TextEdit[] = [];
+  const roleNodes = new Set(getArchMembers(group).refs.map((ref) => ref.roleNode));
+  for (const row of getArchNodeBody(group)) {
+    if (!(row instanceof FunctionApplicationNode)) continue;
+    // `Server api` on its own line is one member: its role goes with it
+    const members = [
+      row.callee,
+      ...row.args,
+    ].filter((node): node is SyntaxNode => !!node && !roleNodes.has(node));
+    const hits = members.filter(isTarget);
+    if (!hits.length) continue;
+    if (hits.length === members.length && isOnOwnLine(source, row.start, row.end)) {
+      edits.push(expandToWholeLines(source, row.start, row.end));
+      continue;
+    }
+    for (const hit of hits) edits.push(memberEdit(source, hit));
+  }
+  return edits;
 }
 
 // One name out of `{ a b c }`, with the spaces on one side so the others stay one space apart
