@@ -1,3 +1,27 @@
+## v13.1.0 (2026-11-27)
+
+#### :memo: Documentation
+* [#1052](https://github.com/holistics/dbml/pull/1052) misc(doc): resync the arch icon artwork, and draw it as the diagram does ([@TeaNguyen](https://github.com/TeaNguyen))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#1050](https://github.com/holistics/dbml/pull/1050) fix(mysql): drop comments from index and check expressions ([@hnwg](https://github.com/hnwg))
+  * [#1059](https://github.com/holistics/dbml/pull/1059) fix(exporter): don't create the dbo schema in SQL Server exports ([@jayhemnani9910](https://github.com/jayhemnani9910))
+  * [#1060](https://github.com/holistics/dbml/pull/1060) fix(postgres importer): keep the space in double precision ([@jayhemnani9910](https://github.com/jayhemnani9910))
+* `dbml-parse`
+  * [#1063](https://github.com/holistics/dbml/pull/1063) fix: revert changes that disallow identifier stream as custom property value in Dep block ([@xuantho573](https://github.com/xuantho573))
+
+#### :rocket: New Feature
+* `dbml-parse`
+  * [#1058](https://github.com/holistics/dbml/pull/1058) Architecture DBML: warn on mixed stacked groups, document link label ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 5
+- Jay Hemnani ([@jayhemnani9910](https://github.com/jayhemnani9910))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- hwdev ([@hnwg](https://github.com/hnwg))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v13.0.0 (2026-11-24)
 
 #### :boom: Breaking Change
