@@ -1,0 +1,15 @@
+Table "t" {
+  "id" int
+  "id2" int [check: `id2 > 0`]
+
+  Checks {
+    `id > 0`
+    `id < 100` [name: 't_id_check']
+  }
+
+  Indexes {
+    `(id + 1)` [name: "t_block_comment"]
+    `(id + 1)` [name: "t_line_comment"]
+    `(id + 1)` [name: "t_hash_comment"]
+  }
+}
