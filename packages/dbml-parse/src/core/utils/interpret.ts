@@ -1,10 +1,12 @@
 import type Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning, type QuickFix,
+} from '@/core/types/errors';
 import type {
   Color, ColumnType, CustomMetadata, CustomMetadataValue, TokenPosition,
 } from '@/core/types/schemaJson';
 import {
-  ArrayNode, CallExpressionNode, FunctionApplicationNode, FunctionExpressionNode, IdentifierStreamNode,
+  ArrayNode, CallExpressionNode, FunctionApplicationNode, FunctionExpressionNode, IdentifierStreamNode, PrimaryExpressionNode,
 } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
@@ -250,8 +252,11 @@ export function assignInlineMetadata<T extends MetadataTarget> (
 
 // Best-effort scalar extraction for a free-form metadata value node.
 // Tries: boolean -> signed number -> quoted string -> color.
+// A body field's callee followed by more words (`owner: true b`) is not a scalar: the value is the whole line, not its first word
 export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataValue, 'token'> | undefined {
   if (!node) return undefined;
+  const parent = node.parentNode;
+  if (parent instanceof FunctionApplicationNode && parent.callee === node && parent.args.length > 0) return undefined;
 
   const boolean = extractBooleanLiteral(node);
   if (boolean !== null) return { value: boolean, type: 'bool' };
@@ -273,21 +278,56 @@ export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataVal
   * - `data` (a single identifier)
   * - `data team` in a setting list (an identifier stream)
   * - `data team` in a body field (a callee applied to identifier args). Given the callee alone, it is lifted to the whole application.
+  * - with `source` (the file's text), a body field may also mix in literals (`'x' b`, `"x" b`, `1 b`). Each word is then taken as written in the source
+  * Without `source`, every word must be a plain identifier (`"team"` is not one).
   * Undefined for anything else, e.g. `a.b` or `data [x]`.
   */
-export function bareTextValue (node?: SyntaxNode): { text: string; start: number; end: number } | undefined {
+export function bareTextValue (node?: SyntaxNode, source?: string): { text: string; start: number; end: number } | undefined {
   if (!node) return undefined;
   const parent = node.parentNode;
   const value = parent instanceof FunctionApplicationNode && parent.callee === node ? parent : node;
 
+  const identifier = (part?: SyntaxNode) => (isExpressionAnIdentifierNode(part) ? extractVariableFromExpression(part) : undefined);
+  const word = (part?: SyntaxNode) => (source !== undefined && part instanceof PrimaryExpressionNode
+    ? source.slice(part.start, part.end)
+    : identifier(part));
   const words = value instanceof IdentifierStreamNode
     ? value.identifiers.map((token) => token.value)
     : value instanceof FunctionApplicationNode
-      ? [value.callee, ...value.args].map(extractVariableFromExpression)
-      : [extractVariableFromExpression(value)];
+      ? [value.callee, ...value.args].map(word)
+      : [identifier(value)];
   if (!words.length || words.some((word) => word === undefined)) return undefined;
 
   return { text: words.join(' '), start: value.start, end: value.end };
+}
+
+/**
+  * Like extractMetadataValue, but also accepts a bare text value (`owner: data team`) as a string.
+  * Only for positions that still accept unquoted text for backward compatibility (Dep settings and body fields).
+  */
+export function extractLegacyMetadataValue (node?: SyntaxNode, source?: string): ReturnType<typeof extractMetadataValue> {
+  const value = extractMetadataValue(node);
+  if (value !== undefined) return value;
+  const bare = bareTextValue(node, source);
+  return bare ? { value: bare.text, type: 'string' } : undefined;
+}
+
+function quoteBareText (bare: { text: string; start: number; end: number }, errorNode: SyntaxNode): { quoted: string; quickFix: QuickFix } {
+  // Prefer double quotes for text with a single quote (`'x' b` -> `"'x' b"`), else single quotes with escapes
+  const escaped = bare.text.replace(/\\/g, '\\\\');
+  const quoted = bare.text.includes('\'') && !bare.text.includes('"')
+    ? `"${escaped}"`
+    : `'${escaped.replace(/'/g, '\\\'')}'`;
+  return {
+    quoted,
+    quickFix: {
+      title: `Quote the value: ${quoted}`,
+      shortTitle: 'Quote value',
+      filepath: errorNode.filepath,
+      edits: [{ start: bare.start, end: bare.end, newText: quoted }],
+      isPreferred: true,
+    },
+  };
 }
 
 /**
@@ -305,16 +345,40 @@ export function invalidMetadataValueError (
   const bare = bareTextValue(valueNode);
   if (!bare) return new CompileError(code, message, errorNode);
 
-  const quoted = `'${bare.text.replace(/\\/g, '\\\\').replace(/'/g, '\\\'')}'`;
+  const { quoted, quickFix } = quoteBareText(bare, errorNode);
   return new CompileError(code, `${message}. Did you mean ${quoted}? Text values must be quoted`, errorNode, {
-    quickFixes: [
-      {
-        title: `Quote the value: ${quoted}`,
-        shortTitle: 'Quote value',
-        filepath: errorNode.filepath,
-        edits: [{ start: bare.start, end: bare.end, newText: quoted }],
-        isPreferred: true,
-      },
-    ],
+    quickFixes: [quickFix],
   });
+}
+
+/**
+  * Diagnostic for a custom metadata value in a position that still accepts unquoted text for backward compatibility (Dep settings and body fields).
+  * - a property value type: nothing
+  * - a bare text value: a deprecation warning with a quick fix that quotes it
+  * - anything else: the same error as invalidMetadataValueError
+  * `source` (the file's text) lets a body field's bare text mix in literals (`'x' b`), see bareTextValue
+  */
+export function legacyMetadataValueDiagnostic (
+  codes: { invalid: CompileErrorCode; deprecated: CompileErrorCode },
+  subject: string,
+  valueNode: SyntaxNode | undefined,
+  errorNode: SyntaxNode,
+  source?: string,
+): { errors: CompileError[]; warnings: CompileWarning[] } {
+  if (extractMetadataValue(valueNode) !== undefined) return { errors: [], warnings: [] };
+  const bare = bareTextValue(valueNode, source);
+  if (!bare) return { errors: [invalidMetadataValueError(codes.invalid, subject, valueNode, errorNode)], warnings: [] };
+
+  const { quoted, quickFix } = quoteBareText(bare, errorNode);
+  return {
+    errors: [],
+    warnings: [
+      new CompileWarning(
+        codes.deprecated,
+        `${subject} has an unquoted text value, which is deprecated. Did you mean ${quoted}? Text values should be quoted`,
+        errorNode,
+        { quickFixes: [quickFix] },
+      ),
+    ],
+  };
 }

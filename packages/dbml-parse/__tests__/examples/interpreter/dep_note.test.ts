@@ -161,9 +161,10 @@ describe('dep settings validation', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it('invalid: custom identifier setting', () => {
-    const errors = analyze(`${PRELUDE}Dep [materialized: view] { a -> b }`).getErrors();
-    expect(errors.map((e) => e.code)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+  it('deprecated: custom identifier setting is a warning, not an error', () => {
+    const report = analyze(`${PRELUDE}Dep [materialized: view] { a -> b }`);
+    expect(report.getErrors()).toHaveLength(0);
+    expect(report.getWarnings().map((w) => w.code)).toEqual([CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE]);
   });
 
   it('valid: custom numeric setting', () => {
@@ -222,13 +223,14 @@ Dep {
     expect(errors).toHaveLength(0);
   });
 
-  it('invalid: custom identifier body sub-declaration', () => {
-    const errors = analyze(`${PRELUDE}
+  it('deprecated: custom identifier body sub-declaration is a warning, not an error', () => {
+    const report = analyze(`${PRELUDE}
 Dep {
   a -> b
   materialized: view
-}`).getErrors();
-    expect(errors.map((e) => e.code)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+}`);
+    expect(report.getErrors()).toHaveLength(0);
+    expect(report.getWarnings().map((w) => w.code)).toEqual([CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE]);
   });
 
   it('valid: custom numeric body sub-declaration', () => {

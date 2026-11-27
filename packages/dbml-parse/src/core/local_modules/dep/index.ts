@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, type CompileWarning } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
@@ -11,13 +11,13 @@ import {
 } from '@/core/utils/validate';
 import { DEP_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import { type LocalModule } from '../types';
-import { validateCustomInlineMetadata } from '../metadata/utils';
+import { validateLegacyCustomInlineMetadata } from '../metadata/utils';
 import DepValidator from './validate';
 
 export const depModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Dep)) {
-      return Report.create(undefined, new DepValidator(compiler, node).validate());
+      return new DepValidator(compiler, node).validate();
     }
     return Report.create(PASS_THROUGH);
   },
@@ -71,6 +71,7 @@ export const depModule: LocalModule = {
 
     const aggReport = aggregateSettingList(settingsList);
     const errors = aggReport.getErrors();
+    const warnings: CompileWarning[] = [];
     const settingMap = aggReport.getValue();
 
     for (const [name, attrs] of Object.entries(settingMap)) {
@@ -86,17 +87,20 @@ export const depModule: LocalModule = {
           });
           break;
         }
-        default:
-          // Any non-builtin key is free-form inline custom metadata
-          errors.push(
-            ...validateCustomInlineMetadata(name, attrs, {
-              duplicate: CompileErrorCode.DUPLICATE_DEP_SETTING,
-              invalidValue: CompileErrorCode.INVALID_DEP_SETTING_VALUE,
-            }));
+        default: {
+          // Any non-builtin key is free-form inline custom metadata. Unquoted text is still accepted, with a deprecation warning
+          const report = validateLegacyCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_DEP_SETTING,
+            invalidValue: CompileErrorCode.INVALID_DEP_SETTING_VALUE,
+            deprecatedValue: CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE,
+          });
+          errors.push(...report.getErrors());
+          warnings.push(...report.getWarnings());
           break;
+        }
       }
     }
 
-    return new Report(settingMap, errors);
+    return new Report(settingMap, errors, warnings);
   },
 };

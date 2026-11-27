@@ -141,6 +141,8 @@ export enum CompileErrorCode {
 
   DUPLICATE_DEP_SETTING,
   INVALID_DEP_SETTING_VALUE,
+  // Warning: an unquoted Dep custom value, still accepted for backward compatibility
+  DEPRECATED_DEP_SETTING_VALUE,
 
   BINDING_ERROR = 4000,
   NONEXISTENT_MODULE,

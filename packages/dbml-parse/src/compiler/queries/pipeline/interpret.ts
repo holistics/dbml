@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash-es';
 import type Compiler from '@/compiler';
 import type { Database, MasterDatabase } from '@/core/types/schemaJson';
 import {
@@ -125,7 +126,13 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     files[fileId] = db;
   }
 
+  // A file's validate/bind diagnostics come from both its bindFile and the interpretSymbol of every file that reaches it
   return new Report({
     files,
-  }, errors, warnings, infos);
+  }, uniqueDiagnostics(errors), uniqueDiagnostics(warnings), uniqueDiagnostics(infos));
+}
+
+// The same diagnostic (file, span, code, message) reported more than once is kept once
+function uniqueDiagnostics<T extends CompileError | CompileWarning | CompileInfo> (diagnostics: T[]): T[] {
+  return uniqBy(diagnostics, (d) => `${d.filepath.absolute}:${d.start}:${d.end}:${d.code}:${d.diagnostic}`);
 }
