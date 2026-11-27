@@ -1,0 +1,9 @@
+Table "users" {
+  "id" bigint [not null, increment]
+  "email" text [not null]
+}
+
+Table "billing"."invoices" {
+  "id" integer [not null, increment]
+  "user_id" bigint [not null]
+}

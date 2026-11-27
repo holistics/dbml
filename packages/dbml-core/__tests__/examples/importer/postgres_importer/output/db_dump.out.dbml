@@ -1,5 +1,5 @@
 Table "humanresources"."department" {
-  "departmentid" integer [pk, not null, note: 'Primary key for Department records.']
+  "departmentid" integer [pk, not null, increment, note: 'Primary key for Department records.']
   "name" public.Name [not null, note: 'Name of the department.']
   "groupname" public.Name [not null, note: 'Name of the group to which the department belongs.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -71,7 +71,7 @@ Table "humanresources"."employeepayhistory" {
 }
 
 Table "humanresources"."jobcandidate" {
-  "jobcandidateid" integer [pk, not null, note: 'Primary key for JobCandidate records.']
+  "jobcandidateid" integer [pk, not null, increment, note: 'Primary key for JobCandidate records.']
   "businessentityid" integer [note: 'Employee identification number if applicant was hired. Foreign key to Employee.BusinessEntityID.']
   "resume" xml [note: 'RÃ©sumÃ© in XML format.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -79,7 +79,7 @@ Table "humanresources"."jobcandidate" {
 }
 
 Table "humanresources"."shift" {
-  "shiftid" integer [pk, not null, note: 'Primary key for Shift records.']
+  "shiftid" integer [pk, not null, increment, note: 'Primary key for Shift records.']
   "name" public.Name [not null, note: 'Shift description.']
   "starttime" time [not null, note: 'Shift start time.']
   "endtime" time [not null, note: 'Shift end time.']
@@ -88,7 +88,7 @@ Table "humanresources"."shift" {
 }
 
 Table "person"."address" {
-  "addressid" integer [pk, not null, note: 'Primary key for Address records.']
+  "addressid" integer [pk, not null, increment, note: 'Primary key for Address records.']
   "addressline1" "character varying(60)" [not null, note: 'First street address line.']
   "addressline2" "character varying(60)" [note: 'Second street address line.']
   "city" "character varying(30)" [not null, note: 'Name of the city.']
@@ -122,7 +122,7 @@ Table "person"."countryregion" {
 
 Table "person"."emailaddress" {
   "businessentityid" integer [not null, note: 'Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID']
-  "emailaddressid" integer [not null, note: 'Primary key. ID of this email address.']
+  "emailaddressid" integer [not null, increment, note: 'Primary key. ID of this email address.']
   "emailaddress" "character varying(50)" [note: 'E-mail address for the person.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
@@ -168,14 +168,14 @@ Table "person"."personphone" {
 }
 
 Table "person"."phonenumbertype" {
-  "phonenumbertypeid" integer [pk, not null, note: 'Primary key for telephone number type records.']
+  "phonenumbertypeid" integer [pk, not null, increment, note: 'Primary key for telephone number type records.']
   "name" public.Name [not null, note: 'Name of the telephone number type']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Type of phone number of a person.'
 }
 
 Table "person"."stateprovince" {
-  "stateprovinceid" integer [pk, not null, note: 'Primary key for StateProvince records.']
+  "stateprovinceid" integer [pk, not null, increment, note: 'Primary key for StateProvince records.']
   "stateprovincecode" character(3) [not null, note: 'ISO standard state or province code.']
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
   "isonlystateprovinceflag" public.Flag [not null, default: true, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
@@ -187,7 +187,7 @@ Table "person"."stateprovince" {
 }
 
 Table "person"."addresstype" {
-  "addresstypeid" integer [pk, not null, note: 'Primary key for AddressType records.']
+  "addresstypeid" integer [pk, not null, increment, note: 'Primary key for AddressType records.']
   "name" public.Name [not null, note: 'Address type description. For example, Billing, Home, or Shipping.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
@@ -195,7 +195,7 @@ Table "person"."addresstype" {
 }
 
 Table "person"."businessentity" {
-  "businessentityid" integer [pk, not null, note: 'Primary key for all customers, vendors, and employees.']
+  "businessentityid" integer [pk, not null, increment, note: 'Primary key for all customers, vendors, and employees.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Source of the ID that connects vendors, customers, and employees with address and contact information.'
@@ -215,7 +215,7 @@ Table "person"."businessentitycontact" {
 }
 
 Table "person"."contacttype" {
-  "contacttypeid" integer [pk, not null, note: 'Primary key for ContactType records.']
+  "contacttypeid" integer [pk, not null, increment, note: 'Primary key for ContactType records.']
   "name" public.Name [not null, note: 'Contact type description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the types of business entity contacts.'
@@ -231,7 +231,7 @@ Table "person"."password" {
 }
 
 Table "production"."billofmaterials" {
-  "billofmaterialsid" integer [pk, not null, note: 'Primary key for BillOfMaterials records.']
+  "billofmaterialsid" integer [pk, not null, increment, note: 'Primary key for BillOfMaterials records.']
   "productassemblyid" integer [note: 'Parent product identification number. Foreign key to Product.ProductID.']
   "componentid" integer [not null, note: 'Component identification number. Foreign key to Product.ProductID.']
   "startdate" timestamp [not null, default: `now()`, note: 'Date the component started being used in the assembly item.']
@@ -279,14 +279,14 @@ Table "production"."document" {
 }
 
 Table "production"."illustration" {
-  "illustrationid" integer [pk, not null, note: 'Primary key for Illustration records.']
+  "illustrationid" integer [pk, not null, increment, note: 'Primary key for Illustration records.']
   "diagram" xml [note: 'Illustrations used in manufacturing instructions. Stored as XML.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Bicycle assembly diagrams.'
 }
 
 Table "production"."location" {
-  "locationid" integer [pk, not null, note: 'Primary key for Location records.']
+  "locationid" integer [pk, not null, increment, note: 'Primary key for Location records.']
   "name" public.Name [not null, note: 'Location description.']
   "costrate" numeric [not null, default: 0.00, note: 'Standard hourly cost of the manufacturing location.']
   "availability" numeric(8,2) [not null, default: 0.00, note: 'Work capacity (in hours) of the manufacturing location.']
@@ -300,7 +300,7 @@ Table "production"."location" {
 }
 
 Table "production"."product" {
-  "productid" integer [pk, not null, note: 'Primary key for Product records.']
+  "productid" integer [pk, not null, increment, note: 'Primary key for Product records.']
   "name" public.Name [not null, note: 'Name of the product.']
   "productnumber" "character varying(25)" [not null, note: 'Unique product identification number.']
   "makeflag" public.Flag [not null, default: true, note: '0 = Product is purchased, 1 = Product is manufactured in-house.']
@@ -342,7 +342,7 @@ Table "production"."product" {
 }
 
 Table "production"."productcategory" {
-  "productcategoryid" integer [pk, not null, note: 'Primary key for ProductCategory records.']
+  "productcategoryid" integer [pk, not null, increment, note: 'Primary key for ProductCategory records.']
   "name" public.Name [not null, note: 'Category description.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
@@ -368,7 +368,7 @@ Table "production"."productcosthistory" {
 }
 
 Table "production"."productdescription" {
-  "productdescriptionid" integer [pk, not null, note: 'Primary key for ProductDescription records.']
+  "productdescriptionid" integer [pk, not null, increment, note: 'Primary key for ProductDescription records.']
   "description" "character varying(400)" [not null, note: 'Description of the product.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
@@ -424,7 +424,7 @@ Table "production"."productlistpricehistory" {
 }
 
 Table "production"."productmodel" {
-  "productmodelid" integer [pk, not null, note: 'Primary key for ProductModel records.']
+  "productmodelid" integer [pk, not null, increment, note: 'Primary key for ProductModel records.']
   "name" public.Name [not null, note: 'Product model description.']
   "catalogdescription" xml [note: 'Detailed product catalog information in xml format.']
   "instructions" xml [note: 'Manufacturing instructions in xml format.']
@@ -457,7 +457,7 @@ Table "production"."productmodelproductdescriptionculture" {
 }
 
 Table "production"."productphoto" {
-  "productphotoid" integer [pk, not null, note: 'Primary key for ProductPhoto records.']
+  "productphotoid" integer [pk, not null, increment, note: 'Primary key for ProductPhoto records.']
   "thumbnailphoto" bytea [note: 'Small image of the product.']
   "thumbnailphotofilename" "character varying(50)" [note: 'Small image file name.']
   "largephoto" bytea [note: 'Large image of the product.']
@@ -479,7 +479,7 @@ Table "production"."productproductphoto" {
 }
 
 Table "production"."productreview" {
-  "productreviewid" integer [pk, not null, note: 'Primary key for ProductReview records.']
+  "productreviewid" integer [pk, not null, increment, note: 'Primary key for ProductReview records.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "reviewername" public.Name [not null, note: 'Name of the reviewer.']
   "reviewdate" timestamp [not null, default: `now()`, note: 'Date review was submitted.']
@@ -496,7 +496,7 @@ WARNING: can have several lines!''']
 }
 
 Table "production"."productsubcategory" {
-  "productsubcategoryid" integer [pk, not null, note: 'Primary key for ProductSubcategory records.']
+  "productsubcategoryid" integer [pk, not null, increment, note: 'Primary key for ProductSubcategory records.']
   "productcategoryid" integer [not null, note: 'Product category identification number. Foreign key to ProductCategory.ProductCategoryID.']
   "name" public.Name [not null, note: 'Subcategory description.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
@@ -505,14 +505,14 @@ Table "production"."productsubcategory" {
 }
 
 Table "production"."scrapreason" {
-  "scrapreasonid" integer [pk, not null, note: 'Primary key for ScrapReason records.']
+  "scrapreasonid" integer [pk, not null, increment, note: 'Primary key for ScrapReason records.']
   "name" public.Name [not null, note: 'Failure description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Manufacturing failure reasons lookup table.'
 }
 
 Table "production"."transactionhistory" {
-  "transactionid" integer [pk, not null, note: 'Primary key for TransactionHistory records.']
+  "transactionid" integer [pk, not null, increment, note: 'Primary key for TransactionHistory records.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "referenceorderid" integer [not null, note: 'Purchase order, sales order, or work order identification number.']
   "referenceorderlineid" integer [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
@@ -553,7 +553,7 @@ Table "production"."unitmeasure" {
 }
 
 Table "production"."workorder" {
-  "workorderid" integer [pk, not null, note: 'Primary key for WorkOrder records.']
+  "workorderid" integer [pk, not null, increment, note: 'Primary key for WorkOrder records.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "orderqty" integer [not null, note: 'Product quantity to build.']
   "scrappedqty" smallint [not null, note: 'Quantity that failed inspection.']
@@ -601,7 +601,7 @@ Table "production"."workorderrouting" {
 
 Table "purchasing"."purchaseorderdetail" {
   "purchaseorderid" integer [not null, note: 'Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.']
-  "purchaseorderdetailid" integer [not null, note: 'Primary key. One line number per purchased product.']
+  "purchaseorderdetailid" integer [not null, increment, note: 'Primary key. One line number per purchased product.']
   "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
   "orderqty" smallint [not null, note: 'Quantity ordered.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
@@ -624,7 +624,7 @@ Table "purchasing"."purchaseorderdetail" {
 }
 
 Table "purchasing"."purchaseorderheader" {
-  "purchaseorderid" integer [pk, not null, note: 'Primary key.']
+  "purchaseorderid" integer [pk, not null, increment, note: 'Primary key.']
   "revisionnumber" smallint [not null, default: 0, note: 'Incremental number to track changes to the purchase order over time.']
   "status" smallint [not null, default: 1, note: 'Order current status. 1 = Pending; 2 = Approved; 3 = Rejected; 4 = Complete']
   "employeeid" integer [not null, note: 'Employee who created the purchase order. Foreign key to Employee.BusinessEntityID.']
@@ -677,7 +677,7 @@ Table "purchasing"."productvendor" {
 }
 
 Table "purchasing"."shipmethod" {
-  "shipmethodid" integer [pk, not null, note: 'Primary key for ShipMethod records.']
+  "shipmethodid" integer [pk, not null, increment, note: 'Primary key for ShipMethod records.']
   "name" public.Name [not null, note: 'Shipping company name.']
   "shipbase" numeric [not null, default: 0.00, note: 'Minimum shipping charge.']
   "shiprate" numeric [not null, default: 0.00, note: 'Shipping charge per pound.']
@@ -708,7 +708,7 @@ Table "purchasing"."vendor" {
 }
 
 Table "sales"."customer" {
-  "customerid" integer [pk, not null, note: 'Primary key.']
+  "customerid" integer [pk, not null, increment, note: 'Primary key.']
   "personid" integer [note: 'Foreign key to Person.BusinessEntityID']
   "storeid" integer [note: 'Foreign key to Store.BusinessEntityID']
   "territoryid" integer [note: 'ID of the territory in which the customer is located. Foreign key to SalesTerritory.SalesTerritoryID.']
@@ -718,7 +718,7 @@ Table "sales"."customer" {
 }
 
 Table "sales"."creditcard" {
-  "creditcardid" integer [pk, not null, note: 'Primary key for CreditCard records.']
+  "creditcardid" integer [pk, not null, increment, note: 'Primary key for CreditCard records.']
   "cardtype" "character varying(50)" [not null, note: 'Credit card name.']
   "cardnumber" "character varying(25)" [not null, note: 'Credit card number.']
   "expmonth" smallint [not null, note: 'Credit card expiration month.']
@@ -728,7 +728,7 @@ Table "sales"."creditcard" {
 }
 
 Table "sales"."currencyrate" {
-  "currencyrateid" integer [pk, not null, note: 'Primary key for CurrencyRate records.']
+  "currencyrateid" integer [pk, not null, increment, note: 'Primary key for CurrencyRate records.']
   "currencyratedate" timestamp [not null, note: 'Date and time the exchange rate was obtained.']
   "fromcurrencycode" character(3) [not null, note: 'Exchange rate was converted from this currency code.']
   "tocurrencycode" character(3) [not null, note: 'Exchange rate was converted to this currency code.']
@@ -778,7 +778,7 @@ Table "sales"."store" {
 }
 
 Table "sales"."shoppingcartitem" {
-  "shoppingcartitemid" integer [pk, not null, note: 'Primary key for ShoppingCartItem records.']
+  "shoppingcartitemid" integer [pk, not null, increment, note: 'Primary key for ShoppingCartItem records.']
   "shoppingcartid" "character varying(50)" [not null, note: 'Shopping cart identification number.']
   "quantity" integer [not null, default: 1, note: 'Product quantity ordered.']
   "productid" integer [not null, note: 'Product ordered. Foreign key to Product.ProductID.']
@@ -792,7 +792,7 @@ Table "sales"."shoppingcartitem" {
 }
 
 Table "sales"."specialoffer" {
-  "specialofferid" integer [pk, not null, note: 'Primary key for SpecialOffer records.']
+  "specialofferid" integer [pk, not null, increment, note: 'Primary key for SpecialOffer records.']
   "description" "character varying(255)" [not null, note: 'Discount description.']
   "discountpct" numeric [not null, default: 0.00, note: 'Discount precentage.']
   "type" "character varying(50)" [not null, note: 'Discount type category.']
@@ -815,7 +815,7 @@ Table "sales"."specialoffer" {
 
 Table "sales"."salesorderdetail" {
   "salesorderid" integer [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
-  "salesorderdetailid" integer [not null, note: 'Primary key. One incremental unique number per product sold.']
+  "salesorderdetailid" integer [not null, increment, note: 'Primary key. One incremental unique number per product sold.']
   "carriertrackingnumber" "character varying(25)" [note: 'Shipment tracking number supplied by the shipper.']
   "orderqty" smallint [not null, note: 'Quantity ordered per product.']
   "productid" integer [not null, note: 'Product sold to customer. Foreign key to Product.ProductID.']
@@ -838,7 +838,7 @@ Table "sales"."salesorderdetail" {
 }
 
 Table "sales"."salesorderheader" {
-  "salesorderid" integer [pk, not null, note: 'Primary key.']
+  "salesorderid" integer [pk, not null, increment, note: 'Primary key.']
   "revisionnumber" smallint [not null, default: 0, note: 'Incremental number to track changes to the sales order over time.']
   "orderdate" timestamp [not null, default: `now()`, note: 'Dates the sales order was created.']
   "duedate" timestamp [not null, note: 'Date the order is due to the customer.']
@@ -937,7 +937,7 @@ Table "sales"."salespersonquotahistory" {
 }
 
 Table "sales"."salesreason" {
-  "salesreasonid" integer [pk, not null, note: 'Primary key for SalesReason records.']
+  "salesreasonid" integer [pk, not null, increment, note: 'Primary key for SalesReason records.']
   "name" public.Name [not null, note: 'Sales reason description.']
   "reasontype" public.Name [not null, note: 'Category the sales reason belongs to.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -945,7 +945,7 @@ Table "sales"."salesreason" {
 }
 
 Table "sales"."salesterritory" {
-  "territoryid" integer [pk, not null, note: 'Primary key for SalesTerritory records.']
+  "territoryid" integer [pk, not null, increment, note: 'Primary key for SalesTerritory records.']
   "name" public.Name [not null, note: 'Sales territory description']
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
   "group" "character varying(50)" [not null, note: 'Geographic area to which the sales territory belong.']
@@ -984,7 +984,7 @@ Table "sales"."salesterritoryhistory" {
 }
 
 Table "sales"."salestaxrate" {
-  "salestaxrateid" integer [pk, not null, note: 'Primary key for SalesTaxRate records.']
+  "salestaxrateid" integer [pk, not null, increment, note: 'Primary key for SalesTaxRate records.']
   "stateprovinceid" integer [not null, note: 'State, province, or country/region the sales tax applies to.']
   "taxtype" smallint [not null, note: '1 = Tax applied to retail transactions, 2 = Tax applied to wholesale transactions, 3 = Tax applied to all sales (retail and wholesale) transactions.']
   "taxrate" numeric [not null, default: 0.00, note: 'Tax rate amount.']
