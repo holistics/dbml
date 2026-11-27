@@ -80,13 +80,20 @@ export const programModule: GlobalModule = {
     if (!(symbol instanceof ProgramSymbol)) return Report.create(PASS_THROUGH);
     if (!(symbol.declaration instanceof ProgramNode)) return Report.create(undefined);
 
+    const bindReports = compiler.reachableFiles(filepath).map((file) => compiler.bindFile(file));
+    // Validate/bind warnings (e.g. deprecated syntax) don't block interpretation, so they are reported either way
+    const bindWarnings = bindReports.flatMap((report) => report.getWarnings());
+
     if (!shouldInterpretNode(compiler, symbol.declaration)) {
-      const errors = compiler.reachableFiles(filepath).flatMap(
-        (file) => compiler.bindFile(file).getErrors(),
-      );
-      return Report.create(undefined, errors);
+      return Report.create(undefined, bindReports.flatMap((report) => report.getErrors()), bindWarnings);
     }
 
-    return new ProgramInterpreter(compiler, symbol, filepath).interpret() as Report<SchemaElement | SchemaElement[] | undefined>;
+    const result = new ProgramInterpreter(compiler, symbol, filepath).interpret();
+    return new Report(
+      result.getValue() as SchemaElement | SchemaElement[] | undefined,
+      result.getErrors(),
+      [...bindWarnings, ...result.getWarnings()],
+      result.getInfos(),
+    );
   },
 };

@@ -32,6 +32,10 @@ function errorCodes (source: string) {
   return interpret(TABLES + source).getErrors().map((e) => e.code);
 }
 
+function warningCodes (source: string) {
+  return interpret(TABLES + source).getWarnings().map((w) => w.code);
+}
+
 function setup (program: string) {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, program);
@@ -175,19 +179,6 @@ describe('[example] Dep inline custom metadata', () => {
     });
   });
 
-  it('reports a bare identifier value in the settings list', () => {
-    const source = 'Dep pipeline: raw_orders -> stg_orders [owner: team_a]';
-    expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_DEP_SETTING_VALUE);
-  });
-
-  it('reports a bare identifier value in a block-body field', () => {
-    const source = `Dep pipeline {
-  raw_orders -> stg_orders
-  owner: team_a
-}`;
-    expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_DEP_SETTING_VALUE);
-  });
-
   describe('unquoted legacy values', () => {
     const QUOTE_HINT = 'must be a string, a color literal, a number literal, or a boolean literal';
 
@@ -195,29 +186,178 @@ describe('[example] Dep inline custom metadata', () => {
       return interpret(TABLES + source).getErrors().map((e) => e.diagnostic);
     }
 
-    it('rejects a bare identifier block-body value and hints to quote it', () => {
+    function warnings (source: string) {
+      return interpret(TABLES + source).getWarnings().map((w) => ({ code: w.code, message: w.diagnostic }));
+    }
+
+    function legacyWarning (key: string, text: string, quoted?: string) {
+      return {
+        code: CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE,
+        message: `Custom setting '${key}' has an unquoted text value, which is deprecated. Did you mean ${quoted ?? `'${text}'`}? Text values should be quoted`,
+      };
+    }
+
+    it('accepts a bare identifier block-body value as a string, with a warning', () => {
       const source = `Dep pipeline {
   raw_orders -> stg_orders
   materialized: table
 }`;
-      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
-      expect(messages(source)).toEqual([`Custom setting 'materialized' ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('materialized', 'table')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        materialized: { value: 'table', type: 'string' },
+      });
     });
 
-    it('rejects `null` and hints to quote it', () => {
+    it('accepts a bare multi-word block-body value as one string, with a warning', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: data team
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'data team')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: 'data team', type: 'string' },
+      });
+    });
+
+    it('accepts `null` as the string \'null\', with a warning', () => {
       const source = `Dep pipeline {
   raw_orders -> stg_orders
   owner: null
 }`;
-      expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}. Did you mean 'null'? Text values must be quoted`]);
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'null')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: 'null', type: 'string' },
+      });
     });
 
-    it('hints to quote a bare identifier in the settings list', () => {
+    it('accepts a bare value in the header settings list, with a warning', () => {
       const source = 'Dep pipeline: raw_orders -> stg_orders [materialized: table]';
-      expect(messages(source)).toEqual([`Custom setting 'materialized' ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('materialized', 'table')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        materialized: { value: 'table', type: 'string' },
+      });
     });
 
-    it('hints to quote a bare identifier in a Metadata Dep block', () => {
+    it('accepts a bare multi-word value in an edge settings list, with a warning', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [owner: data team]
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'data team')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: 'data team', type: 'string' },
+      });
+    });
+
+    it.each([
+      ['a boolean', 'true b', 'true b'],
+      ['an identifier', 'data team b', 'data team b'],
+    ])('reads a body value starting with %s as the whole line, with a warning', (_, text, expected) => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: ${text}
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', expected)]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: expected, type: 'string' },
+      });
+    });
+
+    // The value is the line as written. The hint quotes it with double quotes if it has a single quote, else single quotes with escapes
+    it.each([
+      ['a quoted string', "'x' b", "'x' b", '"\'x\' b"'],
+      ['a number', '1 b', '1 b', "'1 b'"],
+      ['a color', '#fff b', '#fff b', "'#fff b'"],
+      ['a double-quoted string', '"x" b', '"x" b', '\'"x" b\''],
+      ['both kinds of quote', '\'a\' "b"', '\'a\' "b"', '\'\\\'a\\\' "b"\''],
+      ['an escaped quote', String.raw`'it\'s' b`, String.raw`'it\'s' b`, String.raw`"'it\\'s' b"`],
+    ])('reads a body value starting with %s as the whole line, with a warning', (_, text, expected, quoted) => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: ${text}
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', expected, quoted)]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: expected, type: 'string' },
+      });
+    });
+
+    it('keeps the quotes of a double-quoted word after an identifier', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: data "team"
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'data "team"')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({
+        owner: { value: 'data "team"', type: 'string' },
+      });
+    });
+
+    it('still reports the warning when another error stops interpretation', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: data team
+}
+Ref: raw_orders.id > missing.id`;
+      expect(errorCodes(source).length).toBeGreaterThan(0);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'data team')]);
+    });
+
+    it('lets a quoted Metadata Dep value override a deprecated bare value', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: data team
+}
+
+Metadata Dep pipeline {
+  owner: 'block'
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([legacyWarning('owner', 'data team')]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({ owner: { value: 'block', type: 'string' } });
+    });
+
+    it('still rejects a body value followed by a settings list', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  owner: 'x' [b]
+}`;
+      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+      expect(warnings(source)).toEqual([]);
+    });
+
+    it('still rejects an identifier followed by a double-quoted word in a Metadata Dep block, without a hint', () => {
+      const source = `Dep pipeline: raw_orders -> stg_orders
+Metadata Dep pipeline {
+  owner: data "team"
+}`;
+      expect(messages(source)).toEqual([`A Metadata field value ${QUOTE_HINT}`]);
+    });
+
+    it('still rejects a quoted string followed by more words in a Metadata Dep block, without a hint', () => {
+      const source = `Dep pipeline: raw_orders -> stg_orders
+Metadata Dep pipeline {
+  owner: 'x' b
+}`;
+      expect(messages(source)).toEqual([`A Metadata field value ${QUOTE_HINT}`]);
+    });
+
+    it('still rejects a multi-word value starting with a boolean in a Metadata Dep block', () => {
+      const source = `Dep pipeline: raw_orders -> stg_orders
+Metadata Dep pipeline {
+  owner: true b
+}`;
+      expect(messages(source)).toEqual([`A Metadata field value ${QUOTE_HINT}. Did you mean 'true b'? Text values must be quoted`]);
+    });
+
+    it('still rejects a bare identifier in a Metadata Dep block', () => {
       const source = `Dep pipeline: raw_orders -> stg_orders
 Metadata Dep pipeline {
   materialized: table
@@ -225,26 +365,37 @@ Metadata Dep pipeline {
       expect(messages(source)).toEqual([`A Metadata field value ${QUOTE_HINT}. Did you mean 'table'? Text values must be quoted`]);
     });
 
-    it('hints to quote a bare identifier in a Table inline setting', () => {
+    it('still rejects a bare identifier in a Table inline setting', () => {
       const source = 'Table t [owner: data_team] { id int }';
       expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}. Did you mean 'data_team'? Text values must be quoted`]);
     });
 
-    it('gives no hint for a non-identifier value', () => {
+    it('still rejects a bare value for a builtin Dep field', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders
+  color: blue
+}`;
+      expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+      expect(warnings(source)).toEqual([]);
+    });
+
+    it('still rejects a non-identifier value, without a hint', () => {
       const source = `Dep pipeline {
   raw_orders -> stg_orders
   owner: a.b
 }`;
       expect(messages(source)).toEqual([`Custom setting 'owner' ${QUOTE_HINT}`]);
+      expect(warnings(source)).toEqual([]);
     });
 
-    it('accepts the quoted form', () => {
+    it('accepts the quoted form without a warning', () => {
       const source = `Dep pipeline {
   raw_orders -> stg_orders
   materialized: 'table'
   owner: 'data-team'
 }`;
       expect(errorCodes(source)).toEqual([]);
+      expect(warnings(source)).toEqual([]);
     });
   });
 
@@ -259,9 +410,18 @@ Metadata Dep pipeline {
   });
 
   describe('block-form edge settings list', () => {
-    it('reports a bare identifier value and drops nothing silently', () => {
+    it('warns on a bare identifier value and drops nothing silently', () => {
       const source = `Dep pipeline {
   raw_orders -> stg_orders [owner: data]
+}`;
+      expect(errorCodes(source)).toEqual([]);
+      expect(warningCodes(source)).toEqual([CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE]);
+      expect(excludeMetadataValueToken(dep(source, 'pipeline')?.metadata)).toEqual({ owner: { value: 'data', type: 'string' } });
+    });
+
+    it('reports an invalid value and drops nothing silently', () => {
+      const source = `Dep pipeline {
+  raw_orders -> stg_orders [owner: a.b]
 }`;
       expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
     });
@@ -287,8 +447,13 @@ Metadata Dep pipeline {
     });
 
     it('reports a short-form settings error only once', () => {
-      const source = 'Dep pipeline: raw_orders -> stg_orders [owner: data]';
+      const source = 'Dep pipeline: raw_orders -> stg_orders [owner: a.b]';
       expect(errorCodes(source)).toEqual([CompileErrorCode.INVALID_DEP_SETTING_VALUE]);
+    });
+
+    it('reports a short-form settings warning only once', () => {
+      const source = 'Dep pipeline: raw_orders -> stg_orders [owner: data]';
+      expect(warningCodes(source)).toEqual([CompileErrorCode.DEPRECATED_DEP_SETTING_VALUE]);
     });
   });
 

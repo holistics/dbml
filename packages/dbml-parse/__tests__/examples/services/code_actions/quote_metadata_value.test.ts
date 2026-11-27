@@ -18,8 +18,13 @@ function errorsOf (source: string) {
   return compile(source).interpretProject().getErrors();
 }
 
+function warningsOf (source: string) {
+  return compile(source).interpretProject().getWarnings();
+}
+
 function quoteFixes (source: string): QuickFix[] {
-  const fixes = errorsOf(source).flatMap((e) => e.details?.quickFixes ?? []);
+  const report = compile(source).interpretProject();
+  const fixes = [...report.getErrors(), ...report.getWarnings()].flatMap((e) => e.details?.quickFixes ?? []);
   return uniqBy(fixes, (f) => `${f.title}@${f.edits[0]?.start}`);
 }
 
@@ -57,9 +62,9 @@ describe('[example] quick fix: quote a bare custom metadata value', () => {
         'Table t { id int }\nMetadata Table t {\n  owner: \'data team\'\n}',
       ],
       [
-        'Dep body field',
-        'Table a { id int }\nTable b { id int }\nDep d {\n  a.id -> b.id\n  owner: data team\n}',
-        'Table a { id int }\nTable b { id int }\nDep d {\n  a.id -> b.id\n  owner: \'data team\'\n}',
+        'Metadata block field starting with a literal',
+        'Table t { id int }\nMetadata Table t {\n  owner: true team\n}',
+        'Table t { id int }\nMetadata Table t {\n  owner: \'true team\'\n}',
       ],
       [
         'arch setting list',
@@ -73,12 +78,79 @@ describe('[example] quick fix: quote a bare custom metadata value', () => {
       ],
     ])('%s', (_, source, expected) => {
       const fixes = quoteFixes(source);
+      expect(fixes).toHaveLength(1);
+      expect(fixes[0].isPreferred).toBe(true);
+
+      const fixed = applyFix(source, fixes[0]);
+      expect(fixed).toBe(expected);
+      expect(errorsOf(fixed)).toEqual([]);
+    });
+  });
+
+  describe('quotes a deprecated bare Dep value, reported as a warning', () => {
+    const TABLES = 'Table a { id int }\nTable b { id int }\n';
+    test.each([
+      [
+        'Dep body field',
+        `${TABLES}Dep d {\n  a.id -> b.id\n  owner: data team\n}`,
+        `${TABLES}Dep d {\n  a.id -> b.id\n  owner: 'data team'\n}`,
+      ],
+      [
+        'Dep header setting list',
+        `${TABLES}Dep d: a.id -> b.id [owner: data team]`,
+        `${TABLES}Dep d: a.id -> b.id [owner: 'data team']`,
+      ],
+      [
+        'Dep edge setting list',
+        `${TABLES}Dep d {\n  a.id -> b.id [owner: data team]\n}`,
+        `${TABLES}Dep d {\n  a.id -> b.id [owner: 'data team']\n}`,
+      ],
+    ])('%s', (_, source, expected) => {
+      expect(errorsOf(source)).toEqual([]);
+      expect(warningsOf(source)).toHaveLength(1);
+
+      const fixes = quoteFixes(source);
       expect(fixes.map((f) => f.title)).toEqual(['Quote the value: \'data team\'']);
       expect(fixes[0].isPreferred).toBe(true);
 
       const fixed = applyFix(source, fixes[0]);
       expect(fixed).toBe(expected);
       expect(errorsOf(fixed)).toEqual([]);
+      expect(warningsOf(fixed)).toEqual([]);
+    });
+
+    test.each([
+      ['a quoted string', "owner: 'x' b", 'owner: "\'x\' b"', "'x' b"],
+      ['a number', 'owner: 1 b', "owner: '1 b'", '1 b'],
+      ['both kinds of quote', 'owner: \'a\' "b"', 'owner: \'\\\'a\\\' "b"\'', '\'a\' "b"'],
+      ['an escaped quote', String.raw`owner: 'it\'s' b`, String.raw`owner: "'it\\'s' b"`, String.raw`'it\'s' b`],
+    ])('quotes a Dep body value starting with %s, keeping the value the same', (_, line, fixedLine, value) => {
+      const source = `${TABLES}Dep d {\n  a.id -> b.id\n  ${line}\n}`;
+      const fixes = quoteFixes(source);
+      expect(fixes).toHaveLength(1);
+
+      const fixed = applyFix(source, fixes[0]);
+      expect(fixed).toBe(`${TABLES}Dep d {\n  a.id -> b.id\n  ${fixedLine}\n}`);
+      expect(errorsOf(fixed)).toEqual([]);
+      expect(warningsOf(fixed)).toEqual([]);
+      const valueOf = (src: string) => compile(src).interpretProject().getValue().files[DEFAULT_ENTRY.absolute]?.deps[0]?.metadata?.owner?.value;
+      expect(valueOf(fixed)).toBe(value);
+      expect(valueOf(source)).toBe(value);
+    });
+
+    test.each([
+      ['Dep header setting list', `${TABLES}Dep d: a.id -> b.id [owner: data team]`],
+      ['Dep edge setting list', `${TABLES}Dep d {\n  a.id -> b.id [owner: data team]\n}`],
+      ['Dep body field', `${TABLES}Dep d {\n  a.id -> b.id\n  owner: data team\n}`],
+    ])('the code action provider offers the fix on the warning marker: %s', (_, source) => {
+      const compiler = compile(source);
+      const services = compiler.initMonacoServices();
+      const markers = services.diagnosticsProvider.provideMarkers(DEFAULT_ENTRY);
+      expect(markers).toHaveLength(1);
+
+      const model = createMockTextModel(source);
+      const result = services.codeActionProvider.provideCodeActions(model, undefined as any, { markers } as any, undefined as any);
+      expect(result?.actions.map((a) => a.title)).toEqual(['Quote the value: \'data team\'']);
     });
   });
 

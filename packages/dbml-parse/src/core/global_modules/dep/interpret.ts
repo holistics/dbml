@@ -15,7 +15,7 @@ import type {
 } from '@/core/types/schemaJson';
 import { DepMetadata, type Filepath } from '@/core/types';
 import type Compiler from '@/compiler';
-import { extractMetadataValue, getTokenPosition } from '@/core/utils/interpret';
+import { extractLegacyMetadataValue, getTokenPosition } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 import { attachCustomMetadata } from '../metadata/utils';
 import { DEP_METADATA_FIELDS } from '../metadata/registries';
@@ -158,7 +158,7 @@ export class DepInterpreter {
       return;
     }
 
-    const value = extractMetadataValue(valueNode);
+    const value = extractLegacyMetadataValue(valueNode, valueNode && this.compiler.getSource(valueNode.filepath));
     if (value !== undefined) metadata[name] = { ...value, token };
   }
 }
