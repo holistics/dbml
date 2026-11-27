@@ -1,0 +1,10 @@
+Table "schemaA"."products" {
+  "id" int [pk]
+  "name" varchar(255)
+  "merchant_id" int
+
+  Indexes {
+    (merchant_id) [name: "product_merchant_index"]
+    (name) [unique]
+  }
+}
